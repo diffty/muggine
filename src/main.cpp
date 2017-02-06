@@ -10,6 +10,10 @@
 #include "buttonwidget.hpp"
 
 
+int test() {
+	printf("TESTETSTESTSE\n");
+}
+
 
 int main(int argc, char **argv)
 {
@@ -21,8 +25,8 @@ int main(int argc, char **argv)
 	// Building UI
 	Scene scene;
 
-	ButtonWidget btn(5, 211, 50, 25, 0);
-	ButtonWidget btn2(70, 211, 50, 25, 0);
+	ButtonWidget btn(5, 211, 50, 25, 0, test);
+	ButtonWidget btn2(70, 211, 50, 25, 0, test);
 
 	SamplerGridWidget sg(10, 10, 300, 200, 10, 8);
 

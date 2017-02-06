@@ -1,7 +1,7 @@
 #include "buttonwidget.hpp"
 
 
-ButtonWidget::ButtonWidget(int x, int y, int w, int h, int initalState)
+ButtonWidget::ButtonWidget(int x, int y, int w, int h, int initalState, int (*pCallback)(void))
 	: IWidget(x, y, w, h),
 	  m_colorOn(255, 0, 3),
 	  m_colorOff(3, 0, 255),
@@ -10,6 +10,7 @@ ButtonWidget::ButtonWidget(int x, int y, int w, int h, int initalState)
 	m_state = initalState;
 	m_bPressedThisLoop = false;
 	m_mode = BtnMode_Instant;
+	m_pCallback = pCallback;
 }
 
 void ButtonWidget::onPress() {
@@ -22,6 +23,8 @@ void ButtonWidget::onPress() {
 	m_state = (m_state == 0) ? 2 : 4;
 	//m_uiManager->pressedElmts[m_uiManager->nbPressedElmts] = m_id;
 	//m_uiManager->nbPressedElmts++;
+
+	(*m_pCallback)();
 }
 
 void ButtonWidget::onRelease() {

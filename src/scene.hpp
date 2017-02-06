@@ -25,6 +25,8 @@ public:
 	void receiveTouchInput(vect2d_t inputPos);
 	void update();
 	void draw(u8* fb);
+
+	void test() { printf("LOLPIPI\n"); };
 };
 
 
