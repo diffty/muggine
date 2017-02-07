@@ -32,6 +32,7 @@ SOURCES		:=	src
 DATA		:=
 INCLUDES	:=	include
 GRAPHICS	:=	gfx
+ROMFS		:=	romfs
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -122,6 +123,10 @@ ifeq ($(strip $(NO_SMDH)),)
 	export _3DSXFLAGS += --smdh=$(CURDIR)/$(TARGET).smdh
 endif
 
+ifneq ($(ROMFS),)
+	export _3DSXFLAGS += --romfs=$(CURDIR)/$(ROMFS)
+endif
+
 .PHONY: $(BUILD) clean all
 
 #---------------------------------------------------------------------------------
@@ -152,7 +157,7 @@ clean:
 	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf
 
 run:
-	@/Applications/Citra/citra $(TARGET).3dsx
+	@/Applications/Citra/citra-qt.app/Contents/MacOS/citra-qt-bin $(TARGET).3dsx
 
 
 #---------------------------------------------------------------------------------
