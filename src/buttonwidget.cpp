@@ -9,7 +9,7 @@ ButtonWidget::ButtonWidget(int x, int y, int w, int h, int initalState, int (*pC
 
 	m_state = initalState;
 	m_bPressedThisLoop = false;
-	m_mode = BtnMode_Instant;
+	m_mode = E_BTNMODE_INSTANT;
 	m_pCallback = pCallback;
 }
 
@@ -21,17 +21,15 @@ void ButtonWidget::onPress() {
 	}
 
 	m_state = (m_state == 0) ? 2 : 4;
-	//m_uiManager->pressedElmts[m_uiManager->nbPressedElmts] = m_id;
-	//m_uiManager->nbPressedElmts++;
 
 	(*m_pCallback)();
 }
 
 void ButtonWidget::onRelease() {
-	if (m_mode == BtnMode_Toggle && m_state == 2) {
+	if (m_mode == E_BTNMODE_TOGGLE && m_state == 2) {
 		m_state = 1;
 	}
-	else if (m_mode == BtnMode_Instant || m_state == 4) {
+	else if (m_mode == E_BTNMODE_INSTANT || m_state == 4) {
 		m_state = 0;
 	}
 }

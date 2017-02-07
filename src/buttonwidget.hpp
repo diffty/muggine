@@ -9,8 +9,8 @@
 
 
 enum ButtonMode {
-	BtnMode_Instant,
-	BtnMode_Toggle
+	E_BTNMODE_INSTANT,
+	E_BTNMODE_TOGGLE
 };
 
 
