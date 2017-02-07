@@ -20,7 +20,9 @@ typedef struct color_t {
 	unsigned int b;
 } color_t;
 
-
+typedef unsigned char byte;
+typedef unsigned short word;
+typedef unsigned int uint;
 
 class Color {
 private:
