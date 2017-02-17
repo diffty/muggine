@@ -1,7 +1,21 @@
 #ifndef COMMON_TYPES_HPP
 #define COMMON_TYPES_HPP
 
+#ifdef TARGET_3DS
 #include <3ds.h>
+#endif
+
+
+// Platform-specific type defines
+#ifdef TARGET_3DS
+typedef u8 uint8;
+typedef u32 uint32;
+#else
+#include <cstdint>
+typedef uint8_t uint8;
+typedef uint32_t uint32;
+#endif
+
 
 
 typedef struct vect2d_t {
@@ -24,20 +38,21 @@ typedef unsigned char byte;
 typedef unsigned short word;
 typedef unsigned int uint;
 
+
 class Color {
 private:
 	color_t m_color;
-	u8* m_framebuffer3DSFmt;
+	uint8* m_framebuffer3DSFmt;
 
-	u8* Update3DSFramebufferFormat() {
-		m_framebuffer3DSFmt[0] = (u8) m_color.b;
-		m_framebuffer3DSFmt[1] = (u8) m_color.g;
-		m_framebuffer3DSFmt[2] = (u8) m_color.r;
+	void Update3DSFramebufferFormat() {
+		m_framebuffer3DSFmt[0] = (uint8)m_color.b;
+		m_framebuffer3DSFmt[1] = (uint8)m_color.g;
+		m_framebuffer3DSFmt[2] = (uint8)m_color.r;
 	}
 
 public:
 	Color(unsigned int r, unsigned int g, unsigned int b) {
-		m_framebuffer3DSFmt = new u8[3];
+		m_framebuffer3DSFmt = new uint8[3];
 		setColor(r, g, b);
 	}
 
@@ -57,7 +72,7 @@ public:
 		Update3DSFramebufferFormat();
 	}
 
-	u8* get3DSFramebufferFormat() {
+	uint8* get3DSFramebufferFormat() {
 		return m_framebuffer3DSFmt;
 	}
 };

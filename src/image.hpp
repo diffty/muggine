@@ -18,10 +18,10 @@
 
 class Image {
 private:
-	u8* m_pRawImgData;
-	u8* m_pImgData;
+	uint8* m_pRawImgData;
+	uint8* m_pImgData;
 	size2d_t m_size;
-	u8* m_mask;
+	uint8* m_mask;
 	uint m_maskNbZone;
 	int m_paletteSize;
 	color_t* m_aPalette;
@@ -31,7 +31,7 @@ public:
 	~Image();
 
 	void loadFromFile(char* fileName);
-	void draw(u8* buffer, int x, int y, bool reversed, bool masked);
+	void draw(uint8* buffer, int x, int y, bool reversed, bool masked);
 
 	size2d_t getSize() { return m_size; }
 };

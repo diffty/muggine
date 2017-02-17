@@ -87,7 +87,7 @@ void Image::loadFromFile(char* fileName) {
 
 	// Reading pixel array
 	m_pRawImgData = (byte *) malloc(nbPixels);
-	m_pImgData = (u8 *) malloc(nbPixels * 3 * sizeof(u8));
+	m_pImgData = (uint8 *)malloc(nbPixels * 3 * sizeof(uint8));
 
 	seekPtr = *startOffset;
 
@@ -156,7 +156,7 @@ void Image::loadFromFile(char* fileName) {
 	free(imgPalSize);
 }
 
-void Image::draw(u8* buffer, int x, int y, bool reversed, bool masked) {
+void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
   int xb, yb;
   unsigned int imgBufIdx, zoneSize;
 

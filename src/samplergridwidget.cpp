@@ -57,7 +57,7 @@ void SamplerGridWidget::update() {
 	m_nbPressedCellsCurrentLoop = 0;
 }
 
-void SamplerGridWidget::draw(u8* fb) {
+void SamplerGridWidget::draw(uint8* fb) {
 	int cellW = m_rect.getSize().w / m_nbCellX;
 	int cellH = m_rect.getSize().h / m_nbCellY;
 

@@ -30,7 +30,7 @@ public:
 	
 	void receiveTouchInput(vect2d_t touchPt);
 	void update();
-	void draw(u8* fb);
+	void draw(uint8* fb);
 
 	void onCellPress(vect2d_t gridCell);
 	void onCellRelease(int cellId);

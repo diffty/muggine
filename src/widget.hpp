@@ -19,7 +19,7 @@ public:
 
 	virtual void receiveTouchInput(vect2d_t touchPt) {};
 	virtual void update() {};
-	virtual void draw(u8* fb) = 0;
+	virtual void draw(uint8* fb) = 0;
 };
 
 

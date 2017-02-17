@@ -4,7 +4,10 @@
 
 #include <stdio.h>
 #include <cstdlib>
+
+#ifdef TARGET_3DS
 #include <3ds.h>
+#endif
 
 #include "linked_list.hpp"
 #include "widget.hpp"
@@ -24,7 +27,7 @@ public:
 
 	void receiveTouchInput(vect2d_t inputPos);
 	void update();
-	void draw(u8* fb);
+	void draw(uint8* fb);
 
 	void test() { printf("LOLPIPI\n"); };
 };

@@ -1,8 +1,10 @@
 #ifndef BUTTONWIDGET_HPP
 #define BUTTONWIDGET_HPP
 
-
+#ifdef TARGET_3DS
 #include <3ds.h>
+#endif
+
 #include "common_types.hpp"
 #include "drawing.hpp"
 #include "widget.hpp"
@@ -36,7 +38,7 @@ public:
 	void onPress();
 	void onRelease();
 	void update();
-	void draw(u8* fb);
+	void draw(uint8* fb);
 };
 
 

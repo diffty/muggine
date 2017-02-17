@@ -82,7 +82,7 @@ void Scene::update() {
 	}
 }
 
-void Scene::draw(u8* fb) {
+void Scene::draw(uint8* fb) {
 	LLNode* currNode = m_contentList.pHead;
 
 	while (currNode != NULL) {

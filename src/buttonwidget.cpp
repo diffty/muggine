@@ -48,7 +48,7 @@ void ButtonWidget::receiveTouchInput(vect2d_t touchPt) {
 	}
 }
 
-void ButtonWidget::draw(u8* fb) {
+void ButtonWidget::draw(uint8* fb) {
 	if (m_state == 1) {
 		drawBox(fb,
 			m_rect.getPos().x,
