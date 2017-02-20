@@ -33,8 +33,8 @@ bool Input::GetTouch(vect2d_t* touch) {
 		if (tp.px + tp.py > 0) {
 			vect2d_t touchPt;
 
-			touch.x = tp.px;
-			touch.y = tp.py;
+			touch->x = tp.px;
+			touch->y = tp.py;
 
 			return true;
 		}

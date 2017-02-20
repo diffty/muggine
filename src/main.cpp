@@ -15,6 +15,7 @@
 #include "system.hpp"
 #include "graphics.hpp"
 #include "input.hpp"
+//#include "rtpmidi.hpp"
 
 
 #ifndef TARGET_3DS
@@ -34,6 +35,9 @@ int main(int argc, char **argv)
 	System sys;
 	Graphics gfx;
 	Input input;
+
+	//RtpMidi::initService();	
+	//RtpMidi rtpObj;
 
 	gfx.Init();
 
@@ -82,6 +86,8 @@ int main(int argc, char **argv)
 		// Wait for VBlank
 		gfx.WaitForBlank();
 	}
+
+	// RtpMidi::shutdownService();
 
 	// Exit services
 	gfx.Exit();
