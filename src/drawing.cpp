@@ -2,6 +2,8 @@
 
 
 void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
+	#ifdef TARGET_3DS
+
 	int x, y;
 	int boxHeight = std::abs(toY - fromY);
 
@@ -25,4 +27,6 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 	}
 
 	delete oneColorCol;
+
+	#endif
 }

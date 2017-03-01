@@ -29,16 +29,11 @@ int test() {
 }
 
 
-int main(int argc, char **argv)
-{
-	System sys;
+void MainApp(System* sys) {
 	Graphics gfx;
 	Input input;
 
 	gfx.Init();
-
-	// Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
-	sys.ConsoleInit();
 
 	// Building UI
 	Scene scene;
@@ -61,11 +56,11 @@ int main(int argc, char **argv)
 	printf("\x1b[20;15HPress Start to exit.");
 
 	// Main loop
-	while (sys.MainLoop())
+	while (sys->MainLoop())
 	{
 		// Scan all the inputs. This should be done once for each frame
 		input.ScanInput();
-		if (input.IsPressed(KEY_START)) break;
+		//if (input.IsPressed(KEY_START)) break;
 
 		vect2d_t touchPt;
 		if (input.GetTouch(&touchPt)) {
@@ -85,6 +80,34 @@ int main(int argc, char **argv)
 
 	// Exit services
 	gfx.Exit();
+}
+
+#ifdef TARGET_WIN
+
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
+{
+	System sys;
+
+	sys.ConsoleInit();
+	sys.InitWindow(hInstance, nCmdShow);
+
+	MainApp(&sys);
 
 	return 0;
 }
+
+#else
+
+int main(int argc, char **argv)
+{
+	System sys;
+
+	// Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
+	sys.ConsoleInit();
+
+	MainApp(&sys);
+
+	return 0;
+}
+
+#endif
