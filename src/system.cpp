@@ -5,6 +5,11 @@ System::System() {
 	isMainLoopRunning = true;
 }
 
+System::System(Graphics* pGfx) {
+	isMainLoopRunning = true;
+	m_pGfxSys = pGfx;
+}
+
 void System::InitWindow(HINSTANCE hInstance, int nCmdShow) {
 	#ifdef TARGET_WIN
 
@@ -38,6 +43,8 @@ void System::InitWindow(HINSTANCE hInstance, int nCmdShow) {
 
 	ShowWindow(hwnd, nCmdShow);
 
+	m_hwnd = hwnd;
+
 	#endif
 }
 
@@ -45,12 +52,7 @@ LRESULT CALLBACK System::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	switch (uMsg) {
 		case WM_PAINT:
 		{
-			PAINTSTRUCT ps;
-			HDC hdc = BeginPaint(hwnd, &ps);
-
-			FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
-			EndPaint(hwnd, &ps);
+			m_pGfxSys->DrawFramebuffer(hwnd);
 		}
 		return 0;
 
@@ -87,6 +89,10 @@ LRESULT CALLBACK System::s_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM l
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
+HWND System::GetWindow() {
+	return m_hwnd;
+}
+
 void System::ConsoleInit() {
 	#ifdef TARGET_3DS
 	
@@ -116,7 +122,7 @@ bool System::MainLoop() {
 		DispatchMessage(&msg);
 	}
 
-	printf("%u\n", msg.message);
+	// printf("%u\n", msg.message);
 
 	/*if (isMainLoopRunning)
 		printf("isMainLoopRunning\n");

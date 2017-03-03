@@ -5,6 +5,10 @@ Input::Input() {
 
 }
 
+Input::Input(System* sys) {
+	m_sys = sys;
+}
+
 void Input::ScanInput() {
 	#ifdef TARGET_3DS
 		hidScanInput();

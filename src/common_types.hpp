@@ -10,12 +10,17 @@
 #ifdef TARGET_3DS
 typedef u8 uint8;
 typedef u32 uint32;
+typedef uint8 fb_t;
 #else
 #include <cstdint>
 typedef uint8_t uint8;
 typedef uint32_t uint32;
 #endif
 
+#ifdef TARGET_WIN
+#include <windows.h>
+typedef BYTE fb_t;
+#endif
 
 
 typedef struct vect2d_t {

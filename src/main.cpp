@@ -30,14 +30,11 @@ int test() {
 }
 
 
-void MainApp(System* sys) {
-	Graphics gfx;
-	Input input;
+void MainApp(System* sys, Graphics* gfx) {
+	Input input(sys);
 
 	//RtpMidi::initService();	
 	//RtpMidi rtpObj;
-
-	gfx.Init();
 
 	// Building UI
 	Scene scene;
@@ -52,12 +49,12 @@ void MainApp(System* sys) {
 	scene.addComponent((IWidget*) &btn2);
 
 	// We don't need double buffering in this example. In this way we can draw our image only once on screen.
-	gfx.SetDoubleBuffering(false);
+	gfx->SetDoubleBuffering(false);
 
 	// Get the bottom screen's frame buffer
-	uint8* fb = gfx.GetFramebuffer();
+	fb_t* fb = gfx->GetFramebuffer();
 
-	printf("\x1b[20;15HPress Start to exit.");
+	printf("Press Start to exit.\n");
 
 	// Main loop
 	while (sys->MainLoop())
@@ -75,29 +72,32 @@ void MainApp(System* sys) {
 		scene.draw(fb);
 
 		// Flush and swap framebuffers
-		gfx.FlushBuffer();
-		gfx.SwapBuffer();
+		gfx->FlushBuffer();
+		gfx->SwapBuffer();
 
 		// Wait for VBlank
-		gfx.WaitForBlank();
+		gfx->WaitForBlank();
 	}
 
 	// RtpMidi::shutdownService();
 
 	// Exit services
-	gfx.Exit();
+	gfx->Exit();
 }
 
 #ifdef TARGET_WIN
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
-	System sys;
+	Graphics gfx;
+	System sys(&gfx);
+
+	gfx.Init();
 
 	sys.ConsoleInit();
 	sys.InitWindow(hInstance, nCmdShow);
 
-	MainApp(&sys);
+	MainApp(&sys, &gfx);
 
 	return 0;
 }
