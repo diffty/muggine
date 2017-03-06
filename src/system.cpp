@@ -3,89 +3,36 @@
 
 System::System() {
 	isMainLoopRunning = true;
+	m_window = NULL;
 }
 
 void System::InitWindow(HINSTANCE hInstance, int nCmdShow) {
 	#ifdef TARGET_WIN
 
-	const wchar_t CLASS_NAME[] = L"Muggine Test Window Class";
-
-	WNDCLASS wc = {};
-
-	wc.lpfnWndProc = System::s_WndProc;
-	wc.hInstance = hInstance;
-	wc.lpszClassName = (LPSTR) CLASS_NAME;
-
-	RegisterClass(&wc);
-
-	// Create the window
-	HWND hwnd = CreateWindowEx(
-		0,
-		(LPSTR) CLASS_NAME,
-		"JESUISMUGGINE",
-		WS_OVERLAPPEDWINDOW,
-
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-
-		NULL,
-		NULL,
-		hInstance,
-		this
-		);
-
-	ShowWindow(hwnd, nCmdShow);
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+	}
+	else {
+		m_window = SDL_CreateWindow("MUGGINE TEST WINDOW",
+									SDL_WINDOWPOS_UNDEFINED,
+									SDL_WINDOWPOS_UNDEFINED,
+									SCREEN_WIDTH,
+									SCREEN_HEIGHT,
+									SDL_WINDOW_SHOWN);
+		
+		if (m_window == NULL) {
+			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+		}
+	}
 
 	#endif
 }
 
-LRESULT CALLBACK System::WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	switch (uMsg) {
-		case WM_PAINT:
-		{
-			PAINTSTRUCT ps;
-			HDC hdc = BeginPaint(hwnd, &ps);
-
-			FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
-			EndPaint(hwnd, &ps);
-		}
-		return 0;
-
-		case WM_CLOSE: 
-			DestroyWindow(hwnd);
-			return 0;
-
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			isMainLoopRunning = false;
-			return 0;
-
-		default:
-			return DefWindowProc(hwnd, uMsg, wParam, lParam);
-	}
+#ifdef TARGET_WIN
+SDL_Window* System::GetWindow() {
+	return m_window;
 }
-
-LRESULT CALLBACK System::s_WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	System *pThis;
-
-	if (uMsg == WM_NCCREATE) {
-		LPCREATESTRUCT lpcs = reinterpret_cast<LPCREATESTRUCT>(lParam);
-		pThis = static_cast<System*>(lpcs->lpCreateParams);
-		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pThis));
-	}
-	else {
-		pThis = reinterpret_cast<System*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-	}
-
-	if (pThis) {
-		return pThis->WndProc(hwnd, uMsg, wParam, lParam);
-	}
-
-	return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}
+#endif
 
 void System::ConsoleInit() {
 	#ifdef TARGET_3DS
@@ -103,35 +50,25 @@ void System::ConsoleInit() {
 }
 
 bool System::MainLoop() {
-	#ifdef TARGET_3DS
-
+#ifdef TARGET_3DS
 	return aptMainLoop();
 
-	#elif TARGET_WIN
+#elif TARGET_WIN
+	SDL_PollEvent(&m_event);
 
-	MSG msg = {};
-
-	if (GetMessage(&msg, NULL, 0, 0)) { // PeekMessage(&msg, NULL, 0, 0, PM_REMOVE
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+	if (m_event.type == SDL_QUIT) {
+		isMainLoopRunning = false;
 	}
 
-	printf("%u\n", msg.message);
-
-	/*if (isMainLoopRunning)
-		printf("isMainLoopRunning\n");
-	else
-		printf("NOT isMainLoopRunning\n");*/
-
 	return isMainLoopRunning;
 
-	#else
-	
+#else
 	return isMainLoopRunning;
-	
-	#endif
+#endif
 }
 
 void System::Exit() {
+	SDL_DestroyWindow(m_window);
 
+	SDL_Quit();
 }

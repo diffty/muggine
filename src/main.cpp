@@ -5,6 +5,8 @@
 
 #ifdef TARGET_3DS
 #include <3ds.h>
+#elif TARGET_WIN
+#include <SDL.h>
 #endif
 
 #include "samplergridwidget.hpp"
@@ -31,7 +33,7 @@ int test() {
 
 
 void MainApp(System* sys) {
-	Graphics gfx;
+	Graphics gfx(sys);
 	Input input;
 
 	//RtpMidi::initService();	
@@ -57,7 +59,7 @@ void MainApp(System* sys) {
 	// Get the bottom screen's frame buffer
 	uint8* fb = gfx.GetFramebuffer();
 
-	printf("\x1b[20;15HPress Start to exit.");
+	printf("Press Start to exit.\n");
 
 	// Main loop
 	while (sys->MainLoop())

@@ -1,50 +1,68 @@
 #include "graphics.hpp"
 
 
-Graphics::Graphics() {
-
+Graphics::Graphics(System* sys) {
+	m_sys = sys;
 }
 
 void Graphics::Init() {
 #ifdef TARGET_3DS
 	gfxInitDefault();
+
+#elif TARGET_WIN
+	m_sdlScreenSurface = SDL_GetWindowSurface(m_sys->GetWindow());
+
 #endif
 }
 
 void Graphics::SetDoubleBuffering(bool isActive) {
-	#ifdef TARGET_3DS
+#ifdef TARGET_3DS
 	gfxSetDoubleBuffering(GFX_BOTTOM, isActive);
-	#endif
+
+#endif
 }
 
 uint8* Graphics::GetFramebuffer() {
-	#ifdef TARGET_3DS
+#ifdef TARGET_3DS
 	return gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL);
-	#else
-	return nullptr;
-	#endif
+
+#else
+	return (uint8*) m_sdlScreenSurface->pixels;
+
+#endif
 }
 
 void Graphics::FlushBuffer() {
-	#ifdef TARGET_3DS
+#ifdef TARGET_3DS
 	gfxFlushBuffers();
-	#endif
+
+#endif
 }
 
 void Graphics::SwapBuffer() {
-	#ifdef TARGET_3DS
+#ifdef TARGET_3DS
 	gfxSwapBuffers();
-	#endif
+
+#elif TARGET_WIN
+	//SDL_FillRect(m_sdlScreenSurface, NULL, SDL_MapRGB(m_sdlScreenSurface->format, 0xFF, 0xFF, 0xFF));
+	SDL_UpdateWindowSurface(m_sys->GetWindow());
+
+#endif
 }
 
 void Graphics::WaitForBlank() {
-	#ifdef TARGET_3DS
+#ifdef TARGET_3DS
 	gspWaitForVBlank();
-	#endif
+
+#endif
 }
 
 void Graphics::Exit() {
-	#ifdef TARGET_3DS
+#ifdef TARGET_3DS
 	gfxExit();
-	#endif
+
+#elif TARGET_WIN
+	SDL_FreeSurface(m_sdlScreenSurface);
+
+#endif
 }
