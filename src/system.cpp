@@ -3,10 +3,13 @@
 
 System::System() {
 	isMainLoopRunning = true;
+    
+#ifdef TARGET_WIN
 	m_window = NULL;
+#endif
 }
 
-void System::InitWindow(HINSTANCE hInstance, int nCmdShow) {
+void System::InitWindow() {
 	#ifdef TARGET_WIN
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -41,10 +44,10 @@ void System::ConsoleInit() {
 	
 	#elif TARGET_WIN
 
-	AllocConsole();
+	/*AllocConsole();
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stdout);
-	freopen("CONOUT$", "w", stderr);
+	freopen("CONOUT$", "w", stderr);*/
 
 	#endif
 }

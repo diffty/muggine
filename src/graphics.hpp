@@ -4,7 +4,7 @@
 #ifdef TARGET_3DS
 #include <3ds.h>
 #elif TARGET_WIN
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #endif
 
 #include "common_types.hpp"

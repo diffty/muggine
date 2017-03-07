@@ -100,8 +100,8 @@ public:
 
 	vect2d_t getPos()			{ return m_pos; }
 	size2d_t getSize()			{ return m_size; }
-	bool setPos(int x, int y)	{ m_pos.x = x; m_pos.y = y; }
-	bool setSize(int w, int h)	{ m_size.w = w; m_size.h = h; }
+	void setPos(int x, int y)	{ m_pos.x = x; m_pos.y = y; }
+	void setSize(int w, int h)	{ m_size.w = w; m_size.h = h; }
 };
 
 

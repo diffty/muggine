@@ -6,7 +6,7 @@
 #include <3ds.h>
 
 #elif TARGET_WIN
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #else
 #define _CRT_SECURE_NO_WARNINGS

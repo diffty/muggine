@@ -39,6 +39,8 @@ LLNode* searchForNodeInList(LinkedList* pList, LLNode* pNode) {
 		}
 		pCurrNode = pCurrNode->pNext;
 	}
+    
+    return NULL;
 }
 
 int countNodesInList(LinkedList* pList) {

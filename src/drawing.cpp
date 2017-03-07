@@ -37,7 +37,7 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 	}
 
 #elif TARGET_WIN
-	int boxWidth = std::abs(toX - fromX);
+	int boxWidth = fabs(toX - fromX);
 
 	uint8* oneColorCol = new uint8[SCREEN_BPP * boxWidth];
 

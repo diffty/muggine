@@ -6,9 +6,9 @@
 #endif
 
 #ifdef TARGET_WIN
-#include <windows.h>
+//#include <windows.h>
 #include <cstdio>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #endif
 
 #include "input.hpp"
@@ -21,7 +21,7 @@ class System {
 public:
 	System();
 	void ConsoleInit();
-	void InitWindow(HINSTANCE hInstance, int nCmdShow);
+	void InitWindow();
 
 	Input* GetInputSys();
 

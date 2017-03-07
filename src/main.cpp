@@ -6,7 +6,7 @@
 #ifdef TARGET_3DS
 #include <3ds.h>
 #elif TARGET_WIN
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #endif
 
 #include "samplergridwidget.hpp"
@@ -88,22 +88,6 @@ void MainApp(System* sys) {
 	gfx.Exit();
 }
 
-#ifdef TARGET_WIN
-
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
-{
-	System sys;
-
-	sys.ConsoleInit();
-	sys.InitWindow(hInstance, nCmdShow);
-
-	MainApp(&sys);
-
-	return 0;
-}
-
-#else
-
 int main(int argc, char **argv)
 {
 	System sys;
@@ -111,9 +95,11 @@ int main(int argc, char **argv)
 	// Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
 	sys.ConsoleInit();
 
+#ifdef TARGET_WIN
+    sys.InitWindow();
+#endif
+
 	MainApp(&sys);
 
 	return 0;
 }
-
-#endif
