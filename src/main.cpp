@@ -34,7 +34,6 @@ int test() {
 
 void MainApp(System* sys) {
 	Graphics gfx(sys);
-	Input input;
 
 	//RtpMidi::initService();	
 	//RtpMidi rtpObj;
@@ -65,11 +64,10 @@ void MainApp(System* sys) {
 	while (sys->MainLoop())
 	{
 		// Scan all the inputs. This should be done once for each frame
-		input.ScanInput();
 		//if (input.IsPressed(KEY_START)) break;
 
 		vect2d_t touchPt;
-		if (input.GetTouch(&touchPt)) {
+		if (sys->GetInputSys()->GetTouch(&touchPt)) {
 			scene.receiveTouchInput(touchPt);
 		}
 

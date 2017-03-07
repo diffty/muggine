@@ -2,7 +2,7 @@
 
 
 Input::Input() {
-
+	
 }
 
 void Input::ScanInput() {
@@ -52,4 +52,12 @@ bool Input::GetTouch(vect2d_t* touch) {
 	return false;
 
 #endif
+}
+
+void Input::RegisterKeyEvent(Uint32 eventType, SDL_Keysym key) {
+	
+}
+
+void Input::RegisterMouseEvent(Uint32 eventType, vect2d_t mousePos) {
+	
 }

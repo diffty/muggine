@@ -11,6 +11,7 @@
 #include <SDL.h>
 #endif
 
+#include "input.hpp"
 
 #define SCREEN_WIDTH	320
 #define SCREEN_HEIGHT	240
@@ -22,6 +23,8 @@ public:
 	void ConsoleInit();
 	void InitWindow(HINSTANCE hInstance, int nCmdShow);
 
+	Input* GetInputSys();
+
 #ifdef TARGET_WIN
 	SDL_Window* GetWindow();
 #endif
@@ -31,6 +34,7 @@ public:
 
 private:
 	bool isMainLoopRunning;
+	Input m_inputSys;
 
 #ifdef TARGET_WIN
 	SDL_Window* m_window;

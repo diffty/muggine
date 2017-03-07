@@ -54,16 +54,34 @@ bool System::MainLoop() {
 	return aptMainLoop();
 
 #elif TARGET_WIN
-	SDL_PollEvent(&m_event);
+	m_inputSys.ScanInput();
 
-	if (m_event.type == SDL_QUIT) {
-		isMainLoopRunning = false;
+	while (SDL_PollEvent(&m_event) != 0) {
+		if (m_event.type == SDL_QUIT) {
+			isMainLoopRunning = false;
+		}
+
+		else if (m_event.type == SDL_KEYDOWN || m_event.type == SDL_KEYUP) {
+			m_inputSys.RegisterKeyEvent(m_event.type, m_event.key.keysym);
+		}
+
+		else if (m_event.type == SDL_MOUSEMOTION || m_event.type == SDL_MOUSEBUTTONDOWN || m_event.type == SDL_MOUSEBUTTONUP) {
+			vect2d_t mousePos;
+			int x, y;
+			
+			SDL_GetMouseState(&x, &y);
+			mousePos.x = x;
+			mousePos.y = y;
+
+			m_inputSys.RegisterMouseEvent(m_event.type, mousePos);
+		}
 	}
 
 	return isMainLoopRunning;
 
 #else
 	return isMainLoopRunning;
+
 #endif
 }
 
@@ -71,4 +89,8 @@ void System::Exit() {
 	SDL_DestroyWindow(m_window);
 
 	SDL_Quit();
+}
+
+Input* System::GetInputSys() {
+	return &m_inputSys;
 }
