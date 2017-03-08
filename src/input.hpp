@@ -15,7 +15,39 @@
 
 
 #include <stdio.h>
+#include <ctime>
 #include "common_types.hpp"
+#include "keys.hpp"
+#include "linked_list.hpp"
+
+
+enum EInputType {
+    IN_KEYB,
+    IN_MOUSE,
+    IN_TOUCH
+};
+
+enum EMouseButton {
+    MOUSE_BTN_LEFT,
+    MOUSE_BTN_RIGHT,
+    MOUSE_BTN_MIDDLE
+};
+
+struct KeyEvent {
+    EKey key;
+    EInputType type;
+};
+
+struct MouseEvent {
+    EMouseButton key;
+    vect2d_t position;
+    EInputType type;
+};
+
+struct InputEvent {
+    int time;
+    void* event;
+};
 
 
 class Input {
@@ -29,7 +61,7 @@ public:
 	void RegisterMouseEvent(Uint32 eventType, vect2d_t mousePos);
 
 private:
-
+    LinkedList currInputList;
 };
 
 #endif

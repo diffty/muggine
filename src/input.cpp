@@ -2,7 +2,10 @@
 
 
 Input::Input() {
-	
+#ifdef TARGET_WIN
+    initKeyConvArray();
+#endif
+    initList(&currInputList);
 }
 
 void Input::ScanInput() {
@@ -55,7 +58,18 @@ bool Input::GetTouch(vect2d_t* touch) {
 }
 
 void Input::RegisterKeyEvent(Uint32 eventType, SDL_Keysym key) {
-	
+    InputEvent event;
+    KeyEvent keyEvt;
+    
+    keyEvt.key = convertSDLToMuggineKey(key.sym);
+    keyEvt.type = IN_KEYB;
+    
+    event.time = (float) time(NULL);
+    event.event = &keyEvt;
+    
+    LLNode newInputEvt;
+    newInputEvt.pData = &event;
+    addNodeToList(&currInputList, newInputEvt);
 }
 
 void Input::RegisterMouseEvent(Uint32 eventType, vect2d_t mousePos) {
