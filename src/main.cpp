@@ -71,6 +71,16 @@ void MainApp(System* sys) {
 			scene.receiveTouchInput(touchPt);
 		}
 
+		MouseEvent* mouseEvt = sys->GetInputSys()->GetButtonPressEvent(MOUSE_BTN_LEFT);
+
+		if (mouseEvt) {
+			scene.receiveTouchInput(mouseEvt->position);
+		}
+
+		if (sys->GetInputSys()->IsKeyPressed(KEY_D)) {
+			printf("DIFFTY\n");
+		}
+
 		scene.update();
 		scene.draw(fb);
 

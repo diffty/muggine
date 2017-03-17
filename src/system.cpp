@@ -76,7 +76,7 @@ bool System::MainLoop() {
 			mousePos.x = x;
 			mousePos.y = y;
 
-			m_inputSys.RegisterMouseEvent(m_event.type, mousePos);
+			m_inputSys.RegisterMouseEvent(m_event.type, mousePos, m_event.button.button);
 		}
 	}
 

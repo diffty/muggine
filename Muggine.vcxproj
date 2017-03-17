@@ -48,12 +48,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>TARGET_WIN;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>X:\TMP\Freddy\muggine\3DSMidiPad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>X:\TMP\Freddy\muggine\3DSMidiPad\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>X:\TMP\Freddy\muggine\3DSMidiPad\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,6 +77,7 @@
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\input.cpp" />
+    <ClCompile Include="src\keys.cpp" />
     <ClCompile Include="src\linked_list.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mathf.cpp" />
@@ -90,6 +92,7 @@
     <ClInclude Include="src\graphics.hpp" />
     <ClInclude Include="src\image.hpp" />
     <ClInclude Include="src\input.hpp" />
+    <ClInclude Include="src\keys.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
     <ClInclude Include="src\mathf.hpp" />
     <ClInclude Include="src\samplergridwidget.hpp" />

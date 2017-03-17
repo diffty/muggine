@@ -37,7 +37,7 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 	}
 
 #elif TARGET_WIN
-	int boxWidth = fabs(toX - fromX);
+	int boxWidth = fabs((float) (toX - fromX));
 
 	uint8* oneColorCol = new uint8[SCREEN_BPP * boxWidth];
 
@@ -52,7 +52,7 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 	}
 
 	for (y = fromY; y <= toY; y++) {
-		memmove(fb + ((SCREEN_WIDTH - 1 - toX) * SCREEN_BPP * sizeof(uint8)) + (y * SCREEN_BPP * sizeof(uint8) * SCREEN_WIDTH),  // Attention, on inverse from et to et 239- parce que la DS a un système de coord qui part d'en bas à gauche
+		memmove(fb + (fromX * SCREEN_BPP * sizeof(uint8)) + (y * SCREEN_BPP * sizeof(uint8) * SCREEN_WIDTH),  // Attention, on inverse from et to et 239- parce que la DS a un système de coord qui part d'en bas à gauche
 			oneColorCol,
 			SCREEN_BPP * boxWidth * sizeof(uint8)
 		);

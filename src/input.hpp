@@ -29,24 +29,24 @@ enum EInputType {
 
 enum EMouseButton {
     MOUSE_BTN_LEFT,
-    MOUSE_BTN_RIGHT,
-    MOUSE_BTN_MIDDLE
+	MOUSE_BTN_MIDDLE,
+	MOUSE_BTN_RIGHT,
+	MOUSE_BTN_UNKNOWN
 };
 
 struct KeyEvent {
     EKey key;
-    EInputType type;
 };
 
 struct MouseEvent {
-    EMouseButton key;
+    EMouseButton btn;
     vect2d_t position;
-    EInputType type;
 };
 
 struct InputEvent {
     int time;
     void* event;
+	EInputType type;
 };
 
 
@@ -56,12 +56,19 @@ public:
 	void ScanInput();
 	uint32 GetInput();
 	bool IsPressed(uint32 key);
+	bool IsKeyPressed(EKey key);
+	bool IsButtonPressed(EMouseButton btn);
+	MouseEvent* GetButtonPressEvent(EMouseButton btn);
 	bool GetTouch(vect2d_t* touch);
 	void RegisterKeyEvent(Uint32 eventType, SDL_Keysym key);
-	void RegisterMouseEvent(Uint32 eventType, vect2d_t mousePos);
+	void RegisterMouseEvent(Uint32 eventType, vect2d_t mousePos, Uint8 mouseBtn);
+	void ProcessEvent(InputEvent* event);
+	void FlushInputEvents();
 
 private:
-    LinkedList currInputList;
+    LinkedList currEventsList;
+	LinkedList currInputList;
+	LinkedList currMouseList;
 };
 
 #endif
