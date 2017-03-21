@@ -17,6 +17,7 @@
 #include "system.hpp"
 #include "graphics.hpp"
 #include "input.hpp"
+#include "rsc_manager.hpp"
 //#include "rtpmidi.hpp"
 
 
@@ -48,7 +49,10 @@ void MainApp(System* sys) {
 
 	SamplerGridWidget sg(10, 10, 300, 200, 10, 8);
 
-	scene.addComponent((IWidget*) &sg);
+	RscManager rscManager;
+	rscManager.loadResource("D:/test.bmp");
+
+	scene.addComponent((IWidget*)&sg);
 	scene.addComponent((IWidget*) &btn);
 	scene.addComponent((IWidget*) &btn2);
 
@@ -59,6 +63,8 @@ void MainApp(System* sys) {
 	uint8* fb = gfx.GetFramebuffer();
 
 	printf("Press Start to exit.\n");
+
+	Image* img = rscManager.getImgResource(0);
 
 	// Main loop
 	while (sys->MainLoop())
@@ -83,6 +89,10 @@ void MainApp(System* sys) {
 
 		scene.update();
 		scene.draw(fb);
+
+		if (img) {
+			img->draw(fb, 10, 10, false, false);
+		}
 
 		// Flush and swap framebuffers
 		gfx.FlushBuffer();

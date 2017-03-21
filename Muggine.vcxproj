@@ -81,6 +81,7 @@
     <ClCompile Include="src\linked_list.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mathf.cpp" />
+    <ClCompile Include="src\rsc_manager.cpp" />
     <ClCompile Include="src\samplergridwidget.cpp" />
     <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\system.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="src\keys.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
     <ClInclude Include="src\mathf.hpp" />
+    <ClInclude Include="src\rsc_manager.hpp" />
     <ClInclude Include="src\samplergridwidget.hpp" />
     <ClInclude Include="src\scene.hpp" />
     <ClInclude Include="src\system.hpp" />

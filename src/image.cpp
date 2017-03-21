@@ -87,7 +87,7 @@ void Image::loadFromFile(char* fileName) {
 
 	// Reading pixel array
 	m_pRawImgData = (byte *) malloc(nbPixels);
-	m_pImgData = (uint8 *)malloc(nbPixels * 3 * sizeof(uint8));
+	m_pImgData = (uint8 *)malloc(nbPixels * SCREEN_BPP * sizeof(uint8));
 
 	seekPtr = *startOffset;
 
@@ -103,9 +103,12 @@ void Image::loadFromFile(char* fileName) {
 
 		for (int i = 0; i < nBytesToRead; i++) {
 			byte currByte = fileBuf[i];
-			m_pImgData[(imgDataPtr + i) * 3]     = m_aPalette[(int) currByte].b;
-			m_pImgData[(imgDataPtr + i) * 3 + 1] = m_aPalette[(int) currByte].g;
-			m_pImgData[(imgDataPtr + i) * 3 + 2] = m_aPalette[(int) currByte].r;
+			m_pImgData[(imgDataPtr + i) * SCREEN_BPP]     = m_aPalette[(int)currByte].b;
+			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 1] = m_aPalette[(int)currByte].g;
+			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 2] = m_aPalette[(int)currByte].r;
+#if TARGET_WIN
+			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 3] = 0;
+#endif
 		}
 
 		seekPtr += nBytesToRead;
@@ -157,8 +160,8 @@ void Image::loadFromFile(char* fileName) {
 }
 
 void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
-  int xb, yb;
-  unsigned int imgBufIdx, zoneSize;
+    int xb, yb;
+    unsigned int imgBufIdx, zoneSize;
 
   	if (masked) {
 		for (int i = 0; i < m_maskNbZone; i++) {
@@ -191,16 +194,24 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 			       zoneSize);*/
 
 			// ...Then current line copy
-			memcpy(buffer + ((y + yb) * 3) + ((x * SCREEN_HEIGHT * 3) + (xb * SCREEN_HEIGHT)),
+			memcpy(buffer + ((y + yb) * SCREEN_BPP) + ((x * SCREEN_HEIGHT * SCREEN_BPP) + (xb * SCREEN_HEIGHT)),
 			       m_pImgData + imgBufIdx,
 			       zoneSize);
 		}
 	}
 	else {
+#if TARGET_3DS
 		for (int i = 0; i < m_size.w; i++) {
-		    memcpy(buffer + (y * 3) + ((x + i) * SCREEN_HEIGHT * 3),
-		           m_pImgData + (((m_size.w - i - 1)) * (m_size.h * 3)),
-		           m_size.h * 3);
+			memcpy(buffer + (y * SCREEN_BPP) + ((x + i) * SCREEN_HEIGHT * SCREEN_BPP),
+				m_pImgData + (((m_size.w - i - 1)) * (m_size.h * SCREEN_BPP)),
+				m_size.h * SCREEN_BPP);
 		}
+#elif TARGET_WIN
+		for (int i = 0; i < m_size.h; i++) {
+			memcpy(buffer + (x * SCREEN_BPP) + ((y + i) * SCREEN_WIDTH * SCREEN_BPP),
+				m_pImgData + (((m_size.h - i - 1)) * (m_size.w * SCREEN_BPP)),
+				m_size.w * SCREEN_BPP);
+		}
+#endif
 	}
 }
