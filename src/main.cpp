@@ -21,11 +21,6 @@
 //#include "rtpmidi.hpp"
 
 
-#ifndef TARGET_3DS
-#define KEY_START 0x21212121
-#endif
-
-
 
 int test() {
 	printf("TESTETSTESTSE\n");
