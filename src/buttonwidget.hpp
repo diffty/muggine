@@ -7,7 +7,7 @@
 
 #include "common_types.hpp"
 #include "drawing.hpp"
-#include "widget.hpp"
+#include "iwidget.hpp"
 
 
 enum ButtonMode {

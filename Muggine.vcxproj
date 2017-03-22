@@ -84,6 +84,7 @@
     <ClCompile Include="src\rsc_manager.cpp" />
     <ClCompile Include="src\samplergridwidget.cpp" />
     <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\sprite.cpp" />
     <ClCompile Include="src\system.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +92,7 @@
     <ClInclude Include="src\common_types.hpp" />
     <ClInclude Include="src\drawing.hpp" />
     <ClInclude Include="src\graphics.hpp" />
+    <ClInclude Include="src\idrawable.hpp" />
     <ClInclude Include="src\image.hpp" />
     <ClInclude Include="src\input.hpp" />
     <ClInclude Include="src\keys.hpp" />
@@ -99,8 +101,9 @@
     <ClInclude Include="src\rsc_manager.hpp" />
     <ClInclude Include="src\samplergridwidget.hpp" />
     <ClInclude Include="src\scene.hpp" />
+    <ClInclude Include="src\sprite.hpp" />
     <ClInclude Include="src\system.hpp" />
-    <ClInclude Include="src\widget.hpp" />
+    <ClInclude Include="src\iwidget.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

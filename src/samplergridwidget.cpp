@@ -57,14 +57,14 @@ void SamplerGridWidget::update() {
 	m_nbPressedCellsCurrentLoop = 0;
 }
 
-void SamplerGridWidget::draw(uint8* fb) {
+void SamplerGridWidget::draw(uint8* buffer) {
 	int cellW = m_rect.getSize().w / m_nbCellX;
 	int cellH = m_rect.getSize().h / m_nbCellY;
 
 	for (int y = 0; y < m_nbCellY; y++) {
 		for (int x = 0; x < m_nbCellX; x++) {
 			if (m_aCellState[y * m_nbCellX + x] == 1) {
-				drawBox(fb,
+				drawBox(buffer,
 					x + cellW * x,
 					y + cellH * y,
 					x + cellW * (x + 1) - 2,
@@ -73,7 +73,7 @@ void SamplerGridWidget::draw(uint8* fb) {
 				);
 			}
 			else if (m_aCellState[y * m_nbCellX + x] == 2 || m_aCellState[y * m_nbCellX + x] == 4) {
-				drawBox(fb,
+				drawBox(buffer,
 					x + cellW * x,
 					y + cellH * y,
 					x + cellW * (x + 1) - 2,
@@ -82,7 +82,7 @@ void SamplerGridWidget::draw(uint8* fb) {
 				);
 			}
 			else {
-				drawBox(fb,
+				drawBox(buffer,
 					x + cellW * x,
 					y + cellH * y,
 					x + cellW * (x + 1) - 2,

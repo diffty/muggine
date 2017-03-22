@@ -10,7 +10,7 @@
 #endif
 
 #include "linked_list.hpp"
-#include "widget.hpp"
+#include "iwidget.hpp"
 
 
 class Scene {

@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include "common_types.hpp"
-#include "widget.hpp"
+#include "iwidget.hpp"
 #include "drawing.hpp"
 
 

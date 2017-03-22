@@ -162,6 +162,18 @@ void Image::loadFromFile(char* fileName) {
 void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
     int xb, yb;
     unsigned int imgBufIdx, zoneSize;
+	unsigned int overflowLeft = 0, overflowRight = 0, overflowTop = 0, overflowBottom = 0;
+
+	overflowLeft = max(0, -x);
+	overflowRight = max(0, (x + m_size.w) - SCREEN_WIDTH);
+	overflowTop = max(0, -y);
+	overflowBottom = max(0, (y + m_size.h) - SCREEN_HEIGHT);
+
+	printf("%d, %d, %d, %d\n", overflowLeft, overflowRight, overflowBottom, overflowTop);
+
+	if (overflowLeft > m_size.w || overflowRight > m_size.w || overflowTop > m_size.h || overflowBottom > m_size.h) {
+		return;
+	}
 
   	if (masked) {
 		for (int i = 0; i < m_maskNbZone; i++) {
@@ -207,10 +219,10 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 				m_size.h * SCREEN_BPP);
 		}
 #elif TARGET_WIN
-		for (int i = 0; i < m_size.h; i++) {
-			memcpy(buffer + (x * SCREEN_BPP) + ((y + i) * SCREEN_WIDTH * SCREEN_BPP),
-				m_pImgData + (((m_size.h - i - 1)) * (m_size.w * SCREEN_BPP)),
-				m_size.w * SCREEN_BPP);
+		for (int i = overflowTop; i < m_size.h - overflowBottom; i++) {
+			memcpy(buffer + (max(0, x) * SCREEN_BPP) + ((max(0, y) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
+				m_pImgData + ((m_size.h - i - 1) * (m_size.w * SCREEN_BPP)) + (overflowLeft * SCREEN_BPP),
+				(m_size.w - overflowLeft - overflowRight) * SCREEN_BPP);
 		}
 #endif
 	}

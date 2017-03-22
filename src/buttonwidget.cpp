@@ -48,9 +48,9 @@ void ButtonWidget::receiveTouchInput(vect2d_t touchPt) {
 	}
 }
 
-void ButtonWidget::draw(uint8* fb) {
+void ButtonWidget::draw(uint8* buffer) {
 	if (m_state == 1) {
-		drawBox(fb,
+		drawBox(buffer,
 			m_rect.getPos().x,
 			m_rect.getPos().y,
 			m_rect.getPos().x + m_rect.getSize().w,
@@ -59,7 +59,7 @@ void ButtonWidget::draw(uint8* fb) {
 		);
 	}
 	else if (m_state == 2 || m_state == 4){
-		drawBox(fb,
+		drawBox(buffer,
 			m_rect.getPos().x,
 			m_rect.getPos().y,
 			m_rect.getPos().x + m_rect.getSize().w,
@@ -68,7 +68,7 @@ void ButtonWidget::draw(uint8* fb) {
 		);
 	}
 	else {
-		drawBox(fb,
+		drawBox(buffer,
 			m_rect.getPos().x,
 			m_rect.getPos().y,
 			m_rect.getPos().x + m_rect.getSize().w,

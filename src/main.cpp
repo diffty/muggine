@@ -18,6 +18,7 @@
 #include "graphics.hpp"
 #include "input.hpp"
 #include "rsc_manager.hpp"
+#include "sprite.hpp"
 //#include "rtpmidi.hpp"
 
 
@@ -47,7 +48,7 @@ void MainApp(System* sys) {
 	RscManager rscManager;
 	rscManager.loadResource("D:/test.bmp");
 
-	scene.addComponent((IWidget*)&sg);
+	scene.addComponent((IWidget*) &sg);
 	scene.addComponent((IWidget*) &btn);
 	scene.addComponent((IWidget*) &btn2);
 
@@ -60,6 +61,10 @@ void MainApp(System* sys) {
 	printf("Press Start to exit.\n");
 
 	Image* img = rscManager.getImgResource(0);
+
+	Sprite spr(0, &rscManager); 
+
+	scene.addComponent((IWidget*) &spr);
 
 	// Main loop
 	while (sys->MainLoop())
@@ -78,16 +83,21 @@ void MainApp(System* sys) {
 			scene.receiveTouchInput(mouseEvt->position);
 		}
 
+		if (sys->GetInputSys()->IsKeyPressed(KEY_Z)) {
+			spr.translate(0, -1);
+		}
+		if (sys->GetInputSys()->IsKeyPressed(KEY_Q)) {
+			spr.translate(-1, 0);
+		}
+		if (sys->GetInputSys()->IsKeyPressed(KEY_S)) {
+			spr.translate(0, 1);
+		}
 		if (sys->GetInputSys()->IsKeyPressed(KEY_D)) {
-			printf("DIFFTY\n");
+			spr.translate(1, 0);
 		}
 
 		scene.update();
 		scene.draw(fb);
-
-		if (img) {
-			img->draw(fb, 10, 10, false, false);
-		}
 
 		// Flush and swap framebuffers
 		gfx.FlushBuffer();
