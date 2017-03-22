@@ -21,6 +21,12 @@
 #include "sprite.hpp"
 //#include "rtpmidi.hpp"
 
+#include "bko_grid.hpp"
+#include "bko_ball.hpp"
+#include "bko_paddle.hpp"
+
+#include <time.h>
+
 
 
 int test() {
@@ -29,30 +35,42 @@ int test() {
 }
 
 
+Uint32 getTime() {
+	return SDL_GetTicks();
+}
+
 void MainApp(System* sys) {
 	Graphics gfx(sys);
-
-	//RtpMidi::initService();	
-	//RtpMidi rtpObj;
-
 	gfx.Init();
 
-	// Building UI
+	RscManager rscManager;
+	rscManager.loadResource("D:/brick.bmp");
+	rscManager.loadResource("D:/ball.bmp");
+	rscManager.loadResource("D:/paddle.bmp");
+
+	// Building scene
 	Scene scene;
 
-	ButtonWidget btn(5, 211, 50, 25, 0, test);
-	ButtonWidget btn2(70, 211, 50, 25, 0, test);
+	// Creating components
+	Grid bkoGrid(0, 0, 10, 7, &rscManager);
+	Ball bkoBall(1, &rscManager);
+	Paddle bkoPaddle(2, &rscManager);
 
-	SamplerGridWidget sg(10, 10, 300, 200, 10, 8);
+	// Setting up
+	bkoPaddle.translate(180, 200, TRANSFORM_ABS);
+	bkoBall.translate(
+		bkoPaddle.getRect()->getPos().x + bkoPaddle.getRect()->getSize().w / 2,
+		bkoPaddle.getRect()->getPos().y - bkoPaddle.getRect()->getSize().h - 1,
+		TRANSFORM_ABS);
 
-	RscManager rscManager;
-	rscManager.loadResource("D:/test.bmp");
+	bkoBall.setVelocity(1, 1);
 
-	scene.addComponent((IWidget*) &sg);
-	scene.addComponent((IWidget*) &btn);
-	scene.addComponent((IWidget*) &btn2);
+	scene.addComponent(&bkoGrid);
+	scene.addComponent(&bkoBall);
+	scene.addComponent(&bkoPaddle);
 
-	// We don't need double buffering in this example. In this way we can draw our image only once on screen.
+	// We don't need double buffering in this example.
+	// In this way we can draw our image only once on screen.
 	gfx.SetDoubleBuffering(false);
 
 	// Get the bottom screen's frame buffer
@@ -60,17 +78,22 @@ void MainApp(System* sys) {
 
 	printf("Press Start to exit.\n");
 
-	Image* img = rscManager.getImgResource(0);
-
-	Sprite spr(0, &rscManager); 
-
-	scene.addComponent((IWidget*) &spr);
+	Uint32 deltaTime = 0;
+	Uint32 prevTime = getTime();
+	Uint32 newTime = prevTime;
 
 	// Main loop
 	while (sys->MainLoop())
 	{
+		
+		newTime = getTime();
+		deltaTime = newTime - prevTime;
+		prevTime = newTime;
+
 		// Scan all the inputs. This should be done once for each frame
 		//if (input.IsPressed(KEY_START)) break;
+
+		gfx.FillWithColor(0xFF);
 
 		vect2d_t touchPt;
 		if (sys->GetInputSys()->GetTouch(&touchPt)) {
@@ -84,16 +107,16 @@ void MainApp(System* sys) {
 		}
 
 		if (sys->GetInputSys()->IsKeyPressed(KEY_Z)) {
-			spr.translate(0, -1);
+			bkoPaddle.translate(0, -1 * deltaTime);
 		}
 		if (sys->GetInputSys()->IsKeyPressed(KEY_Q)) {
-			spr.translate(-1, 0);
+			bkoPaddle.translate(-1 * deltaTime, 0);
 		}
 		if (sys->GetInputSys()->IsKeyPressed(KEY_S)) {
-			spr.translate(0, 1);
+			bkoPaddle.translate(0, 1 * deltaTime);
 		}
 		if (sys->GetInputSys()->IsKeyPressed(KEY_D)) {
-			spr.translate(1, 0);
+			bkoPaddle.translate(1 * deltaTime, 0);
 		}
 
 		scene.update();

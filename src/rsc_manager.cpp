@@ -34,6 +34,7 @@ Image* RscManager::getImgResource(uint rscId) {
 
 	while (i < rscId) {
 		currNode = currNode->pNext;
+		i++;
 	}
 
 	return (Image*) currNode->pData;

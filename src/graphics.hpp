@@ -9,12 +9,14 @@
 
 #include "common_types.hpp"
 #include "system.hpp"
+#include "drawing.hpp"
 
 
 class Graphics {
 public:
 	Graphics(System* sys);
 	void Init();
+	void FillWithColor(uint8 colorHex);
 	void SetDoubleBuffering(bool isActive);
 	uint8* GetFramebuffer();
 	void FlushBuffer();

@@ -169,7 +169,7 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 	overflowTop = max(0, -y);
 	overflowBottom = max(0, (y + m_size.h) - SCREEN_HEIGHT);
 
-	printf("%d, %d, %d, %d\n", overflowLeft, overflowRight, overflowBottom, overflowTop);
+	// printf("%d, %d, %d, %d\n", overflowLeft, overflowRight, overflowBottom, overflowTop);
 
 	if (overflowLeft > m_size.w || overflowRight > m_size.w || overflowTop > m_size.h || overflowBottom > m_size.h) {
 		return;

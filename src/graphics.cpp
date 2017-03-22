@@ -15,6 +15,15 @@ void Graphics::Init() {
 #endif
 }
 
+void Graphics::FillWithColor(uint8 colorHex) {
+	uint8* fb = GetFramebuffer();
+
+	memset(fb,
+		colorHex,
+		SCREEN_BPP * SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint8)
+		);
+}
+
 void Graphics::SetDoubleBuffering(bool isActive) {
 #ifdef TARGET_3DS
 	gfxSetDoubleBuffering(GFX_BOTTOM, isActive);

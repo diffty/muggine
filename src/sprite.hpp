@@ -17,9 +17,12 @@ public:
 	void draw(uint8* buffer);
 	void translate(int x, int y, ETransformMode transformMode = TRANSFORM_REL);
 
+	void setActive(bool bIsActive);
+
 private:
 	uint m_rscId;
 	Image* m_image;
+	bool m_bIsActive = true;
 };
 
 #endif

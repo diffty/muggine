@@ -13,7 +13,15 @@ protected:
 public:
 	IWidget(int x, int y, int w, int h)
 		: IDrawable(),
-		  m_rect(x, y, w, h) {}
+		m_rect(x, y, w, h) {}
+
+	IWidget(int x, int y)
+		: IDrawable(),
+		m_rect(x, y, 0, 0) {}
+
+	IWidget()
+		: IDrawable(),
+		m_rect(0, 0, 0, 0) {}
 
 	Rect* getRect() { return &m_rect; }
 
