@@ -30,12 +30,15 @@ public:
 	void InitWindow();
 
 	Input* GetInputSys();
+	Uint32 getTime();
+	Uint32 getDeltaTime();
 
 #ifdef TARGET_WIN
 	SDL_Window* GetWindow();
 #endif
 
 	bool MainLoop();
+	void initLoop();
 	void Exit();
 
 private:
@@ -47,6 +50,9 @@ private:
 	SDL_Event m_event;
 #endif
 
+	Uint32 m_prevLoopTime;
+	Uint32 m_startLoopTime;
+	Uint32 m_deltaTime;
 };
 
 

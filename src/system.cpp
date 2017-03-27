@@ -3,7 +3,8 @@
 
 System::System() {
 	isMainLoopRunning = true;
-    
+	initLoop();
+
 #ifdef TARGET_WIN
 	m_window = NULL;
 #endif
@@ -52,7 +53,25 @@ void System::ConsoleInit() {
 	#endif
 }
 
+Uint32 System::getTime() {
+	return SDL_GetTicks();
+}
+
+Uint32 System::getDeltaTime() {
+	return m_deltaTime;
+}
+
+void System::initLoop() {
+	m_startLoopTime = getTime();
+	m_prevLoopTime = m_startLoopTime;
+	m_deltaTime = m_startLoopTime - m_prevLoopTime;
+}
+
 bool System::MainLoop() {
+	m_startLoopTime = getTime();
+	m_deltaTime = m_startLoopTime - m_prevLoopTime;
+	m_prevLoopTime = m_startLoopTime;
+
 #ifdef TARGET_3DS
 	return aptMainLoop();
 

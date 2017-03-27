@@ -26,7 +26,7 @@ public:
 	void init();
 	void update();
 	void draw(uint8* buffer);
-    bool checkBrickAtPos(vect2d_t pos, uint* collidingBrickId, uint* collisionBrickSide);
+    bool checkBrickAtPos(vect2d_t pos, uint* collidingBrickId);
     Brick* getBrickFromId(uint id);
 
 private:

@@ -35,10 +35,6 @@ int test() {
 }
 
 
-Uint32 getTime() {
-	return SDL_GetTicks();
-}
-
 void MainApp(System* sys) {
 	Graphics gfx(sys);
 	gfx.Init();
@@ -53,7 +49,7 @@ void MainApp(System* sys) {
 
 	// Creating components
 	Grid bkoGrid(0, 0, 12, 7, &rscManager);
-	Ball bkoBall(1, &rscManager);
+	Ball bkoBall(1, sys, &rscManager);
 	Paddle bkoPaddle(2, &rscManager);
 
 	// Setting up
@@ -63,7 +59,7 @@ void MainApp(System* sys) {
 		bkoPaddle.getRect()->getPos().y - bkoPaddle.getRect()->getSize().h - 1,
 		TRANSFORM_ABS);
 
-	bkoBall.setVelocity(1, 1);
+	bkoBall.setVelocity(1, -1);
 
 	scene.addComponent(&bkoGrid);
 	scene.addComponent(&bkoBall);
@@ -78,17 +74,14 @@ void MainApp(System* sys) {
 
 	printf("Press Start to exit.\n");
 
-	Uint32 deltaTime = 0;
-	Uint32 prevTime = getTime();
-	Uint32 newTime = prevTime;
+	sys->initLoop();
 
 	// Main loop
 	while (sys->MainLoop())
 	{
-		
-		newTime = getTime();
-		deltaTime = newTime - prevTime;
-		prevTime = newTime;
+		Uint32 deltaTime = sys->getDeltaTime();
+
+		if (deltaTime > 1) printf("%d\n", deltaTime);
 
 		// Scan all the inputs. This should be done once for each frame
 		//if (input.IsPressed(KEY_START)) break;
@@ -106,54 +99,68 @@ void MainApp(System* sys) {
 			scene.receiveTouchInput(mouseEvt->position);
 		}
 
-		if (sys->GetInputSys()->IsKeyPressed(KEY_Z)) {
-			bkoPaddle.translate(0, -1 * deltaTime);
-		}
 		if (sys->GetInputSys()->IsKeyPressed(KEY_Q)) {
 			bkoPaddle.translate(-1 * deltaTime, 0);
-		}
-		if (sys->GetInputSys()->IsKeyPressed(KEY_S)) {
-			bkoPaddle.translate(0, 1 * deltaTime);
 		}
 		if (sys->GetInputSys()->IsKeyPressed(KEY_D)) {
 			bkoPaddle.translate(1 * deltaTime, 0);
 		}
-        
-        vect2d_t ballPos = bkoBall.getRect()->getPos();
-        size2d_t ballSize = bkoBall.getRect()->getSize();
-        vect2d_t ballVel = bkoBall.getVelocity();
-        
-        if (ballPos.x < 0 || ballPos.x + ballSize.w > SCREEN_WIDTH)
-            ballVel.x = -ballVel.x;
 
-        if (ballPos.y < 0 || ballPos.y + ballSize.h > SCREEN_HEIGHT)
-            ballVel.y = -ballVel.y;
-        
-        bkoBall.setVelocity(ballVel);
-        
-        uint collidingBrickId;
-        uint collisionBrickSide;
-        
-        if (bkoGrid.checkBrickAtPos(bkoBall.getRect()->getPos(), &collidingBrickId, &collisionBrickSide)) {
-            printf("Colliding with %d\n", collidingBrickId);
+		vect2d_t ballPos = bkoBall.getRect()->getPos();
+		size2d_t ballSize = bkoBall.getRect()->getSize();
+		vect2d_t ballVel = bkoBall.getVelocity();
+		vect2d_t ballCenter = bkoBall.getCenterPos();
+
+		uint collidingBrickId;
+		uint collisionBrickSide;
+
+		vect2d_t nextBallPos;
+		nextBallPos.x = ballPos.x + ballVel.x;
+		nextBallPos.y = ballPos.y + ballVel.y;
+
+		vect2d_t nextBallCenterPos;
+		nextBallCenterPos.x = ballCenter.x + ballVel.x;
+		nextBallCenterPos.y = ballCenter.y + ballVel.y;
+
+		if (nextBallPos.x <= 0 || nextBallPos.x + ballSize.w >= SCREEN_WIDTH) {
+			ballVel.x = -ballVel.x;
+			printf("cacaX");
+		}
+
+		if (nextBallPos.y <= 0 || nextBallPos.y + ballSize.h >= SCREEN_HEIGHT) {
+			ballVel.y = -ballVel.y;
+			printf("cacaY");
+		}
+
+		//printf("%d, %d\n", ballPos.x, ballPos.y);
+
+		if (bkoGrid.checkBrickAtPos(nextBallCenterPos, &collidingBrickId)) {
+            //printf("Colliding with %d\n", collidingBrickId);
+
+			Brick* collidingBrick = bkoGrid.getBrickFromId(collidingBrickId);
+			collisionBrickSide = collidingBrick->getBallSideFromBrick(&bkoBall);
+
             switch (collisionBrickSide) {
-                case 0:
+                case 0:		// LEFT
                     ballVel.x = -ballVel.x;
                     break;
                     
-                case 1:
+                case 1:		// RIGHT
                     ballVel.x = -ballVel.x;
                     break;
 
-                case 2:
+                case 2:		// TOP
                     ballVel.y = -ballVel.y;
                     break;
                     
-                case 3:
+                case 3:		// BOTTOM
                     ballVel.y = -ballVel.y;
                     break;
             }
+
+			bkoBall.setVelocity(ballVel);
             bkoGrid.getBrickFromId(collidingBrickId)->setActive(false);
+
         }
         
 		scene.update();

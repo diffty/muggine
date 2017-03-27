@@ -40,18 +40,13 @@ void Grid::draw(uint8* buffer) {
 	}
 }
 
-bool Grid::checkBrickAtPos(vect2d_t pos, uint* collidingBrickId, uint* collisionBrickSide) {
+bool Grid::checkBrickAtPos(vect2d_t pos, uint* collidingBrickId) {
     for (int i = 0; i < m_nbBricks; i++) {
         Rect* currBrickRect = m_brickList[i]->getRect();
         
         if (m_brickList[i]->isActive() && currBrickRect->isPointInRect(pos.x, pos.y)) {
             *collidingBrickId = i;
 
-            vect2d_t brickPos = currBrickRect->getPos();
-            size2d_t brickSize = currBrickRect->getSize();
-
-            
-            
             return true;
         }
     }
