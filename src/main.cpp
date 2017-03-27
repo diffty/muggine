@@ -44,15 +44,15 @@ void MainApp(System* sys) {
 	gfx.Init();
 
 	RscManager rscManager;
-	rscManager.loadResource("D:/brick.bmp");
-	rscManager.loadResource("D:/ball.bmp");
-	rscManager.loadResource("D:/paddle.bmp");
+	rscManager.loadResource("data/brick.bmp");
+	rscManager.loadResource("data/ball.bmp");
+	rscManager.loadResource("data/paddle.bmp");
 
 	// Building scene
 	Scene scene;
 
 	// Creating components
-	Grid bkoGrid(0, 0, 10, 7, &rscManager);
+	Grid bkoGrid(0, 0, 12, 7, &rscManager);
 	Ball bkoBall(1, &rscManager);
 	Paddle bkoPaddle(2, &rscManager);
 
@@ -118,7 +118,44 @@ void MainApp(System* sys) {
 		if (sys->GetInputSys()->IsKeyPressed(KEY_D)) {
 			bkoPaddle.translate(1 * deltaTime, 0);
 		}
+        
+        vect2d_t ballPos = bkoBall.getRect()->getPos();
+        size2d_t ballSize = bkoBall.getRect()->getSize();
+        vect2d_t ballVel = bkoBall.getVelocity();
+        
+        if (ballPos.x < 0 || ballPos.x + ballSize.w > SCREEN_WIDTH)
+            ballVel.x = -ballVel.x;
 
+        if (ballPos.y < 0 || ballPos.y + ballSize.h > SCREEN_HEIGHT)
+            ballVel.y = -ballVel.y;
+        
+        bkoBall.setVelocity(ballVel);
+        
+        uint collidingBrickId;
+        uint collisionBrickSide;
+        
+        if (bkoGrid.checkBrickAtPos(bkoBall.getRect()->getPos(), &collidingBrickId, &collisionBrickSide)) {
+            printf("Colliding with %d\n", collidingBrickId);
+            switch (collisionBrickSide) {
+                case 0:
+                    ballVel.x = -ballVel.x;
+                    break;
+                    
+                case 1:
+                    ballVel.x = -ballVel.x;
+                    break;
+
+                case 2:
+                    ballVel.y = -ballVel.y;
+                    break;
+                    
+                case 3:
+                    ballVel.y = -ballVel.y;
+                    break;
+            }
+            bkoGrid.getBrickFromId(collidingBrickId)->setActive(false);
+        }
+        
 		scene.update();
 		scene.draw(fb);
 

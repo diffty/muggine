@@ -15,6 +15,8 @@ public:
 		m_pRscManager = pRscManager;
 		m_nbBricksW = nbBricksW;
 		m_nbBricksH = nbBricksH;
+            
+        m_nbBricks = m_nbBricksW * m_nbBricksH;
 
 		init();
 	};
@@ -24,6 +26,8 @@ public:
 	void init();
 	void update();
 	void draw(uint8* buffer);
+    bool checkBrickAtPos(vect2d_t pos, uint* collidingBrickId, uint* collisionBrickSide);
+    Brick* getBrickFromId(uint id);
 
 private:
 	// LinkedList m_brickList;
@@ -32,6 +36,7 @@ private:
 	RscManager* m_pRscManager;
 	uint m_nbBricksW;
 	uint m_nbBricksH;
+    uint m_nbBricks;
 };
 
 #endif

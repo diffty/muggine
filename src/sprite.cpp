@@ -10,8 +10,10 @@ Sprite::Sprite(uint rscId, RscManager* rscManager, int x, int y)
 }
 
 void Sprite::draw(uint8* buffer) {
-	vect2d_t pos = m_rect.getPos();
-	m_image->draw(buffer, pos.x, pos.y, false, false);
+    if (m_bIsActive) {
+        vect2d_t pos = m_rect.getPos();
+        m_image->draw(buffer, pos.x, pos.y, false, false);
+    }
 }
 
 void Sprite::translate(int x, int y, ETransformMode transformMode) {
@@ -29,4 +31,8 @@ void Sprite::translate(int x, int y, ETransformMode transformMode) {
 
 void Sprite::setActive(bool bIsActive) {
 	m_bIsActive = bIsActive;
+}
+
+bool Sprite::isActive() {
+    return m_bIsActive;
 }

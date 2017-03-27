@@ -18,6 +18,7 @@ public:
 	void translate(int x, int y, ETransformMode transformMode = TRANSFORM_REL);
 
 	void setActive(bool bIsActive);
+    bool isActive();
 
 private:
 	uint m_rscId;
