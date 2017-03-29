@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
+#include <unistd.h>
 
 #ifdef TARGET_3DS
 #include <3ds.h>
@@ -81,7 +82,7 @@ void MainApp(System* sys) {
 	{
 		Uint32 deltaTime = sys->getDeltaTime();
 
-		if (deltaTime > 1) printf("%d\n", deltaTime);
+		//if (deltaTime > 1) printf("%d\n", deltaTime);
 
 		// Scan all the inputs. This should be done once for each frame
 		//if (input.IsPressed(KEY_START)) break;
@@ -115,8 +116,8 @@ void MainApp(System* sys) {
 		uint collisionBrickSide;
 
 		vect2d_t nextBallPos;
-		nextBallPos.x = ballPos.x + ballVel.x;
-		nextBallPos.y = ballPos.y + ballVel.y;
+		nextBallPos.x = ballPos.x + ballVel.x * sys->getDeltaTime() * 0.2;
+		nextBallPos.y = ballPos.y + ballVel.y * sys->getDeltaTime() * 0.2;
 
 		vect2d_t nextBallCenterPos;
 		nextBallCenterPos.x = ballCenter.x + ballVel.x;
@@ -124,17 +125,19 @@ void MainApp(System* sys) {
 
 		if (nextBallPos.x <= 0 || nextBallPos.x + ballSize.w >= SCREEN_WIDTH) {
 			ballVel.x = -ballVel.x;
-			printf("cacaX");
+			printf("cacaX\n");
 		}
 
 		if (nextBallPos.y <= 0 || nextBallPos.y + ballSize.h >= SCREEN_HEIGHT) {
 			ballVel.y = -ballVel.y;
-			printf("cacaY");
+			printf("cacaY\n");
 		}
 
-		//printf("%d, %d\n", ballPos.x, ballPos.y);
+		printf("%ld, %ld : %ld, %ld\n", ballPos.x, ballPos.y, ballVel.x * sys->getDeltaTime(), ballVel.y * sys->getDeltaTime());
 
-		if (bkoGrid.checkBrickAtPos(nextBallCenterPos, &collidingBrickId)) {
+        if (bkoGrid.checkBrickBetweenPos(ballCenter, nextBallCenterPos, ballSize, &collidingBrickId))
+		//if (bkoGrid.checkBrickAtPos(nextBallCenterPos, &collidingBrickId))
+        {
             //printf("Colliding with %d\n", collidingBrickId);
 
 			Brick* collidingBrick = bkoGrid.getBrickFromId(collidingBrickId);
@@ -158,10 +161,10 @@ void MainApp(System* sys) {
                     break;
             }
 
-			bkoBall.setVelocity(ballVel);
             bkoGrid.getBrickFromId(collidingBrickId)->setActive(false);
-
         }
+        
+        bkoBall.setVelocity(ballVel);
         
 		scene.update();
 		scene.draw(fb);

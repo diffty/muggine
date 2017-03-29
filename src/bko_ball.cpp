@@ -5,9 +5,9 @@ void Ball::setVelocity(vect2d_t newVelocity) {
 	m_velocity = newVelocity;
 }
 
-void Ball::setVelocity(uint x, uint y) {
-	m_velocity.x = x;
-	m_velocity.y = y;
+void Ball::setVelocity(long x, long y) {
+	m_velocity.x = (long) x;
+	m_velocity.y = (long) y;
 }
 
 vect2d_t Ball::getVelocity() {
@@ -29,8 +29,9 @@ void Ball::update() {
 
 void Ball::move() {
 	Uint32 deltaTime = m_sys->getDeltaTime();
-	vect2d currPos = m_rect.getPos();
-	currPos.x += m_velocity.x * deltaTime;
-	currPos.y += m_velocity.y * deltaTime;
+	vect2d_t currPos = m_rect.getPos();
+	currPos.x += (long) (m_velocity.x * deltaTime * 0.2);
+	currPos.y += (long) (m_velocity.y * deltaTime * 0.2);
+    
 	m_rect.setPos(currPos.x, currPos.y);
 }

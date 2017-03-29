@@ -28,6 +28,7 @@ public:
 	void draw(uint8* buffer);
     bool checkBrickAtPos(vect2d_t pos, uint* collidingBrickId);
     Brick* getBrickFromId(uint id);
+    bool checkBrickBetweenPos(vect2d_t currBallCenter, vect2d_t nextBallCenter, size2d_t ballSize, uint* collidingBrickId);
 
 private:
 	// LinkedList m_brickList;

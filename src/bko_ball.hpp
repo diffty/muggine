@@ -17,7 +17,7 @@ public:
 	vect2d_t getVelocity();
 	vect2d_t getCenterPos();
 	void setVelocity(vect2d_t newVelocity);
-	void setVelocity(uint x, uint y);
+	void setVelocity(long x, long y);
 	void move();
 	void update();
 

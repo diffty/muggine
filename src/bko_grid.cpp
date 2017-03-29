@@ -24,8 +24,8 @@ void Grid::init() {
 	for (int i = 0; i < m_nbBricksW * m_nbBricksH; i++) {
 		m_brickList[i] = new Brick(0, m_pRscManager);
 		m_brickList[i]->translate(
-			(spriteSize.w + 2) * (i % m_nbBricksW),
-			(spriteSize.h + 2) * (i / m_nbBricksW),
+			(spriteSize.w) * (i % m_nbBricksW),
+			(spriteSize.h) * (i / m_nbBricksW),
 			TRANSFORM_ABS);
 	}
 }
@@ -55,4 +55,26 @@ bool Grid::checkBrickAtPos(vect2d_t pos, uint* collidingBrickId) {
 
 Brick* Grid::getBrickFromId(uint id) {
     return m_brickList[id];
+}
+
+bool Grid::checkBrickBetweenPos(vect2d_t currBallCenter, vect2d_t nextBallCenter, size2d_t ballSize, uint* collidingBrickId) {
+    vect2d_t deltaPos;
+    deltaPos.x = nextBallCenter.x - currBallCenter.x;
+    deltaPos.y = nextBallCenter.y - currBallCenter.y;
+    
+    double deltaDist = sqrt(deltaPos.x * deltaPos.x + deltaPos.y * deltaPos.y);
+    
+    for (int i = 0; i < (int) deltaDist; i++) {
+        vect2d_t currPos;
+        currPos.x = currBallCenter.x + (deltaPos.x / deltaDist) * i;
+        currPos.y = currBallCenter.y + (deltaPos.y / deltaDist) * i;
+        
+        printf("checking: %ld, %ld\n", currPos.x, currPos.y);
+        
+        if (checkBrickAtPos(currPos, collidingBrickId)) {
+            return true;
+        }
+    }
+    
+    return false;
 }
