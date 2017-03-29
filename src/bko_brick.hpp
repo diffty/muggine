@@ -2,7 +2,6 @@
 #define BKO_BRICK_HPP
 
 #include "sprite.hpp"
-#include "bko_ball.hpp"
 
 
 class Brick : public Sprite {
@@ -10,7 +9,7 @@ public:
 	Brick(uint rscId, RscManager* pRscManager)
 		: Sprite(rscId, pRscManager) { };
 
-	uint getBallSideFromBrick(Ball* ball);
+	//uint getBallSideFromBrick(Ball* ball);
 };
 
 #endif

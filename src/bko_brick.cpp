@@ -1,5 +1,7 @@
 #include "bko_brick.hpp"
 
+
+/*
 uint Brick::getBallSideFromBrick(Ball* ball) {
 	vect2d_t brickPos = m_rect.getPos();
 	size2d_t brickSize = m_rect.getSize();
@@ -20,3 +22,4 @@ uint Brick::getBallSideFromBrick(Ball* ball) {
 
 	return 0;
 }
+*/

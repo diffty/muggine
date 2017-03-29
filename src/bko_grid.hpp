@@ -2,9 +2,9 @@
 #define BKO_GRID_HPP
 
 #include "iwidget.hpp"
-#include "bko_brick.hpp"
 #include "linked_list.hpp"
 #include "rsc_manager.hpp"
+#include "bko_brick.hpp"
 
 
 class Grid : public IWidget {
@@ -28,7 +28,7 @@ public:
 	void draw(uint8* buffer);
     bool checkBrickAtPos(vect2d_t pos, uint* collidingBrickId);
     Brick* getBrickFromId(uint id);
-    bool checkBrickBetweenPos(vect2d_t currBallCenter, vect2d_t nextBallCenter, size2d_t ballSize, uint* collidingBrickId);
+	bool checkBrickBetweenPos(vect2d_t currBallCenter, vect2d_t nextBallCenter, size2d_t ballSize, uint* collidingBrickId, vect2d_t* collisionPoint);
 
 private:
 	// LinkedList m_brickList;

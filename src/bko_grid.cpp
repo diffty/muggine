@@ -57,24 +57,3 @@ Brick* Grid::getBrickFromId(uint id) {
     return m_brickList[id];
 }
 
-bool Grid::checkBrickBetweenPos(vect2d_t currBallCenter, vect2d_t nextBallCenter, size2d_t ballSize, uint* collidingBrickId) {
-    vect2d_t deltaPos;
-    deltaPos.x = nextBallCenter.x - currBallCenter.x;
-    deltaPos.y = nextBallCenter.y - currBallCenter.y;
-    
-    double deltaDist = sqrt(deltaPos.x * deltaPos.x + deltaPos.y * deltaPos.y);
-    
-    for (int i = 0; i < (int) deltaDist; i++) {
-        vect2d_t currPos;
-        currPos.x = currBallCenter.x + (deltaPos.x / deltaDist) * i;
-        currPos.y = currBallCenter.y + (deltaPos.y / deltaDist) * i;
-        
-        printf("checking: %ld, %ld\n", currPos.x, currPos.y);
-        
-        if (checkBrickAtPos(currPos, collidingBrickId)) {
-            return true;
-        }
-    }
-    
-    return false;
-}

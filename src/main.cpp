@@ -2,7 +2,10 @@
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
+
+#ifdef TARGET_OSX
 #include <unistd.h>
+#endif
 
 #ifdef TARGET_3DS
 #include <3ds.h>
@@ -28,6 +31,9 @@
 
 #include <time.h>
 
+#ifdef TARGET_WIN
+#include <windows.h>
+#endif
 
 
 int test() {
@@ -107,66 +113,90 @@ void MainApp(System* sys) {
 			bkoPaddle.translate(1 * deltaTime, 0);
 		}
 
-		vect2d_t ballPos = bkoBall.getRect()->getPos();
-		size2d_t ballSize = bkoBall.getRect()->getSize();
-		vect2d_t ballVel = bkoBall.getVelocity();
-		vect2d_t ballCenter = bkoBall.getCenterPos();
+		//if (sys->GetInputSys()->IsKeyPressed(KEY_A)) {
+			vect2d_t ballPos = bkoBall.getRect()->getPos();
+			size2d_t ballSize = bkoBall.getRect()->getSize();
+			vect2d_t ballVel = bkoBall.getVelocity();
+			vect2d_t ballCenter = bkoBall.getCenterPos();
 
-		uint collidingBrickId;
-		uint collisionBrickSide;
+			uint collidingBrickId;
+			int collisionBrickSide = -1;
 
-		vect2d_t nextBallPos;
-		nextBallPos.x = ballPos.x + ballVel.x * sys->getDeltaTime() * 0.2;
-		nextBallPos.y = ballPos.y + ballVel.y * sys->getDeltaTime() * 0.2;
+			vect2d_t ballVelVect;
+			ballVelVect.x = ballVel.x * (long)deltaTime;
+			ballVelVect.y = ballVel.y * (long)deltaTime;
 
-		vect2d_t nextBallCenterPos;
-		nextBallCenterPos.x = ballCenter.x + ballVel.x;
-		nextBallCenterPos.y = ballCenter.y + ballVel.y;
+			vect2d_t nextBallPos;
+			nextBallPos.x = ballPos.x + ballVelVect.x; // * sys->getDeltaTime() * 0.2;
+			nextBallPos.y = ballPos.y + ballVelVect.y; // * sys->getDeltaTime() * 0.2;
 
-		if (nextBallPos.x <= 0 || nextBallPos.x + ballSize.w >= SCREEN_WIDTH) {
-			ballVel.x = -ballVel.x;
-			printf("cacaX\n");
-		}
+			vect2d_t nextBallCenterPos;
+			nextBallCenterPos.x = ballCenter.x + ballVelVect.x;
+			nextBallCenterPos.y = ballCenter.y + ballVelVect.y;
 
-		if (nextBallPos.y <= 0 || nextBallPos.y + ballSize.h >= SCREEN_HEIGHT) {
-			ballVel.y = -ballVel.y;
-			printf("cacaY\n");
-		}
+			vect2d_t collisionPoint;
+			int collisionType = -1;
 
-		printf("%ld, %ld : %ld, %ld\n", ballPos.x, ballPos.y, ballVel.x * sys->getDeltaTime(), ballVel.y * sys->getDeltaTime());
+			if (bkoBall.checkCollisionBetweenPos(&bkoGrid, ballCenter, nextBallCenterPos, &collidingBrickId, &collisionPoint, &collisionType))
+			{
+				//printf("Colliding with %d\n", collidingBrickId);
 
-        if (bkoGrid.checkBrickBetweenPos(ballCenter, nextBallCenterPos, ballSize, &collidingBrickId))
-		//if (bkoGrid.checkBrickAtPos(nextBallCenterPos, &collidingBrickId))
-        {
-            //printf("Colliding with %d\n", collidingBrickId);
+				if (collisionType == 1) {
+					//printf("Colliding on %ld, %ld / Setting to %ld, %ld\n", collisionPoint.x, collisionPoint.y, collisionPoint.x - (ballVel.x / abs(ballVel.x)), collisionPoint.y - (ballVel.y / abs(ballVel.y)));
+					bkoBall.getRect()->setPos(collisionPoint.x - ballVel.x, collisionPoint.y - ballVel.y);
+					
+					ballVel.x = -ballVel.x;
+				}
+				else if (collisionType == 2) {
+					bkoBall.getRect()->setPos(collisionPoint.x - ballVel.x, collisionPoint.y - ballVel.y);
+					ballVel.y = -ballVel.y;
+				}
+				else if (collisionType == 0) {
+					Brick* collidingBrick = bkoGrid.getBrickFromId(collidingBrickId);
+					/*collisionBrickSide = collidingBrick->getBallSideFromBrick(&bkoBall);*/
 
-			Brick* collidingBrick = bkoGrid.getBrickFromId(collidingBrickId);
-			collisionBrickSide = collidingBrick->getBallSideFromBrick(&bkoBall);
+					vect2d_t brickPos = collidingBrick->getRect()->getPos();
+					size2d_t brickSize = collidingBrick->getRect()->getSize();
 
-            switch (collisionBrickSide) {
-                case 0:		// LEFT
-                    ballVel.x = -ballVel.x;
-                    break;
-                    
-                case 1:		// RIGHT
-                    ballVel.x = -ballVel.x;
-                    break;
+					//printf("Collision point: %ld, %ld / %ld, %ld\n", collisionPoint.x, collisionPoint.y, collidingBrick.x + collidingBrick.getRext.w, ballPos.y + ballSize.h);
+					if (collisionPoint.y == brickPos.y || collisionPoint.y == brickPos.y + brickSize.h) {
+						collisionBrickSide = 1;
+					}
+					if (collisionPoint.x == brickPos.x || collisionPoint.x == brickPos.x + brickSize.w) {
+						collisionBrickSide = 0;
+					}
 
-                case 2:		// TOP
-                    ballVel.y = -ballVel.y;
-                    break;
-                    
-                case 3:		// BOTTOM
-                    ballVel.y = -ballVel.y;
-                    break;
-            }
+					bkoBall.getRect()->setPos(collisionPoint.x - ballVel.x, collisionPoint.y - ballVel.y);
 
-            bkoGrid.getBrickFromId(collidingBrickId)->setActive(false);
-        }
-        
-        bkoBall.setVelocity(ballVel);
-        
-		scene.update();
+					switch (collisionBrickSide) {
+					case 0:		// LEFT
+						ballVel.x = -ballVel.x;
+						break;
+
+					case 1:		// TOP
+						ballVel.y = -ballVel.y;
+						break;
+					}
+
+					bkoGrid.getBrickFromId(collidingBrickId)->setActive(false);
+				}
+
+				ballVelVect.x = ballVel.x * (long) deltaTime;
+				ballVelVect.y = ballVel.y * (long) deltaTime;
+			}
+
+			ballPos.x += ballVelVect.x;
+			ballPos.y += ballVelVect.y;
+
+			//printf("%ld, %ld : %ld, %ld\n", ballPos.x, ballPos.y, ballVel.x /* * sys->getDeltaTime() */, ballVel.y /* * sys->getDeltaTime() */);
+
+			bkoBall.getRect()->setPos(ballPos.x, ballPos.y);
+
+			bkoBall.setVelocity(ballVel);
+
+			scene.update();
+		//}
+
 		scene.draw(fb);
 
 		// Flush and swap framebuffers
