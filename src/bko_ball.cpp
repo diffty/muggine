@@ -46,6 +46,8 @@ bool Ball::checkCollisionBetweenPos(Grid* pGrid, vect2d_t currBallCenter, vect2d
 
 	double deltaDist = sqrt(deltaPos.x * deltaPos.x + deltaPos.y * deltaPos.y);
 
+	//printf("start check (%d, %d)->(%d, %d)\n", currBallCenter.x, currBallCenter.y, nextBallCenter.x, nextBallCenter.y);
+
 	for (int i = 0; i < (int)deltaDist; i++) {
 		pCollisionPoint->x = currBallCenter.x + (long) (((double)deltaPos.x / deltaDist) * (double)i);
 		pCollisionPoint->y = currBallCenter.y + (long) (((double)deltaPos.y / deltaDist) * (double)i);
@@ -62,6 +64,11 @@ bool Ball::checkCollisionBetweenPos(Grid* pGrid, vect2d_t currBallCenter, vect2d
 		}
 		else if (pCollisionPoint->y <= 0 || pCollisionPoint->y >= SCREEN_HEIGHT - 1) {
 			*pCollisionType = 2;
+			return true;
+		}
+		else if (pCollisionPoint->x <= 0 || pCollisionPoint->x >= SCREEN_WIDTH - 1
+				&& pCollisionPoint->y <= 0 || pCollisionPoint->y >= SCREEN_HEIGHT - 1) {
+			*pCollisionType = 3;
 			return true;
 		}
 	}
