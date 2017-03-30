@@ -57,6 +57,7 @@ public:
 	uint32 GetInput();
 	bool IsPressed(uint32 key);
 	bool IsKeyPressed(EKey key);
+	bool IsJoyBtnPressed(EJoy joyBtn);
 	bool IsButtonPressed(EMouseButton btn);
 	MouseEvent* GetButtonPressEvent(EMouseButton btn);
 	bool GetTouch(vect2d_t* touch);

@@ -47,6 +47,14 @@ bool Input::IsKeyPressed(EKey key) {
 	return false;
 }
 
+bool Input::IsJoyBtnPressed(EJoy joyBtn) {
+#ifdef TARGET_3DS
+	return hidKeysDown() & (convertMuggineKeyTo3DS(joyBtn));
+#else
+	return false;
+#endif
+}
+
 bool Input::IsButtonPressed(EMouseButton btn) {
 	LLNode* currNode = currMouseList.pHead;
 	MouseEvent* currMouseBtn;

@@ -32,11 +32,6 @@
 #endif
 
 
-int test() {
-	printf("TESTETSTESTSE\n");
-	return 0;
-}
-
 
 void MainApp(System* sys) {
 	Graphics gfx(sys);
@@ -72,8 +67,6 @@ void MainApp(System* sys) {
 	// Get the bottom screen's frame buffer
 	uint8* fb = gfx.GetFramebuffer();
 
-	printf("Press Start to exit.\n");
-
 	sys->initLoop();
 
 	int timeBeforeBallMove = 0;
@@ -82,7 +75,7 @@ void MainApp(System* sys) {
 	// Main loop
 	while (sys->MainLoop())
 	{
-		Uint32 deltaTime = sys->getDeltaTime();
+		uint32 deltaTime = sys->getDeltaTime();
 
 		// Scan all the inputs. This should be done once for each frame
 		//if (input.IsPressed(KEY_START)) break;
@@ -103,7 +96,7 @@ void MainApp(System* sys) {
 		if (sys->GetInputSys()->IsKeyPressed(KEY_Q)) {
 			bkoPaddle.translate(-1 * deltaTime, 0);
 		}
-		if (sys->GetInputSys()->IsKeyPressed(KEY_D)) {
+		else if (sys->GetInputSys()->IsKeyPressed(KEY_D)) {
 			bkoPaddle.translate(1 * deltaTime, 0);
 		}
 

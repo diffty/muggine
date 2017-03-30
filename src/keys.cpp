@@ -1,6 +1,8 @@
 #include "keys.hpp"
 
 
+
+#ifdef TARGET_SDL
 void initKeyConvArray() {
     keyConvTab[SDLK_UNKNOWN] = KEY_UNKNOWN;
 
@@ -77,5 +79,18 @@ void initKeyConvArray() {
 }
 
 EKey convertSDLToMuggineKey(SDL_Keycode keyCode) {
-    return keyConvTab[keyCode];
+	return keyConvTab[keyCode];
 }
+
+#elif TARGET_3DS
+void initReverseJoyBtnConvArray() {
+	reverseJoyBtnConvTab[KEY_A] = JOY_BTN_1;
+	reverseJoyBtnConvTab[KEY_B] = JOY_BTN_2;
+	reverseJoyBtnConvTab[KEY_X] = JOY_BTN_3;
+	reverseJoyBtnConvTab[KEY_Y] = JOY_BTN_4;
+}
+
+uint32 convertMuggineKeyTo3DS(EJoy joyKey) {
+	return reverseJoyBtnConvTab[joyKey];
+}
+#endif

@@ -53,11 +53,11 @@ void System::ConsoleInit() {
 	#endif
 }
 
-Uint32 System::getTime() {
+uint32 System::getTime() {
 	return SDL_GetTicks();
 }
 
-Uint32 System::getDeltaTime() {
+uint32 System::getDeltaTime() {
 	return m_deltaTime;
 }
 

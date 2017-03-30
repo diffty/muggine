@@ -131,9 +131,28 @@ enum EKey {
     KEY_KP_PERIOD,
 };
 
+enum EJoy {
+	JOY_BTN_1,
+	JOY_BTN_2,
+	JOY_BTN_3,
+	JOY_BTN_4,
+	JOY_DPAD_LEFT,
+	JOY_DPAD_RIGHT,
+	JOY_DPAD_TOP,
+	JOY_DPAD_BOTTOM
+};
+
+#ifdef TARGET_SDL
 static EKey keyConvTab[256];
 void initKeyConvArray();
 EKey convertSDLToMuggineKey(SDL_Keycode keyCode);
+
+#elif
+static EKey reverseJoyBtnConvTab[256];
+void initReverseJoyBtnConvArray();
+uint32 convertMuggineKeyTo3DS(EJoy);
+
+#endif
 
 #endif
 
