@@ -2,7 +2,7 @@
 
 
 Input::Input() {
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
     initKeyConvArray();
 #endif
 	initList(&currEventsList);
@@ -14,7 +14,7 @@ void Input::ScanInput() {
 #ifdef TARGET_3DS
 	hidScanInput();
 
-#elif TARGET_WIN
+#elif TARGET_SDL
 	
 #endif
 }

@@ -10,7 +10,7 @@
 #define KEYS_HPP
 
 
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
 
 #include <SDL2/SDL.h>
 

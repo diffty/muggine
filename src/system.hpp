@@ -5,7 +5,7 @@
 #include <3ds.h>
 #endif
 
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
 //#include <windows.h>
 #include <cstdio>
 #include <SDL2/SDL.h>
@@ -18,7 +18,7 @@
 
 #ifdef TARGET_3DS
 #define SCREEN_BPP		3
-#elif TARGET_WIN
+#elif TARGET_SDL
 #define SCREEN_BPP		4
 #endif
 
@@ -33,7 +33,7 @@ public:
 	Uint32 getTime();
 	Uint32 getDeltaTime();
 
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
 	SDL_Window* GetWindow();
 #endif
 
@@ -45,7 +45,7 @@ private:
 	bool isMainLoopRunning;
 	Input m_inputSys;
 
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
 	SDL_Window* m_window;
 	SDL_Event m_event;
 #endif

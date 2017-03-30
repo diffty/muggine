@@ -3,13 +3,9 @@
 #include <cstring>
 #include <cmath>
 
-#ifdef TARGET_OSX
-#include <unistd.h>
-#endif
-
 #ifdef TARGET_3DS
 #include <3ds.h>
-#elif TARGET_WIN
+#elif TARGET_SDL
 #include <SDL2/SDL.h>
 #endif
 
@@ -220,7 +216,7 @@ int main(int argc, char **argv)
 	// Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
 	sys.ConsoleInit();
 
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
     sys.InitWindow();
 #endif
 

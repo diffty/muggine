@@ -9,7 +9,7 @@ void Graphics::Init() {
 #ifdef TARGET_3DS
 	gfxInitDefault();
 
-#elif TARGET_WIN
+#elif TARGET_SDL
 	m_sdlScreenSurface = SDL_GetWindowSurface(m_sys->GetWindow());
 
 #endif
@@ -52,7 +52,7 @@ void Graphics::SwapBuffer() {
 #ifdef TARGET_3DS
 	gfxSwapBuffers();
 
-#elif TARGET_WIN
+#elif TARGET_SDL
 	//SDL_FillRect(m_sdlScreenSurface, NULL, SDL_MapRGB(m_sdlScreenSurface->format, 0xFF, 0xFF, 0xFF));
 	SDL_UpdateWindowSurface(m_sys->GetWindow());
 
@@ -70,7 +70,7 @@ void Graphics::Exit() {
 #ifdef TARGET_3DS
 	gfxExit();
 
-#elif TARGET_WIN
+#elif TARGET_SDL
 	SDL_FreeSurface(m_sdlScreenSurface);
 
 #endif

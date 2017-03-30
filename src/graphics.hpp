@@ -3,7 +3,7 @@
 
 #ifdef TARGET_3DS
 #include <3ds.h>
-#elif TARGET_WIN
+#elif TARGET_SDL
 #include <SDL2/SDL.h>
 #endif
 
@@ -25,7 +25,7 @@ public:
 	void Exit();
 
 private:
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
 	SDL_Surface* m_sdlScreenSurface;
 	uint8* m_frameBuffer;
 #endif

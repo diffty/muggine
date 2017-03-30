@@ -106,7 +106,7 @@ void Image::loadFromFile(char* fileName) {
 			m_pImgData[(imgDataPtr + i) * SCREEN_BPP]     = m_aPalette[(int)currByte].b;
 			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 1] = m_aPalette[(int)currByte].g;
 			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 2] = m_aPalette[(int)currByte].r;
-#if TARGET_WIN
+#if TARGET_SDL
 			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 3] = 0;
 #endif
 		}
@@ -218,7 +218,7 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 				m_pImgData + (((m_size.w - i - 1)) * (m_size.h * SCREEN_BPP)),
 				m_size.h * SCREEN_BPP);
 		}
-#elif TARGET_WIN
+#elif TARGET_SDL
 		for (int i = overflowTop; i < m_size.h - overflowBottom; i++) {
 			memcpy(buffer + (max(0, x) * SCREEN_BPP) + ((max(0, y) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
 				m_pImgData + ((m_size.h - i - 1) * (m_size.w * SCREEN_BPP)) + (overflowLeft * SCREEN_BPP),

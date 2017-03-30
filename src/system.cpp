@@ -5,13 +5,13 @@ System::System() {
 	isMainLoopRunning = true;
 	initLoop();
 
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
 	m_window = NULL;
 #endif
 }
 
 void System::InitWindow() {
-	#ifdef TARGET_WIN
+#ifdef TARGET_SDL
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -32,7 +32,7 @@ void System::InitWindow() {
 	#endif
 }
 
-#ifdef TARGET_WIN
+#ifdef TARGET_SDL
 SDL_Window* System::GetWindow() {
 	return m_window;
 }
@@ -43,7 +43,7 @@ void System::ConsoleInit() {
 	
 	consoleInit(GFX_TOP, NULL);
 	
-	#elif TARGET_WIN
+#elif TARGET_SDL
 
 	/*AllocConsole();
 	freopen("CONIN$", "r", stdin);
@@ -75,7 +75,7 @@ bool System::MainLoop() {
 #ifdef TARGET_3DS
 	return aptMainLoop();
 
-#elif TARGET_WIN
+#elif TARGET_SDL
 	m_inputSys.ScanInput();
 
 	while (SDL_PollEvent(&m_event) != 0) {

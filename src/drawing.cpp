@@ -5,7 +5,7 @@
 
 #ifdef TARGET_3DS
 #define SCREEN_BPP		3
-#elif TARGET_WIN
+#elif TARGET_SDL
 #define SCREEN_BPP		4
 #endif
 
@@ -36,7 +36,7 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 		);
 	}
 
-#elif TARGET_WIN
+#elif TARGET_SDL
 	int boxWidth = fabs((float) (toX - fromX));
 
 	uint8* oneColorCol = new uint8[SCREEN_BPP * boxWidth];

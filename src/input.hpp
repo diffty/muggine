@@ -5,7 +5,7 @@
 #ifdef TARGET_3DS
 #include <3ds.h>
 
-#elif TARGET_WIN
+#elif TARGET_SDL
 #include <SDL2/SDL.h>
 
 #else
