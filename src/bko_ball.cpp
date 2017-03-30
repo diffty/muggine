@@ -36,7 +36,7 @@ void Ball::move() {
 	m_rect.setPos(currPos.x, currPos.y);
 }
 
-bool Ball::checkCollisionBetweenPos(Grid* pGrid, vect2d_t currBallCenter, vect2d_t nextBallCenter, uint* pCollidingBrickId, vect2d_t* pCollisionPoint, int* pCollisionType) {
+bool Ball::checkCollisionBetweenPos(Grid* pGrid, Paddle* pPaddle, vect2d_t currBallCenter, vect2d_t nextBallCenter, uint* pCollidingBrickId, vect2d_t* pCollisionPoint, int* pCollisionType) {
 	vect2d_t deltaPos;
 	deltaPos.x = nextBallCenter.x - currBallCenter.x;
 	deltaPos.y = nextBallCenter.y - currBallCenter.y;
@@ -69,6 +69,10 @@ bool Ball::checkCollisionBetweenPos(Grid* pGrid, vect2d_t currBallCenter, vect2d
 		else if (pCollisionPoint->x <= 0 || pCollisionPoint->x >= SCREEN_WIDTH - 1
 				&& pCollisionPoint->y <= 0 || pCollisionPoint->y >= SCREEN_HEIGHT - 1) {
 			*pCollisionType = 3;
+			return true;
+		}
+		else if (pPaddle->getRect()->isPointInRect(pCollisionPoint->x, pCollisionPoint->y)) {
+			*pCollisionType = 4;
 			return true;
 		}
 	}

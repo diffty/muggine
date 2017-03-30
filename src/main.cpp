@@ -132,7 +132,7 @@ void MainApp(System* sys) {
 		vect2d_t collisionPoint;
 		int collisionType = -1;
 
-		if (bkoBall.checkCollisionBetweenPos(&bkoGrid, ballCenter, nextBallCenterPos, &collidingBrickId, &collisionPoint, &collisionType))
+		if (bkoBall.checkCollisionBetweenPos(&bkoGrid, &bkoPaddle, ballCenter, nextBallCenterPos, &collidingBrickId, &collisionPoint, &collisionType))
 		{
 			//printf("Colliding with %d\n", collidingBrickId);
 
@@ -152,9 +152,12 @@ void MainApp(System* sys) {
 				ballVel.x = -ballVel.x;
 				ballVel.y = -ballVel.y;
 			}
+			else if (collisionType == 4) {
+				//printf("Colliding on Y %ld, %ld\n", collisionPoint.x, collisionPoint.y);
+				ballVel.y = -ballVel.y;
+			}
 			else if (collisionType == 0) {
 				Brick* collidingBrick = bkoGrid.getBrickFromId(collidingBrickId);
-				/*collisionBrickSide = collidingBrick->getBallSideFromBrick(&bkoBall);*/
 
 				vect2d_t brickPos = collidingBrick->getRect()->getPos();
 				size2d_t brickSize = collidingBrick->getRect()->getSize();
@@ -192,7 +195,6 @@ void MainApp(System* sys) {
 		bkoBall.setVelocity(ballVel);
 
 		scene.update();
-
 		scene.draw(fb);
 
 		// Flush and swap framebuffers
