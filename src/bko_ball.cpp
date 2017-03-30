@@ -21,6 +21,17 @@ vect2d_t Ball::getCenterPos() {
 	return centerPos;
 }
 
+void Ball::reinit(Paddle* pPaddle) {
+	translate(
+		pPaddle->getRect()->getPos().x + pPaddle->getRect()->getSize().w / 2,
+		pPaddle->getRect()->getPos().y - pPaddle->getRect()->getSize().h - 1,
+		TRANSFORM_ABS);
+	
+	m_bIsMoving = false;
+	m_bIsDead = false;
+	m_bIsStickToPaddle = true;
+}
+
 void Ball::update() {
 	if (m_bIsMoving) {
 		// move();
@@ -46,13 +57,9 @@ bool Ball::checkCollisionBetweenPos(Grid* pGrid, Paddle* pPaddle, vect2d_t currB
 
 	double deltaDist = sqrt(deltaPos.x * deltaPos.x + deltaPos.y * deltaPos.y);
 
-	//printf("start check (%d, %d)->(%d, %d)\n", currBallCenter.x, currBallCenter.y, nextBallCenter.x, nextBallCenter.y);
-
 	for (int i = 0; i < (int)deltaDist; i++) {
 		pCollisionPoint->x = currBallCenter.x + (long) (((double)deltaPos.x / deltaDist) * (double)i);
 		pCollisionPoint->y = currBallCenter.y + (long) (((double)deltaPos.y / deltaDist) * (double)i);
-
-		//printf("checking: %ld, %ld\n", pCollisionPoint->x, pCollisionPoint->y);
 
 		if (pGrid->checkBrickAtPos(*pCollisionPoint, pCollidingBrickId)) {
 			*pCollisionType = 0;
