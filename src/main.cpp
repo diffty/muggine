@@ -46,7 +46,7 @@ void MainApp(System* sys) {
 	Scene scene;
 
 	// Creating components
-	Grid bkoGrid(0, 0, 12, 7, &rscManager);
+	Grid bkoGrid(0, 0, 13, 7, &rscManager);
 	Ball bkoBall(1, sys, &rscManager);
 	Paddle bkoPaddle(2, &rscManager);
 
@@ -70,7 +70,7 @@ void MainApp(System* sys) {
 	sys->initLoop();
 
 	int timeBeforeBallMove = 0;
-	int moveBallEveryTime = 20;
+	int moveBallEveryTime = 8;
 
 	// Main loop
 	while (sys->MainLoop())
