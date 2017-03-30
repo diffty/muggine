@@ -1,3 +1,3 @@
-3DS MIDI Pad - a DIY 3DS MIDI controller 
+MuGGine -- A multi-generation multi-platform game engine
 =======
 
