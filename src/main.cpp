@@ -93,10 +93,10 @@ void MainApp(System* sys) {
 			scene.receiveTouchInput(mouseEvt->position);
 		}
 
-		if (sys->GetInputSys()->IsKeyPressed(KEY_Q)) {
+		if (sys->GetInputSys()->IsKeyPressed(KEYB_Q)) {
 			bkoPaddle.translate(-1 * deltaTime, 0);
 		}
-		else if (sys->GetInputSys()->IsKeyPressed(KEY_D)) {
+		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D)) {
 			bkoPaddle.translate(1 * deltaTime, 0);
 		}
 
@@ -195,12 +195,12 @@ void MainApp(System* sys) {
 		if (bkoBall.isMoving())
 			timeBeforeBallMove -= deltaTime;
 
-		if (bkoBall.isDead() && (sys->GetInputSys()->IsKeyPressed(KEY_Q) || sys->GetInputSys()->IsKeyPressed(KEY_D))) {
+		if (bkoBall.isDead() && (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsKeyPressed(KEYB_D))) {
 			bkoBall.reinit(&bkoPaddle);
 		}
 
 		if (bkoBall.isStickToPaddle()) {
-			if (sys->GetInputSys()->IsKeyPressed(KEY_Z)) {
+			if (sys->GetInputSys()->IsKeyPressed(KEYB_Z)) {
 				bkoBall.setIsStickToPaddle(false);
 				bkoBall.setIsMoving(true);
 			}
