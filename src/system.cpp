@@ -54,7 +54,11 @@ void System::ConsoleInit() {
 }
 
 uint32 System::getTime() {
+#ifdef TARGET_SDL
 	return SDL_GetTicks();
+#elif TARGET_3DS
+    return (uint32) osGetTime();
+#endif
 }
 
 uint32 System::getDeltaTime() {
@@ -107,9 +111,10 @@ bool System::MainLoop() {
 }
 
 void System::Exit() {
+#ifdef TARGET_SDL
 	SDL_DestroyWindow(m_window);
-
 	SDL_Quit();
+#endif
 }
 
 Input* System::GetInputSys() {

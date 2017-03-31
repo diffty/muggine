@@ -9,10 +9,15 @@
 #ifndef KEYS_HPP
 #define KEYS_HPP
 
+#include "common_types.hpp"
 
 #ifdef TARGET_SDL
 
 #include <SDL2/SDL.h>
+
+#elif TARGET_3DS
+
+#include <3ds.h>
 
 #endif
 
@@ -150,7 +155,7 @@ void initKeyConvArray();
 EKey convertSDLToMuggineKey(SDL_Keycode keyCode);
 
 #elif TARGET_3DS
-static EJoy reverseJoyBtnConvTab[256];
+static uint8 reverseJoyBtnConvTab[256];
 void initReverseJoyBtnConvArray();
 uint32 convertMuggineKeyTo3DS(EJoy);
 
