@@ -12,10 +12,10 @@ Input::Input() {
 	initList(&currMouseList);
 }
 
-bool Input::IsPressed(uint32 key) {
+/*bool Input::IsPressed(uint32 key) {
 	uint32 kDown = GetInput();
 	return (kDown & key);
-}
+}*/
 
 bool Input::IsKeyPressed(EKey key) {
 	LLNode* currNode = currInputList.pHead;
@@ -186,7 +186,7 @@ void Input::RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseB
 	}
 
 	if (eventType == SDL_MOUSEBUTTONDOWN) {
-		if (IsPressed(mouseEvt->btn)) {
+		if (IsButtonPressed(mouseEvt->btn)) {
 			delete mouseEvt;
 		}
 		else {

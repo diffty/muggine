@@ -5,6 +5,7 @@
 #include "system.hpp"
 #include "bko_grid.hpp"
 #include "bko_paddle.hpp"
+#include <cmath>
 
 
 class Ball : public Sprite {

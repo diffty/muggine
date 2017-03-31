@@ -54,7 +54,7 @@ class Input {
 public:
 	Input();
 	void ScanInput();
-	uint32 GetInput();
+	//uint32 GetInput();
 	bool IsPressed(uint32 key);
 	bool IsKeyPressed(EKey key);
 	bool IsJoyBtnPressed(EJoy joyBtn);
