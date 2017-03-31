@@ -39,7 +39,7 @@ void Ball::update() {
 }
 
 void Ball::move() {
-	Uint32 deltaTime = m_sys->getDeltaTime();
+	uint32 deltaTime = m_sys->getDeltaTime();
 	vect2d_t currPos = m_rect.getPos();
 	currPos.x += (long) (m_velocity.x /* * deltaTime */ * 1);
 	currPos.y += (long) (m_velocity.y /* * deltaTime */ * 1);

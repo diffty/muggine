@@ -14,6 +14,8 @@
 
 #include <SDL2/SDL.h>
 
+#endif
+
 
 enum EKey {
     KEY_UNKNOWN,
@@ -148,11 +150,9 @@ void initKeyConvArray();
 EKey convertSDLToMuggineKey(SDL_Keycode keyCode);
 
 #elif
-static EKey reverseJoyBtnConvTab[256];
+static EJoy reverseJoyBtnConvTab[256];
 void initReverseJoyBtnConvArray();
 uint32 convertMuggineKeyTo3DS(EJoy);
-
-#endif
 
 #endif
 

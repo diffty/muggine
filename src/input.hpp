@@ -61,8 +61,8 @@ public:
 	bool IsButtonPressed(EMouseButton btn);
 	MouseEvent* GetButtonPressEvent(EMouseButton btn);
 	bool GetTouch(vect2d_t* touch);
-	void RegisterKeyEvent(Uint32 eventType, SDL_Keysym key);
-	void RegisterMouseEvent(Uint32 eventType, vect2d_t mousePos, Uint8 mouseBtn);
+	void RegisterKeyEvent(uint32 eventType, SDL_Keysym key);
+	void RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseBtn);
 	void ProcessEvent(InputEvent* event);
 	void FlushInputEvents();
 

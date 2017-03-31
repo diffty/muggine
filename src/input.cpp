@@ -119,7 +119,7 @@ void displayKeys(LinkedList* list) {
 	printf("\n");
 }
 
-void Input::RegisterKeyEvent(Uint32 eventType, SDL_Keysym key) {
+void Input::RegisterKeyEvent(uint32 eventType, SDL_Keysym key) {
     KeyEvent* keyEvt = new KeyEvent;
     keyEvt->key = convertSDLToMuggineKey(key.sym);
 
@@ -186,7 +186,7 @@ void Input::RegisterKeyEvent(Uint32 eventType, SDL_Keysym key) {
 	}
 }
 
-void Input::RegisterMouseEvent(Uint32 eventType, vect2d_t mousePos, Uint8 mouseBtn) {
+void Input::RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseBtn) {
 	MouseEvent* mouseEvt = NULL;
 	MouseEvent* currMouse = NULL;
 
