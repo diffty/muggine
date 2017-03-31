@@ -27,9 +27,9 @@ void Ball::reinit(Paddle* pPaddle) {
 		pPaddle->getRect()->getPos().y - pPaddle->getRect()->getSize().h - 1,
 		TRANSFORM_ABS);
 	
-	m_bIsMoving = false;
+	m_bIsMoving = true;
 	m_bIsDead = false;
-	m_bIsStickToPaddle = true;
+	m_bIsStickToPaddle = false;
 }
 
 void Ball::update() {

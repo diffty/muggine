@@ -39,7 +39,7 @@ SDL_Window* System::GetWindow() {
 #endif
 
 void System::ConsoleInit() {
-	#ifdef TARGET_3DS
+#ifdef TARGET_3DS
 	
 	consoleInit(GFX_TOP, NULL);
 	
@@ -50,7 +50,7 @@ void System::ConsoleInit() {
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);*/
 
-	#endif
+#endif
 }
 
 uint32 System::getTime() {

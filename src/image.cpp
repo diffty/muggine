@@ -33,15 +33,15 @@ void Image::loadFromFile(char* fileName) {
 	printf("Loading image %s.\n", fileName);
 
 	/*if ((image = (image_t *) malloc(sizeof(image_t))) == NULL) {
-	printf("Not enough memory for new image allocation.\n");
+	printf("Not enough memory forS new image allocation.\n");
 	exit(1);
 	}*/
-
+    
 	if ((fp = fopen(fileName, "rb")) == NULL) {
 		printf("Can't read image file %s. Aborting.\n", fileName);
 		exit(1);
 	}
-
+    
 	// Reading header
 	fseek(fp, 0x0002, SEEK_SET);
 	fread(dataSize, 4, 1, fp);
@@ -102,12 +102,19 @@ void Image::loadFromFile(char* fileName) {
 		fread(fileBuf, 1, nBytesToRead, fp);
 
 		for (int i = 0; i < nBytesToRead; i++) {
-			byte currByte = fileBuf[i];
-			m_pImgData[(imgDataPtr + i) * SCREEN_BPP]     = m_aPalette[(int)currByte].b;
-			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 1] = m_aPalette[(int)currByte].g;
-			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 2] = m_aPalette[(int)currByte].r;
+#ifdef TARGET_3DS
+            int fileBufSeek = ((i % m_size.h) * m_size.w) + (i / m_size.h);
+#else
+            int fileBufSeek = i;
+#endif
+            
+            byte currByte = fileBuf[fileBufSeek];
+
+			m_pImgData[imgDataPtr + (i * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
+			m_pImgData[imgDataPtr + (i * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
+			m_pImgData[imgDataPtr + (i * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
 #if TARGET_SDL
-			m_pImgData[(imgDataPtr + i) * SCREEN_BPP + 3] = 0;
+			m_pImgData[imgDataPtr + (i * SCREEN_BPP) + 3] = 0;
 #endif
 		}
 
@@ -213,10 +220,10 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 	}
 	else {
 #if TARGET_3DS
-		for (int i = 0; i < m_size.w; i++) {
+		for (int i = overflowLeft; i < m_size.w - overflowRight; i++) {
 			memcpy(buffer + (y * SCREEN_BPP) + ((x + i) * SCREEN_HEIGHT * SCREEN_BPP),
-				m_pImgData + (((m_size.w - i - 1)) * (m_size.h * SCREEN_BPP)),
-				m_size.h * SCREEN_BPP);
+				m_pImgData + (i * m_size.h * SCREEN_BPP),
+				(m_size.h - overflowTop - overflowBottom) * SCREEN_BPP);
 		}
 #elif TARGET_SDL
 		for (int i = overflowTop; i < m_size.h - overflowBottom; i++) {

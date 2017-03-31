@@ -32,7 +32,7 @@ bool Input::IsKeyPressed(EKey key) {
 
 bool Input::IsJoyBtnPressed(EJoy joyBtn) {
 #ifdef TARGET_3DS
-	return hidKeysDown() & (convertMuggineKeyTo3DS(joyBtn));
+	return hidKeysHeld() & (convertMuggineKeyTo3DS(joyBtn));
 #else
 	return false;
 #endif

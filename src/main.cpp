@@ -33,18 +33,26 @@
 
 
 
-void MainApp(System* sys) {
-	Graphics gfx(sys);
-	gfx.Init();
-
+void MainApp(System* sys, Graphics* gfx) {
+#ifdef TARGET_3DS
+    Result rc = romfsInit();
+#endif
+    
 	RscManager rscManager;
-	rscManager.loadResource("data/brick.bmp");
-	rscManager.loadResource("data/ball.bmp");
-	rscManager.loadResource("data/paddle.bmp");
-
+#ifdef TARGET_3DS
+	rscManager.loadResource("romfs:/data/brick.bmp");   // Catch le crash quand le path est pas bon stp
+	rscManager.loadResource("romfs:/data/ball.bmp");
+    rscManager.loadResource("romfs:/data/paddle.bmp");
+#else
+    //rscManager.loadResource("data/brick.bmp");   // Catch le crash quand le path est pas bon stp
+    //rscManager.loadResource("data/ball.bmp");
+    //rscManager.loadResource("data/paddle.bmp");
+#endif
+    
 	// Building scene
 	Scene scene;
-
+    
+    
 	// Creating components
 	Grid bkoGrid(0, 0, 13, 7, &rscManager);
 	Ball bkoBall(1, sys, &rscManager);
@@ -62,10 +70,10 @@ void MainApp(System* sys) {
 
 	// We don't need double buffering in this example.
 	// In this way we can draw our image only once on screen.
-	gfx.SetDoubleBuffering(false);
+	gfx->SetDoubleBuffering(false);
 
 	// Get the bottom screen's frame buffer
-	uint8* fb = gfx.GetFramebuffer();
+	uint8* fb = gfx->GetFramebuffer();
 
 	sys->initLoop();
 
@@ -80,7 +88,7 @@ void MainApp(System* sys) {
 		// Scan all the inputs. This should be done once for each frame
 		//if (input.IsPressed(KEY_START)) break;
 
-		gfx.FillWithColor(0xFF);
+		gfx->FillWithColor(0x99);
 
 		vect2d_t touchPt;
 		if (sys->GetInputSys()->GetTouch(&touchPt)) {
@@ -93,10 +101,10 @@ void MainApp(System* sys) {
 			scene.receiveTouchInput(mouseEvt->position);
 		}
 
-		if (sys->GetInputSys()->IsKeyPressed(KEYB_Q)) {
+		if (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_LEFT)) {
 			bkoPaddle.translate(-1 * deltaTime, 0);
 		}
-		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D)) {
+		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_RIGHT)) {
 			bkoPaddle.translate(1 * deltaTime, 0);
 		}
 
@@ -112,8 +120,8 @@ void MainApp(System* sys) {
 			int collisionBrickSide = -1;
 
 			vect2d_t ballVelVect;
-			ballVelVect.x = ballVel.x/* * (long)deltaTime*/;
-			ballVelVect.y = ballVel.y/* * (long)deltaTime*/;
+			ballVelVect.x = ballVel.x; // * (long)deltaTime;
+			ballVelVect.y = ballVel.y; // * (long)deltaTime;
 
 			vect2d_t nextBallPos;
 			nextBallPos.x = ballPos.x + ballVelVect.x;
@@ -181,8 +189,8 @@ void MainApp(System* sys) {
 					bkoBall.setIsDead(true);
 				}
 
-				ballVelVect.x = ballVel.x/* * (long)deltaTime*/;
-				ballVelVect.y = ballVel.y/* * (long)deltaTime*/;
+				ballVelVect.x = ballVel.x; // * (long)deltaTime;
+				ballVelVect.y = ballVel.y; // * (long)deltaTime;
 			}
 
 			nextBallPos.x = nextBallCenterPos.x - ballSize.w / 2;
@@ -195,12 +203,12 @@ void MainApp(System* sys) {
 		if (bkoBall.isMoving())
 			timeBeforeBallMove -= deltaTime;
 
-		if (bkoBall.isDead() && (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsKeyPressed(KEYB_D))) {
+		if (bkoBall.isDead() && (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_LEFT) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_RIGHT))) {
 			bkoBall.reinit(&bkoPaddle);
 		}
 
 		if (bkoBall.isStickToPaddle()) {
-			if (sys->GetInputSys()->IsKeyPressed(KEYB_Z)) {
+			if (sys->GetInputSys()->IsKeyPressed(KEYB_Z) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_UP)) {
 				bkoBall.setIsStickToPaddle(false);
 				bkoBall.setIsMoving(true);
 			}
@@ -216,31 +224,33 @@ void MainApp(System* sys) {
 		scene.draw(fb);
 
 		// Flush and swap framebuffers
-		gfx.FlushBuffer();
-		gfx.SwapBuffer();
+		gfx->FlushBuffer();
+		gfx->SwapBuffer();
 
 		// Wait for VBlank
-		gfx.WaitForBlank();
+		gfx->WaitForBlank();
 	}
 
 	// RtpMidi::shutdownService();
 
 	// Exit services
-	gfx.Exit();
+	gfx->Exit();
 }
 
 int main(int argc, char **argv)
 {
 	System sys;
-
-	// Initialize console on top screen. Using NULL as the second argument tells the console library to use the internal console structure as current one
-	sys.ConsoleInit();
-
+    Graphics gfx(&sys);
+    
 #ifdef TARGET_SDL
     sys.InitWindow();
 #endif
 
-	MainApp(&sys);
-
-	return 0;
+    gfx.Init();
+    sys.ConsoleInit();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
+    
+	MainApp(&sys, &gfx);
+    
+    return 0;
 }
+

@@ -6,7 +6,7 @@ RscManager::RscManager() {
 }
 
 bool RscManager::loadResource(char* rscPath) {
-	Image* newImage = new Image(rscPath);
+    Image* newImage = new Image(rscPath);
 
 	if (newImage) {
 		LLNode* newRscNode = new LLNode;
