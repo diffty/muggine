@@ -73,11 +73,10 @@ bool System::MainLoop() {
 	m_prevLoopTime = m_startLoopTime;
 
 #ifdef TARGET_3DS
+	hidScanInput();
 	return aptMainLoop();
 
 #elif TARGET_SDL
-	m_inputSys.ScanInput();
-
 	while (SDL_PollEvent(&m_event) != 0) {
 		if (m_event.type == SDL_QUIT) {
 			isMainLoopRunning = false;

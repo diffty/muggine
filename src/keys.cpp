@@ -84,10 +84,10 @@ EKey convertSDLToMuggineKey(SDL_Keycode keyCode) {
 
 #elif TARGET_3DS
 void initReverseJoyBtnConvArray() {
-	reverseJoyBtnConvTab[KEY_A] = JOY_BTN_1;
-	reverseJoyBtnConvTab[KEY_B] = JOY_BTN_2;
-	reverseJoyBtnConvTab[KEY_X] = JOY_BTN_3;
-	reverseJoyBtnConvTab[KEY_Y] = JOY_BTN_4;
+	reverseJoyBtnConvTab[JOY_BTN_1] = KEY_A;
+	reverseJoyBtnConvTab[JOY_BTN_2] = KEY_B;
+	reverseJoyBtnConvTab[JOY_BTN_3] = KEY_X;
+	reverseJoyBtnConvTab[JOY_BTN_4] = KEY_Y;
 }
 
 uint32 convertMuggineKeyTo3DS(EJoy joyKey) {

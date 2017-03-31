@@ -4,29 +4,12 @@
 Input::Input() {
 #ifdef TARGET_SDL
     initKeyConvArray();
+#elif TARGET_3DS
+	initReverseJoyBtnConvArray();
 #endif
 	initList(&currEventsList);
 	initList(&currInputList);
 	initList(&currMouseList);
-}
-
-void Input::ScanInput() {
-#ifdef TARGET_3DS
-	hidScanInput();
-
-#elif TARGET_SDL
-	
-#endif
-}
-
-uint32 Input::GetInput() {
-#ifdef TARGET_3DS
-	return hidKeysDown();
-
-#else
-	return 0x21212121;
-
-#endif
 }
 
 bool Input::IsPressed(uint32 key) {
@@ -119,6 +102,7 @@ void displayKeys(LinkedList* list) {
 	printf("\n");
 }
 
+#ifdef TARGET_SDL
 void Input::RegisterKeyEvent(uint32 eventType, SDL_Keysym key) {
     KeyEvent* keyEvt = new KeyEvent;
     keyEvt->key = convertSDLToMuggineKey(key.sym);
@@ -246,6 +230,7 @@ void Input::RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseB
 		}
 	}
 }
+#endif
 
 void Input::ProcessEvent(InputEvent* evt) {
 	switch (evt->type) {

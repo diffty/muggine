@@ -149,7 +149,7 @@ static EKey keyConvTab[256];
 void initKeyConvArray();
 EKey convertSDLToMuggineKey(SDL_Keycode keyCode);
 
-#elif
+#elif TARGET_3DS
 static EJoy reverseJoyBtnConvTab[256];
 void initReverseJoyBtnConvArray();
 uint32 convertMuggineKeyTo3DS(EJoy);
