@@ -119,7 +119,7 @@ void Image::loadFromFile(char* fileName) {
 			}
 
 #ifdef TARGET_3DS
-            int fileBufSeek = ((currPixNb % m_size.h) * m_size.w) + (currPixNb / m_size.h);
+            int fileBufSeek = ((currPixNb % m_size.h) * (m_size.w + rowPadding)) + (currPixNb / m_size.h);
 #else
 			//int fileBufSeek = i + (rowPadding * (i / m_size.w));
 			int fileBufSeek = i;
