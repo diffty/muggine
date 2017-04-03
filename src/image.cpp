@@ -97,19 +97,23 @@ void Image::loadFromFile(char* fileName) {
 
 	while (seekPtr < (nbPixels + (*startOffset))) {
 		nBytesToRead = min((nbPixels - (seekPtr - (*startOffset))), FREAD_BUFFER_SIZE);
-
+        
+        
 		fseek(fp, seekPtr, SEEK_SET);
 		fread(fileBuf, 1, nBytesToRead, fp);
 
 		for (int i = 0; i < nBytesToRead; i++) {
+            uint8 currPixNb = seekPtr - *startOffset + i;
+            
 #ifdef TARGET_3DS
-            int fileBufSeek = ((i % m_size.h) * m_size.w) + (i / m_size.h);
+            int fileBufSeek = ((currPixNb % m_size.h) * m_size.w) + (currPixNb / m_size.h);
 #else
-            int fileBufSeek = i;
+            int fileBufSeek = currPixNb;
 #endif
             
             byte currByte = fileBuf[fileBufSeek];
-
+            
+            printf("%x ", currByte);
 			m_pImgData[imgDataPtr + (i * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
 			m_pImgData[imgDataPtr + (i * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
 			m_pImgData[imgDataPtr + (i * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
@@ -221,7 +225,7 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 	else {
 #if TARGET_3DS
 		for (int i = overflowLeft; i < m_size.w - overflowRight; i++) {
-			memcpy(buffer + (y * SCREEN_BPP) + ((x + i) * SCREEN_HEIGHT * SCREEN_BPP),
+			memcpy(buffer + ((SCREEN_HEIGHT - m_size.h - 1 - y) * SCREEN_BPP) + ((x + i) * SCREEN_HEIGHT * SCREEN_BPP),
 				m_pImgData + (i * m_size.h * SCREEN_BPP),
 				(m_size.h - overflowTop - overflowBottom) * SCREEN_BPP);
 		}

@@ -89,6 +89,14 @@ void initReverseJoyBtnConvArray() {
     reverseJoyBtnConvTab[JOY_BTN_3] = KEY_X;
     reverseJoyBtnConvTab[JOY_BTN_4] = KEY_Y;
     
+    reverseJoyBtnConvTab[JOY_BTN_START] = KEY_START;
+    reverseJoyBtnConvTab[JOY_BTN_SELECT] = KEY_SELECT;
+    
+    reverseJoyBtnConvTab[JOY_LEFT] = KEY_LEFT;
+    reverseJoyBtnConvTab[JOY_RIGHT] = KEY_RIGHT;
+    reverseJoyBtnConvTab[JOY_UP] = KEY_UP;
+    reverseJoyBtnConvTab[JOY_DOWN] = KEY_DOWN;
+    
     reverseJoyBtnConvTab[JOY_DPAD_LEFT] = KEY_DLEFT;
     reverseJoyBtnConvTab[JOY_DPAD_RIGHT] = KEY_DRIGHT;
     reverseJoyBtnConvTab[JOY_DPAD_UP] = KEY_DUP;

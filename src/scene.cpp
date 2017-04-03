@@ -2,11 +2,15 @@
 
 
 Scene::Scene() {
-	initList(&m_contentList);
+    initList(&m_contentList);
+}
+
+Scene::~Scene() {
+    clear();
 }
 
 void Scene::addComponent(IWidget* widget) {
-	LLNode* newNode = (LLNode *) malloc(sizeof(LLNode));
+	LLNode* newNode = new LLNode;
 	newNode->pData = widget;
 	addNodeToList(&m_contentList, newNode);
 }
@@ -30,6 +34,8 @@ void Scene::removeComponent(IWidget* widget) {
 				m_contentList.pTail = prevNode;
 
 			currNode->pNext = NULL;
+            
+            delete currNode;
 
 			m_contentList.size--;
 			return;
@@ -89,4 +95,17 @@ void Scene::draw(uint8* fb) {
 		((IWidget*) currNode->pData)->draw(fb);
 		currNode = currNode->pNext;
 	}
+}
+
+void Scene::clear() {
+    LLNode* currNode = m_contentList.pHead;
+    LLNode* nextNode;
+    
+    while (currNode != NULL) {
+        nextNode = currNode->pNext;
+        delete currNode;
+        currNode = nextNode;
+    }
+    
+    m_contentList.pHead = NULL;
 }

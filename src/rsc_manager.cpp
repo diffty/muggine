@@ -2,7 +2,11 @@
 
 
 RscManager::RscManager() {
-	initList(&m_rscList);
+    initList(&m_rscList);
+}
+
+RscManager::~RscManager() {
+    freeResources();
 }
 
 bool RscManager::loadResource(char* rscPath) {
@@ -38,4 +42,18 @@ Image* RscManager::getImgResource(uint rscId) {
 	}
 
 	return (Image*) currNode->pData;
+}
+
+void RscManager::freeResources() {
+    LLNode* currNode = m_rscList.pHead;
+    LLNode* nextNode;
+    
+    while (currNode != NULL) {
+        nextNode = currNode->pNext;
+        delete ((Image *) currNode->pData);
+        delete currNode;
+        currNode = nextNode;
+    }
+    
+    m_rscList.pHead = NULL;
 }

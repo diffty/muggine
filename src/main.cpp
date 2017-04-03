@@ -44,9 +44,9 @@ void MainApp(System* sys, Graphics* gfx) {
 	rscManager.loadResource("romfs:/data/ball.bmp");
     rscManager.loadResource("romfs:/data/paddle.bmp");
 #else
-    //rscManager.loadResource("data/brick.bmp");   // Catch le crash quand le path est pas bon stp
-    //rscManager.loadResource("data/ball.bmp");
-    //rscManager.loadResource("data/paddle.bmp");
+    rscManager.loadResource("data/brick.bmp");   // Catch le crash quand le path est pas bon stp
+    rscManager.loadResource("data/ball.bmp");
+    rscManager.loadResource("data/paddle.bmp");
 #endif
     
 	// Building scene
@@ -86,9 +86,9 @@ void MainApp(System* sys, Graphics* gfx) {
 		uint32 deltaTime = sys->getDeltaTime();
 
 		// Scan all the inputs. This should be done once for each frame
-		//if (input.IsPressed(KEY_START)) break;
+		if (sys->GetInputSys()->IsJoyBtnPressed(JOY_BTN_START)) break;
 
-		gfx->FillWithColor(0x99);
+		gfx->FillWithColor(0x00);
 
 		vect2d_t touchPt;
 		if (sys->GetInputSys()->GetTouch(&touchPt)) {
@@ -101,10 +101,10 @@ void MainApp(System* sys, Graphics* gfx) {
 			scene.receiveTouchInput(mouseEvt->position);
 		}
 
-		if (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_LEFT)) {
+		if (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsJoyBtnPressed(JOY_LEFT)) {
 			bkoPaddle.translate(-1 * deltaTime, 0);
 		}
-		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_RIGHT)) {
+		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_RIGHT)) {
 			bkoPaddle.translate(1 * deltaTime, 0);
 		}
 
@@ -203,12 +203,12 @@ void MainApp(System* sys, Graphics* gfx) {
 		if (bkoBall.isMoving())
 			timeBeforeBallMove -= deltaTime;
 
-		if (bkoBall.isDead() && (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_LEFT) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_RIGHT))) {
+		if (bkoBall.isDead() && (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_LEFT) || sys->GetInputSys()->IsJoyBtnPressed(JOY_RIGHT))) {
 			bkoBall.reinit(&bkoPaddle);
 		}
 
 		if (bkoBall.isStickToPaddle()) {
-			if (sys->GetInputSys()->IsKeyPressed(KEYB_Z) || sys->GetInputSys()->IsJoyBtnPressed(JOY_DPAD_UP)) {
+			if (sys->GetInputSys()->IsKeyPressed(KEYB_Z) || sys->GetInputSys()->IsJoyBtnPressed(JOY_UP)) {
 				bkoBall.setIsStickToPaddle(false);
 				bkoBall.setIsMoving(true);
 			}
@@ -233,8 +233,11 @@ void MainApp(System* sys, Graphics* gfx) {
 
 	// RtpMidi::shutdownService();
 
+    rscManager.freeResources();
+
 	// Exit services
 	gfx->Exit();
+    
 }
 
 int main(int argc, char **argv)

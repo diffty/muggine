@@ -19,6 +19,7 @@ private:
 
 public:
 	Scene();
+    ~Scene();
 	
 	void addComponent(IWidget* w);
 	void removeComponent(IWidget* widget);
@@ -28,6 +29,7 @@ public:
 	void receiveTouchInput(vect2d_t inputPos);
 	void update();
 	void draw(uint8* fb);
+    void clear();
 
 	void test() { printf("LOLPIPI\n"); };
 };

@@ -9,9 +9,11 @@
 class RscManager {
 public:
 	RscManager();
+    ~RscManager();
 
 	bool loadResource(char* rscPath);
 	Image* getImgResource(uint rscId);
+    void freeResources();
 
 private:
 	LinkedList m_rscList;
