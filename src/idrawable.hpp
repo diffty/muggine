@@ -8,7 +8,8 @@
 
 class IDrawable {
 public:
-	IDrawable() {};
+	IDrawable()  {};
+	virtual ~IDrawable() {};
 
 	virtual void draw(uint8* buffer) = 0;
 };

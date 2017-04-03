@@ -1,11 +1,15 @@
 #include "bko_grid.hpp"
 
 Grid::~Grid() {
+	printf("Deleting Grid\n");
+
 	for (int i = 0; i < m_nbBricksW * m_nbBricksH; i++) {
 		delete m_brickList[i];
 	}
 
 	delete[] m_brickList;
+
+	printf("End Grid deletion\n");
 }
 
 void Grid::init() {

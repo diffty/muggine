@@ -52,7 +52,6 @@ void MainApp(System* sys, Graphics* gfx) {
 	// Building scene
 	Scene scene;
     
-    
 	// Creating components
 	Grid bkoGrid(0, 0, 11, 7, &rscManager);
 	Ball bkoBall(1, sys, &rscManager);
@@ -237,7 +236,6 @@ void MainApp(System* sys, Graphics* gfx) {
 
 	// Exit services
 	gfx->Exit();
-    
 }
 
 int main(int argc, char **argv)

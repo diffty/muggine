@@ -5,6 +5,7 @@
 #include "image.hpp"
 #include "rsc_manager.hpp"
 
+
 enum ETransformMode {
 	TRANSFORM_REL,
 	TRANSFORM_ABS,

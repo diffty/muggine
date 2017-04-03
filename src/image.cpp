@@ -6,7 +6,8 @@ Image::Image(char* fileName) {
 }
 
 Image::~Image() {
-
+	free(m_pImgData);
+	free(m_aPalette);
 }
 
 
@@ -62,14 +63,17 @@ void Image::loadFromFile(char* fileName) {
 
 	if (m_paletteSize == 0) m_paletteSize = 256;
 
+	nbPixels = (long) m_size.h * (long) m_size.w;
+	int rowPadding = 4 - (m_size.w % 4);
+
 	printf("Size : %ld\n", *dataSize);
 	printf("Start offset : %d\n", *startOffset);
 	printf("Header size : %d\n", *headerSize);
 	printf("Image width : %d\n", m_size.w);
 	printf("Image height : %d\n", m_size.h);
 	printf("Palette size : %d\n", m_paletteSize);
-
-	nbPixels = (long) m_size.h * (long) m_size.w;
+	printf("Nb pixels : %d\n", nbPixels);
+	printf("Padding: %d\n", rowPadding);
 
 	// Reading palette
 	paletteData = (byte *) malloc(m_paletteSize*4);
@@ -86,18 +90,11 @@ void Image::loadFromFile(char* fileName) {
 	}
 
 	// Reading pixel array
-	m_pRawImgData = (byte *) malloc(nbPixels);
 	m_pImgData = (uint8 *) malloc(nbPixels * SCREEN_BPP * sizeof(uint8));
 
 	seekPtr = *startOffset;
 
-	printf("NbPixels: %d\n", nbPixels);
-
 	int imgDataPtr = 0;
-
-	int rowPadding = 4 - (m_size.w % 4);
-
-	printf("Padding: %d\n", rowPadding);
 
 	int nbPixelsWPadding = nbPixels + (m_size.h - 1) * rowPadding;
 
@@ -111,23 +108,17 @@ void Image::loadFromFile(char* fileName) {
 		int currPixNb = 0;
 
 		for (int i = 0; i < nBytesToRead; i++) {
-            // uint8 currPixNb = seekPtr - *startOffset + i;
-            
 			if (currPixNb % m_size.w == 0 && currPixNb > 0) {
-				printf("\n");
 				i += rowPadding;
 			}
 
 #ifdef TARGET_3DS
             int fileBufSeek = ((currPixNb % m_size.h) * (m_size.w + rowPadding)) + (currPixNb / m_size.h);
 #else
-			//int fileBufSeek = i + (rowPadding * (i / m_size.w));
 			int fileBufSeek = i;
 #endif
             
 			byte currByte = fileBuf[fileBufSeek];
-            
-			printf("%2d : %3x ", i, m_aPalette[(int)currByte].b);
 
 			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP)] = m_aPalette[(int)currByte].b;
 			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;

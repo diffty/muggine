@@ -103,7 +103,7 @@ void Scene::clear() {
     
     while (currNode != NULL) {
         nextNode = currNode->pNext;
-        delete currNode;
+		delete currNode;
         currNode = nextNode;
     }
     

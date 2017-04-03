@@ -17,6 +17,8 @@ public:
 		m_sys = sys;
 	};
 
+	~Ball() {};
+
 	vect2d_t getVelocity();
 	vect2d_t getCenterPos();
 	void setVelocity(vect2d_t newVelocity);

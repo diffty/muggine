@@ -9,7 +9,6 @@ public:
 	Brick(uint rscId, RscManager* pRscManager)
 		: Sprite(rscId, pRscManager) { };
 
-	//uint getBallSideFromBrick(Ball* ball);
 };
 
 #endif
