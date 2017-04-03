@@ -54,7 +54,7 @@ void MainApp(System* sys, Graphics* gfx) {
     
     
 	// Creating components
-	Grid bkoGrid(0, 0, 13, 7, &rscManager);
+	Grid bkoGrid(0, 0, 11, 7, &rscManager);
 	Ball bkoBall(1, sys, &rscManager);
 	Paddle bkoPaddle(2, &rscManager);
 

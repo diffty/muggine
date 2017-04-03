@@ -87,7 +87,7 @@ void Image::loadFromFile(char* fileName) {
 
 	// Reading pixel array
 	m_pRawImgData = (byte *) malloc(nbPixels);
-	m_pImgData = (uint8 *)malloc(nbPixels * SCREEN_BPP * sizeof(uint8));
+	m_pImgData = (uint8 *) malloc(nbPixels * SCREEN_BPP * sizeof(uint8));
 
 	seekPtr = *startOffset;
 
@@ -95,31 +95,47 @@ void Image::loadFromFile(char* fileName) {
 
 	int imgDataPtr = 0;
 
-	while (seekPtr < (nbPixels + (*startOffset))) {
-		nBytesToRead = min((nbPixels - (seekPtr - (*startOffset))), FREAD_BUFFER_SIZE);
+	int rowPadding = 4 - (m_size.w % 4);
+
+	printf("Padding: %d\n", rowPadding);
+
+	int nbPixelsWPadding = nbPixels + (m_size.h - 1) * rowPadding;
+
+	while (seekPtr < (nbPixelsWPadding + (*startOffset))) {
+		nBytesToRead = min((nbPixelsWPadding - (seekPtr - (*startOffset))), FREAD_BUFFER_SIZE);
         
         
 		fseek(fp, seekPtr, SEEK_SET);
 		fread(fileBuf, 1, nBytesToRead, fp);
 
+		int currPixNb = 0;
+
 		for (int i = 0; i < nBytesToRead; i++) {
-            uint8 currPixNb = seekPtr - *startOffset + i;
+            // uint8 currPixNb = seekPtr - *startOffset + i;
             
+			if (currPixNb % m_size.w == 0 && currPixNb > 0) {
+				printf("\n");
+				i += rowPadding;
+			}
+
 #ifdef TARGET_3DS
             int fileBufSeek = ((currPixNb % m_size.h) * m_size.w) + (currPixNb / m_size.h);
 #else
-            int fileBufSeek = currPixNb;
+			//int fileBufSeek = i + (rowPadding * (i / m_size.w));
+			int fileBufSeek = i;
 #endif
             
-            byte currByte = fileBuf[fileBufSeek];
+			byte currByte = fileBuf[fileBufSeek];
             
-            printf("%x ", currByte);
-			m_pImgData[imgDataPtr + (i * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
-			m_pImgData[imgDataPtr + (i * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
-			m_pImgData[imgDataPtr + (i * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
+			printf("%2d : %3x ", i, m_aPalette[(int)currByte].b);
+
+			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP)] = m_aPalette[(int)currByte].b;
+			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
+			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
 #if TARGET_SDL
-			m_pImgData[imgDataPtr + (i * SCREEN_BPP) + 3] = 0;
+			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP) + 3] = 0;
 #endif
+			currPixNb++;
 		}
 
 		seekPtr += nBytesToRead;
