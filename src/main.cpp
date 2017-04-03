@@ -43,26 +43,31 @@ void MainApp(System* sys, Graphics* gfx) {
 	rscManager.loadResource("romfs:/data/brick.bmp");   // Catch le crash quand le path est pas bon stp
 	rscManager.loadResource("romfs:/data/ball.bmp");
     rscManager.loadResource("romfs:/data/paddle.bmp");
+	rscManager.loadResource("romfs:/data/frame.bmp");
 #else
     rscManager.loadResource("data/brick.bmp");   // Catch le crash quand le path est pas bon stp
     rscManager.loadResource("data/ball.bmp");
     rscManager.loadResource("data/paddle.bmp");
+	rscManager.loadResource("data/frame.bmp");
 #endif
     
 	// Building scene
 	Scene scene;
     
 	// Creating components
-	Grid bkoGrid(0, 0, 11, 7, &rscManager);
+	Grid bkoGrid(14, 14, 8, 7, &rscManager);
 	Ball bkoBall(1, sys, &rscManager);
 	Paddle bkoPaddle(2, &rscManager);
+	Sprite bkoFrame(3, &rscManager);
 
 	// Setting up
+	bkoFrame.translate(2, 2, TRANSFORM_ABS);
 	bkoPaddle.translate(180, 200, TRANSFORM_ABS);
 	bkoBall.reinit(&bkoPaddle);
 
 	bkoBall.setVelocity(1, -1);
 
+	scene.addComponent(&bkoFrame);
 	scene.addComponent(&bkoGrid);
 	scene.addComponent(&bkoBall);
 	scene.addComponent(&bkoPaddle);
@@ -84,10 +89,10 @@ void MainApp(System* sys, Graphics* gfx) {
 	{
 		uint32 deltaTime = sys->getDeltaTime();
 
+		gfx->FillWithColor(0x00);
+
 		// Scan all the inputs. This should be done once for each frame
 		if (sys->GetInputSys()->IsJoyBtnPressed(JOY_BTN_START)) break;
-
-		gfx->FillWithColor(0x00);
 
 		vect2d_t touchPt;
 		if (sys->GetInputSys()->GetTouch(&touchPt)) {

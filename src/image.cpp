@@ -64,7 +64,8 @@ void Image::loadFromFile(char* fileName) {
 	if (m_paletteSize == 0) m_paletteSize = 256;
 
 	nbPixels = (long) m_size.h * (long) m_size.w;
-	int rowPadding = 4 - (m_size.w % 4);
+
+	long rowPadding = 4 - m_size.w % 4;
 
 	printf("Size : %ld\n", *dataSize);
 	printf("Start offset : %d\n", *startOffset);
