@@ -79,6 +79,10 @@ void initKeyConvArray() {
 }
 
 EKey convertSDLToMuggineKey(SDL_Keycode keyCode) {
+    if (keyCode > 255) {
+        printf("Unknown keycode.\n");
+        return KEYB_UNKNOWN;
+    }
 	return keyConvTab[keyCode];
 }
 
