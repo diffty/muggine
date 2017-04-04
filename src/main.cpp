@@ -55,19 +55,19 @@ void MainApp(System* sys, Graphics* gfx) {
 	Scene scene;
     
 	// Creating components
-	Grid bkoGrid(14, 14, 8, 7, &rscManager);
+	Grid bkoGrid(12, 12, 8, 7, &rscManager);
 	Ball bkoBall(1, sys, &rscManager);
 	Paddle bkoPaddle(2, &rscManager);
 	Sprite bkoFrame(3, &rscManager);
 
 	// Setting up
-	bkoFrame.translate(2, 2, TRANSFORM_ABS);
+	bkoFrame.translate(0, 0, TRANSFORM_ABS);
 	bkoPaddle.translate(180, 200, TRANSFORM_ABS);
 	bkoBall.reinit(&bkoPaddle);
 
 	bkoBall.setVelocity(1, -1);
 
-	scene.addComponent(&bkoFrame);
+    scene.addComponent(&bkoFrame);
 	scene.addComponent(&bkoGrid);
 	scene.addComponent(&bkoBall);
 	scene.addComponent(&bkoPaddle);
@@ -188,7 +188,7 @@ void MainApp(System* sys, Graphics* gfx) {
 					bkoGrid.getBrickFromId(collidingBrickId)->setActive(false);
 				}
 
-				if (collisionPoint.y >= SCREEN_HEIGHT-1) {
+				if (collisionPoint.y >= GAMEZONE_BOTTOM-1) {
 					bkoBall.setIsMoving(false);
 					bkoBall.setIsDead(true);
 				}

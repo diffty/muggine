@@ -95,22 +95,19 @@ void Image::loadFromFile(char* fileName) {
 
 	seekPtr = *startOffset;
 
-	int imgDataPtr = 0;
-
 	int nbPixelsWPadding = nbPixels + (m_size.h - 1) * rowPadding;
-
+    long currPixNb = 0;
+    
 	while (seekPtr < (nbPixelsWPadding + (*startOffset))) {
 		nBytesToRead = min((nbPixelsWPadding - (seekPtr - (*startOffset))), FREAD_BUFFER_SIZE);
-        
         
 		fseek(fp, seekPtr, SEEK_SET);
 		fread(fileBuf, 1, nBytesToRead, fp);
 
-		int currPixNb = 0;
-
 		for (int i = 0; i < nBytesToRead; i++) {
 			if (currPixNb % m_size.w == 0 && currPixNb > 0) {
 				i += rowPadding;
+                //printf(" | %ld, %ld, %ld\n", currPixNb, m_size.w, currPixNb % m_size.w);
 			}
 
 #ifdef TARGET_3DS
@@ -118,20 +115,22 @@ void Image::loadFromFile(char* fileName) {
 #else
 			int fileBufSeek = i;
 #endif
+            // printf("%3d ", fileBufSeek);
             
 			byte currByte = fileBuf[fileBufSeek];
+            
+            //printf("%3x ", currByte);
 
-			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP)] = m_aPalette[(int)currByte].b;
-			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
-			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
+			m_pImgData[(currPixNb * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
+			m_pImgData[(currPixNb * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
+			m_pImgData[(currPixNb * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
 #if TARGET_SDL
-			m_pImgData[imgDataPtr + (currPixNb * SCREEN_BPP) + 3] = 0;
+			m_pImgData[(currPixNb * SCREEN_BPP) + 3] = 0;
 #endif
 			currPixNb++;
 		}
 
 		seekPtr += nBytesToRead;
-		imgDataPtr += nBytesToRead;
 	}
 
 

@@ -65,16 +65,16 @@ bool Ball::checkCollisionBetweenPos(Grid* pGrid, Paddle* pPaddle, vect2d_t currB
 			*pCollisionType = 0;
 			return true;
 		}
-		else if (pCollisionPoint->x <= 0 || pCollisionPoint->x >= SCREEN_WIDTH - 1) {
+		else if (pCollisionPoint->x <= GAMEZONE_LEFT || pCollisionPoint->x >= GAMEZONE_RIGHT - 1) {
 			*pCollisionType = 1;
 			return true;
 		}
-		else if (pCollisionPoint->y <= 0 || pCollisionPoint->y >= SCREEN_HEIGHT - 1) {
+		else if (pCollisionPoint->y <= GAMEZONE_TOP || pCollisionPoint->y >= GAMEZONE_BOTTOM - 1) {
 			*pCollisionType = 2;
 			return true;
 		}
-		else if (pCollisionPoint->x <= 0 || pCollisionPoint->x >= SCREEN_WIDTH - 1
-				&& pCollisionPoint->y <= 0 || pCollisionPoint->y >= SCREEN_HEIGHT - 1) {
+		else if (pCollisionPoint->x <= GAMEZONE_LEFT || pCollisionPoint->x >= GAMEZONE_RIGHT - 1
+				&& pCollisionPoint->y <= GAMEZONE_TOP || pCollisionPoint->y >= GAMEZONE_BOTTOM - 1) {
 			*pCollisionType = 3;
 			return true;
 		}

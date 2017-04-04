@@ -7,6 +7,11 @@
 #include "bko_paddle.hpp"
 #include <cmath>
 
+#define GAMEZONE_LEFT   12
+#define GAMEZONE_RIGHT  238
+#define GAMEZONE_TOP    12
+#define GAMEZONE_BOTTOM 235
+
 
 class Ball : public Sprite {
 public:

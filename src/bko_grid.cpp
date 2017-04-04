@@ -28,8 +28,8 @@ void Grid::init() {
 	for (int i = 0; i < m_nbBricksW * m_nbBricksH; i++) {
 		m_brickList[i] = new Brick(0, m_pRscManager);
 		m_brickList[i]->translate(
-			(spriteSize.w) * (i % m_nbBricksW),
-			(spriteSize.h) * (i / m_nbBricksW),
+			getRect()->getPos().x + (spriteSize.w - 1) * (i % m_nbBricksW),
+			getRect()->getPos().y + (spriteSize.h - 1) * (i / m_nbBricksW),
 			TRANSFORM_ABS);
 	}
 }
