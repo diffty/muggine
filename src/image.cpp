@@ -111,15 +111,11 @@ void Image::loadFromFile(char* fileName) {
         for (int i = 0; i < nBytesToRead; i++) {
 			if (currPixNb % m_size.w == 0 && currPixNb > 0) {
 				i += rowPadding;
-                //printf(" | %ld, %ld, %ld\n", currPixNb, m_size.w, currPixNb % m_size.w);
 			}
 
 #ifdef TARGET_3DS
-            //int fileBufSeek = ((currPixNb % m_size.h) * (m_size.w + rowPadding)) + (currPixNb / m_size.h);
             fileBufSeek = i;
-            imgDataPtr = ((currPixNb % m_size.w) * m_size.h) + (currPixNb / m_size.w); // (((currPixNb % m_size.w) * m_size.w) + (currPixNb / m_size.w));
-            
-            //printf("%d: %d\n", currPixNb, imgDataPtr);
+            imgDataPtr = ((currPixNb % m_size.w) * m_size.h) + (currPixNb / m_size.w);
 #else
 			fileBufSeek = i;
             imgDataPtr = currPixNb;
