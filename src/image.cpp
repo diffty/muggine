@@ -98,34 +98,39 @@ void Image::loadFromFile(char* fileName) {
 	int nbPixelsWPadding = nbPixels + (m_size.h - 1) * rowPadding;
     long currPixNb = 0;
     
+    long imgDataPtr = 0;
+    
 	while (seekPtr < (nbPixelsWPadding + (*startOffset))) {
 		nBytesToRead = min((nbPixelsWPadding - (seekPtr - (*startOffset))), FREAD_BUFFER_SIZE);
         
 		fseek(fp, seekPtr, SEEK_SET);
 		fread(fileBuf, 1, nBytesToRead, fp);
 
-		for (int i = 0; i < nBytesToRead; i++) {
+        long fileBufSeek = 0;
+
+        for (int i = 0; i < nBytesToRead; i++) {
 			if (currPixNb % m_size.w == 0 && currPixNb > 0) {
 				i += rowPadding;
                 //printf(" | %ld, %ld, %ld\n", currPixNb, m_size.w, currPixNb % m_size.w);
 			}
 
 #ifdef TARGET_3DS
-            int fileBufSeek = ((currPixNb % m_size.h) * (m_size.w + rowPadding)) + (currPixNb / m_size.h);
+            //int fileBufSeek = ((currPixNb % m_size.h) * (m_size.w + rowPadding)) + (currPixNb / m_size.h);
+            fileBufSeek = i;
+            imgDataPtr = ((currPixNb % m_size.w) * m_size.h) + (currPixNb / m_size.w); // (((currPixNb % m_size.w) * m_size.w) + (currPixNb / m_size.w));
+            
+            //printf("%d: %d\n", currPixNb, imgDataPtr);
 #else
-			int fileBufSeek = i;
+			fileBufSeek = i;
+            imgDataPtr = currPixNb;
 #endif
-            // printf("%3d ", fileBufSeek);
+            byte currByte = fileBuf[fileBufSeek];
             
-			byte currByte = fileBuf[fileBufSeek];
-            
-            //printf("%3x ", currByte);
-
-			m_pImgData[(currPixNb * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
-			m_pImgData[(currPixNb * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
-			m_pImgData[(currPixNb * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
+            m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
+			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
+			m_pImgData[(imgDataPtr * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
 #if TARGET_SDL
-			m_pImgData[(currPixNb * SCREEN_BPP) + 3] = 0;
+			m_pImgData[(imgDataPtr * SCREEN_BPP) + 3] = 0;
 #endif
 			currPixNb++;
 		}
