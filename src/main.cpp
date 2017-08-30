@@ -35,25 +35,25 @@
 
 void MainApp(System* sys, Graphics* gfx) {
 #ifdef TARGET_3DS
-    Result rc = romfsInit();
+	Result rc = romfsInit();
 #endif
-    
+
 	RscManager rscManager;
 #ifdef TARGET_3DS
 	rscManager.loadRsc("romfs:/data/brick.bmp");   // Catch le crash quand le path est pas bon stp
 	rscManager.loadRsc("romfs:/data/ball.bmp");
-    rscManager.loadRsc("romfs:/data/paddle.bmp");
+	rscManager.loadRsc("romfs:/data/paddle.bmp");
 	rscManager.loadRsc("romfs:/data/frame.bmp");
 #else
-    rscManager.loadRsc("data/brick.bmp");   // Catch le crash quand le path est pas bon stp
-    rscManager.loadRsc("data/ball.bmp");
-    rscManager.loadRsc("data/paddle.bmp");
+	rscManager.loadRsc("data/brick.bmp");   // Catch le crash quand le path est pas bon stp
+	rscManager.loadRsc("data/ball.bmp");
+	rscManager.loadRsc("data/paddle.bmp");
 	rscManager.loadRsc("data/frame.bmp");
 #endif
-    
+
 	// Building scene
 	Scene scene;
-    
+
 	// Creating components
 	Grid bkoGrid(12, 12, 8, 7, &rscManager);
 	Ball bkoBall(1, sys, &rscManager);
@@ -67,10 +67,10 @@ void MainApp(System* sys, Graphics* gfx) {
 
 	bkoBall.setVelocity(1, -1);
 
-    //scene.addComponent(&bkoFrame);
-	//scene.addComponent(&bkoGrid);
-	//scene.addComponent(&bkoBall);
-	//scene.addComponent(&bkoPaddle);
+	scene.addComponent(&bkoFrame);
+	scene.addComponent(&bkoGrid);
+	scene.addComponent(&bkoBall);
+	scene.addComponent(&bkoPaddle);
 
 	// We don't need double buffering in this example.
 	// In this way we can draw our image only once on screen.
@@ -83,8 +83,6 @@ void MainApp(System* sys, Graphics* gfx) {
 
 	int timeBeforeBallMove = 0;
 	int moveBallEveryTime = 8;
-
-	int testN = 0;
 
 	// Main loop
 	while (sys->MainLoop())
@@ -107,22 +105,123 @@ void MainApp(System* sys, Graphics* gfx) {
 			scene.receiveTouchInput(mouseEvt->position);
 		}
 
-		if (sys->GetInputSys()->IsKeyPressed(KEYB_A) || testN < 1000) {
-			Ball* bkoBall = new Ball(1, sys, &rscManager);
-			bkoBall->translate((float) rand() / RAND_MAX * 300, (float)rand() / RAND_MAX * 200, TRANSFORM_ABS);
-			scene.addComponent(bkoBall);
-			printf("add: %i\n", scene.getComponentCount());
-			rscManager.loadRsc("data/brick.bmp");
+		if (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsJoyBtnPressed(JOY_LEFT)) {
+			bkoPaddle.translate(-1 * deltaTime, 0);
 		}
-		else if (scene.getComponentCount() == 0 && testN > 0) {
-			testN = 0;
+		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_RIGHT)) {
+			bkoPaddle.translate(1 * deltaTime, 0);
 		}
-		else if (sys->GetInputSys()->IsKeyPressed(KEYB_Z) || testN >= 1000) {
-			Ball* ballObj = (Ball*) scene.getFirstComponent();
-			scene.removeComponent(scene.getFirstComponent());
-			delete ballObj;
-			printf("remove: %i\n", scene.getComponentCount());
-			rscManager.unloadRsc(rscManager.getRscCount()-1);
+
+		vect2d_t ballPos = bkoBall.getRect()->getPos();
+		size2d_t ballSize = bkoBall.getRect()->getSize();
+		vect2d_t ballVel = bkoBall.getVelocity();
+		vect2d_t ballCenter = bkoBall.getCenterPos();
+
+		if (bkoBall.isMoving() && timeBeforeBallMove <= 0) {
+			timeBeforeBallMove = moveBallEveryTime;
+
+			uint collidingBrickId;
+			int collisionBrickSide = -1;
+
+			vect2d_t ballVelVect;
+			ballVelVect.x = ballVel.x; // * (long)deltaTime;
+			ballVelVect.y = ballVel.y; // * (long)deltaTime;
+
+			vect2d_t nextBallPos;
+			nextBallPos.x = ballPos.x + ballVelVect.x;
+			nextBallPos.y = ballPos.y + ballVelVect.y;
+
+			vect2d_t nextBallCenterPos;
+			nextBallCenterPos.x = ballCenter.x + ballVelVect.x;
+			nextBallCenterPos.y = ballCenter.y + ballVelVect.y;
+
+			vect2d_t collisionPoint;
+			int collisionType = -1;
+
+			if (bkoBall.checkCollisionBetweenPos(&bkoGrid, &bkoPaddle, ballCenter, nextBallCenterPos, &collidingBrickId, &collisionPoint, &collisionType))
+			{
+				nextBallCenterPos.x = collisionPoint.x - ballVel.x;
+				nextBallCenterPos.y = collisionPoint.y - ballVel.y;
+
+				if (collisionType == 1) {
+					ballVel.x = -ballVel.x;
+				}
+				else if (collisionType == 2) {
+					ballVel.y = -ballVel.y;
+				}
+				else if (collisionType == 3) {
+					ballVel.x = -ballVel.x;
+					ballVel.y = -ballVel.y;
+				}
+				else if (collisionType == 4) {
+					ballVel.y = -ballVel.y;
+				}
+				else if (collisionType == 0) {
+					Brick* collidingBrick = bkoGrid.getBrickFromId(collidingBrickId);
+
+					vect2d_t brickPos = collidingBrick->getRect()->getPos();
+					size2d_t brickSize = collidingBrick->getRect()->getSize();
+
+					if (collisionPoint.y == brickPos.y || collisionPoint.y == brickPos.y + brickSize.h) {
+						collisionBrickSide = 1;
+					}
+					if (collisionPoint.x == brickPos.x || collisionPoint.x == brickPos.x + brickSize.w) {
+						if (collisionBrickSide == 1) collisionBrickSide = 2;
+						else collisionBrickSide = 0;
+					}
+
+					switch (collisionBrickSide) {
+					case 0:		// X
+						ballVel.x = -ballVel.x;
+						break;
+
+					case 1:		// Y
+						ballVel.y = -ballVel.y;
+						break;
+
+					case 2:		// BOTH
+						ballVel.x = -ballVel.x;
+						ballVel.y = -ballVel.y;
+						break;
+					}
+
+					bkoGrid.getBrickFromId(collidingBrickId)->setActive(false);
+				}
+
+				if (collisionPoint.y >= GAMEZONE_BOTTOM - 1) {
+					bkoBall.setIsMoving(false);
+					bkoBall.setIsDead(true);
+				}
+
+				ballVelVect.x = ballVel.x; // * (long)deltaTime;
+				ballVelVect.y = ballVel.y; // * (long)deltaTime;
+			}
+
+			nextBallPos.x = nextBallCenterPos.x - ballSize.w / 2;
+			nextBallPos.y = nextBallCenterPos.y - ballSize.h / 2;
+
+			bkoBall.getRect()->setPos(nextBallPos.x, nextBallPos.y);
+			bkoBall.setVelocity(ballVel);
+		}
+
+		if (bkoBall.isMoving())
+			timeBeforeBallMove -= deltaTime;
+
+		if (bkoBall.isDead() && (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_LEFT) || sys->GetInputSys()->IsJoyBtnPressed(JOY_RIGHT))) {
+			bkoBall.reinit(&bkoPaddle);
+		}
+
+		if (bkoBall.isStickToPaddle()) {
+			if (sys->GetInputSys()->IsKeyPressed(KEYB_Z) || sys->GetInputSys()->IsJoyBtnPressed(JOY_UP)) {
+				bkoBall.setIsStickToPaddle(false);
+				bkoBall.setIsMoving(true);
+			}
+			else {
+				bkoBall.translate(
+					bkoPaddle.getRect()->getPos().x + bkoPaddle.getRect()->getSize().w / 2,
+					bkoPaddle.getRect()->getPos().y - bkoPaddle.getRect()->getSize().h - 1,
+					TRANSFORM_ABS);
+			}
 		}
 
 		scene.update();
@@ -134,13 +233,11 @@ void MainApp(System* sys, Graphics* gfx) {
 
 		// Wait for VBlank
 		gfx->WaitForBlank();
-
-		testN++;
 	}
 
 	// RtpMidi::shutdownService();
 
-    rscManager.freeAllRsc();
+	rscManager.freeAllRsc();
 
 	// Exit services
 	gfx->Exit();
@@ -149,17 +246,16 @@ void MainApp(System* sys, Graphics* gfx) {
 int main(int argc, char **argv)
 {
 	System sys;
-    Graphics gfx(&sys);
-    
+	Graphics gfx(&sys);
+
 #ifdef TARGET_SDL
-    sys.InitWindow();
+	sys.InitWindow();
 #endif
 
-    gfx.Init();
-    sys.ConsoleInit();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
-    
-	MainApp(&sys, &gfx);
-    
-    return 0;
-}
+	gfx.Init();
+	sys.ConsoleInit();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
 
+	MainApp(&sys, &gfx);
+
+	return 0;
+}
