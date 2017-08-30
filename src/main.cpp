@@ -9,6 +9,7 @@
 #include <SDL2/SDL.h>
 #endif
 
+#include "mem_manager.hpp"
 #include "samplergridwidget.hpp"
 #include "linked_list.hpp"
 #include "common_types.hpp"
@@ -38,7 +39,9 @@ void MainApp(System* sys, Graphics* gfx) {
     Result rc = romfsInit();
 #endif
     
+    MemManager memManager(1024);
 	RscManager rscManager;
+    
 #ifdef TARGET_3DS
 	rscManager.loadResource("romfs:/data/brick.bmp");   // Catch le crash quand le path est pas bon stp
 	rscManager.loadResource("romfs:/data/ball.bmp");

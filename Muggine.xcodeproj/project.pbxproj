@@ -10,6 +10,7 @@
 		9559FBAE1E829FDA00EE7E55 /* rsc_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9559FBAC1E829FDA00EE7E55 /* rsc_manager.cpp */; };
 		9559FBB01E82A36000EE7E55 /* keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9559FBAF1E82A36000EE7E55 /* keys.cpp */; };
 		9564BA2C1E6F6AC00059F16B /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9564BA2B1E6F6AC00059F16B /* SDL2.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		957F180F1F576A0B00110543 /* mem_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 957F180D1F576A0B00110543 /* mem_manager.cpp */; };
 		95D2C43C1E676AA700A93B15 /* buttonwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95D2C4211E676AA700A93B15 /* buttonwidget.cpp */; };
 		95D2C43D1E676AA700A93B15 /* drawing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95D2C4241E676AA700A93B15 /* drawing.cpp */; };
 		95D2C43E1E676AA700A93B15 /* graphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95D2C4261E676AA700A93B15 /* graphics.cpp */; };
@@ -47,6 +48,8 @@
 		955C6F421E6769D000097C33 /* Muggine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Muggine; sourceTree = BUILT_PRODUCTS_DIR; };
 		9564BA2B1E6F6AC00059F16B /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		9564BA2D1E6F70C50059F16B /* keys.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = keys.hpp; path = src/keys.hpp; sourceTree = SOURCE_ROOT; };
+		957F180D1F576A0B00110543 /* mem_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mem_manager.cpp; path = src/mem_manager.cpp; sourceTree = SOURCE_ROOT; };
+		957F180E1F576A0B00110543 /* mem_manager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = mem_manager.hpp; path = src/mem_manager.hpp; sourceTree = SOURCE_ROOT; };
 		95D2C4211E676AA700A93B15 /* buttonwidget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = buttonwidget.cpp; path = src/buttonwidget.cpp; sourceTree = SOURCE_ROOT; };
 		95D2C4221E676AA700A93B15 /* buttonwidget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = buttonwidget.hpp; path = src/buttonwidget.hpp; sourceTree = SOURCE_ROOT; };
 		95D2C4231E676AA700A93B15 /* common_types.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = common_types.hpp; path = src/common_types.hpp; sourceTree = SOURCE_ROOT; };
@@ -153,6 +156,8 @@
 				95D2C4381E676AA700A93B15 /* scene.hpp */,
 				95D2C4391E676AA700A93B15 /* system.cpp */,
 				95D2C43A1E676AA700A93B15 /* system.hpp */,
+				957F180D1F576A0B00110543 /* mem_manager.cpp */,
+				957F180E1F576A0B00110543 /* mem_manager.hpp */,
 			);
 			name = src;
 			path = Muggine;
@@ -231,6 +236,7 @@
 				95EAC63E1E83163C0032A89A /* bko_ball.cpp in Sources */,
 				95D2C4461E676AA700A93B15 /* samplergridwidget.cpp in Sources */,
 				95D2C43D1E676AA700A93B15 /* drawing.cpp in Sources */,
+				957F180F1F576A0B00110543 /* mem_manager.cpp in Sources */,
 				95D2C4431E676AA700A93B15 /* mathf.cpp in Sources */,
 				95EAC6461E83165A0032A89A /* sprite.cpp in Sources */,
 				95D2C4471E676AA700A93B15 /* scene.cpp in Sources */,
