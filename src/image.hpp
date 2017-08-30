@@ -22,13 +22,11 @@
 
 
 
-
 class Image {
 private:
-	uint8* m_pRawImgData;
 	uint8* m_pImgData;
 	size2d_t m_size;
-	uint8* m_mask;
+	//uint8* m_mask;
 	uint m_maskNbZone;
 	int m_paletteSize;
 	color_t* m_aPalette;

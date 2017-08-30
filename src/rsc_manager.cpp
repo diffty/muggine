@@ -6,10 +6,10 @@ RscManager::RscManager() {
 }
 
 RscManager::~RscManager() {
-    freeResources();
+	freeAllRsc();
 }
 
-bool RscManager::loadResource(char* rscPath) {
+bool RscManager::loadRsc(char* rscPath) {
     Image* newImage = new Image(rscPath);
 
 	if (newImage) {
@@ -25,15 +25,40 @@ bool RscManager::loadResource(char* rscPath) {
 	}
 }
 
+void RscManager::unloadRsc(uint rscId) {
+	LLNode* rscNode = getRscNode(rscId);
+	
+	if (rscNode) {
+		removeNodeFromList(&m_rscList, rscNode);
+		Image* imgData = (Image*) rscNode->pData;
+		delete imgData;
+		delete rscNode;
+	}
+	else {
+		printf("<!> Can't remove resource #%i: not found.\n", rscId);
+	}
+}
+
 // TODO: changer le type d'id en un truc plus large
 // TODO: faire une recherche par nom
-Image* RscManager::getImgResource(uint rscId) {
+Image* RscManager::getImgRsc(uint rscId) {
+	LLNode* rscNode = getRscNode(rscId);
+
+	if (rscNode) {
+		return (Image*) rscNode->pData;
+	}
+	else {
+		return NULL;
+	}
+}
+
+LLNode* RscManager::getRscNode(uint rscId) {
 	if (rscId >= m_rscList.size) {
 		printf("<!> Invalid resource id: %d\n", rscId);
 		return NULL;
 	}
 
-	uint8 i = 0;
+	uint i = 0;
 	LLNode* currNode = m_rscList.pHead;
 
 	while (i < rscId) {
@@ -41,10 +66,10 @@ Image* RscManager::getImgResource(uint rscId) {
 		i++;
 	}
 
-	return (Image*) currNode->pData;
+	return currNode;
 }
 
-void RscManager::freeResources() {
+void RscManager::freeAllRsc() {
     LLNode* currNode = m_rscList.pHead;
     LLNode* nextNode;
     
@@ -56,4 +81,8 @@ void RscManager::freeResources() {
     }
     
     m_rscList.pHead = NULL;
+}
+
+uint RscManager::getRscCount() {
+	return m_rscList.size;
 }

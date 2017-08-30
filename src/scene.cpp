@@ -70,6 +70,10 @@ IWidget* Scene::getFirstComponent() {
 	return (IWidget*) m_contentList.pHead->pData;
 }
 
+unsigned int Scene::getComponentCount() {
+	return m_contentList.size;
+}
+
 void Scene::receiveTouchInput(vect2d_t inputPos) {
 	LLNode* currNode = m_contentList.pHead;
 

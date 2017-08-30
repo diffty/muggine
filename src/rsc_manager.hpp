@@ -11,9 +11,12 @@ public:
 	RscManager();
     ~RscManager();
 
-	bool loadResource(char* rscPath);
-	Image* getImgResource(uint rscId);
-    void freeResources();
+	bool loadRsc(char* rscPath);
+	void unloadRsc(uint rscId);
+	void freeAllRsc();
+	LLNode* getRscNode(uint rscId);
+	Image* getImgRsc(uint rscId);
+	uint getRscCount();
 
 private:
 	LinkedList m_rscList;

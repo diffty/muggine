@@ -195,7 +195,7 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 	}
 
   	if (masked) {
-		for (int i = 0; i < m_maskNbZone; i++) {
+		/*for (int i = 0; i < m_maskNbZone; i++) {
 			imgBufIdx = m_mask[i*2];
 			zoneSize = m_mask[i*2+1];
 
@@ -220,15 +220,15 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 			}
 
 			// ...Then current line copy
-			/*memcpy(buffer + (x + xb) + ((y * SCREEN_WIDTH) + (yb * SCREEN_WIDTH)),
-			       m_pImgData + imgBufIdx,
-			       zoneSize);*/
+			//memcpy(buffer + (x + xb) + ((y * SCREEN_WIDTH) + (yb * SCREEN_WIDTH)),
+			//       m_pImgData + imgBufIdx,
+			//       zoneSize);
 
 			// ...Then current line copy
 			memcpy(buffer + ((y + yb) * SCREEN_BPP) + ((x * SCREEN_HEIGHT * SCREEN_BPP) + (xb * SCREEN_HEIGHT)),
 			       m_pImgData + imgBufIdx,
 			       zoneSize);
-		}
+		}*/
 	}
 	else {
 #if TARGET_3DS

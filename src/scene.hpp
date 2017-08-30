@@ -26,6 +26,7 @@ public:
 	void removeComponent(IWidget* widget);
 	IWidget* getFirstComponent();
 	IWidget* getNComponent(int n);
+	unsigned int getComponentCount();
 
 	void receiveTouchInput(vect2d_t inputPos);
 	void update();

@@ -21,7 +21,7 @@ void Grid::init() {
 		addNodeToList(&m_brickList, newNode);
 	}*/
 
-	size2d_t spriteSize = m_pRscManager->getImgResource(0)->getSize();
+	size2d_t spriteSize = m_pRscManager->getImgRsc(0)->getSize();
 
 	m_brickList = new Brick*[m_nbBricksW * m_nbBricksH];
 	

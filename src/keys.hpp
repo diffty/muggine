@@ -21,6 +21,8 @@
 
 #endif
 
+#include <iostream>
+
 
 enum EKey {
     KEYB_UNKNOWN,

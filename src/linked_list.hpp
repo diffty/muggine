@@ -19,7 +19,7 @@ typedef struct LinkedList {
 
 void initList(LinkedList* pList);
 void addNodeToList(LinkedList* pList, LLNode* nodeToAdd);
-void removeNodeFromList(LinkedList* pList);
+LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode);
 LLNode* searchForNodeInList(LinkedList* pList, LLNode* pNode);
 int countNodesInList(LinkedList* pList);
 

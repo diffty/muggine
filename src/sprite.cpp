@@ -4,7 +4,7 @@ Sprite::Sprite(uint rscId, RscManager* rscManager, int x, int y)
 	: IWidget(x, y)
 {
 	m_rscId = rscId;
-	m_image = rscManager->getImgResource(m_rscId);
+	m_image = rscManager->getImgRsc(m_rscId);
 	size2d_t imgSize = m_image->getSize();
 	m_rect.setSize(imgSize.w, imgSize.h);
 }

@@ -22,8 +22,26 @@ void addNodeToList(LinkedList* pList, LLNode* nodeToAdd) {
 	pList->size++;
 }
 
-void removeNodeFromList(LinkedList* pList, LLNode* pNode) {
-	
+LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode) {
+	if (pList->pHead == NULL) {
+		return NULL;
+	}
+
+	LLNode* pCurrNode = pList->pHead;
+
+	while (pCurrNode != NULL) {
+		if (pCurrNode->pNext == pNode) {
+			pCurrNode->pNext = pNode->pNext;
+
+			if (pList->pTail == pNode) pList->pTail = pCurrNode;
+
+			pList->size--;
+			return pNode;
+		}
+		pCurrNode = pCurrNode->pNext;
+	}
+
+	return NULL;
 }
 
 LLNode* popNodeFromList(LinkedList* pList) {
