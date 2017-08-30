@@ -17,7 +17,7 @@ void System::InitWindow() {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
 	else {
-		m_window = SDL_CreateWindow("MUGGINE TEST WINDOW",
+		m_window = SDL_CreateWindow("Muggine Breakout",
 									SDL_WINDOWPOS_UNDEFINED,
 									SDL_WINDOWPOS_UNDEFINED,
 									SCREEN_WIDTH,

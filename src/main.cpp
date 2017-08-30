@@ -43,12 +43,16 @@ void MainApp(System* sys, Graphics* gfx) {
 	rscManager.loadResource("romfs:/data/brick.bmp");   // Catch le crash quand le path est pas bon stp
 	rscManager.loadResource("romfs:/data/ball.bmp");
     rscManager.loadResource("romfs:/data/paddle.bmp");
-	rscManager.loadResource("romfs:/data/frame.bmp");
+    rscManager.loadResource("romfs:/data/frame_t.bmp");
+    rscManager.loadResource("romfs:/data/frame_l.bmp");
+    rscManager.loadResource("romfs:/data/frame_r.bmp");
 #else
     rscManager.loadResource("data/brick.bmp");   // Catch le crash quand le path est pas bon stp
     rscManager.loadResource("data/ball.bmp");
     rscManager.loadResource("data/paddle.bmp");
-	rscManager.loadResource("data/frame.bmp");
+    rscManager.loadResource("data/frame_t.bmp");
+    rscManager.loadResource("data/frame_l.bmp");
+    rscManager.loadResource("data/frame_r.bmp");
 #endif
     
 	// Building scene
@@ -58,16 +62,22 @@ void MainApp(System* sys, Graphics* gfx) {
 	Grid bkoGrid(12, 12, 8, 7, &rscManager);
 	Ball bkoBall(1, sys, &rscManager);
 	Paddle bkoPaddle(2, &rscManager);
-	Sprite bkoFrame(3, &rscManager);
+    Sprite bkoFrameT(3, &rscManager);
+    Sprite bkoFrameL(4, &rscManager);
+    Sprite bkoFrameR(5, &rscManager);
 
 	// Setting up
-	bkoFrame.translate(0, 0, TRANSFORM_ABS);
+    bkoFrameL.translate(2, 0, TRANSFORM_ABS);
+    bkoFrameT.translate(13, 0, TRANSFORM_ABS);
+    bkoFrameR.translate(240, 0, TRANSFORM_ABS);
 	bkoPaddle.translate(180, 200, TRANSFORM_ABS);
 	bkoBall.reinit(&bkoPaddle);
 
 	bkoBall.setVelocity(1, -1);
 
-    scene.addComponent(&bkoFrame);
+    scene.addComponent(&bkoFrameT);
+    scene.addComponent(&bkoFrameL);
+    scene.addComponent(&bkoFrameR);
 	scene.addComponent(&bkoGrid);
 	scene.addComponent(&bkoBall);
 	scene.addComponent(&bkoPaddle);
