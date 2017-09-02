@@ -19,6 +19,7 @@
 #include "input.hpp"
 #include "rsc_manager.hpp"
 #include "sprite.hpp"
+#include "spritesheet.hpp"
 //#include "rtpmidi.hpp"
 
 #include "bko_grid.hpp"
@@ -37,19 +38,24 @@ void MainApp(System* sys, Graphics* gfx) {
 #ifdef TARGET_3DS
 	Result rc = romfsInit();
 #endif
+    
+RscManager rscManager;
 
-	RscManager rscManager;
+ 
 #ifdef TARGET_3DS
 	rscManager.loadRsc("romfs:/data/brick.bmp");   // Catch le crash quand le path est pas bon stp
 	rscManager.loadRsc("romfs:/data/ball.bmp");
 	rscManager.loadRsc("romfs:/data/paddle.bmp");
 	rscManager.loadRsc("romfs:/data/frame.bmp");
+    rscManager.loadRsc("romfs:/data/animtest2.bmp");
 #else
 	rscManager.loadRsc("data/brick.bmp");   // Catch le crash quand le path est pas bon stp
 	rscManager.loadRsc("data/ball.bmp");
 	rscManager.loadRsc("data/paddle.bmp");
-	rscManager.loadRsc("data/frame.bmp");
+    rscManager.loadRsc("data/frame.bmp");
+    rscManager.loadRsc("data/animtest2.bmp");
 #endif
+
 
 	// Building scene
 	Scene scene;
@@ -59,6 +65,12 @@ void MainApp(System* sys, Graphics* gfx) {
 	Ball bkoBall(1, sys, &rscManager);
 	Paddle bkoPaddle(2, &rscManager);
 	Sprite bkoFrame(3, &rscManager);
+    
+    #ifdef TARGET_3DS
+    SpriteSheet sprSht("romfs:/data/animtest2.bmp", 2, 2, 4);
+    #else
+    SpriteSheet sprSht("data/animtest2.bmp", 2, 2, 4);
+    #endif
 
 	// Setting up
 	bkoFrame.translate(0, 0, TRANSFORM_ABS);
@@ -111,6 +123,9 @@ void MainApp(System* sys, Graphics* gfx) {
 		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_RIGHT)) {
 			bkoPaddle.translate(1 * deltaTime, 0);
 		}
+        else if (sys->GetInputSys()->IsKeyPressed(KEYB_ESCAPE) || sys->GetInputSys()->IsJoyBtnPressed(JOY_BTN_START)) {
+            break;
+        }
 
 		vect2d_t ballPos = bkoBall.getRect()->getPos();
 		size2d_t ballSize = bkoBall.getRect()->getSize();
@@ -226,6 +241,9 @@ void MainApp(System* sys, Graphics* gfx) {
 
 		scene.update();
 		scene.draw(fb);
+        
+        sprSht.draw(fb, 100, 100, false, false);
+        sprSht.nextFrame();
 
 		// Flush and swap framebuffers
 		gfx->FlushBuffer();

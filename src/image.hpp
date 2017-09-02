@@ -23,7 +23,7 @@
 
 
 class Image {
-private:
+protected:
 	uint8* m_pImgData;
 	size2d_t m_size;
 	//uint8* m_mask;
@@ -36,7 +36,8 @@ public:
 	~Image();
 
 	void loadFromFile(char* fileName);
-	void draw(uint8* buffer, int x, int y, bool reversed, bool masked);
+    void draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked);
+    void draw(uint8* buffer, int dstX, int dstY, bool reversed, bool masked);
 
 	size2d_t getSize() { return m_size; }
 };

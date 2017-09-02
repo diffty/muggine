@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		95571AED1F5ACEAC00C55998 /* spritesheet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95571AEB1F5ACEAC00C55998 /* spritesheet.cpp */; };
 		9559FBAE1E829FDA00EE7E55 /* rsc_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9559FBAC1E829FDA00EE7E55 /* rsc_manager.cpp */; };
 		9559FBB01E82A36000EE7E55 /* keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9559FBAF1E82A36000EE7E55 /* keys.cpp */; };
 		9564BA2C1E6F6AC00059F16B /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9564BA2B1E6F6AC00059F16B /* SDL2.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -41,6 +42,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		95571AEB1F5ACEAC00C55998 /* spritesheet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spritesheet.cpp; path = src/spritesheet.cpp; sourceTree = SOURCE_ROOT; };
+		95571AEC1F5ACEAC00C55998 /* spritesheet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = spritesheet.hpp; path = src/spritesheet.hpp; sourceTree = SOURCE_ROOT; };
 		9559FBAC1E829FDA00EE7E55 /* rsc_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rsc_manager.cpp; path = src/rsc_manager.cpp; sourceTree = SOURCE_ROOT; };
 		9559FBAD1E829FDA00EE7E55 /* rsc_manager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = rsc_manager.hpp; path = src/rsc_manager.hpp; sourceTree = SOURCE_ROOT; };
 		9559FBAF1E82A36000EE7E55 /* keys.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = keys.cpp; path = src/keys.cpp; sourceTree = SOURCE_ROOT; };
@@ -134,6 +137,8 @@
 				95D2C4271E676AA700A93B15 /* graphics.hpp */,
 				95D2C4281E676AA700A93B15 /* image.cpp */,
 				95D2C4291E676AA700A93B15 /* image.hpp */,
+				95571AEB1F5ACEAC00C55998 /* spritesheet.cpp */,
+				95571AEC1F5ACEAC00C55998 /* spritesheet.hpp */,
 				95EAC6421E8316430032A89A /* iwidget.hpp */,
 				95D2C42A1E676AA700A93B15 /* input.cpp */,
 				95EAC6441E83165A0032A89A /* sprite.cpp */,
@@ -233,6 +238,7 @@
 				95D2C43D1E676AA700A93B15 /* drawing.cpp in Sources */,
 				95D2C4431E676AA700A93B15 /* mathf.cpp in Sources */,
 				95EAC6461E83165A0032A89A /* sprite.cpp in Sources */,
+				95571AED1F5ACEAC00C55998 /* spritesheet.cpp in Sources */,
 				95D2C4471E676AA700A93B15 /* scene.cpp in Sources */,
 				95D2C43F1E676AA700A93B15 /* image.cpp in Sources */,
 				95D2C4401E676AA700A93B15 /* input.cpp in Sources */,

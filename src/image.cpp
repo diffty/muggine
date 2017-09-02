@@ -65,7 +65,9 @@ void Image::loadFromFile(char* fileName) {
 
 	nbPixels = (long) m_size.h * (long) m_size.w;
 
-	long rowPadding = 4 - m_size.w % 4;
+    long rowPadding = 0;
+    
+    if (m_size.w % 4 != 0) rowPadding = 4 - m_size.w % 4;
 
 	printf("Size : %ld\n", *dataSize);
 	printf("Start offset : %d\n", *startOffset);
@@ -178,28 +180,49 @@ void Image::loadFromFile(char* fileName) {
 	free(imgPalSize);
 }
 
-void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
+void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked) {
     int xb, yb;
     unsigned int imgBufIdx, zoneSize;
 	unsigned int overflowLeft = 0, overflowRight = 0, overflowTop = 0, overflowBottom = 0;
 
-	overflowLeft = max(0, -x);
-	overflowRight = max(0, (x + m_size.w) - SCREEN_WIDTH);
-	overflowTop = max(0, -y);
-	overflowBottom = max(0, (y + m_size.h) - SCREEN_HEIGHT);
+    if (srcX >= m_size.w || srcY >= m_size.h) {
+        return;
+    }
+    
+    if (srcX >= 0 || srcY >= 0 || srcW > 0 || srcH > 0) {
+        if (srcW > m_size.w || srcH > m_size.h) {
+            return;
+        }
+        
+        if ((srcX + srcW) > m_size.w) {
+            srcW = m_size.w - srcX;
+        }
+        if ((srcY + srcH) > m_size.h) {
+            srcH = m_size.h - srcY;
+        }
+    }
+    else {
+        srcW = m_size.w;
+        srcH = m_size.h;
+    }
+    
+	overflowLeft = max(0, -dstX);
+	overflowRight = max(0, (dstX + srcW) - SCREEN_WIDTH);
+	overflowTop = max(0, -dstY);
+	overflowBottom = max(0, (dstY + srcH) - SCREEN_HEIGHT);
 
 	// printf("%d, %d, %d, %d\n", overflowLeft, overflowRight, overflowBottom, overflowTop);
 
-	if (overflowLeft > m_size.w || overflowRight > m_size.w || overflowTop > m_size.h || overflowBottom > m_size.h) {
+	if (overflowLeft > srcW || overflowRight > srcW || overflowTop > srcH || overflowBottom > srcH) {
 		return;
 	}
-
+    
   	if (masked) {
 		/*for (int i = 0; i < m_maskNbZone; i++) {
 			imgBufIdx = m_mask[i*2];
 			zoneSize = m_mask[i*2+1];
 
-			xb = imgBufIdx % m_size.w;
+			xb = imgBufIdx % srcW;
 
 			if (reversed)
 				yb = imgBufIdx / m_size.w;
@@ -207,42 +230,46 @@ void Image::draw(uint8* buffer, int x, int y, bool reversed, bool masked) {
 				yb = m_size.h - (imgBufIdx / m_size.w) - 1;
 
 			// Clipping
-			if (x + xb + zoneSize < 0 || x + xb >= SCREEN_WIDTH || y + yb < 0 || y + yb >= SCREEN_HEIGHT) {
+			if (dstX + xb + zoneSize < 0 || dstX + xb >= SCREEN_WIDTH || dstY + yb < 0 || dstY + yb >= SCREEN_HEIGHT) {
 				continue;
 			}
-			else if (x + xb + zoneSize > SCREEN_WIDTH) {
+			else if (dstX + xb + zoneSize > SCREEN_WIDTH) {
 				zoneSize = zoneSize - ((x + xb + zoneSize) % SCREEN_WIDTH);
 			}
-			else if (x + xb < 0) {
-				imgBufIdx += -(x + xb);
-				zoneSize = zoneSize + (x + xb);
+			else if (dstX + xb < 0) {
+				imgBufIdx += -(dstX + xb);
+				zoneSize = zoneSize + (dstX + xb);
 				xb = imgBufIdx % m_size.w;
 			}
 
 			// ...Then current line copy
-			//memcpy(buffer + (x + xb) + ((y * SCREEN_WIDTH) + (yb * SCREEN_WIDTH)),
+			//memcpy(buffer + (dstX + xb) + ((dstY * SCREEN_WIDTH) + (yb * SCREEN_WIDTH)),
 			//       m_pImgData + imgBufIdx,
 			//       zoneSize);
 
 			// ...Then current line copy
-			memcpy(buffer + ((y + yb) * SCREEN_BPP) + ((x * SCREEN_HEIGHT * SCREEN_BPP) + (xb * SCREEN_HEIGHT)),
+			memcpy(buffer + ((dstY + yb) * SCREEN_BPP) + ((dstX * SCREEN_HEIGHT * SCREEN_BPP) + (xb * SCREEN_HEIGHT)),
 			       m_pImgData + imgBufIdx,
 			       zoneSize);
 		}*/
 	}
 	else {
 #if TARGET_3DS
-		for (int i = overflowLeft; i < m_size.w - overflowRight; i++) {
-			memcpy(buffer + ((SCREEN_HEIGHT - m_size.h - 1 - y) * SCREEN_BPP) + ((x + i) * SCREEN_HEIGHT * SCREEN_BPP),
-				m_pImgData + (i * m_size.h * SCREEN_BPP),
-				(m_size.h - overflowTop - overflowBottom) * SCREEN_BPP);
+		for (int i = overflowLeft; i < srcW - overflowRight; i++) {
+			memcpy(buffer + ((SCREEN_HEIGHT - m_size.h - 1 - dstY) * SCREEN_BPP) + ((dstX + i) * SCREEN_HEIGHT * SCREEN_BPP),
+				m_pImgData + ((i + srcX) * m_size.h * SCREEN_BPP),
+				(srcH - overflowTop - overflowBottom) * SCREEN_BPP);
 		}
 #elif TARGET_SDL
-		for (int i = overflowTop; i < m_size.h - overflowBottom; i++) {
-			memcpy(buffer + (max(0, x) * SCREEN_BPP) + ((max(0, y) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
-				m_pImgData + ((m_size.h - i - 1) * (m_size.w * SCREEN_BPP)) + (overflowLeft * SCREEN_BPP),
-				(m_size.w - overflowLeft - overflowRight) * SCREEN_BPP);
+		for (int i = overflowTop; i < srcH - overflowBottom; i++) {
+			memcpy(buffer + (max(0, dstX) * SCREEN_BPP) + ((max(0, dstY) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
+				m_pImgData + ((m_size.h - (i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((overflowLeft + srcX) * SCREEN_BPP),
+				(srcW - overflowLeft - overflowRight) * SCREEN_BPP);
 		}
 #endif
 	}
+}
+
+void Image::draw(uint8* buffer, int dstX, int dstY, bool reversed, bool masked) {
+    draw(buffer, dstX, dstY, 0, 0, m_size.w, m_size.h, reversed, masked);
 }
