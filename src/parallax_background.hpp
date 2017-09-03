@@ -19,10 +19,11 @@ typedef struct Layer {
     Image* img;
     int distance;
     vect2d_t v2dPos;
+    vect2d_t offset;
 } Layer;
 
 
-class ParallaxBackground : IWidget {
+class ParallaxBackground : public IWidget {
 private:
     LinkedList m_lLayers;
     vect2d_t m_v2dCamPos;
@@ -30,11 +31,12 @@ private:
 public:
     ParallaxBackground();
     ~ParallaxBackground();
-    void addLayer(Image* layerImg, int distance);
+    void addLayer(Image* layerImg, int distance, int offX = 0, int offY = 0);
     void deleteLayer(int layerNum);
     void update();
     void draw(uint8* buffer);
-    
+    void setCamPos(int x, int y);
+    vect2d_t getCamPos();
 };
 
 #endif /* parallax_background_hpp */
