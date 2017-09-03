@@ -22,6 +22,6 @@ void addNodeToList(LinkedList* pList, LLNode* nodeToAdd);
 LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode);
 LLNode* searchForNodeInList(LinkedList* pList, LLNode* pNode);
 int countNodesInList(LinkedList* pList);
-
+LLNode* getNodeInList(LinkedList* pList, uint nodeNum);
 
 #endif

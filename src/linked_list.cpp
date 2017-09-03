@@ -1,4 +1,4 @@
-#include "linked_list.hpp"
+ #include "linked_list.hpp"
 
 
 void initList(LinkedList* pList) {
@@ -79,4 +79,21 @@ int countNodesInList(LinkedList* pList) {
 	}
 
 	return nbNodes;
+}
+
+LLNode* getNodeInList(LinkedList* pList, uint nodeNum) {
+    if (nodeNum >= pList->size) {
+        printf("<!> Out of list node number : %d\n", nodeNum);
+        return NULL;
+    }
+    
+    uint i = 0;
+    LLNode* currNode = pList->pHead;
+    
+    while (i < nodeNum) {
+        currNode = currNode->pNext;
+        i++;
+    }
+    
+    return currNode;
 }
