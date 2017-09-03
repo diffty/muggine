@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		953B4BB91F5C5DE6004509BA /* parallax_background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 953B4BB71F5C5DE6004509BA /* parallax_background.cpp */; };
 		95571AED1F5ACEAC00C55998 /* spritesheet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95571AEB1F5ACEAC00C55998 /* spritesheet.cpp */; };
 		9559FBAE1E829FDA00EE7E55 /* rsc_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9559FBAC1E829FDA00EE7E55 /* rsc_manager.cpp */; };
 		9559FBB01E82A36000EE7E55 /* keys.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9559FBAF1E82A36000EE7E55 /* keys.cpp */; };
@@ -42,6 +43,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		953B4BB71F5C5DE6004509BA /* parallax_background.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = parallax_background.cpp; path = src/parallax_background.cpp; sourceTree = SOURCE_ROOT; };
+		953B4BB81F5C5DE6004509BA /* parallax_background.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = parallax_background.hpp; path = src/parallax_background.hpp; sourceTree = SOURCE_ROOT; };
 		95571AEB1F5ACEAC00C55998 /* spritesheet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = spritesheet.cpp; path = src/spritesheet.cpp; sourceTree = SOURCE_ROOT; };
 		95571AEC1F5ACEAC00C55998 /* spritesheet.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = spritesheet.hpp; path = src/spritesheet.hpp; sourceTree = SOURCE_ROOT; };
 		9559FBAC1E829FDA00EE7E55 /* rsc_manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rsc_manager.cpp; path = src/rsc_manager.cpp; sourceTree = SOURCE_ROOT; };
@@ -150,6 +153,8 @@
 				95D2C42C1E676AA700A93B15 /* linked_list.cpp */,
 				95D2C42D1E676AA700A93B15 /* linked_list.hpp */,
 				95D2C42E1E676AA700A93B15 /* main.cpp */,
+				953B4BB71F5C5DE6004509BA /* parallax_background.cpp */,
+				953B4BB81F5C5DE6004509BA /* parallax_background.hpp */,
 				95D2C42F1E676AA700A93B15 /* mathf.cpp */,
 				95D2C4301E676AA700A93B15 /* mathf.hpp */,
 				95D2C4351E676AA700A93B15 /* samplergridwidget.cpp */,
@@ -239,6 +244,7 @@
 				95D2C4431E676AA700A93B15 /* mathf.cpp in Sources */,
 				95EAC6461E83165A0032A89A /* sprite.cpp in Sources */,
 				95571AED1F5ACEAC00C55998 /* spritesheet.cpp in Sources */,
+				953B4BB91F5C5DE6004509BA /* parallax_background.cpp in Sources */,
 				95D2C4471E676AA700A93B15 /* scene.cpp in Sources */,
 				95D2C43F1E676AA700A93B15 /* image.cpp in Sources */,
 				95D2C4401E676AA700A93B15 /* input.cpp in Sources */,
