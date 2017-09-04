@@ -102,6 +102,15 @@ void Image::loadFromFile(char* fileName) {
     
     long imgDataPtr = 0;
     
+    bool inTransp = false;
+    bool inOpaque = false;
+    
+    //LinkedList lTranspInfo;
+    //initList(&lTranspInfo);
+    
+    LinkedList lOpaqueInfo;
+    initList(&lOpaqueInfo);
+    
 	while (seekPtr < (nbPixelsWPadding + (*startOffset))) {
 		nBytesToRead = min((nbPixelsWPadding - (seekPtr - (*startOffset))), FREAD_BUFFER_SIZE);
         
@@ -122,7 +131,29 @@ void Image::loadFromFile(char* fileName) {
 			fileBufSeek = i;
             imgDataPtr = currPixNb;
 #endif
+
             byte currByte = fileBuf[fileBufSeek];
+            
+            // Transparency detection
+            if (currPixNb == 0) { // If first pixel is opaque
+                if ((int) currByte != 0) {
+                    inOpaque = true;
+                    LLNode* lnOpaqueInfo = new LLNode;
+                    lnOpaqueInfo->pData = new long;
+                    *((long*) lnOpaqueInfo->pData) = currPixNb;
+                    addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
+                }
+            }
+            else {
+                if ((inOpaque && (currByte == 0 || (currPixNb+1) % m_size.w == 0)) || (!inOpaque && currByte != 0)) {
+                    LLNode* lnOpaqueInfo = new LLNode;
+                    lnOpaqueInfo->pData = new long;
+                    *((long*) lnOpaqueInfo->pData) = currPixNb;
+                    // printf("o: %ld, ", *((long*) lnOpaqueInfo->pData));
+                    addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
+                    inOpaque = !inOpaque;
+                }
+            }
             
             m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
@@ -136,41 +167,34 @@ void Image::loadFromFile(char* fileName) {
 		seekPtr += nBytesToRead;
 	}
 
+    m_maskNbZone = lOpaqueInfo.size;
+    m_mask = new long[m_maskNbZone];
+    
+    printf("NbZones: %ld", m_maskNbZone);
+    LLNode* currNode = lOpaqueInfo.pHead;
+    
+    i = 0;
+    
+    while (currNode != NULL) {
+        long* pPosData = (long *) currNode->pData;
+        m_mask[i] = *pPosData;
+        
+        removeNodeFromList(&lOpaqueInfo, currNode);
 
+        LLNode* nodeToDelete = currNode;
+        currNode = currNode->pNext;
+        
+        delete nodeToDelete;
+        delete pPosData;
+        
+        printf("%ld, ", m_mask[i]);
+        
+        i++;
+    }
+    
 	fclose(fp);
-
-	/*
-	m_mask = (u8 *) malloc(2 * sizeof(u8));
-	
-	// Building transparency info
-	j = 0;
-	k = 0;
-	m_maskNbZone = 0;
-
-	for (i = 0; i < nbPixels; i++) {
-		if (m_pImgData[i] != m_pImgData[0]) {
-			j++;
-		}
-
-		if (i < (nbPixels) - 1) {
-			if (m_pImgData[i] != m_pImgData[i+1]) {
-				if (m_pImgData[i+1] == m_pImgData[0] || i+1 == (nbPixels) - 1 || (i > 0 && i % m_size.w == 0)) {
-					m_mask = (u8 *) realloc(m_mask, 2 * (m_maskNbZone + 1) * sizeof(u8));
-
-					m_mask[k] = i-j+1;
-					m_mask[k+1] = j;
-
-					k += 2;
-					j = 0;
-
-					m_maskNbZone++;
-				}
-			}
-		}
-	}
-	*/
-
-	free(dataSize);
+    
+    free(dataSize);
 	free(startOffset);
 	free(headerSize);
 	free(fileBuf);
@@ -218,10 +242,10 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 	}
     
   	if (masked) {
-		/*for (int i = 0; i < m_maskNbZone; i++) {
-			imgBufIdx = m_mask[i*2];
-			zoneSize = m_mask[i*2+1];
-
+		/*for (int i = 0; i < m_maskNbZone/2; i++) {
+			imgBufIdx = (unsigned int) m_mask[i*2];
+			zoneSize = (unsigned int) m_mask[i*2+1] - (unsigned int) m_mask[i*2];
+            
 			xb = imgBufIdx % srcW;
 
 			if (reversed)
@@ -234,7 +258,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 				continue;
 			}
 			else if (dstX + xb + zoneSize > SCREEN_WIDTH) {
-				zoneSize = zoneSize - ((x + xb + zoneSize) % SCREEN_WIDTH);
+				zoneSize = zoneSize - ((dstX + xb + zoneSize) % SCREEN_WIDTH);
 			}
 			else if (dstX + xb < 0) {
 				imgBufIdx += -(dstX + xb);
@@ -252,6 +276,15 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 			       m_pImgData + imgBufIdx,
 			       zoneSize);
 		}*/
+        
+        for (int i = 0; i < m_maskNbZone/2; i++) {
+            imgBufIdx = (unsigned int) m_mask[i*2];
+            zoneSize = (unsigned int) m_mask[i*2+1] - (unsigned int) m_mask[i*2];
+            
+            memcpy(buffer + (max(0, dstX) * SCREEN_BPP) + ((max(0, dstY) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
+                   m_pImgData + ((m_size.h - (i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((overflowLeft + srcX) * SCREEN_BPP),
+                   (srcW - overflowLeft - overflowRight) * SCREEN_BPP);
+        }
 	}
 	else {
 #if TARGET_3DS

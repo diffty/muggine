@@ -8,6 +8,7 @@
 #include <cstring>
 #include "common_types.hpp"
 #include "mathf.hpp"
+#include "linked_list.hpp"
 
 #define FREAD_BUFFER_SIZE   1000
 
@@ -26,7 +27,7 @@ class Image {
 protected:
 	uint8* m_pImgData;
 	size2d_t m_size;
-	//uint8* m_mask;
+	long* m_mask;
 	uint m_maskNbZone;
 	int m_paletteSize;
 	color_t* m_aPalette;
