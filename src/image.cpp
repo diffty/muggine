@@ -105,12 +105,15 @@ void Image::loadFromFile(char* fileName) {
     bool inTransp = false;
     bool inOpaque = false;
     
-    //LinkedList lTranspInfo;
-    //initList(&lTranspInfo);
-    
     LinkedList lOpaqueInfo;
     initList(&lOpaqueInfo);
     
+	int currZoneIdx = 0;
+
+	m_nbZoneByLine = new long[m_size.h];
+	for (int i = 0; i < m_size.h; i++)
+		m_nbZoneByLine[i] = 0;
+
 	while (seekPtr < (nbPixelsWPadding + (*startOffset))) {
 		nBytesToRead = min((nbPixelsWPadding - (seekPtr - (*startOffset))), FREAD_BUFFER_SIZE);
         
@@ -134,27 +137,65 @@ void Image::loadFromFile(char* fileName) {
 
             byte currByte = fileBuf[fileBufSeek];
             
-            // Transparency detection
-            if (currPixNb == 0) { // If first pixel is opaque
-                if ((int) currByte != 0) {
-                    inOpaque = true;
-                    LLNode* lnOpaqueInfo = new LLNode;
-                    lnOpaqueInfo->pData = new long;
-                    *((long*) lnOpaqueInfo->pData) = currPixNb;
-                    addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
-                }
-            }
-            else {
-                if ((inOpaque && (currByte == 0 || (currPixNb+1) % m_size.w == 0)) || (!inOpaque && currByte != 0)) {
-                    LLNode* lnOpaqueInfo = new LLNode;
-                    lnOpaqueInfo->pData = new long;
-                    *((long*) lnOpaqueInfo->pData) = currPixNb;
-                    // printf("o: %ld, ", *((long*) lnOpaqueInfo->pData));
-                    addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
-                    inOpaque = !inOpaque;
-                }
-            }
-            
+			bool doEndNow = false;
+
+			// Transparency detection
+			if (currPixNb == 0) { // If first pixel is opaque
+				if ((int)currByte != 0) {
+					inOpaque = true;
+					LLNode* lnOpaqueInfo = new LLNode;
+					lnOpaqueInfo->pData = new long;
+					*((long*)lnOpaqueInfo->pData) = currPixNb;
+					addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
+
+					printf("begin: %ld/%ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb, currPixNb % m_size.w, currPixNb / m_size.w);
+				}
+			}
+			else {
+				if ((inOpaque && (currByte == 0 || (currPixNb + 1) % m_size.w == 0)) || (!inOpaque && currByte != 0)) {
+					LLNode* lnOpaqueInfo = new LLNode;
+					lnOpaqueInfo->pData = new long;
+
+					if (inOpaque) {
+						if (currByte == 0) {
+							*((long*) lnOpaqueInfo->pData) = currPixNb - 1;
+						}
+						else {
+							*((long*) lnOpaqueInfo->pData) = currPixNb;
+						}
+
+						m_nbZoneByLine[currPixNb / m_size.w]++;
+						printf("end: %ld/%ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb, currPixNb % m_size.w, currPixNb / m_size.w);
+						printf("NbZoneInLine %ld : %ld\n", currPixNb / m_size.w, m_nbZoneByLine[currPixNb / m_size.w]);
+					}
+					else {
+						*((long*) lnOpaqueInfo->pData) = currPixNb;
+						printf("begin: %ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb % m_size.w, currPixNb / m_size.w);
+
+						if ((currPixNb + 1) % m_size.w == 0) {
+							doEndNow = true;
+						}
+					}
+
+					addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
+
+					if (doEndNow) {
+						LLNode* lnOpaqueInfo = new LLNode;
+						lnOpaqueInfo->pData = new long;
+
+						*((long*)lnOpaqueInfo->pData) = currPixNb;
+
+						addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
+
+						doEndNow = false;
+						inOpaque = false;
+					}
+					else {
+						inOpaque = !inOpaque;
+					}
+				}
+			}
+
             m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
@@ -167,18 +208,59 @@ void Image::loadFromFile(char* fileName) {
 		seekPtr += nBytesToRead;
 	}
 
-    m_maskNbZone = lOpaqueInfo.size;
+	if (lOpaqueInfo.size % 2 == 1) {
+		LLNode* lnOpaqueInfo = new LLNode;
+		lnOpaqueInfo->pData = new long;
+
+		*((long*)lnOpaqueInfo->pData) = currPixNb - 1;
+
+		m_nbZoneByLine[currPixNb / m_size.w]++;
+
+		printf("end2: %ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb % m_size.w, currPixNb / m_size.w);
+		printf("NbZoneInLine %ld : %ld\n", currPixNb / m_size.w, m_nbZoneByLine[currPixNb / m_size.w]);
+
+		addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
+	}
+
+	m_maskNbZone = lOpaqueInfo.size;
     m_mask = new long[m_maskNbZone];
     
-    printf("NbZones: %ld", m_maskNbZone);
+    printf("NbZones: %ld\n", m_maskNbZone);
     LLNode* currNode = lOpaqueInfo.pHead;
     
-    i = 0;
     
-    while (currNode != NULL) {
-        long* pPosData = (long *) currNode->pData;
-        m_mask[i] = *pPosData;
-        
+	m_maskIdByLine = new long*[m_size.h];
+
+	for (int i = 0; i < m_size.h; i++) {
+		m_maskIdByLine[i] = new long[m_nbZoneByLine[i]];
+	}
+
+	i = 0;
+	j = 0;
+
+	int lastY = 0;
+
+	while (currNode != NULL) {
+		long* pPosData = (long *)currNode->pData;
+
+		if (i % 2 == 0) {
+			m_mask[i] = *pPosData;
+
+			int currY = m_mask[i] / m_size.w;
+
+			if (lastY != currY) {
+				lastY = currY;
+				j = 0;
+			}
+
+			m_maskIdByLine[currY][j] = i;
+
+			j++;
+		}
+		else {
+			m_mask[i] = *pPosData + 1 - m_mask[i - 1];
+		}
+
         removeNodeFromList(&lOpaqueInfo, currNode);
 
         LLNode* nodeToDelete = currNode;
@@ -186,9 +268,7 @@ void Image::loadFromFile(char* fileName) {
         
         delete nodeToDelete;
         delete pPosData;
-        
-        printf("%ld, ", m_mask[i]);
-        
+
         i++;
     }
     
@@ -277,14 +357,47 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 			       zoneSize);
 		}*/
         
-        for (int i = 0; i < m_maskNbZone/2; i++) {
+		for (int i = m_size.h - 1 - srcH - srcY; i < m_size.h - 1 - srcY; i++) {
+			//printf("%ld\n", m_nbZoneByLine[i]);
+			for (int j = 0; j < m_nbZoneByLine[i]; j++) {
+				//printf("%ld\n", m_maskIdByLine[i][j]);
+				int maskIdx = m_maskIdByLine[i][j];
+
+				imgBufIdx = (unsigned int) m_mask[maskIdx];
+				zoneSize  = (unsigned int) m_mask[maskIdx + 1];
+
+				int ptrX = imgBufIdx % m_size.w;
+				int ptrY = (srcH - 1) - (imgBufIdx / m_size.w);
+				int clippedSize = min(ptrX + zoneSize, SCREEN_WIDTH) - ptrX;
+
+				if (ptrX + zoneSize < srcX || ptrX > srcX + srcW) {
+					continue;
+				}
+
+				int newPtrX = min(max(ptrX, srcX), srcX + srcW);
+				int newZoneSize = min((ptrX + zoneSize), srcX + srcW) - ptrX - (newPtrX - ptrX);
+				int newImgBufIdx = imgBufIdx + (newPtrX - ptrX);
+
+				// printf("(%ld, %ld): %ld\n", ptrX, ptrY, newPtrX);
+				memcpy(buffer + ((ptrX + dstX + (newPtrX - ptrX) - srcX) * SCREEN_BPP) + ((ptrY + dstY) * SCREEN_WIDTH * SCREEN_BPP),
+					m_pImgData + newImgBufIdx * SCREEN_BPP,
+					newZoneSize * SCREEN_BPP);
+			}
+		}
+
+        /*for (int i = 0; i < m_maskNbZone/2; i++) {
             imgBufIdx = (unsigned int) m_mask[i*2];
-            zoneSize = (unsigned int) m_mask[i*2+1] - (unsigned int) m_mask[i*2];
+            //zoneSize = (unsigned int) m_mask[i*2+1] - (unsigned int) m_mask[i*2];
+			zoneSize = (unsigned int) m_mask[i*2+1];
+
+			int ptrX = imgBufIdx % m_size.w;
+			int ptrY = (m_size.h - 1) - (imgBufIdx / m_size.w);
+			int clippedSize = min(ptrX + zoneSize, SCREEN_WIDTH) - ptrX;
             
-            memcpy(buffer + (max(0, dstX) * SCREEN_BPP) + ((max(0, dstY) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
-                   m_pImgData + ((m_size.h - (i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((overflowLeft + srcX) * SCREEN_BPP),
-                   (srcW - overflowLeft - overflowRight) * SCREEN_BPP);
-        }
+            memcpy(buffer + ((ptrX + dstX) * SCREEN_BPP) + ((ptrY + dstY) * SCREEN_WIDTH * SCREEN_BPP),
+                   m_pImgData + imgBufIdx * SCREEN_BPP,
+				   zoneSize * SCREEN_BPP);
+        }*/
 	}
 	else {
 #if TARGET_3DS

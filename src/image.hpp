@@ -28,6 +28,8 @@ protected:
 	uint8* m_pImgData;
 	size2d_t m_size;
 	long* m_mask;
+	long* m_nbZoneByLine;
+	long** m_maskIdByLine;
 	uint m_maskNbZone;
 	int m_paletteSize;
 	color_t* m_aPalette;
