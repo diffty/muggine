@@ -26,6 +26,11 @@ LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode) {
 	if (pList->pHead == NULL) {
 		return NULL;
 	}
+    
+    if (pNode == pList->pHead) {
+        pList->pHead = pNode->pNext;
+        return pNode;
+    }
 
 	LLNode* pCurrNode = pList->pHead;
 
