@@ -51,7 +51,7 @@ RscManager rscManager;
 	rscManager.loadRsc("data/bg2.bmp");
 	rscManager.loadRsc("data/bg3.bmp");
     rscManager.loadRsc("data/bg4.bmp");
-    rscManager.loadRsc("data/transptest.bmp");
+    rscManager.loadRsc("data/simon2.bmp");
 #endif
 
 	// Building scene
@@ -62,10 +62,13 @@ RscManager rscManager;
     Image* transpImg = rscManager.getImgRsc(4);
     
     // Setting up BG
-    parallaxBG.addLayer(rscManager.getImgRsc(3), 4, 0, -20);
-    parallaxBG.addLayer(rscManager.getImgRsc(2), 3, 0, -15);
-    parallaxBG.addLayer(rscManager.getImgRsc(1), 2, 0, -7);
-    parallaxBG.addLayer(rscManager.getImgRsc(0), 0);
+	parallaxBG.addLayer(rscManager.getImgRsc(4), 7, 0, -48);
+	parallaxBG.addLayer(rscManager.getImgRsc(4), 6, 0, -47);
+	parallaxBG.addLayer(rscManager.getImgRsc(4), 5, 0, -45);
+	parallaxBG.addLayer(rscManager.getImgRsc(4), 4, 0, -40);
+    parallaxBG.addLayer(rscManager.getImgRsc(4), 3, 0, -30);
+    parallaxBG.addLayer(rscManager.getImgRsc(4), 2, 0, -15);
+    parallaxBG.addLayer(rscManager.getImgRsc(4), 1.5);
     
     parallaxBG.translate(0, 100);
     
@@ -116,8 +119,6 @@ RscManager rscManager;
 
 		scene.update();
 		scene.draw(fb);
-        
-        transpImg->draw(fb, 50, 50, false, true);
         
 		// Flush and swap framebuffers
 		gfx->FlushBuffer();
