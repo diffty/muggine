@@ -27,6 +27,7 @@ class ParallaxBackground : public IWidget {
 private:
     LinkedList m_lLayers;
     vect2d_t m_v2dCamPos;
+	bool m_bDrawTransparency;
     
 public:
     ParallaxBackground();
@@ -37,6 +38,7 @@ public:
     void draw(uint8* buffer);
     void setCamPos(int x, int y);
     vect2d_t getCamPos();
+	void setTransparencyDrawing(bool newTransparency);
 };
 
 #endif /* parallax_background_hpp */

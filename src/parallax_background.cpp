@@ -12,7 +12,8 @@
 ParallaxBackground::ParallaxBackground() {
     m_v2dCamPos.x = 0;
     m_v2dCamPos.y = 0;
-    
+	m_bDrawTransparency = true;
+
     initList(&m_lLayers);
 }
 
@@ -84,7 +85,7 @@ void ParallaxBackground::draw(uint8* buffer) {
         do {
             currXPos += currLayer->img->getSize().w;
 
-            currLayer->img->draw(buffer, m_rect.getPos().x + currXPos, m_rect.getPos().y + currLayer->v2dPos.y, false, false);
+            currLayer->img->draw(buffer, m_rect.getPos().x + currXPos, m_rect.getPos().y + currLayer->v2dPos.y, false, m_bDrawTransparency);
             
         } while (m_rect.getPos().x + currXPos < SCREEN_WIDTH);
 
@@ -99,4 +100,8 @@ void ParallaxBackground::setCamPos(int x, int y) {
 
 vect2d_t ParallaxBackground::getCamPos() {
     return m_v2dCamPos;
+}
+
+void ParallaxBackground::setTransparencyDrawing(bool newTransparency) {
+	m_bDrawTransparency = newTransparency;
 }
