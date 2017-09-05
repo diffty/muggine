@@ -94,10 +94,12 @@
     <ClCompile Include="src\linked_list.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mathf.cpp" />
+    <ClCompile Include="src\parallax_background.cpp" />
     <ClCompile Include="src\rsc_manager.cpp" />
     <ClCompile Include="src\samplergridwidget.cpp" />
     <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\sprite.cpp" />
+    <ClCompile Include="src\spritesheet.cpp" />
     <ClCompile Include="src\system.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -115,10 +117,12 @@
     <ClInclude Include="src\keys.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
     <ClInclude Include="src\mathf.hpp" />
+    <ClInclude Include="src\parallax_background.hpp" />
     <ClInclude Include="src\rsc_manager.hpp" />
     <ClInclude Include="src\samplergridwidget.hpp" />
     <ClInclude Include="src\scene.hpp" />
     <ClInclude Include="src\sprite.hpp" />
+    <ClInclude Include="src\spritesheet.hpp" />
     <ClInclude Include="src\system.hpp" />
     <ClInclude Include="src\iwidget.hpp" />
   </ItemGroup>

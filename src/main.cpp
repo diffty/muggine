@@ -52,6 +52,7 @@ RscManager rscManager;
 	rscManager.loadRsc("data/bg3.bmp");
     rscManager.loadRsc("data/bg4.bmp");
     rscManager.loadRsc("data/simon2.bmp");
+	rscManager.loadRsc("data/animtest3.bmp");
 #endif
 
 	// Building scene
@@ -60,6 +61,7 @@ RscManager rscManager;
 	// Creating components
     ParallaxBackground parallaxBG;
     Image* transpImg = rscManager.getImgRsc(4);
+	SpriteSheet sprSht("data/animtest3.bmp", 2, 2, 4);
     
     // Setting up BG
 	parallaxBG.addLayer(rscManager.getImgRsc(4), 7, 0, -48);
@@ -70,7 +72,7 @@ RscManager rscManager;
     parallaxBG.addLayer(rscManager.getImgRsc(4), 2, 0, -15);
     parallaxBG.addLayer(rscManager.getImgRsc(4), 1.5);
     
-    parallaxBG.translate(0, 100);
+    parallaxBG.translate(0, 170);
     
 	// Setting up scene
 	scene.addComponent(&parallaxBG);
@@ -83,6 +85,8 @@ RscManager rscManager;
 	uint8* fb = gfx->GetFramebuffer();
 
 	sys->initLoop();
+
+	int i = 0;
 
 	// Main loop
 	while (sys->MainLoop())
@@ -119,6 +123,16 @@ RscManager rscManager;
 
 		scene.update();
 		scene.draw(fb);
+
+		sprSht.draw(fb, -10, -10, false, true);
+		sprSht.draw(fb, -10, 230, false, true);
+		sprSht.draw(fb, 300, 220, false, true);
+		sprSht.draw(fb, 300, -10, false, true);
+		sprSht.draw(fb, 120, 120, false, true);
+
+		//transpImg->draw(fb, -20, -20, 0, 0, 68, 100, false, true);
+		
+		if (i % 1500 == 0) sprSht.nextFrame();
         
 		// Flush and swap framebuffers
 		gfx->FlushBuffer();
@@ -126,6 +140,8 @@ RscManager rscManager;
 
 		// Wait for VBlank
 		gfx->WaitForBlank();
+
+		i++;
 	}
 
 	rscManager.freeAllRsc();

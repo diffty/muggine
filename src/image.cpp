@@ -322,82 +322,57 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 	}
     
   	if (masked) {
-		/*for (int i = 0; i < m_maskNbZone/2; i++) {
-			imgBufIdx = (unsigned int) m_mask[i*2];
-			zoneSize = (unsigned int) m_mask[i*2+1] - (unsigned int) m_mask[i*2];
-            
-			xb = imgBufIdx % srcW;
+		for (int y = srcY; y < srcY + srcH; y++) {
 
-			if (reversed)
-				yb = imgBufIdx / m_size.w;
-			else
-				yb = m_size.h - (imgBufIdx / m_size.w) - 1;
+			// for (int i = m_size.h - 1 - srcH - srcY; i < m_size.h - 1 - srcY - max(0, -(dstY)); i++) {
 
-			// Clipping
-			if (dstX + xb + zoneSize < 0 || dstX + xb >= SCREEN_WIDTH || dstY + yb < 0 || dstY + yb >= SCREEN_HEIGHT) {
+			int reversedY = (m_size.h - 1) - (m_size.h - srcY) + (y % srcH);
+
+			if (dstY + srcH+1 - (y % srcH) < 0 || dstY + srcH+1 - (y % srcH) > SCREEN_HEIGHT-1) {
 				continue;
 			}
-			else if (dstX + xb + zoneSize > SCREEN_WIDTH) {
-				zoneSize = zoneSize - ((dstX + xb + zoneSize) % SCREEN_WIDTH);
-			}
-			else if (dstX + xb < 0) {
-				imgBufIdx += -(dstX + xb);
-				zoneSize = zoneSize + (dstX + xb);
-				xb = imgBufIdx % m_size.w;
-			}
 
-			// ...Then current line copy
-			//memcpy(buffer + (dstX + xb) + ((dstY * SCREEN_WIDTH) + (yb * SCREEN_WIDTH)),
-			//       m_pImgData + imgBufIdx,
-			//       zoneSize);
-
-			// ...Then current line copy
-			memcpy(buffer + ((dstY + yb) * SCREEN_BPP) + ((dstX * SCREEN_HEIGHT * SCREEN_BPP) + (xb * SCREEN_HEIGHT)),
-			       m_pImgData + imgBufIdx,
-			       zoneSize);
-		}*/
-        
-		for (int i = m_size.h - 1 - srcH - srcY; i < m_size.h - 1 - srcY; i++) {
-			//printf("%ld\n", m_nbZoneByLine[i]);
-			for (int j = 0; j < m_nbZoneByLine[i]; j++) {
-				//printf("%ld\n", m_maskIdByLine[i][j]);
-				int maskIdx = m_maskIdByLine[i][j];
+			for (int j = 0; j < m_nbZoneByLine[reversedY]; j++) {
+				int maskIdx = m_maskIdByLine[reversedY][j];
 
 				imgBufIdx = (unsigned int) m_mask[maskIdx];
 				zoneSize  = (unsigned int) m_mask[maskIdx + 1];
 
-				int ptrX = imgBufIdx % m_size.w;
-				int ptrY = (srcH - 1) - (imgBufIdx / m_size.w);
-				int clippedSize = min(ptrX + zoneSize, SCREEN_WIDTH) - ptrX;
+				int posOnImgX = imgBufIdx % m_size.w;
+				int posOnImgY = (srcH - 1) - (imgBufIdx / m_size.w);
 
-				if (ptrX + zoneSize < srcX || ptrX > srcX + srcW) {
+				if (posOnImgX + zoneSize < srcX || posOnImgX > srcX + srcW || (posOnImgX - srcX) + zoneSize + dstX < 0 || (posOnImgX - srcX) + dstX > SCREEN_WIDTH-1) {
 					continue;
 				}
 
-				int newPtrX = min(max(ptrX, srcX), srcX + srcW);
-				int newZoneSize = min((ptrX + zoneSize), srcX + srcW) - ptrX - (newPtrX - ptrX);
-				int newImgBufIdx = imgBufIdx + (newPtrX - ptrX);
+				// Custom clipping
+				int newPosOnImgX = min(max(posOnImgX, srcX), srcX + srcW);
+				int newPosOnImgXDelta = (newPosOnImgX - posOnImgX);
 
-				// printf("(%ld, %ld): %ld\n", ptrX, ptrY, newPtrX);
-				memcpy(buffer + ((ptrX + dstX + (newPtrX - ptrX) - srcX) * SCREEN_BPP) + ((ptrY + dstY) * SCREEN_WIDTH * SCREEN_BPP),
+				int newZoneSize = min((posOnImgX + zoneSize), srcX + srcW) - posOnImgX - newPosOnImgXDelta;
+				int newImgBufIdx = imgBufIdx + newPosOnImgXDelta;
+
+				// Edge clipping
+				int transpZoneX = max(-dstX - (newPosOnImgX - srcX), 0);
+
+				if (dstX < 0) {
+					newPosOnImgX += transpZoneX;
+					newZoneSize = max(0, newZoneSize - transpZoneX);
+					newImgBufIdx += transpZoneX;
+				}
+				else if (dstX + (newPosOnImgX - srcX) + newZoneSize > SCREEN_WIDTH-1) {
+					newZoneSize = max(0, newZoneSize - (dstX + (newPosOnImgX - srcX) + newZoneSize - SCREEN_WIDTH));
+				}
+
+				// Building final coordinates
+				int posOnBufferX = (newPosOnImgX + dstX - srcX);
+				int posOnBufferY = (((srcH + srcY) - reversedY) + dstY);
+
+				memcpy(buffer + (posOnBufferX * SCREEN_BPP) + (posOnBufferY * SCREEN_WIDTH * SCREEN_BPP),
 					m_pImgData + newImgBufIdx * SCREEN_BPP,
 					newZoneSize * SCREEN_BPP);
 			}
 		}
-
-        /*for (int i = 0; i < m_maskNbZone/2; i++) {
-            imgBufIdx = (unsigned int) m_mask[i*2];
-            //zoneSize = (unsigned int) m_mask[i*2+1] - (unsigned int) m_mask[i*2];
-			zoneSize = (unsigned int) m_mask[i*2+1];
-
-			int ptrX = imgBufIdx % m_size.w;
-			int ptrY = (m_size.h - 1) - (imgBufIdx / m_size.w);
-			int clippedSize = min(ptrX + zoneSize, SCREEN_WIDTH) - ptrX;
-            
-            memcpy(buffer + ((ptrX + dstX) * SCREEN_BPP) + ((ptrY + dstY) * SCREEN_WIDTH * SCREEN_BPP),
-                   m_pImgData + imgBufIdx * SCREEN_BPP,
-				   zoneSize * SCREEN_BPP);
-        }*/
 	}
 	else {
 #if TARGET_3DS
