@@ -328,7 +328,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 
 			int reversedY = (m_size.h - 1) - (m_size.h - 1 - srcY) + (y % srcH);
 
-			if (dstY + srcH+1 - (y % srcH) < 0 || dstY + srcH+1 - (y % srcH) > SCREEN_HEIGHT-1) {
+			if (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > SCREEN_HEIGHT-1) {
 				continue;
 			}
 
@@ -367,7 +367,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 
 				// Building final coordinates
 				int posOnBufferX = (newPosOnImgX + dstX - srcX);
-				int posOnBufferY = (((srcH + srcY) - reversedY) + dstY);
+				int posOnBufferY = (((srcH - 1 + srcY) - reversedY) + dstY);
 
 				// Blittin'
 				memcpy(buffer + (posOnBufferX * SCREEN_BPP) + (posOnBufferY * SCREEN_WIDTH * SCREEN_BPP),
