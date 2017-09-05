@@ -341,6 +341,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 				int posOnImgX = imgBufIdx % m_size.w;
 				int posOnImgY = (srcH - 1) - (imgBufIdx / m_size.w);
 
+				// Skipping out of bounds zones
 				if (posOnImgX + zoneSize < srcX || posOnImgX > srcX + srcW || (posOnImgX - srcX) + zoneSize + dstX < 0 || (posOnImgX - srcX) + dstX > SCREEN_WIDTH-1) {
 					continue;
 				}
@@ -352,7 +353,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 				int newZoneSize = min((posOnImgX + zoneSize), srcX + srcW) - posOnImgX - newPosOnImgXDelta;
 				int newImgBufIdx = imgBufIdx + newPosOnImgXDelta;
 
-				// Edge clipping
+				// Buffer edge clipping
 				int transpZoneX = max(-dstX - (newPosOnImgX - srcX), 0);
 
 				if (dstX < 0) {
@@ -368,6 +369,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 				int posOnBufferX = (newPosOnImgX + dstX - srcX);
 				int posOnBufferY = (((srcH + srcY) - reversedY) + dstY);
 
+				// Blittin'
 				memcpy(buffer + (posOnBufferX * SCREEN_BPP) + (posOnBufferY * SCREEN_WIDTH * SCREEN_BPP),
 					m_pImgData + newImgBufIdx * SCREEN_BPP,
 					newZoneSize * SCREEN_BPP);
