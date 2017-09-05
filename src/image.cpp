@@ -326,7 +326,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 
 			// for (int i = m_size.h - 1 - srcH - srcY; i < m_size.h - 1 - srcY - max(0, -(dstY)); i++) {
 
-			int reversedY = (m_size.h - 1) - (m_size.h - srcY) + (y % srcH);
+			int reversedY = (m_size.h - 1) - (m_size.h - 1 - srcY) + (y % srcH);
 
 			if (dstY + srcH+1 - (y % srcH) < 0 || dstY + srcH+1 - (y % srcH) > SCREEN_HEIGHT-1) {
 				continue;

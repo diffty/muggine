@@ -18,6 +18,8 @@ SpriteSheet::SpriteSheet(char* fileName, int gridWidth, int gridHeight, uint len
     m_frameSize.h = (m_size.h / gridHeight);
         
     m_length = length;
+        
+    m_currFrame = 0;
 }
 
 
