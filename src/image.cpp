@@ -148,7 +148,7 @@ void Image::loadFromFile(char* fileName) {
 					*((long*)lnOpaqueInfo->pData) = currPixNb;
 					addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
 
-					printf("begin: %ld/%ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb, currPixNb % m_size.w, currPixNb / m_size.w);
+					//printf("begin: %ld/%ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb, currPixNb % m_size.w, currPixNb / m_size.w);
 				}
 			}
 			else {
@@ -165,12 +165,12 @@ void Image::loadFromFile(char* fileName) {
 						}
 
 						m_nbZoneByLine[currPixNb / m_size.w]++;
-						printf("end: %ld/%ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb, currPixNb % m_size.w, currPixNb / m_size.w);
-						printf("NbZoneInLine %ld : %ld\n", currPixNb / m_size.w, m_nbZoneByLine[currPixNb / m_size.w]);
+						//printf("end: %ld/%ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb, currPixNb % m_size.w, currPixNb / m_size.w);
+						//printf("NbZoneInLine %ld : %ld\n", currPixNb / m_size.w, m_nbZoneByLine[currPixNb / m_size.w]);
 					}
 					else {
 						*((long*) lnOpaqueInfo->pData) = currPixNb;
-						printf("begin: %ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb % m_size.w, currPixNb / m_size.w);
+						//printf("begin: %ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb % m_size.w, currPixNb / m_size.w);
 
 						if ((currPixNb + 1) % m_size.w == 0) {
 							doEndNow = true;
@@ -216,8 +216,8 @@ void Image::loadFromFile(char* fileName) {
 
 		m_nbZoneByLine[currPixNb / m_size.w]++;
 
-		printf("end2: %ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb % m_size.w, currPixNb / m_size.w);
-		printf("NbZoneInLine %ld : %ld\n", currPixNb / m_size.w, m_nbZoneByLine[currPixNb / m_size.w]);
+		//printf("end2: %ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb % m_size.w, currPixNb / m_size.w);
+		//printf("NbZoneInLine %ld : %ld\n", currPixNb / m_size.w, m_nbZoneByLine[currPixNb / m_size.w]);
 
 		addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
 	}
@@ -225,7 +225,7 @@ void Image::loadFromFile(char* fileName) {
 	m_maskNbZone = lOpaqueInfo.size;
     m_mask = new long[m_maskNbZone];
     
-    printf("NbZones: %ld\n", m_maskNbZone);
+    //printf("NbZones: %ld\n", m_maskNbZone);
     LLNode* currNode = lOpaqueInfo.pHead;
     
     
@@ -323,9 +323,6 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
     
   	if (masked) {
 		for (int y = srcY; y < srcY + srcH; y++) {
-
-			// for (int i = m_size.h - 1 - srcH - srcY; i < m_size.h - 1 - srcY - max(0, -(dstY)); i++) {
-
 			int reversedY = (m_size.h - 1) - (m_size.h - 1 - srcY) + (y % srcH);
 
 			if (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > SCREEN_HEIGHT-1) {
