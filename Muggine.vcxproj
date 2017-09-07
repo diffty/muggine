@@ -87,6 +87,9 @@
     <ClCompile Include="src\bko_paddle.cpp" />
     <ClCompile Include="src\buttonwidget.cpp" />
     <ClCompile Include="src\drawing.cpp" />
+    <ClCompile Include="src\fsm.cpp" />
+    <ClCompile Include="src\fsm_event.cpp" />
+    <ClCompile Include="src\fsm_node.cpp" />
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\input.cpp" />
@@ -101,6 +104,7 @@
     <ClCompile Include="src\sprite.cpp" />
     <ClCompile Include="src\spritesheet.cpp" />
     <ClCompile Include="src\system.cpp" />
+    <ClCompile Include="src\ts_maincharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bko_ball.hpp" />
@@ -110,6 +114,9 @@
     <ClInclude Include="src\buttonwidget.hpp" />
     <ClInclude Include="src\common_types.hpp" />
     <ClInclude Include="src\drawing.hpp" />
+    <ClInclude Include="src\fsm.hpp" />
+    <ClInclude Include="src\fsm_event.hpp" />
+    <ClInclude Include="src\fsm_node.hpp" />
     <ClInclude Include="src\graphics.hpp" />
     <ClInclude Include="src\idrawable.hpp" />
     <ClInclude Include="src\image.hpp" />
@@ -125,6 +132,7 @@
     <ClInclude Include="src\spritesheet.hpp" />
     <ClInclude Include="src\system.hpp" />
     <ClInclude Include="src\iwidget.hpp" />
+    <ClInclude Include="src\ts_maincharacter.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
