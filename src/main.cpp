@@ -21,10 +21,9 @@
 #include "sprite.hpp"
 #include "spritesheet.hpp"
 #include "parallax_background.hpp"
+#include "fsm.hpp"
+#include "ts_maincharacter.hpp"
 
-#include "bko_grid.hpp"
-#include "bko_ball.hpp"
-#include "bko_paddle.hpp"
 
 #include <time.h>
 
@@ -47,10 +46,6 @@ RscManager rscManager;
 	rscManager.loadRsc("romfs:/data/bg3.bmp");
 	rscManager.loadRsc("romfs:/data/bg4.bmp");
 #else
-	rscManager.loadRsc("data/bg1.bmp");   // Catch le crash quand le path est pas bon stp
-	rscManager.loadRsc("data/bg2.bmp");
-	rscManager.loadRsc("data/bg3.bmp");
-    rscManager.loadRsc("data/bg4.bmp");
     rscManager.loadRsc("data/simon2.bmp");
 	rscManager.loadRsc("data/animtest3.bmp");
 #endif
@@ -58,24 +53,28 @@ RscManager rscManager;
 	// Building scene
 	Scene scene;
 
-	// Creating components
-    ParallaxBackground parallaxBG;
-    Image* transpImg = rscManager.getImgRsc(4);
-	SpriteSheet sprSht("data/animtest3.bmp", 2, 2, 4);
-    
-    // Setting up BG
-	parallaxBG.addLayer(rscManager.getImgRsc(4), 7, 0, -48);
-	parallaxBG.addLayer(rscManager.getImgRsc(4), 6, 0, -47);
-	parallaxBG.addLayer(rscManager.getImgRsc(4), 5, 0, -45);
-	parallaxBG.addLayer(rscManager.getImgRsc(4), 4, 0, -40);
-    parallaxBG.addLayer(rscManager.getImgRsc(4), 3, 0, -30);
-    parallaxBG.addLayer(rscManager.getImgRsc(4), 2, 0, -15);
-    parallaxBG.addLayer(rscManager.getImgRsc(4), 1.5);
-    
-    parallaxBG.translate(0, 170);
-    
+	//Creating components
+	//ParallaxBackground parallaxBG;
+	//Image* transpImg = rscManager.getImgRsc(4);
+	//SpriteSheet sprSht("data/animtest3.bmp", 2, 2, 4);
+	
+	//Setting up BG
+	//parallaxBG.addLayer(rscManager.getImgRsc(4), 7, 0, -48);
+	//parallaxBG.addLayer(rscManager.getImgRsc(4), 6, 0, -47);
+	//parallaxBG.addLayer(rscManager.getImgRsc(4), 5, 0, -45);
+	//parallaxBG.addLayer(rscManager.getImgRsc(4), 4, 0, -40);
+	//parallaxBG.addLayer(rscManager.getImgRsc(4), 3, 0, -30);
+	//parallaxBG.addLayer(rscManager.getImgRsc(4), 2, 0, -15);
+	//parallaxBG.addLayer(rscManager.getImgRsc(4), 1.5);
+	
+	//parallaxBG.translate(0, 170);
+
 	// Setting up scene
-	scene.addComponent(&parallaxBG);
+	//scene.addComponent(&parallaxBG);
+
+	MainCharacter mainChar;
+
+	scene.addComponent(&mainChar);
 
 	// We don't need double buffering in this example.
 	// In this way we can draw our image only once on screen.
@@ -110,12 +109,12 @@ RscManager rscManager;
 		}
 
 		if (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsJoyBtnPressed(JOY_LEFT)) {
-            vect2d_t currCamPos = parallaxBG.getCamPos();
-			parallaxBG.setCamPos(currCamPos.x + -1 * deltaTime, 0);
+            //vect2d_t currCamPos = parallaxBG.getCamPos();
+			//parallaxBG.setCamPos(currCamPos.x + -1 * deltaTime, 0);
 		}
 		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_RIGHT)) {
-            vect2d_t currCamPos = parallaxBG.getCamPos();
-			parallaxBG.setCamPos(currCamPos.x + 1 * deltaTime, 0);
+            //vect2d_t currCamPos = parallaxBG.getCamPos();
+			//parallaxBG.setCamPos(currCamPos.x + 1 * deltaTime, 0);
 		}
         else if (sys->GetInputSys()->IsKeyPressed(KEYB_ESCAPE) || sys->GetInputSys()->IsJoyBtnPressed(JOY_BTN_START)) {
             break;
@@ -124,15 +123,15 @@ RscManager rscManager;
 		scene.update();
 		scene.draw(fb);
 
-		sprSht.draw(fb, -10, -10, false, true);
-		sprSht.draw(fb, -10, 230, false, true);
-		sprSht.draw(fb, 300, 220, false, true);
-		sprSht.draw(fb, 300, -10, false, true);
-		sprSht.draw(fb, 120, 120, false, true);
+		//sprSht.draw(fb, -10, -10, false, true);
+		//sprSht.draw(fb, -10, 230, false, true);
+		//sprSht.draw(fb, 300, 220, false, true);
+		//sprSht.draw(fb, 300, -10, false, true);
+		//sprSht.draw(fb, 120, 120, false, true);
 
 		//transpImg->draw(fb, -20, -20, 0, 0, 68, 100, false, true);
 		
-		if (i % 1500 == 0) sprSht.nextFrame();
+		//if (i % 1500 == 0) sprSht.nextFrame();
         
 		// Flush and swap framebuffers
 		gfx->FlushBuffer();
