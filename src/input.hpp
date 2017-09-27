@@ -19,6 +19,7 @@
 #include "common_types.hpp"
 #include "keys.hpp"
 #include "linked_list.hpp"
+#include "constants.hpp"
 
 
 enum EInputType {
@@ -61,6 +62,8 @@ public:
 	bool IsButtonPressed(EMouseButton btn);
 	MouseEvent* GetButtonPressEvent(EMouseButton btn);
 	bool GetTouch(vect2d_t* touch);
+	vect2d_t getCurrInputPos();
+
 #ifdef TARGET_SDL
 	void RegisterKeyEvent(uint32 eventType, SDL_Keysym key);
 	void RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseBtn);
@@ -72,6 +75,8 @@ private:
     LinkedList currEventsList;
 	LinkedList currInputList;
 	LinkedList currMouseList;
+
+	vect2d_t vCurrMousePos;
 };
 
 #endif

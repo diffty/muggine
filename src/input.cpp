@@ -82,12 +82,13 @@ bool Input::GetTouch(vect2d_t* touch) {
 	}
 
 #else
-	touch->x = 0.;
-	touch->y = 0.;
-
 	return false;
 
 #endif
+}
+
+vect2d_t Input::getCurrInputPos() {
+	return vCurrMousePos;
 }
 
 void displayKeys(LinkedList* list) {
@@ -175,6 +176,11 @@ void Input::RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseB
 	MouseEvent* currMouse = NULL;
 
 	LLNode* currNode = currInputList.pHead;
+
+	mousePos.x /= SCREEN_SCALE;
+	mousePos.y /= SCREEN_SCALE;
+
+	vCurrMousePos = mousePos;
 
 	if (eventType != SDL_MOUSEMOTION) {
 		mouseEvt = new MouseEvent;
