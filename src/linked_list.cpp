@@ -7,28 +7,72 @@ void initList(LinkedList* pList) {
 	pList->size = 0;
 }
 
-void addNodeToList(LinkedList* pList, LLNode* nodeToAdd) {
+void destroyList(LinkedList* pList) {
+	LLNode* pCurrNode = pList->pHead;
+
+	if (pCurrNode) {
+		LLNode* pNextNode = pCurrNode->pNext;
+
+		while (pCurrNode != NULL) {
+			pNextNode = pCurrNode->pNext;
+			delete pCurrNode;
+			pCurrNode = pNextNode;
+		}
+	}
+}
+
+void appendList(LinkedList* pllSrcList, LinkedList* pllDstList) {
+	LLNode* pCurrNode = pllSrcList->pHead;
+	
+	while (pCurrNode != NULL) {
+		LLNode* pClonedNode = new LLNode(*pCurrNode);
+		pClonedNode->pNext = NULL;
+		addNodeToList(pllDstList, pClonedNode);
+
+		pCurrNode = pCurrNode->pNext;
+	}
+}
+
+void addNodeToList(LinkedList* pList, LLNode*  pNodeToAdd, bool bAddToHead) {
 	if (pList->pHead == NULL) {
-		pList->pHead = nodeToAdd;
-		pList->pTail = nodeToAdd;
-		nodeToAdd->pNext = NULL;
+		pList->pHead = pNodeToAdd;
+		pList->pTail = pNodeToAdd;
+		pNodeToAdd->pNext = NULL;
 	}
 	else {
-		pList->pTail->pNext = nodeToAdd;
-		pList->pTail = nodeToAdd;
-		nodeToAdd->pNext = NULL;
+		if (bAddToHead) {
+			pNodeToAdd->pNext = pList->pHead;
+			pList->pHead = pNodeToAdd;
+		}
+		else {
+			if (pList->pTail != NULL)
+				pList->pTail->pNext = pNodeToAdd;
+
+			pList->pTail = pNodeToAdd;
+			pNodeToAdd->pNext = NULL;
+		}
 	}
 
 	pList->size++;
+}
+
+void addDataToList(LinkedList* pList, void* pDataToAdd) {
+	LLNode* pNewNode = new LLNode;
+	pNewNode->pData = pDataToAdd;
+	pNewNode->pNext = NULL;
+	addNodeToList(pList, pNewNode);
 }
 
 LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode) {
 	if (pList->pHead == NULL) {
 		return NULL;
 	}
-    
+
     if (pNode == pList->pHead) {
         pList->pHead = pNode->pNext;
+		if (pNode == pList->pTail) {
+			pList->pTail = NULL;
+		}
         return pNode;
     }
 
