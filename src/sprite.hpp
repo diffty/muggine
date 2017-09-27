@@ -8,12 +8,16 @@
 
 class Sprite : public IWidget {
 public:
-	Sprite(uint rscId, RscManager* rscManager, int x = 0, int y = 0);
+	Sprite(Image* pImg, vect2df_t vPos);
+	Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos);
+	Sprite(uint rscId, RscManager* rscManager, float x = 0, float y = 0);
 	void draw(uint8* buffer);
 
 private:
 	uint m_rscId;
-	Image* m_image;
+	Image* m_pImg;
+	SpriteSheet* m_pSprSht;
+	uint m_uFrameNb;
 };
 
 #endif
