@@ -52,7 +52,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>TARGET_WIN;TARGET_SDL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_WIN;TARGET_SDL;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -86,13 +86,21 @@
     <ClCompile Include="src\bko_grid.cpp" />
     <ClCompile Include="src\bko_paddle.cpp" />
     <ClCompile Include="src\buttonwidget.cpp" />
+    <ClCompile Include="src\draggable_sprite.cpp" />
     <ClCompile Include="src\drawing.cpp" />
+    <ClCompile Include="src\font.cpp" />
     <ClCompile Include="src\fsm.cpp" />
     <ClCompile Include="src\fsm_event.cpp" />
     <ClCompile Include="src\fsm_node.cpp" />
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\input.cpp" />
+    <ClCompile Include="src\iwidget.cpp" />
+    <ClCompile Include="src\paginated_widget_layout.cpp" />
+    <ClCompile Include="src\text.cpp" />
+    <ClCompile Include="src\ts_things_store.cpp" />
+    <ClCompile Include="src\ts_draggable_thing.cpp" />
+    <ClCompile Include="src\ts_interactable_thing.cpp" />
     <ClCompile Include="src\keys.cpp" />
     <ClCompile Include="src\linked_list.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -104,7 +112,8 @@
     <ClCompile Include="src\sprite.cpp" />
     <ClCompile Include="src\spritesheet.cpp" />
     <ClCompile Include="src\system.cpp" />
-    <ClCompile Include="src\ts_maincharacter.cpp" />
+    <ClCompile Include="src\ts_main_character.cpp" />
+    <ClCompile Include="src\ts_things_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bko_ball.hpp" />
@@ -113,7 +122,10 @@
     <ClInclude Include="src\bko_paddle.hpp" />
     <ClInclude Include="src\buttonwidget.hpp" />
     <ClInclude Include="src\common_types.hpp" />
+    <ClInclude Include="src\constants.hpp" />
+    <ClInclude Include="src\draggable_sprite.hpp" />
     <ClInclude Include="src\drawing.hpp" />
+    <ClInclude Include="src\font.hpp" />
     <ClInclude Include="src\fsm.hpp" />
     <ClInclude Include="src\fsm_event.hpp" />
     <ClInclude Include="src\fsm_node.hpp" />
@@ -121,6 +133,11 @@
     <ClInclude Include="src\idrawable.hpp" />
     <ClInclude Include="src\image.hpp" />
     <ClInclude Include="src\input.hpp" />
+    <ClInclude Include="src\paginated_widget_layout.hpp" />
+    <ClInclude Include="src\text.hpp" />
+    <ClInclude Include="src\ts_things_store.hpp" />
+    <ClInclude Include="src\ts_draggable_thing.hpp" />
+    <ClInclude Include="src\ts_interactable_thing.hpp" />
     <ClInclude Include="src\keys.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
     <ClInclude Include="src\mathf.hpp" />
@@ -132,7 +149,8 @@
     <ClInclude Include="src\spritesheet.hpp" />
     <ClInclude Include="src\system.hpp" />
     <ClInclude Include="src\iwidget.hpp" />
-    <ClInclude Include="src\ts_maincharacter.hpp" />
+    <ClInclude Include="src\ts_main_character.hpp" />
+    <ClInclude Include="src\ts_things_manager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

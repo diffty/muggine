@@ -22,8 +22,13 @@
 #include "spritesheet.hpp"
 #include "parallax_background.hpp"
 #include "fsm.hpp"
-#include "ts_maincharacter.hpp"
-
+#include "ts_main_character.hpp"
+#include "ts_interactable_thing.hpp"
+#include "ts_things_manager.hpp"
+#include "ts_draggable_thing.hpp"
+#include "ts_things_store.hpp"
+#include "font.hpp"
+#include "text.hpp"
 
 #include <time.h>
 
@@ -38,43 +43,72 @@ void MainApp(System* sys, Graphics* gfx) {
 	Result rc = romfsInit();
 #endif
     
-RscManager rscManager;
- 
+	RscManager rscManager;
+
 #ifdef TARGET_3DS
-	rscManager.loadRsc("romfs:/data/bg1.bmp");   // Catch le crash quand le path est pas bon stp
-	rscManager.loadRsc("romfs:/data/bg2.bmp");
-	rscManager.loadRsc("romfs:/data/bg3.bmp");
-	rscManager.loadRsc("romfs:/data/bg4.bmp");
+	rscManager.loadImg("romfs:/data/bg1.bmp");   // Catch le crash quand le path est pas bon stp
+	rscManager.loadImg("romfs:/data/bg2.bmp");
+	rscManager.loadImg("romfs:/data/bg3.bmp");
+	rscManager.loadImg("romfs:/data/bg4.bmp");
 #else
-    rscManager.loadRsc("data/simon2.bmp");
-	rscManager.loadRsc("data/animtest3.bmp");
+    rscManager.loadImg("data/thomas.bmp");
+	rscManager.loadSprSht("data/objects.bmp", 5, 5, 25);
+	rscManager.loadImg("data/room.bmp");
 #endif
 
 	// Building scene
 	Scene scene;
 
-	//Creating components
-	//ParallaxBackground parallaxBG;
-	//Image* transpImg = rscManager.getImgRsc(4);
-	//SpriteSheet sprSht("data/animtest3.bmp", 2, 2, 4);
-	
-	//Setting up BG
-	//parallaxBG.addLayer(rscManager.getImgRsc(4), 7, 0, -48);
-	//parallaxBG.addLayer(rscManager.getImgRsc(4), 6, 0, -47);
-	//parallaxBG.addLayer(rscManager.getImgRsc(4), 5, 0, -45);
-	//parallaxBG.addLayer(rscManager.getImgRsc(4), 4, 0, -40);
-	//parallaxBG.addLayer(rscManager.getImgRsc(4), 3, 0, -30);
-	//parallaxBG.addLayer(rscManager.getImgRsc(4), 2, 0, -15);
-	//parallaxBG.addLayer(rscManager.getImgRsc(4), 1.5);
-	
-	//parallaxBG.translate(0, 170);
+	// Setting up things
+	vect2df_t roomPos;
+	roomPos.x = 0.;
+	roomPos.y = 0.;
+
+	Sprite room(rscManager.getImgRsc(2), roomPos);
+	Font bigFont("data/font-big.bmp", 16, 16, 256);
+	Font smallFont("data/font-small.bmp", 16, 16, 256);
+
+	vect2df_t testTextPos;
+	testTextPos.x = 10;
+	testTextPos.y = 10;
+
+	Text testText("TEST", &bigFont, testTextPos);
+
+	vect2df_t vStorePos;
+	vStorePos.x = 290;
+	vStorePos.y = 0;
+
+	size2df_t sStoreSize;
+	sStoreSize.w = 30;
+	sStoreSize.h = 226;
+
+	ThingsStore thingsStore(vStorePos, sStoreSize, 1, 10);
+	ThingsManager thingsManager(&thingsStore);
 
 	// Setting up scene
-	//scene.addComponent(&parallaxBG);
+	vect2df_t charPos;
+	charPos.x = 150.;
+	charPos.y = 100.;
 
-	MainCharacter mainChar;
+	MainCharacter mainChar(rscManager.getImgRsc(0), charPos, &thingsManager);
+	mainChar.translate(150, 100, TRANSFORM_ABS);
 
+	vect2df_t testThingPos;
+	testThingPos.x = 200;
+	testThingPos.y = 10;
+
+	DraggableThing dt1(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 5, true, true);
+	DraggableThing dt2(rscManager.getSprShtRsc(1), 1, testThingPos, &thingsManager, sys->getInputSys(), 1, 5, true, true);
+	DraggableThing dt3(rscManager.getSprShtRsc(1), 2, testThingPos, &thingsManager, sys->getInputSys(), 1, 5, true, true);
+
+	thingsStore.addWidget(&dt1);
+	thingsStore.addWidget(&dt2);
+	thingsStore.addWidget(&dt3);
+
+	scene.addComponent(&room);
 	scene.addComponent(&mainChar);
+	scene.addComponent(&thingsStore);
+	scene.addComponent(&testText);
 
 	// We don't need double buffering in this example.
 	// In this way we can draw our image only once on screen.
@@ -88,51 +122,43 @@ RscManager rscManager;
 	int i = 0;
 
 	// Main loop
-	while (sys->MainLoop())
+	while (sys->mainLoop())
 	{
-		uint32 deltaTime = sys->getDeltaTime();
+		double deltaTime = sys->getDeltaTime();
+
+		//printf("FPS: %u ", (uint) (1./deltaTime));
 
 		gfx->FillWithColor(0x00);
 
 		// Scan all the inputs. This should be done once for each frame
-		if (sys->GetInputSys()->IsJoyBtnPressed(JOY_BTN_START)) break;
+		if (sys->getInputSys()->IsJoyBtnPressed(JOY_BTN_START)) break;
 
 		vect2d_t touchPt;
-		if (sys->GetInputSys()->GetTouch(&touchPt)) {
+		if (sys->getInputSys()->GetTouch(&touchPt)) {
 			scene.receiveTouchInput(touchPt);
 		}
 
-		MouseEvent* mouseEvt = sys->GetInputSys()->GetButtonPressEvent(MOUSE_BTN_LEFT);
+		MouseEvent* mouseEvt = sys->getInputSys()->GetButtonPressEvent(MOUSE_BTN_LEFT);
 
 		if (mouseEvt) {
 			scene.receiveTouchInput(mouseEvt->position);
 		}
 
-		if (sys->GetInputSys()->IsKeyPressed(KEYB_Q) || sys->GetInputSys()->IsJoyBtnPressed(JOY_LEFT)) {
+		if (sys->getInputSys()->IsKeyPressed(KEYB_Q) || sys->getInputSys()->IsJoyBtnPressed(JOY_LEFT)) {
             //vect2d_t currCamPos = parallaxBG.getCamPos();
 			//parallaxBG.setCamPos(currCamPos.x + -1 * deltaTime, 0);
 		}
-		else if (sys->GetInputSys()->IsKeyPressed(KEYB_D) || sys->GetInputSys()->IsJoyBtnPressed(JOY_RIGHT)) {
+		else if (sys->getInputSys()->IsKeyPressed(KEYB_D) || sys->getInputSys()->IsJoyBtnPressed(JOY_RIGHT)) {
             //vect2d_t currCamPos = parallaxBG.getCamPos();
 			//parallaxBG.setCamPos(currCamPos.x + 1 * deltaTime, 0);
 		}
-        else if (sys->GetInputSys()->IsKeyPressed(KEYB_ESCAPE) || sys->GetInputSys()->IsJoyBtnPressed(JOY_BTN_START)) {
+        else if (sys->getInputSys()->IsKeyPressed(KEYB_ESCAPE) || sys->getInputSys()->IsJoyBtnPressed(JOY_BTN_START)) {
             break;
         }
 
 		scene.update();
 		scene.draw(fb);
 
-		//sprSht.draw(fb, -10, -10, false, true);
-		//sprSht.draw(fb, -10, 230, false, true);
-		//sprSht.draw(fb, 300, 220, false, true);
-		//sprSht.draw(fb, 300, -10, false, true);
-		//sprSht.draw(fb, 120, 120, false, true);
-
-		//transpImg->draw(fb, -20, -20, 0, 0, 68, 100, false, true);
-		
-		//if (i % 1500 == 0) sprSht.nextFrame();
-        
 		// Flush and swap framebuffers
 		gfx->FlushBuffer();
 		gfx->SwapBuffer();
@@ -151,17 +177,19 @@ RscManager rscManager;
 
 int main(int argc, char **argv)
 {
-	System sys;
-	Graphics gfx(&sys);
+	System* sys = System::get();
+	Graphics gfx(sys);
 
 #ifdef TARGET_SDL
-	sys.InitWindow();
+	sys->initWindow();
 #endif
 
 	gfx.Init();
-	sys.ConsoleInit();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
+	sys->consoleInit();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
 
-	MainApp(&sys, &gfx);
+	MainApp(sys, &gfx);
+
+	delete sys;
 
 	return 0;
 }
