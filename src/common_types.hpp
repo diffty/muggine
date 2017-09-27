@@ -21,12 +21,22 @@ typedef uint32_t uint32;
 typedef struct vect2d_t {
 	long x;
 	long y;
-} vect2d;
+} vect2d_t;
+
+typedef struct vect2df_t {
+	float x;
+	float y;
+} vect2df_t;
 
 typedef struct size2d_t {
 	long w;
 	long h;
-} size2d;
+} size2d_t;
+
+typedef struct size2df_t {
+	long w;
+	long h;
+} size2df_t;
 
 typedef struct color_t {
 	unsigned int r;
@@ -80,8 +90,8 @@ public:
 
 class Rect {
 private:
-	vect2d m_pos;
-	size2d m_size;
+	vect2d_t m_pos;
+	size2d_t m_size;
 
 public:
 	Rect(int x, int y, int w, int h) {
@@ -98,10 +108,48 @@ public:
 			return false;
 	}
 
-	vect2d_t getPos()			{ return m_pos; }
-	size2d_t getSize()			{ return m_size; }
-	void setPos(int x, int y)	{ m_pos.x = x; m_pos.y = y; }
-	void setSize(int w, int h)	{ m_size.w = w; m_size.h = h; }
+	vect2d_t getPos() { return m_pos; }
+	size2d_t getSize() { return m_size; }
+	void setPos(int x, int y) { m_pos.x = x; m_pos.y = y; }
+	void setSize(int w, int h) { m_size.w = w; m_size.h = h; }
+};
+
+
+class Rectf {
+private:
+	vect2df_t m_pos;
+	size2df_t m_size;
+
+public:
+	Rectf(float x, float y, float w, float h) {
+		m_pos.x = x;
+		m_pos.y = y;
+		m_size.w = w;
+		m_size.h = h;
+	}
+
+	bool isPointInRect(float x, float y) {
+		if (m_pos.x <= x
+			&& m_pos.y <= y
+			&& m_pos.x + m_size.w >= x
+			&& m_pos.y + m_size.h >= y)
+			return true;
+		else
+			return false;
+	}
+
+	vect2df_t getPos()  { return m_pos; }
+	size2df_t getSize() { return m_size; }
+	void setPos(float x, float y) { m_pos.x = x; m_pos.y = y; }
+	void setSize(float w, float h) { m_size.w = w; m_size.h = h; }
+
+	vect2d_t getPosi() {
+		vect2d_t newPos;
+		newPos.x = m_pos.x;
+		newPos.y = m_pos.y;
+		return newPos;
+	}
+
 };
 
 
