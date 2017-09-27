@@ -9,12 +9,28 @@ RscManager::~RscManager() {
 	freeAllRsc();
 }
 
-bool RscManager::loadRsc(char* rscPath) {
-    Image* newImage = new Image(rscPath);
+bool RscManager::loadImg(char* imgPath) {
+    Image* newImage = new Image(imgPath);
 
 	if (newImage) {
 		LLNode* newRscNode = new LLNode;
 		newRscNode->pData = (void *) newImage;
+
+		addNodeToList(&m_rscList, newRscNode);
+
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool RscManager::loadSprSht(char* imgPath, int gridWidth, int gridHeight, uint length) {
+	SpriteSheet* newSprSheet = new SpriteSheet(imgPath, gridWidth, gridHeight, length);
+
+	if (newSprSheet) {
+		LLNode* newRscNode = new LLNode;
+		newRscNode->pData = (void *) newSprSheet;
 
 		addNodeToList(&m_rscList, newRscNode);
 
@@ -45,7 +61,20 @@ Image* RscManager::getImgRsc(uint rscId) {
 	LLNode* rscNode = getRscNode(rscId);
 
 	if (rscNode) {
-		return (Image*) rscNode->pData;
+		return (Image*)rscNode->pData;
+	}
+	else {
+		return NULL;
+	}
+}
+
+// TODO: faire un truc qui fait que tu vas pas
+// TODO: piocher à l'aveugle dans les ressources
+SpriteSheet* RscManager::getSprShtRsc(uint rscId) {
+	LLNode* rscNode = getRscNode(rscId);
+
+	if (rscNode) {
+		return (SpriteSheet*)rscNode->pData;
 	}
 	else {
 		return NULL;
