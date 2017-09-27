@@ -12,6 +12,8 @@ Scene::~Scene() {
 void Scene::addComponent(IWidget* widget) {
 	LLNode* newNode = new LLNode;
 	newNode->pData = widget;
+	widget->setParentScene(this);
+	widget->updateChildren();
 	addNodeToList(&m_contentList, newNode);
 }
 
@@ -22,6 +24,8 @@ void Scene::removeComponent(IWidget* widget) {
 	while (currNode != NULL) {
 		if ((IWidget *) currNode->pData == widget) {
 			printf("Removing component. %p\n", currNode);
+
+			widget->setParentScene(NULL);
 
 			if (prevNode == NULL) {
 				m_contentList.pHead = currNode->pNext;
