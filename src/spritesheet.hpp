@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include "image.hpp"
 
-class SpriteSheet : Image {
+class SpriteSheet : public Image {
 private:
     size2d_t m_gridSize;
     size2d_t m_frameSize;
@@ -26,6 +26,7 @@ public:
     void setFrame(uint newFrame);
     void nextFrame();
     void prevFrame();
+	size2d_t getFrameSize();
 
 };
 
