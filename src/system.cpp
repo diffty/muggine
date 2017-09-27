@@ -1,7 +1,15 @@
 #include "system.hpp"
 
 
+System* System::m_pInstance = NULL;
+
+
 System::System() {
+#ifdef TARGET_WIN
+	LARGE_INTEGER t;
+	QueryPerformanceFrequency(&m_tickFrequency);
+#endif
+
 	isMainLoopRunning = true;
 	initLoop();
 
@@ -10,7 +18,20 @@ System::System() {
 #endif
 }
 
-void System::InitWindow() {
+System::~System() {
+
+}
+
+System* System::get() {
+	if (!m_pInstance) {
+		m_pInstance = new System();
+	}
+
+	return m_pInstance;
+}
+
+
+void System::initWindow() {
 #ifdef TARGET_SDL
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -20,8 +41,8 @@ void System::InitWindow() {
 		m_window = SDL_CreateWindow("MUGGINE TEST WINDOW",
 									SDL_WINDOWPOS_UNDEFINED,
 									SDL_WINDOWPOS_UNDEFINED,
-									SCREEN_WIDTH,
-									SCREEN_HEIGHT,
+									SCREEN_WIDTH * SCREEN_SCALE,
+									SCREEN_HEIGHT * SCREEN_SCALE,
 									SDL_WINDOW_SHOWN);
 		
 		if (m_window == NULL) {
@@ -33,12 +54,12 @@ void System::InitWindow() {
 }
 
 #ifdef TARGET_SDL
-SDL_Window* System::GetWindow() {
+SDL_Window* System::getWindow() {
 	return m_window;
 }
 #endif
 
-void System::ConsoleInit() {
+void System::consoleInit() {
 #ifdef TARGET_3DS
 	
 	consoleInit(GFX_TOP, NULL);
@@ -53,15 +74,35 @@ void System::ConsoleInit() {
 #endif
 }
 
-uint32 System::getTime() {
-#ifdef TARGET_SDL
+double System::getTime() {
+#ifdef TARGET_WIN
+	LARGE_INTEGER currTick;
+	LARGE_INTEGER t;
+
+	if (QueryPerformanceCounter(&t) != 0)
+		currTick.QuadPart = t.QuadPart;
+
+	double test = ((((double) currTick.QuadPart / (double) m_tickFrequency.QuadPart)));
+	return test;
+	//return (uint32) (currTick.QuadPart / (freq.QuadPart / 1000000));
+
+#elif TARGET_SDL
 	return SDL_GetTicks();
+
 #elif TARGET_3DS
     return (uint32) osGetTime();
+
+#elif TARGET_DOS
+	double currentTime;
+	struct time t_struc;
+	gettime(&t_struc);
+	currentTime = ((double)time(NULL) + ((double)t_struc.ti_hund)*0.01);
+	return currentTime;
+
 #endif
 }
 
-uint32 System::getDeltaTime() {
+double System::getDeltaTime() {
 	return m_deltaTime;
 }
 
@@ -71,7 +112,7 @@ void System::initLoop() {
 	m_deltaTime = m_startLoopTime - m_prevLoopTime;
 }
 
-bool System::MainLoop() {
+bool System::mainLoop() {
 	m_startLoopTime = getTime();
 	m_deltaTime = m_startLoopTime - m_prevLoopTime;
 	m_prevLoopTime = m_startLoopTime;
@@ -110,13 +151,13 @@ bool System::MainLoop() {
 #endif
 }
 
-void System::Exit() {
+void System::exit() {
 #ifdef TARGET_SDL
 	SDL_DestroyWindow(m_window);
 	SDL_Quit();
 #endif
 }
 
-Input* System::GetInputSys() {
+Input* System::getInputSys() {
 	return &m_inputSys;
 }

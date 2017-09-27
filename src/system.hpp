@@ -6,42 +6,46 @@
 #endif
 
 #ifdef TARGET_SDL
-//#include <windows.h>
 #include <cstdio>
 #include <SDL2/SDL.h>
 #endif
 
-#include "input.hpp"
-
-#define SCREEN_WIDTH	320
-#define SCREEN_HEIGHT	240
-
-#ifdef TARGET_3DS
-#define SCREEN_BPP		3
-#elif TARGET_SDL
-#define SCREEN_BPP		4
+#ifdef TARGET_WIN
+#include <Windows.h>
 #endif
+
+#include "input.hpp"
+#include "constants.hpp"
+#include <time.h>
+
 
 
 class System {
 public:
 	System();
-	void ConsoleInit();
-	void InitWindow();
+	~System();
 
-	Input* GetInputSys();
-	uint32 getTime();
-	uint32 getDeltaTime();
+	static System* get();
+
+	void consoleInit();
+	void initWindow();
+
+	Input* getInputSys();
+	double getTime();
+	double getDeltaTime();
 
 #ifdef TARGET_SDL
-	SDL_Window* GetWindow();
+	SDL_Window* getWindow();
 #endif
 
-	bool MainLoop();
+	bool mainLoop();
 	void initLoop();
-	void Exit();
+	void exit();
+
 
 private:
+	static System* m_pInstance;
+
 	bool isMainLoopRunning;
 	Input m_inputSys;
 
@@ -50,9 +54,13 @@ private:
 	SDL_Event m_event;
 #endif
 
-	uint32 m_prevLoopTime;
-	uint32 m_startLoopTime;
-	uint32 m_deltaTime;
+	double m_prevLoopTime;
+	double m_startLoopTime;
+	double m_deltaTime;
+
+#ifdef TARGET_WIN
+	LARGE_INTEGER m_tickFrequency;
+#endif
 };
 
 
