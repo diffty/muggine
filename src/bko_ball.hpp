@@ -24,14 +24,14 @@ public:
 
 	~Ball() {};
 
-	vect2d_t getVelocity();
-	vect2d_t getCenterPos();
-	void setVelocity(vect2d_t newVelocity);
+	vect2df_t getVelocity();
+	vect2df_t getCenterPos();
+	void setVelocity(vect2df_t newVelocity);
 	void setVelocity(long x, long y);
 	void move();
 	void update();
 	void reinit(Paddle* pPaddle);
-	bool checkCollisionBetweenPos(Grid* pGrid, Paddle* pPaddle, vect2d_t currBallCenter, vect2d_t nextBallCenter, uint* pCollidingBrickId, vect2d_t* pCollisionPoint, int* pCollisionType);
+	bool checkCollisionBetweenPos(Grid* pGrid, Paddle* pPaddle, vect2df_t currBallCenter, vect2df_t nextBallCenter, uint* pCollidingBrickId, vect2df_t* pCollisionPoint, int* pCollisionType);
 	
 	void setIsDead(bool bIsDead) { m_bIsDead = bIsDead; }
 	void setIsMoving(bool bIsMoving) { m_bIsMoving = bIsMoving; }
@@ -42,7 +42,7 @@ public:
 	bool isStickToPaddle() { return m_bIsStickToPaddle; }
 
 private:
-	vect2d_t m_velocity;
+	vect2df_t m_velocity;
 	uint m_radius;
 	System* m_sys;
 	bool m_bIsMoving = false;

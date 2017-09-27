@@ -21,7 +21,7 @@ void Grid::init() {
 		addNodeToList(&m_brickList, newNode);
 	}*/
 
-	size2d_t spriteSize = m_pRscManager->getImgRsc(0)->getSize();
+	size2d_t spriteSize = m_pRscManager->getImgRsc(0)->getSizei();
 
 	m_brickList = new Brick*[m_nbBricksW * m_nbBricksH];
 	
@@ -44,9 +44,9 @@ void Grid::draw(uint8* buffer) {
 	}
 }
 
-bool Grid::checkBrickAtPos(vect2d_t pos, uint* collidingBrickId) {
+bool Grid::checkBrickAtPos(vect2df_t pos, uint* collidingBrickId) {
     for (int i = 0; i < m_nbBricks; i++) {
-        Rect* currBrickRect = m_brickList[i]->getRect();
+        Rectf* currBrickRect = m_brickList[i]->getRect();
         
         if (m_brickList[i]->isActive() && currBrickRect->isPointInRect(pos.x, pos.y)) {
             *collidingBrickId = i;
