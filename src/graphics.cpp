@@ -3,6 +3,16 @@
 
 Graphics::Graphics(System* sys) {
 	m_sys = sys;
+
+	m_drawBufBlitRect.x = 0;
+	m_drawBufBlitRect.y = 0;
+	m_drawBufBlitRect.w = SCREEN_WIDTH;
+	m_drawBufBlitRect.h = SCREEN_HEIGHT;
+
+	m_screenBufBlitRect.x = 0;
+	m_screenBufBlitRect.y = 0;
+	m_screenBufBlitRect.w = SCREEN_WIDTH * SCREEN_SCALE;
+	m_screenBufBlitRect.h = SCREEN_HEIGHT * SCREEN_SCALE;
 }
 
 void Graphics::Init() {
@@ -10,7 +20,14 @@ void Graphics::Init() {
 	gfxInitDefault();
 
 #elif TARGET_SDL
-	m_sdlScreenSurface = SDL_GetWindowSurface(m_sys->GetWindow());
+	m_pSDLDrawSurface = SDL_CreateRGBSurface(
+		0,
+		SCREEN_WIDTH,
+		SCREEN_HEIGHT,
+		32,
+		0,0,0,0);
+
+	m_pSDLScreenSurface = SDL_GetWindowSurface(m_sys->getWindow());
 
 #endif
 }
@@ -36,7 +53,7 @@ uint8* Graphics::GetFramebuffer() {
 	return gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL);
 
 #else
-	return (uint8*) m_sdlScreenSurface->pixels;
+	return (uint8*) m_pSDLDrawSurface->pixels;
 
 #endif
 }
@@ -54,7 +71,10 @@ void Graphics::SwapBuffer() {
 
 #elif TARGET_SDL
 	//SDL_FillRect(m_sdlScreenSurface, NULL, SDL_MapRGB(m_sdlScreenSurface->format, 0xFF, 0xFF, 0xFF));
-	SDL_UpdateWindowSurface(m_sys->GetWindow());
+	
+
+	SDL_BlitScaled(m_pSDLDrawSurface, &m_drawBufBlitRect, m_pSDLScreenSurface, &m_screenBufBlitRect);
+	SDL_UpdateWindowSurface(m_sys->getWindow());
 
 #endif
 }
@@ -71,7 +91,7 @@ void Graphics::Exit() {
 	gfxExit();
 
 #elif TARGET_SDL
-	SDL_FreeSurface(m_sdlScreenSurface);
+	SDL_FreeSurface(m_pSDLScreenSurface);
 
 #endif
 }

@@ -10,6 +10,7 @@
 #include "common_types.hpp"
 #include "system.hpp"
 #include "drawing.hpp"
+#include "constants.hpp"
 
 
 class Graphics {
@@ -26,11 +27,15 @@ public:
 
 private:
 #ifdef TARGET_SDL
-	SDL_Surface* m_sdlScreenSurface;
 	uint8* m_frameBuffer;
+	SDL_Surface* m_pSDLScreenSurface;
+	SDL_Surface* m_pSDLDrawSurface;
+	SDL_Rect m_drawBufBlitRect;
+	SDL_Rect m_screenBufBlitRect;
+
 #endif
-	
 	System* m_sys;
+
 };
 
 
