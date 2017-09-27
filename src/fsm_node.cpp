@@ -37,3 +37,7 @@ void FSMNode::addEvent(char* sName, FSMNode* pConnectedNode, bool (*pTestCallbac
 char* FSMNode::getName() {
 	return m_sName;
 }
+
+int FSMNode::getStateId() {
+	return m_iStateId;
+}

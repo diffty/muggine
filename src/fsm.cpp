@@ -1,9 +1,10 @@
 #include "fsm.hpp"
 
-FSM::FSM(void(*pOnStateChangeCallback)(void)) {
+FSM::FSM(void (*pOnStateChangeCallback)(void* arg), void* pOnStateChangeCallbackArgs) {
 	initList(&m_llNodeList);
 	m_pActiveNode = NULL;
 	m_pOnStateChangeCallback = pOnStateChangeCallback;
+	m_pOnStateChangeCallbackArgs = pOnStateChangeCallbackArgs;
 }
 
 FSM::~FSM() {
@@ -28,7 +29,7 @@ void FSM::update() {
 		m_pActiveNode = pTriggeredEvent->getConnectedNode();
 
 		if (m_pOnStateChangeCallback != NULL) {
-			(*m_pOnStateChangeCallback)();
+			(*m_pOnStateChangeCallback)(m_pOnStateChangeCallbackArgs);
 		}
 	}
 }

@@ -9,10 +9,11 @@ class FSM {
 private:
 	LinkedList m_llNodeList;
 	FSMNode* m_pActiveNode;
-	void (*m_pOnStateChangeCallback)(void) = NULL;
+	void (*m_pOnStateChangeCallback)(void* arg) = NULL;
+	void* m_pOnStateChangeCallbackArgs = NULL;
 
 public:
-	FSM(void (*pOnStateChangeCallback)(void) = NULL);
+	FSM(void (*pOnStateChangeCallback)(void* arg) = NULL, void* pOnStateChangeCallbackArgs = NULL);
 	~FSM();
 
 	void addNode(FSMNode* pNewFsmNode);

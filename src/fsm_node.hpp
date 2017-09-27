@@ -18,6 +18,7 @@ public:
 	void addEvent(char* sName, FSMNode* pConnectedNode, bool (*pTestCallback)(void*), void* pTestCallbackArg);
 	FSMEvent* testAllConditions();
 	char* getName();
+	int getStateId();
 };
 
 #endif
