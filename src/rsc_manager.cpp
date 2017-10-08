@@ -1,7 +1,11 @@
 #include "rsc_manager.hpp"
 
 
+RscManager* RscManager::s_pInstance = NULL;
+
+
 RscManager::RscManager() {
+	RscManager::s_pInstance = this;
     initList(&m_rscList);
 }
 
@@ -114,4 +118,11 @@ void RscManager::freeAllRsc() {
 
 uint RscManager::getRscCount() {
 	return m_rscList.size;
+}
+
+RscManager* RscManager::get() {
+	if (s_pInstance == NULL) {
+		return new RscManager;
+	}
+	return s_pInstance;
 }

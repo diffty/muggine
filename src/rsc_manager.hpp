@@ -8,6 +8,11 @@
 
 
 class RscManager {
+private:
+	LinkedList m_rscList;
+
+	static RscManager* s_pInstance;
+
 public:
 	RscManager();
     ~RscManager();
@@ -21,8 +26,7 @@ public:
 	SpriteSheet* getSprShtRsc(uint rscId);
 	uint getRscCount();
 
-private:
-	LinkedList m_rscList;
+	static RscManager* get();
 };
 
 #endif
