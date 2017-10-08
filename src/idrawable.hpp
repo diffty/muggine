@@ -3,12 +3,13 @@
 
 
 #include "common_types.hpp"
-#include "idrawable.hpp"
+#include "iobject.hpp"
 
 
-class IDrawable {
+class IDrawable : public IObject {
 public:
-	IDrawable()  {};
+	IDrawable() :
+		IObject() {};
 	virtual ~IDrawable() {};
 
 	virtual void draw(uint8* buffer) = 0;
