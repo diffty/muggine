@@ -28,7 +28,8 @@ void SpriteSheet::draw(uint8* buffer, int dstX, int dstY, bool reversed, bool ma
 }
 
 void SpriteSheet::draw(uint8* buffer, uint frame, int dstX, int dstY, bool reversed, bool masked) {
-    Image::draw(buffer, dstX, dstY, (m_frameSize.w * (frame % m_gridSize.w)), (m_frameSize.h * (m_gridSize.h - 1 - (frame / m_gridSize.h))), m_frameSize.w, m_frameSize.h, reversed, masked);
+    //printf("%i: %i\n", frame, (m_frameSize.w * (frame % m_gridSize.w)));
+    Image::draw(buffer, dstX, dstY, (m_frameSize.w * (frame % m_gridSize.w)), (m_frameSize.h * (m_gridSize.h - 1 - (frame / m_gridSize.w))), m_frameSize.w, m_frameSize.h, reversed, masked);
 }
 
 void SpriteSheet::setFrame(uint newFrame) {
