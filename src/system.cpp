@@ -85,6 +85,12 @@ double System::getTime() {
 	double test = ((((double) currTick.QuadPart / (double) m_tickFrequency.QuadPart)));
 	return test;
 	//return (uint32) (currTick.QuadPart / (freq.QuadPart / 1000000));
+    
+#elif TARGET_OSX
+    timespec timeStruct;
+    clock_gettime(CLOCK_REALTIME, &timeStruct);
+    return ((double) timeStruct.tv_nsec / 1000000000) + timeStruct.tv_sec;
+    
 
 #elif TARGET_SDL
 	return SDL_GetTicks();
