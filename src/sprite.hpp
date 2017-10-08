@@ -13,7 +13,7 @@ public:
 	Sprite(uint rscId, RscManager* rscManager, float x = 0, float y = 0);
 	void draw(uint8* buffer);
 
-private:
+protected:
 	uint m_rscId;
 	Image* m_pImg;
 	SpriteSheet* m_pSprSht;
