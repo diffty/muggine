@@ -19,6 +19,9 @@ public:
 	void addNode(FSMNode* pNewFsmNode);
 	FSMNode* getActiveState();
 
+	void changeState(FSMNode* pNewStateNode);
+	void changeState(int iNewStateId);
+
 	void update();
 };
 

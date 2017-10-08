@@ -26,11 +26,32 @@ void FSM::update() {
 	FSMEvent* pTriggeredEvent = m_pActiveNode->testAllConditions();
 
 	if (pTriggeredEvent != NULL) {
-		m_pActiveNode = pTriggeredEvent->getConnectedNode();
+		changeState(pTriggeredEvent->getConnectedNode());
+	}
+}
 
-		if (m_pOnStateChangeCallback != NULL) {
-			(*m_pOnStateChangeCallback)(m_pOnStateChangeCallbackArgs);
+void FSM::changeState(FSMNode* pNewStateNode) {
+	m_pActiveNode = pNewStateNode;
+
+	printf("changeState: %s\n", m_pActiveNode->getName());
+
+	if (m_pOnStateChangeCallback != NULL) {
+		(*m_pOnStateChangeCallback)(m_pOnStateChangeCallbackArgs);
+	}
+}
+
+void FSM::changeState(int iNewStateId) {
+	LLNode* pCurrNode = m_llNodeList.pHead;
+
+	while (pCurrNode != NULL) {
+		FSMNode* pStateNode = (FSMNode*) pCurrNode->pData;
+
+		if (pStateNode->getStateId() == iNewStateId) {
+			changeState(pStateNode);
+			return;
 		}
+
+		pCurrNode = pCurrNode->pNext;
 	}
 }
 
