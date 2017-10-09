@@ -22,13 +22,15 @@
 #include "spritesheet.hpp"
 #include "parallax_background.hpp"
 #include "fsm.hpp"
+#include "font.hpp"
+#include "text.hpp"
 #include "ts_main_character.hpp"
 #include "ts_interactable_thing.hpp"
 #include "ts_things_manager.hpp"
-#include "ts_draggable_thing.hpp"
 #include "ts_things_store.hpp"
-#include "font.hpp"
-#include "text.hpp"
+#include "ts_draggable_thing.hpp"
+#include "ts_critical_thing.hpp"
+#include "ts_game_mode.hpp"
 
 #include <time.h>
 
@@ -51,7 +53,7 @@ void MainApp(System* sys, Graphics* gfx) {
 	rscManager.loadImg("romfs:/data/bg3.bmp");
 	rscManager.loadImg("romfs:/data/bg4.bmp");
 #else
-    rscManager.loadImg("data/thomas.bmp");
+    rscManager.loadSprSht("data/tlg_animated.bmp", 12, 11, 131);
 	rscManager.loadSprSht("data/objects.bmp", 5, 5, 25);
 	rscManager.loadImg("data/room.bmp");
 #endif
@@ -85,30 +87,115 @@ void MainApp(System* sys, Graphics* gfx) {
 	ThingsStore thingsStore(vStorePos, sStoreSize, 1, 10);
 	ThingsManager thingsManager(&thingsStore);
 
-	// Setting up scene
-	vect2df_t charPos;
-	charPos.x = 150.;
-	charPos.y = 100.;
+	TSGameMode gameMode(&scene, &thingsManager);
 
-	MainCharacter mainChar(rscManager.getImgRsc(0), charPos, &thingsManager);
+	// Setting up scene
+	/*MainCharacter mainChar(rscManager.getImgRsc(0), charPos, &thingsManager);
 	mainChar.translate(150, 100, TRANSFORM_ABS);
 
-	vect2df_t testThingPos;
-	testThingPos.x = 200;
-	testThingPos.y = 10;
+	MainCharacter mainChar2(rscManager.getImgRsc(0), charPos, &thingsManager);
+	mainChar2.translate(100, 200, TRANSFORM_ABS);*/
 
-	DraggableThing dt1(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 5, true, true);
-	DraggableThing dt2(rscManager.getSprShtRsc(1), 1, testThingPos, &thingsManager, sys->getInputSys(), 1, 5, true, true);
-	DraggableThing dt3(rscManager.getSprShtRsc(1), 2, testThingPos, &thingsManager, sys->getInputSys(), 1, 5, true, true);
+	scene.addComponent(&room);
+
+	vect2df_t testThingPos;
+	testThingPos.x = 0;
+	testThingPos.y = 0;
+
+	DraggableThing dt1(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 10, 15, 80, true, true, true, true);
+	DraggableThing dt2(rscManager.getSprShtRsc(1), 1, testThingPos, &thingsManager, sys->getInputSys(), 1, 8,  20, 80, true, true, true, true);
+	DraggableThing dt3(rscManager.getSprShtRsc(1), 2, testThingPos, &thingsManager, sys->getInputSys(), 1, 5,  10, 80, true, true, true, true);
 
 	thingsStore.addWidget(&dt1);
 	thingsStore.addWidget(&dt2);
 	thingsStore.addWidget(&dt3);
 
-	scene.addComponent(&room);
-	scene.addComponent(&mainChar);
+	//
+	testThingPos.x = 225;
+	testThingPos.y = 10;
+	CriticalThing ct1(rscManager.getSprShtRsc(1), 3, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	testThingPos.x = 135;
+	CriticalThing ct2(rscManager.getSprShtRsc(1), 3, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	testThingPos.x = 40;
+	CriticalThing ct3(rscManager.getSprShtRsc(1), 3, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	//
+	testThingPos.x = 225;
+	testThingPos.y = 194;
+	CriticalThing ct4(rscManager.getSprShtRsc(1), 5, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	testThingPos.x = 135;
+	CriticalThing ct5(rscManager.getSprShtRsc(1), 5, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	testThingPos.x = 40;
+	CriticalThing ct6(rscManager.getSprShtRsc(1), 5, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	//
+	testThingPos.x = 10;
+	testThingPos.y = 40;
+	CriticalThing ct7(rscManager.getSprShtRsc(1), 6, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	testThingPos.y = 100;
+	CriticalThing ct8(rscManager.getSprShtRsc(1), 6, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	testThingPos.y = 160;
+	CriticalThing ct9(rscManager.getSprShtRsc(1), 6, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	//
+	testThingPos.x = 260;
+	testThingPos.y = 40;
+	CriticalThing ct10(rscManager.getSprShtRsc(1), 4, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	testThingPos.y = 100;
+	CriticalThing ct11(rscManager.getSprShtRsc(1), 4, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	testThingPos.y = 160;
+	CriticalThing ct12(rscManager.getSprShtRsc(1), 4, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
+
+	thingsManager.addThing(&ct1);
+	thingsManager.addThing(&ct2);
+	thingsManager.addThing(&ct3);
+	thingsManager.addThing(&ct4);
+	thingsManager.addThing(&ct5);
+	thingsManager.addThing(&ct6);
+	thingsManager.addThing(&ct7);
+	thingsManager.addThing(&ct8);
+	thingsManager.addThing(&ct9);
+	thingsManager.addThing(&ct10);
+	thingsManager.addThing(&ct11);
+	thingsManager.addThing(&ct12);
+
+	
 	scene.addComponent(&thingsStore);
 	scene.addComponent(&testText);
+	scene.addComponent(&ct1);
+	scene.addComponent(&ct2);
+	scene.addComponent(&ct3);
+	scene.addComponent(&ct4);
+	scene.addComponent(&ct5);
+	scene.addComponent(&ct6);
+	scene.addComponent(&ct7);
+	scene.addComponent(&ct8);
+	scene.addComponent(&ct9);
+	scene.addComponent(&ct10);
+	scene.addComponent(&ct11);
+	scene.addComponent(&ct12);
+
+	// Spawning character(s)
+	vect2df_t charPos;
+	charPos.x = 150.;
+	charPos.y = 100.;
+
+	gameMode.spawnCharacter(charPos);
+
+	charPos.x = 50;
+	charPos.y = 150;
+
+	//gameMode.spawnCharacter(charPos);
+
+
 
 	// We don't need double buffering in this example.
 	// In this way we can draw our image only once on screen.
