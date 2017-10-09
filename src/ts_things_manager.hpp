@@ -2,6 +2,7 @@
 #define THINGS_MANAGER_HPP
 
 #include "linked_list.hpp"
+#include "ts_game_mode.hpp"
 
 
 class DraggableThing;
@@ -20,6 +21,9 @@ public:
 	void addThing(DraggableThing* pNewThing);
 	void getClosestAvailableThingsToPoint(LinkedList* pllAvailableThings, vect2d_t vPos);
 	void renewThingInStore(DraggableThing* pThingToRenew);
+
+	void onCriticalThingUsed();
+	void onThingMoved();
 };
 
 #endif

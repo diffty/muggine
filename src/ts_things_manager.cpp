@@ -21,51 +21,54 @@ void ThingsManager::addThing(DraggableThing* pNewThing) {
 void ThingsManager::getClosestAvailableThingsToPoint(LinkedList* pllAvailableThings, vect2d_t vPos) {
 	LLNode* pCurrNode = m_llThingsList.pHead;
 	
-	float fMinDistance = 9999999;
-
 	while (pCurrNode != NULL) {
-		DraggableThing* pCurrThing = (DraggableThing*) pCurrNode->pData;
+		DraggableThing* pCurrThing = (DraggableThing*)pCurrNode->pData;
 		vect2df_t vCurrThingPos = pCurrThing->getRect()->getPos();
 		float fCurrDistance = sqrt(powf(vPos.x - vCurrThingPos.x, 2) + powf(vPos.y - vCurrThingPos.y, 2));
 
-		LLNode* pClonedNode = new LLNode(*pCurrNode);
-		pClonedNode->pNext = NULL;
+		if ((pCurrThing->isSingleUser()
+			&& !pCurrThing->isUsed())
+			&& ((float) pCurrThing->getActionRadius() > fCurrDistance || pCurrThing->getActionRadius() == -1)) {
 
-		LLNode* pCurrSortedNode = pllAvailableThings->pHead;
-		LLNode* pPrevSortedNode = NULL;
+			LLNode* pClonedNode = new LLNode(*pCurrNode);
+			pClonedNode->pNext = NULL;
 
-		float fPrevCurrSortedThingDist = -1;
+			LLNode* pCurrSortedNode = pllAvailableThings->pHead;
+			LLNode* pPrevSortedNode = NULL;
 
-		printf("** %f\n", fCurrDistance);
+			float fPrevCurrSortedThingDist = -1;
 
-		while (pCurrSortedNode != NULL) {
-			DraggableThing* pCurrSortedThing = (DraggableThing*) pCurrSortedNode->pData;
-			vect2df_t vCurrSortedThingPos = pCurrSortedThing->getRect()->getPos();
-			float fCurrSortedThingDist = sqrt(powf(vPos.x - vCurrSortedThingPos.x, 2) + powf(vPos.y - vCurrSortedThingPos.y, 2));
+			//printf("** %f\n", fCurrDistance);
 
-			printf("%f, %f, %p\n", fCurrDistance, fCurrSortedThingDist, pClonedNode->pData);
+			while (pCurrSortedNode != NULL) {
+				DraggableThing* pCurrSortedThing = (DraggableThing*)pCurrSortedNode->pData;
+				vect2df_t vCurrSortedThingPos = pCurrSortedThing->getRect()->getPos();
+				float fCurrSortedThingDist = sqrt(powf(vPos.x - vCurrSortedThingPos.x, 2) + powf(vPos.y - vCurrSortedThingPos.y, 2));
 
-			if (fCurrDistance < fCurrSortedThingDist)  {
-				printf("FOUND\n");
-				break;
+				//printf("%f, %f, %p\n", fCurrDistance, fCurrSortedThingDist, pClonedNode->pData);
+
+				if (fCurrDistance < fCurrSortedThingDist) {
+					//printf("FOUND\n");
+					break;
+				}
+
+				pPrevSortedNode = pCurrSortedNode;
+				fPrevCurrSortedThingDist = fCurrSortedThingDist;
+
+				pCurrSortedNode = pCurrSortedNode->pNext;
 			}
 
-			pPrevSortedNode = pCurrSortedNode;
-			fPrevCurrSortedThingDist = fCurrSortedThingDist;
+			if (pPrevSortedNode == NULL) {
+				pClonedNode->pNext = pllAvailableThings->pHead;
+				pllAvailableThings->pHead = pClonedNode;
+			}
+			else {
+				pClonedNode->pNext = pPrevSortedNode->pNext;
+				pPrevSortedNode->pNext = pClonedNode;
+			}
 
-			pCurrSortedNode = pCurrSortedNode->pNext;
+			//printf("-----\n");
 		}
-
-		if (pPrevSortedNode == NULL) {
-			pClonedNode->pNext = pllAvailableThings->pHead;
-			pllAvailableThings->pHead = pClonedNode;
-		}
-		else {
-			pClonedNode->pNext = pPrevSortedNode->pNext;
-			pPrevSortedNode->pNext = pClonedNode;
-		}
-
-		printf("-----\n");
 
 		pCurrNode = pCurrNode->pNext;
 	}
@@ -73,4 +76,12 @@ void ThingsManager::getClosestAvailableThingsToPoint(LinkedList* pllAvailableThi
 
 void ThingsManager::renewThingInStore(DraggableThing* pThingToRenew) {
 	m_pStore->renewThing(pThingToRenew);
+}
+
+void ThingsManager::onCriticalThingUsed() {
+	TSGameMode::get()->decreaseHealth(0.01);
+}
+
+void ThingsManager::onThingMoved() {
+	TSGameMode::get()->onThingMoved();
 }
