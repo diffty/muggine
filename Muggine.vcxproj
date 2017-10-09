@@ -86,6 +86,8 @@
     <ClCompile Include="src\bko_grid.cpp" />
     <ClCompile Include="src\bko_paddle.cpp" />
     <ClCompile Include="src\buttonwidget.cpp" />
+    <ClCompile Include="src\iobject.cpp" />
+    <ClCompile Include="src\ts_critical_thing.cpp" />
     <ClCompile Include="src\draggable_sprite.cpp" />
     <ClCompile Include="src\drawing.cpp" />
     <ClCompile Include="src\font.cpp" />
@@ -98,6 +100,8 @@
     <ClCompile Include="src\iwidget.cpp" />
     <ClCompile Include="src\paginated_widget_layout.cpp" />
     <ClCompile Include="src\text.cpp" />
+    <ClCompile Include="src\tiny_progress_bar.cpp" />
+    <ClCompile Include="src\ts_game_mode.cpp" />
     <ClCompile Include="src\ts_things_store.cpp" />
     <ClCompile Include="src\ts_draggable_thing.cpp" />
     <ClCompile Include="src\ts_interactable_thing.cpp" />
@@ -123,6 +127,8 @@
     <ClInclude Include="src\buttonwidget.hpp" />
     <ClInclude Include="src\common_types.hpp" />
     <ClInclude Include="src\constants.hpp" />
+    <ClInclude Include="src\iobject.hpp" />
+    <ClInclude Include="src\ts_critical_thing.hpp" />
     <ClInclude Include="src\draggable_sprite.hpp" />
     <ClInclude Include="src\drawing.hpp" />
     <ClInclude Include="src\font.hpp" />
@@ -135,6 +141,8 @@
     <ClInclude Include="src\input.hpp" />
     <ClInclude Include="src\paginated_widget_layout.hpp" />
     <ClInclude Include="src\text.hpp" />
+    <ClInclude Include="src\tiny_progress_bar.hpp" />
+    <ClInclude Include="src\ts_game_mode.hpp" />
     <ClInclude Include="src\ts_things_store.hpp" />
     <ClInclude Include="src\ts_draggable_thing.hpp" />
     <ClInclude Include="src\ts_interactable_thing.hpp" />
