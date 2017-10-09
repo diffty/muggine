@@ -1,4 +1,5 @@
 #include "common_types.hpp"
+#include <cmath>
 
 
 vect2df_t getNormalizedVect(vect2df_t vVect) {
