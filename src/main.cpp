@@ -52,8 +52,9 @@ void MainApp(System* sys, Graphics* gfx) {
 	rscManager.loadImg("romfs:/data/bg2.bmp");
 	rscManager.loadImg("romfs:/data/bg3.bmp");
 	rscManager.loadImg("romfs:/data/bg4.bmp");
+
 #else
-    rscManager.loadSprSht("data/tlg_animated.bmp", 12, 11, 131);
+    rscManager.loadSprSht("data/tlg_animated.bmp", 12, 12, 139);
 	rscManager.loadSprSht("data/objects.bmp", 5, 5, 25);
 	rscManager.loadImg("data/room.bmp");
 #endif
@@ -193,7 +194,7 @@ void MainApp(System* sys, Graphics* gfx) {
 	charPos.x = 50;
 	charPos.y = 150;
 
-	//gameMode.spawnCharacter(charPos);
+	gameMode.spawnCharacter(charPos);
 
 
 
