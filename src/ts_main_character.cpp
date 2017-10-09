@@ -1,4 +1,5 @@
 #include "ts_main_character.hpp"
+#include "math_tools.hpp"
 
 
 MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager* pThingsManager)
@@ -22,6 +23,8 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 
 	m_pProgressBar = new TinyProgressBar(vProgressBarPos, sProgressBarSize);
 	m_pProgressBar->setActive(false);
+
+	m_eCurrOrientation = E_ORIENTATION_S;
 
 	// Init FSM
 	FSMNode* fsmNodeIdle = new FSMNode(E_MAINCHAR_STATE_IDLE, "idle");
@@ -73,10 +76,15 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
     addState("walk_amazed2_s", 104, 111, 10, true);
     addState("occupied", 112, 115, 5, true);
     addState("idle_n", 116, 116, 5, true);
-    addState("idle_no", 117, 117, 1, true);
-    addState("idle_o", 118, 121, 4, true);
-    addState("idle_s", 122, 126, 4, true);
-    addState("idle_so", 127, 130, 4, true);
+    addState("idle_ne", 117, 117, 1, true);
+    addState("idle_e", 118, 121, 4, true);
+	addState("idle_se", 122, 125, 4, true);
+	addState("idle_s", 126, 130, 4, true);
+	addState("idle_so", 131, 134, 4, true);
+	addState("idle_o", 135, 138, 4, true);
+	addState("idle_no", 139, 139, 4, true);
+
+	updateAnimationState();
 }
 
 MainCharacter::~MainCharacter() {
@@ -89,10 +97,16 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 		m_pEventTimer->currTime = 0;
 		m_pEventTimer->limit = 5;
 		m_pCurrFocusedThing = NULL;
+
+		updateAnimationState();
+
 		break;
 
 	case E_MAINCHAR_STATE_SEEKING:
 		m_pCurrFocusedThing = NULL;
+
+		updateAnimationState();
+
 		break;
 
 	case E_MAINCHAR_STATE_OCCUPIED_OBJ:
@@ -138,6 +152,7 @@ void MainCharacter::onEndState(FSM_MAINCHAR_STATE currState) {
 
 void MainCharacter::draw(uint8* fb) {
 	AnimatedSprite::draw(fb);
+
 	if (m_pProgressBar->isActive())
 		m_pProgressBar->draw(fb);
 }
@@ -179,18 +194,7 @@ void MainCharacter::update() {
 			vMoveVector.x = vCurrPos.x - vCurrFocusedThingPos.x;
 			vMoveVector.y = vCurrPos.y - vCurrFocusedThingPos.y;
 
-			if (abs(vMoveVector.x) < abs(vMoveVector.y)) {
-				vNormalizedVect.x = vMoveVector.x / abs(vMoveVector.y);
-				vNormalizedVect.y = vMoveVector.y / abs(vMoveVector.y);
-			}
-			else if (abs(vMoveVector.x) > abs(vMoveVector.y)) {
-				vNormalizedVect.x = vMoveVector.x / abs(vMoveVector.x);
-				vNormalizedVect.y = vMoveVector.y / abs(vMoveVector.x);
-			}
-			else {
-				vNormalizedVect.x = vMoveVector.x / abs(vMoveVector.x);
-				vNormalizedVect.y = vMoveVector.y / abs(vMoveVector.y);
-			}
+			vNormalizedVect = getNormalizedVect(vMoveVector);
 
 			//printf("(%f, %f) ", vNormalizedVect.x, vNormalizedVect.y);
 
@@ -240,19 +244,6 @@ void MainCharacter::update() {
 		}
 		currHistoryThingsNode = nextHistoryThingsNode;
 	}
-    
-    /*if (System::get()->getInputSys()->IsKeyPressed(KEYB_Z)) {
-        changeState(0);
-    }
-    else if (System::get()->getInputSys()->IsKeyPressed(KEYB_D)) {
-        changeState(2);
-    }
-    else if (System::get()->getInputSys()->IsKeyPressed(KEYB_S)) {
-        changeState(4);
-    }
-    else if (System::get()->getInputSys()->IsKeyPressed(KEYB_Q)) {
-        changeState(6);
-    }*/
 }
 
 void MainCharacter::translate(float x, float y, ETransformMode transformMode) {
@@ -269,43 +260,46 @@ void MainCharacter::translate(float x, float y, ETransformMode transformMode) {
         vDeltaPos.y = y - vCurPos.y;
     }
     
-    //printf("%f, %f\n", vDeltaPos.x, vDeltaPos.y);
+	updateOrientationFromVector(vDeltaPos);
+	updateAnimationState();
     
-    if (vDeltaPos.x > 0.) {
-        if (vDeltaPos.y > 0.) {
-            changeState(3);
-        }
-        else if (vDeltaPos.y == 0.) {
-            changeState(2);
-        }
-        else {
-            changeState(1);
-        }
-    }
-    else if (vDeltaPos.x == 0.) {
-        if (vDeltaPos.y > 0.) {
-            changeState(4);
-        }
-        else if (vDeltaPos.y == 0.) {
-            
-        }
-        else {
-            changeState(0);
-        }
-    }
-    else if (vDeltaPos.x < 0.) {
-        if (vDeltaPos.y > 0.) {
-            changeState(5);
-        }
-        else if (vDeltaPos.y == 0.) {
-            changeState(6);
-        }
-        else {
-            changeState(7);
-        }
-    }
-
     Sprite::translate(x, y, transformMode);
+}
+
+E_ORIENTATION MainCharacter::getOrientationFromVector(vect2df_t vDir) {
+	if (vDir.x > 0.) {
+		if (vDir.y > 0.) {
+			return E_ORIENTATION_SE;
+		}
+		else if (vDir.y == 0.) {
+			return E_ORIENTATION_E;
+		}
+		else {
+			return E_ORIENTATION_NE;
+		}
+	}
+	else if (vDir.x == 0.) {
+		if (vDir.y > 0.) {
+			return E_ORIENTATION_S;
+		}
+		else if (vDir.y == 0.) {
+			return E_ORIENTATION_UNKNOWN;
+		}
+		else {
+			return E_ORIENTATION_N;
+		}
+	}
+	else if (vDir.x < 0.) {
+		if (vDir.y > 0.) {
+			return E_ORIENTATION_SO;
+		}
+		else if (vDir.y == 0.) {
+			return E_ORIENTATION_O;
+		}
+		else {
+			return E_ORIENTATION_NO;
+		}
+	}
 }
 
 // Event funcs
@@ -483,4 +477,91 @@ bool MainCharacter::determineThingIsCritFuncEvent(void* arg) {
 		return true;
 	}
 	return false;
+}
+
+void MainCharacter::updateOrientationFromVector(vect2df_t vDeltaPos) {
+	E_ORIENTATION eOrientation = getOrientationFromVector(vDeltaPos);
+
+	if (eOrientation != E_ORIENTATION_UNKNOWN)
+		m_eCurrOrientation = eOrientation;
+}
+
+void MainCharacter::updateAnimationState() {
+	switch (m_fsm.getActiveState()->getStateId()) {
+		case E_MAINCHAR_STATE_WALKING:
+		{
+			switch (m_eCurrOrientation) {
+			case E_ORIENTATION_N:
+				changeState(0);
+				break;
+
+			case E_ORIENTATION_NE:
+				changeState(1);
+				break;
+
+			case E_ORIENTATION_E:
+				changeState(2);
+				break;
+
+			case E_ORIENTATION_SE:
+				changeState(3);
+				break;
+
+			case E_ORIENTATION_S:
+				changeState(4);
+				break;
+
+			case E_ORIENTATION_SO:
+				changeState(5);
+				break;
+
+			case E_ORIENTATION_O:
+				changeState(6);
+				break;
+
+			case E_ORIENTATION_NO:
+				changeState(7);
+				break;
+			}
+			break;
+		}
+
+		case E_MAINCHAR_STATE_IDLE:
+		{
+			switch (m_eCurrOrientation) {
+			case E_ORIENTATION_N:
+				changeState(15);
+				break;
+
+			case E_ORIENTATION_NE:
+				changeState(16);
+				break;
+
+			case E_ORIENTATION_E:
+				changeState(17);
+				break;
+
+			case E_ORIENTATION_SE:
+				changeState(18);
+				break;
+
+			case E_ORIENTATION_S:
+				changeState(19);
+				break;
+
+			case E_ORIENTATION_SO:
+				changeState(20);
+				break;
+
+			case E_ORIENTATION_O:
+				changeState(21);
+				break;
+
+			case E_ORIENTATION_NO:
+				changeState(22);
+				break;
+			}
+			break;
+		}
+	}
 }

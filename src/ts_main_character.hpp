@@ -24,6 +24,18 @@ enum FSM_MAINCHAR_STATE {
 	E_MAINCHAR_STATE_OCCUPIED_WORKGUY,
 };
 
+enum E_ORIENTATION {
+	E_ORIENTATION_N,
+	E_ORIENTATION_NO,
+	E_ORIENTATION_O,
+	E_ORIENTATION_SO,
+	E_ORIENTATION_S,
+	E_ORIENTATION_SE,
+	E_ORIENTATION_E,
+	E_ORIENTATION_NE,
+	E_ORIENTATION_UNKNOWN,
+};
+
 typedef struct eventTimer_t {
 	float currTime;
 	float limit;
@@ -45,9 +57,10 @@ private:
 	DraggableThing* m_pCurrFocusedThing;
 	DraggableThing* m_pNewFocusedThing;
 	float m_fWalkSpeed;
-	FSM_MAINCHAR_STATE m_prevState;
 	LinkedList m_llThingsHistory;
 	TinyProgressBar* m_pProgressBar;
+	E_ORIENTATION m_eCurrOrientation;
+	FSM_MAINCHAR_STATE m_prevState;
 
 public:
 	MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager* pThingsManager);
@@ -59,6 +72,8 @@ public:
 	void draw(uint8* fb);
 	void update();
     void translate(float x, float y, ETransformMode transformMode);
+
+	E_ORIENTATION getOrientationFromVector(vect2df_t vDeltaPos);
     
 	void onBeginUsing();
 	void onEndUsing();
@@ -82,6 +97,9 @@ public:
 	static bool endAttackEventFunc(void* arg);
 	static bool determineThingIsObjFuncEvent(void* arg);
 	static bool determineThingIsCritFuncEvent(void* arg);
+
+	void updateOrientationFromVector(vect2df_t vDeltaPos);
+	void updateAnimationState();
 };
 
 #endif
