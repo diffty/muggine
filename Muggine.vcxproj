@@ -81,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\animatedsprite.cpp" />
     <ClCompile Include="src\bko_ball.cpp" />
     <ClCompile Include="src\bko_brick.cpp" />
     <ClCompile Include="src\bko_grid.cpp" />
@@ -120,6 +121,7 @@
     <ClCompile Include="src\ts_things_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\animatedsprite.hpp" />
     <ClInclude Include="src\bko_ball.hpp" />
     <ClInclude Include="src\bko_brick.hpp" />
     <ClInclude Include="src\bko_grid.hpp" />
@@ -128,6 +130,7 @@
     <ClInclude Include="src\common_types.hpp" />
     <ClInclude Include="src\constants.hpp" />
     <ClInclude Include="src\iobject.hpp" />
+    <ClInclude Include="src\math_tools.hpp" />
     <ClInclude Include="src\ts_critical_thing.hpp" />
     <ClInclude Include="src\draggable_sprite.hpp" />
     <ClInclude Include="src\drawing.hpp" />
