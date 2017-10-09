@@ -20,6 +20,8 @@ void ThingsStore::renewThing(DraggableThing* pThingToRenew) {
 
 		if (pCurrThing == pThingToRenew) {
 			DraggableThing* pNewClonedThing = new DraggableThing(*pCurrThing);
+
+			pNewClonedThing->setIsInStore(true);
 			
 			currNode->pData = (void*) pNewClonedThing;
 			Scene* parentScene = pCurrThing->getParentScene();
