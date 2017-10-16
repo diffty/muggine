@@ -2,11 +2,13 @@
 
 
 
-Text::Text(char* aText, Font* pFont, vect2df_t vPos)
+Text::Text(char* szText, Font* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
 	m_pFont = pFont;
-	m_aText = aText;
+	m_szText = new char[1];
+	m_szText[0] = '\0';
+	setText(szText);
 }
 
 
@@ -14,8 +16,25 @@ Text::~Text() {
 
 }
 
+char* Text::getText() {
+	return m_szText;
+}
+
+void Text::setText(char* szText) {
+	int iTextLen = strlen(szText);
+
+	delete m_szText;
+	m_szText = new char[iTextLen+1];
+
+	for (int i = 0; i < iTextLen; i++) {
+		m_szText[i] = szText[i];
+	}
+
+	m_szText[iTextLen] = '\0';
+}
+
 void Text::draw(uint8* buffer) {
-	drawStr(buffer, m_rect.getPos().x, m_rect.getPos().y, m_aText);
+	drawStr(buffer, m_rect.getPos().x, m_rect.getPos().y, m_szText);
 }
 
 void Text::drawChar(uint8* buffer, float x, float y, char c) {
@@ -32,10 +51,16 @@ void Text::drawStr(uint8* buffer, float x, float y, char* text) {
 }
 
 // Grosse source de memory leaks cette merde
-char** Text::intToStr(int iNum) {
+char* Text::intToStr(int iNum) {
 	unsigned int i, j;
 	char tmp;
-	char* newStr = (char *) malloc(16 * sizeof(char));
+	char* newStr = new char[16];
+
+	if (iNum == 0) {
+		newStr[0] = '0';
+		newStr[1] = '\0';
+		return newStr;
+	}
 
 	for (i = 0; iNum > 0; i++) {
 		newStr[i] = (iNum % 10) + 48;
@@ -51,5 +76,5 @@ char** Text::intToStr(int iNum) {
 		newStr[j] = tmp;
 	}
 
-	return &newStr;
+	return newStr;
 }
