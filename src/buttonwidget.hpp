@@ -37,6 +37,7 @@ public:
 	void receiveTouchInput(vect2d_t touchPt);
 	void onPress();
 	void onRelease();
+
 	void update();
 	void draw(uint8* fb);
 };
