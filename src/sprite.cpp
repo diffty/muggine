@@ -31,8 +31,17 @@ Sprite::Sprite(uint rscId, RscManager* rscManager, float x, float y)
 	m_rect.setSize(imgSize.w, imgSize.h);
 }
 
+uint Sprite::getFrame() {
+	return m_uFrameNb;
+}
+
+void Sprite::setFrame(uint uNewFrame) {
+	m_uFrameNb = uNewFrame;
+}
+
 void Sprite::draw(uint8* buffer) {
-    if (m_bIsActive) {
+	// TODO: faire ce test à l'échelle de l'objet Scene qui va appeler les draw et update
+    if (m_bIsActive) { 
         vect2df_t pos = m_rect.getPos();
 
 		if (m_pSprSht)
