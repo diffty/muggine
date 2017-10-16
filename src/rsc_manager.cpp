@@ -29,12 +29,28 @@ bool RscManager::loadImg(char* imgPath) {
 	}
 }
 
-bool RscManager::loadSprSht(char* imgPath, int gridWidth, int gridHeight, uint length) {
-	SpriteSheet* newSprSheet = new SpriteSheet(imgPath, gridWidth, gridHeight, length);
+bool RscManager::loadSprSht(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength) {
+	SpriteSheet* pNewSprSht = new SpriteSheet(szImgPath, iGridWidth, iGridHeight, uLength);
 
-	if (newSprSheet) {
+	if (pNewSprSht) {
 		LLNode* newRscNode = new LLNode;
-		newRscNode->pData = (void *) newSprSheet;
+		newRscNode->pData = (void *)pNewSprSht;
+
+		addNodeToList(&m_rscList, newRscNode);
+
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool RscManager::loadFont(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength) {
+	Font* pNewFont = new Font(szImgPath, iGridWidth, iGridHeight, uLength);
+
+	if (pNewFont) {
+		LLNode* newRscNode = new LLNode;
+		newRscNode->pData = (void *)pNewFont;
 
 		addNodeToList(&m_rscList, newRscNode);
 
@@ -79,6 +95,17 @@ SpriteSheet* RscManager::getSprShtRsc(uint rscId) {
 
 	if (rscNode) {
 		return (SpriteSheet*)rscNode->pData;
+	}
+	else {
+		return NULL;
+	}
+}
+
+Font* RscManager::getFontRsc(uint rscId) {
+	LLNode* rscNode = getRscNode(rscId);
+
+	if (rscNode) {
+		return (Font*)rscNode->pData;
 	}
 	else {
 		return NULL;
