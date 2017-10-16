@@ -9,18 +9,15 @@
 #include <SDL2/SDL.h>
 #endif
 
-#include "samplergridwidget.hpp"
 #include "linked_list.hpp"
 #include "common_types.hpp"
 #include "scene.hpp"
-#include "buttonwidget.hpp"
 #include "system.hpp"
 #include "graphics.hpp"
 #include "input.hpp"
 #include "rsc_manager.hpp"
 #include "sprite.hpp"
 #include "spritesheet.hpp"
-#include "parallax_background.hpp"
 #include "fsm.hpp"
 #include "font.hpp"
 #include "text.hpp"
@@ -30,7 +27,9 @@
 #include "ts_things_store.hpp"
 #include "ts_draggable_thing.hpp"
 #include "ts_critical_thing.hpp"
+#include "ts_workguy_thing.hpp"
 #include "ts_game_mode.hpp"
+#include "image_button_widget.hpp"
 
 #include <time.h>
 
@@ -57,6 +56,11 @@ void MainApp(System* sys, Graphics* gfx) {
     rscManager.loadSprSht("data/tlg_animated.bmp", 12, 12, 139);
 	rscManager.loadSprSht("data/objects.bmp", 5, 5, 25);
 	rscManager.loadImg("data/room.bmp");
+	rscManager.loadSprSht("data/characters.bmp", 1, 1, 1);
+	rscManager.loadFont("data/font-big.bmp", 16, 16, 256);
+	rscManager.loadFont("data/font-small.bmp", 16, 16, 256);
+	rscManager.loadSprSht("data/ui.bmp", 4, 1, 4);
+	rscManager.loadSprSht("data/ui2.bmp", 1, 1, 1);
 #endif
 
 	// Building scene
@@ -68,14 +72,6 @@ void MainApp(System* sys, Graphics* gfx) {
 	roomPos.y = 0.;
 
 	Sprite room(rscManager.getImgRsc(2), roomPos);
-	Font bigFont("data/font-big.bmp", 16, 16, 256);
-	Font smallFont("data/font-small.bmp", 16, 16, 256);
-
-	vect2df_t testTextPos;
-	testTextPos.x = 10;
-	testTextPos.y = 10;
-
-	Text testText("TEST", &bigFont, testTextPos);
 
 	vect2df_t vStorePos;
 	vStorePos.x = 290;
@@ -83,10 +79,12 @@ void MainApp(System* sys, Graphics* gfx) {
 
 	size2df_t sStoreSize;
 	sStoreSize.w = 30;
-	sStoreSize.h = 226;
+	sStoreSize.h = 180;
 
-	ThingsStore thingsStore(vStorePos, sStoreSize, 1, 10);
+	ThingsStore thingsStore(vStorePos, sStoreSize, 1, 6);
 	ThingsManager thingsManager(&thingsStore);
+
+	scene.addComponent(&room);
 
 	TSGameMode gameMode(&scene, &thingsManager);
 
@@ -97,19 +95,41 @@ void MainApp(System* sys, Graphics* gfx) {
 	MainCharacter mainChar2(rscManager.getImgRsc(0), charPos, &thingsManager);
 	mainChar2.translate(100, 200, TRANSFORM_ABS);*/
 
-	scene.addComponent(&room);
+	// printf("%i\n", '€' == 0xE282AC); 
+
+	
 
 	vect2df_t testThingPos;
 	testThingPos.x = 0;
 	testThingPos.y = 0;
 
-	DraggableThing dt1(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 10, 15, 80, true, true, true, true);
-	DraggableThing dt2(rscManager.getSprShtRsc(1), 1, testThingPos, &thingsManager, sys->getInputSys(), 1, 8,  20, 80, true, true, true, true);
-	DraggableThing dt3(rscManager.getSprShtRsc(1), 2, testThingPos, &thingsManager, sys->getInputSys(), 1, 5,  10, 80, true, true, true, true);
+	DraggableThing dt1(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 10, 15, 80, false, true, true, true);
+	DraggableThing dt2(rscManager.getSprShtRsc(1), 1, testThingPos, &thingsManager, sys->getInputSys(), 1, 8,  20, 80, false, true, true, true);
+	DraggableThing dt3(rscManager.getSprShtRsc(1), 2, testThingPos, &thingsManager, sys->getInputSys(), 1, 5,  10, 80, false, true, true, true);
+	DraggableThing dt4(rscManager.getSprShtRsc(1), 7, testThingPos, &thingsManager, sys->getInputSys(), 1, 5, 10, 80, false, true, true, true);
+	DraggableThing dt5(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 10, 15, 80, false, true, true, true);
+	DraggableThing dt6(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 10, 15, 80, false, true, true, true);
+	DraggableThing dt7(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 10, 15, 80, false, true, true, true);
+	DraggableThing dt8(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 10, 15, 80, false, true, true, true);
+	DraggableThing dt9(rscManager.getSprShtRsc(1), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 10, 15, 80, false, true, true, true);
 
-	thingsStore.addWidget(&dt1);
-	thingsStore.addWidget(&dt2);
-	thingsStore.addWidget(&dt3);
+	dt1.setPrice(10);
+	dt4.setUsableOnlyDuringWork(true);
+	dt4.setIsWorkThing(true);
+	dt4.setDestroyAfterUse(true);
+
+	scene.addComponent(&thingsStore);
+	thingsStore.addPageBtnComponentsToMainScene(); // lol
+
+	thingsStore.addThingToStore(&dt1);
+	thingsStore.addThingToStore(&dt2);
+	thingsStore.addThingToStore(&dt3);
+	thingsStore.addThingToStore(&dt4);
+	thingsStore.addThingToStore(&dt5);
+	thingsStore.addThingToStore(&dt6);
+	thingsStore.addThingToStore(&dt7);
+	thingsStore.addThingToStore(&dt8);
+	thingsStore.addThingToStore(&dt9);
 
 	//
 	testThingPos.x = 225;
@@ -155,6 +175,10 @@ void MainApp(System* sys, Graphics* gfx) {
 	testThingPos.y = 160;
 	CriticalThing ct12(rscManager.getSprShtRsc(1), 4, testThingPos, &thingsManager, sys->getInputSys(), 1, -1, false, true);
 
+	testThingPos.x = 210;
+	testThingPos.y = 100;
+	WorkguyThing wg1(rscManager.getSprShtRsc(3), 0, testThingPos, &thingsManager, sys->getInputSys(), 1, 5, 90, 75, false, true);
+
 	thingsManager.addThing(&ct1);
 	thingsManager.addThing(&ct2);
 	thingsManager.addThing(&ct3);
@@ -167,10 +191,8 @@ void MainApp(System* sys, Graphics* gfx) {
 	thingsManager.addThing(&ct10);
 	thingsManager.addThing(&ct11);
 	thingsManager.addThing(&ct12);
+	thingsManager.addThing(&wg1);
 
-	
-	scene.addComponent(&thingsStore);
-	scene.addComponent(&testText);
 	scene.addComponent(&ct1);
 	scene.addComponent(&ct2);
 	scene.addComponent(&ct3);
@@ -183,6 +205,7 @@ void MainApp(System* sys, Graphics* gfx) {
 	scene.addComponent(&ct10);
 	scene.addComponent(&ct11);
 	scene.addComponent(&ct12);
+	scene.addComponent(&wg1);
 
 	// Spawning character(s)
 	vect2df_t charPos;
@@ -197,12 +220,8 @@ void MainApp(System* sys, Graphics* gfx) {
 	gameMode.spawnCharacter(charPos);
 
 
-
-	// We don't need double buffering in this example.
-	// In this way we can draw our image only once on screen.
 	gfx->SetDoubleBuffering(false);
 
-	// Get the bottom screen's frame buffer
 	uint8* fb = gfx->GetFramebuffer();
 
 	sys->initLoop();
@@ -232,13 +251,14 @@ void MainApp(System* sys, Graphics* gfx) {
 			scene.receiveTouchInput(mouseEvt->position);
 		}
 
-		if (sys->getInputSys()->IsKeyPressed(KEYB_Q) || sys->getInputSys()->IsJoyBtnPressed(JOY_LEFT)) {
-            //vect2d_t currCamPos = parallaxBG.getCamPos();
-			//parallaxBG.setCamPos(currCamPos.x + -1 * deltaTime, 0);
+		if (sys->getInputSys()->IsKeyPressed(KEYB_Z) || sys->getInputSys()->IsJoyBtnPressed(JOY_UP)) {
+			TSGameMode::get()->increaseMoney(10);
+		}
+		else if (sys->getInputSys()->IsKeyPressed(KEYB_Q) || sys->getInputSys()->IsJoyBtnPressed(JOY_LEFT)) {
+			thingsStore.switchToPrevWidget();
 		}
 		else if (sys->getInputSys()->IsKeyPressed(KEYB_D) || sys->getInputSys()->IsJoyBtnPressed(JOY_RIGHT)) {
-            //vect2d_t currCamPos = parallaxBG.getCamPos();
-			//parallaxBG.setCamPos(currCamPos.x + 1 * deltaTime, 0);
+			thingsStore.switchToNextWidget();
 		}
         else if (sys->getInputSys()->IsKeyPressed(KEYB_ESCAPE) || sys->getInputSys()->IsJoyBtnPressed(JOY_BTN_START)) {
             break;
