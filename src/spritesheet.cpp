@@ -32,8 +32,16 @@ void SpriteSheet::draw(uint8* buffer, uint frame, int dstX, int dstY, bool rever
     Image::draw(buffer, dstX, dstY, (m_frameSize.w * (frame % m_gridSize.w)), (m_frameSize.h * (m_gridSize.h - 1 - (frame / m_gridSize.w))), m_frameSize.w, m_frameSize.h, reversed, masked);
 }
 
+size2d_t SpriteSheet::getFrameSize() {
+	return m_frameSize;
+}
+
+uint SpriteSheet::getFrame() {
+	return m_currFrame;
+}
+
 void SpriteSheet::setFrame(uint newFrame) {
-    m_currFrame = newFrame;
+	m_currFrame = newFrame;
 }
 
 void SpriteSheet::nextFrame() {
@@ -47,8 +55,4 @@ void SpriteSheet::prevFrame() {
         newFrame = m_length - 1;
     }
     m_currFrame = newFrame;
-}
-
-size2d_t SpriteSheet::getFrameSize() {
-	return m_frameSize;
 }

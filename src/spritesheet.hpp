@@ -23,11 +23,13 @@ public:
     SpriteSheet(char* fileName, int gridWidth, int gridHeight, uint length);
     void draw(uint8* buffer, uint frame, int dstX, int dstY, bool reversed, bool masked);
     void draw(uint8* buffer, int dstX, int dstY, bool reversed, bool masked);
-    void setFrame(uint newFrame);
-    void nextFrame();
-    void prevFrame();
+	
 	size2d_t getFrameSize();
-
+	uint getFrame();
+	void setFrame(uint newFrame);
+    
+	void nextFrame();
+    void prevFrame();
 };
 
 #endif /* spritesheet_hpp */
