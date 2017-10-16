@@ -31,10 +31,12 @@ void DraggableThing::init(ThingsManager* pThingsManager, int iAppealPower, int i
 	m_iActionRadius = iActionRadius;
 	m_bUsableOnce = bUsableOnce;
 	m_bSingleUser = bSingleUser;
-
 	m_bInStore = bInStore;
+	m_bUsableOnlyDuringWork = false;
 
-	int m_type = 0;
+	m_iMoneyValue = -1;
+	m_iPrice = 0;
+	m_pCharOwner = NULL;
 
 	initList(&m_llUsers);
 }
@@ -74,6 +76,46 @@ bool DraggableThing::isSingleUser() {
 	return m_bSingleUser;
 }
 
+bool DraggableThing::isUsableOnlyDuringWork() {
+	return m_bUsableOnlyDuringWork;
+}
+
+bool DraggableThing::isWorkThing() {
+	return m_bIsWorkThing;
+}
+
+int DraggableThing::getPrice() {
+	return m_iPrice;
+}
+
+MainCharacter* DraggableThing::getCharOwner() {
+	return m_pCharOwner;
+}
+
+void DraggableThing::setMoneyValue(int iMoneyValue) {
+	m_iMoneyValue = iMoneyValue;
+}
+
+void DraggableThing::setPrice(int iPrice) {
+	m_iPrice = iPrice;
+}
+
+void DraggableThing::setCharOwner(MainCharacter* pCharOwner) {
+	m_pCharOwner = pCharOwner;
+}
+
+void DraggableThing::setDestroyAfterUse(bool bDestroyAfterUse) {
+	m_bDestroyAfterUse = bDestroyAfterUse;
+}
+
+void DraggableThing::setUsableOnlyDuringWork(bool bUsableOnlyDuringWork) {
+	m_bUsableOnlyDuringWork = bUsableOnlyDuringWork;
+}
+
+void DraggableThing::setIsWorkThing(bool bIsWorkThing) {
+	m_bIsWorkThing = bIsWorkThing;
+}
+
 void DraggableThing::onDragStart(vect2d_t vStartDragPt) {
 	
 }
@@ -82,9 +124,15 @@ void DraggableThing::onDragEnd() {
 	m_pThingsManager->onThingMoved();
 
 	if (m_bInStore) {
-		m_pThingsManager->addThing(this);
-		m_pThingsManager->renewThingInStore(this);
-		m_bInStore = false;
+		if (TSGameMode::get()->getMoney() - m_iPrice >= 0) {
+			m_pThingsManager->addThing(this);
+			m_pThingsManager->renewThingInStore(this);
+			m_bInStore = false;
+			TSGameMode::get()->decreaseMoney(m_iPrice);
+		}
+		else {
+			m_pThingsManager->replaceThingInStore(this);
+		}
 	}
 }
 
@@ -96,8 +144,21 @@ void DraggableThing::onBeginUsing() {
 	
 }
 
-void DraggableThing::onEndUsing() {
-	
+void DraggableThing::onEndUsing(MainCharacter* pChar) {
+	if (m_iMoneyValue != -1)
+		TSGameMode::get()->increaseMoney(m_iMoneyValue);
+
+	printf("%i, %i\n", m_bIsWorkThing, pChar->hasWork());
+
+	if (m_bIsWorkThing && pChar->hasWork()) {
+		printf("c ok\n");
+		pChar->onEndWork();
+	}
+
+	if (m_bDestroyAfterUse) {
+		m_bIsActive = false;
+		// TODO: faire un appel au thingsmanager pour qu'il delete l'objet au prochain update
+	}
 }
 
 void DraggableThing::onUsing() {

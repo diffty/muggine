@@ -25,6 +25,13 @@ protected:
 	int m_iActionRadius;
 	bool m_bUsableOnce;
 	bool m_bSingleUser;
+	int m_iMoneyValue = -1;
+	int m_iPrice = 0;
+	bool m_bDestroyAfterUse;
+	bool m_bUsableOnlyDuringWork = false;
+	bool m_bIsWorkThing = false;
+
+	MainCharacter* m_pCharOwner = NULL;
 
 	bool m_bInStore;
 
@@ -44,6 +51,18 @@ public:
 	void setIsInStore(bool bInStore);
 	bool isInStore();
 	bool isSingleUser();
+	bool isUsableOnlyDuringWork();
+	bool isWorkThing();
+
+	int getPrice();
+	MainCharacter* getCharOwner();
+
+	void setMoneyValue(int iMoneyValue);
+	void setPrice(int iPrice);
+	void setCharOwner(MainCharacter* pCharOwner);
+	void setDestroyAfterUse(bool bDestroyAfterUse);
+	void setUsableOnlyDuringWork(bool bUsableOnlyDuringWork);
+	void setIsWorkThing(bool bIsWorkThing);
 
 	// Overrides du parent
 	virtual void onDragStart(vect2d_t vStartDragPt);
@@ -51,7 +70,7 @@ public:
 	virtual void onDragging();
 
 	virtual void onBeginUsing();
-	virtual void onEndUsing();
+	virtual void onEndUsing(MainCharacter* pChar);
 	virtual void onUsing();
 
 	int getOccupationTime();
