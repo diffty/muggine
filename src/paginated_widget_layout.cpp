@@ -1,14 +1,12 @@
 #include "paginated_widget_layout.hpp"
 
 
-
-PaginatedWidgetLayout::PaginatedWidgetLayout(vect2df_t vPos, size2df_t sSize, uint uNbCellX, uint uNbCellY) :
+PaginatedWidgetLayout::PaginatedWidgetLayout(vect2df_t vPos, size2df_t sSize) :
 	IWidget(vPos.x, vPos.y, sSize.w, sSize.h) {
 
-	m_uNbCellX = uNbCellX;
-	m_uNbCellY = uNbCellY;
-
-	initList(&m_llContentList);
+	initList(&m_llWidgetList);
+	pCurrWidget = NULL;
+	pCurrWidgetId = -1;
 }
 
 PaginatedWidgetLayout::~PaginatedWidgetLayout() {
@@ -16,69 +14,65 @@ PaginatedWidgetLayout::~PaginatedWidgetLayout() {
 }
 
 void PaginatedWidgetLayout::addWidget(IWidget* pWidget) {
-	LLNode* newNode = new LLNode;
-	newNode->pData = pWidget;
+	addDataToList(&m_llWidgetList, pWidget);
 
 	pWidget->setParentScene(getParentScene());
 
-	addNodeToList(&m_llContentList, newNode);
-	moveWidgetToGrid(m_llContentList.size - 1);
+	if (pCurrWidget == NULL) {
+		pCurrWidget = pWidget;
+		pCurrWidgetId = 0;
+	}
 }
 
-void PaginatedWidgetLayout::moveWidgetToGrid(uint uWidgetId) {
-	LLNode* currNode = getNodeInList(&m_llContentList, uWidgetId);
-	IWidget* currWidget = (IWidget*) currNode->pData;
+void PaginatedWidgetLayout::switchWidget(uint uNum) {
+	LLNode* pNode = getNodeInList(&m_llWidgetList, uNum);
+	if (pNode != NULL) {
+		pCurrWidget = (IWidget*) pNode->pData;
+		pCurrWidgetId = uNum;
+	}
+}
 
-	uint posXOnGrid = uWidgetId % m_uNbCellX;
-	uint posYOnGrid = uWidgetId / m_uNbCellX;
+void PaginatedWidgetLayout::switchToPrevWidget() {
+	int iNewWidgetId = (pCurrWidgetId - 1);
 
-	int iGridCellW = (m_rect.getSize().w / m_uNbCellX);
-	int iGridCellH = (m_rect.getSize().h / m_uNbCellY);
+	if (iNewWidgetId < 0)
+		iNewWidgetId = m_llWidgetList.size - 1;
 
-	size2df_t sCurrWidgetSize = currWidget->getRect()->getSize();
+	switchWidget(iNewWidgetId);
+}
 
-	currWidget->translate(m_rect.getPos().x + iGridCellW * posXOnGrid + iGridCellW / 2 - sCurrWidgetSize.w / 2,
-						  m_rect.getPos().y + iGridCellH * posYOnGrid + iGridCellH / 2 - sCurrWidgetSize.h / 2,
-						  TRANSFORM_ABS);
+void PaginatedWidgetLayout::switchToNextWidget() {
+	switchWidget((pCurrWidgetId + 1) % m_llWidgetList.size);
 }
 
 void PaginatedWidgetLayout::update() {
-	LLNode* currNode = m_llContentList.pHead;
-
-	while (currNode != NULL) {
-		((IWidget*)currNode->pData)->update();
-		currNode = currNode->pNext;
+	if (pCurrWidget != NULL) {
+		pCurrWidget->update();
 	}
 }
 
 void PaginatedWidgetLayout::draw(uint8* fb) {
-	LLNode* currNode = m_llContentList.pHead;
-
-	while (currNode != NULL) {
-		((IWidget*)currNode->pData)->draw(fb);
-		currNode = currNode->pNext;
+	if (pCurrWidget != NULL) {
+		pCurrWidget->draw(fb);
 	}
 }
 
 void PaginatedWidgetLayout::receiveTouchInput(vect2d_t inputPos) {
-	LLNode* currNode = m_llContentList.pHead;
-
-	while (currNode != NULL) {
-		((IWidget*)currNode->pData)->receiveTouchInput(inputPos);
-		currNode = currNode->pNext;
+	if (pCurrWidget != NULL) {
+		pCurrWidget->receiveTouchInput(inputPos);
 	}
 }
 
 void PaginatedWidgetLayout::updateChildren() {
-	LLNode* currNode = m_llContentList.pHead;
+	LLNode* currNode = m_llWidgetList.pHead;
 
 	Scene* pParentScene = getParentScene();
 
 	while (currNode != NULL) {
-		IWidget* pCurrentWidget = ((IWidget*)currNode->pData);
+		IWidget* pCurrWidget = ((IWidget*)currNode->pData);
 
-		pCurrentWidget->setParentScene(pParentScene);
-		pCurrentWidget->updateChildren();
+		pCurrWidget->setParentScene(pParentScene);
+		pCurrWidget->updateChildren();
 
 		currNode = currNode->pNext;
 	}
