@@ -11,7 +11,7 @@
 #include "ts_things_manager.hpp"
 #include "ts_draggable_thing.hpp"
 #include "ts_critical_thing.hpp"
-
+#include "ts_workguy_thing.hpp"
 
 enum FSM_MAINCHAR_STATE {
 	E_MAINCHAR_STATE_IDLE,
@@ -61,6 +61,8 @@ private:
 	TinyProgressBar* m_pProgressBar;
 	E_ORIENTATION m_eCurrOrientation;
 	FSM_MAINCHAR_STATE m_prevState;
+	bool m_bHasWork;
+	work_job_t* m_pCurrentJob;
 
 public:
 	MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager* pThingsManager);
@@ -74,6 +76,10 @@ public:
     void translate(float x, float y, ETransformMode transformMode);
 
 	E_ORIENTATION getOrientationFromVector(vect2df_t vDeltaPos);
+
+	bool hasWork();
+	void setFocusedThing(DraggableThing* pThing);
+	void setHasWork(bool bHasWork);
     
 	void onBeginUsing();
 	void onEndUsing();
@@ -84,7 +90,10 @@ public:
 	void onAttacking();
 	void onSlay();
 
+	void onEndWork();
 	void onThingMoved();
+
+	void assignNewJob(WorkguyThing* pEmployer, int iPrice);
 
 	DraggableThing* searchForAvailableThings();
 
@@ -97,6 +106,7 @@ public:
 	static bool endAttackEventFunc(void* arg);
 	static bool determineThingIsObjFuncEvent(void* arg);
 	static bool determineThingIsCritFuncEvent(void* arg);
+	static bool determineThingIsWorkguyFuncEvent(void* arg);
 
 	void updateOrientationFromVector(vect2df_t vDeltaPos);
 	void updateAnimationState();

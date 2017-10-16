@@ -12,6 +12,8 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 	m_pEventTimer->currTime = 0;
 	m_pEventTimer->limit = 5;
 
+	m_pCurrentJob = NULL;
+
 	// Init progress bar
 	vect2df_t vProgressBarPos;
 	vProgressBarPos.x = m_rect.getPos().x;
@@ -34,6 +36,7 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 	FSMNode* fsmNodeArrived = new FSMNode(E_MAINCHAR_STATE_ARRIVED, "arrived");
 	FSMNode* fsmNodeOccupiedObj = new FSMNode(E_MAINCHAR_STATE_OCCUPIED_OBJ, "occupied_object");
 	FSMNode* fsmNodeOccupiedCrit = new FSMNode(E_MAINCHAR_STATE_OCCUPIED_CRIT, "occupied_critical");
+	FSMNode* fsmNodeOccupiedWorkguy = new FSMNode(E_MAINCHAR_STATE_OCCUPIED_WORKGUY, "occupied_workguy");
 
 	fsmNodeIdle->addEvent("bored", fsmNodeSeeking, &boredEventFunc, &m_pEventTimer);
 	fsmNodeSeeking->addEvent("found", fsmNodeAppealed, &foundThingEventFunc, &m_pCurrFocusedThing);
@@ -41,9 +44,11 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 	fsmNodeWalking->addEvent("arrived_on_thing", fsmNodeArrived, &startBusyEventFunc, &m_pDistToFocusedThing);
 	fsmNodeWalking->addEvent("start_walking_to_another", fsmNodeAppealed, &seenAnotherThingEventFunc, &m_pEventTimer);
 	fsmNodeArrived->addEvent("thing_is_an_object", fsmNodeOccupiedObj, &determineThingIsObjFuncEvent, &m_pCurrFocusedThing);
+	fsmNodeArrived->addEvent("thing_is_a_work_guy", fsmNodeOccupiedWorkguy, &determineThingIsWorkguyFuncEvent, &m_pCurrFocusedThing);
 	fsmNodeArrived->addEvent("thing_is_a_critical_object", fsmNodeOccupiedCrit, &determineThingIsCritFuncEvent, &m_pCurrFocusedThing);
 	fsmNodeOccupiedObj->addEvent("end_busy", fsmNodeIdle, &endBusyEventFunc, &m_pEventTimer);
 	fsmNodeOccupiedCrit->addEvent("end_crit", fsmNodeAppealed, &endAttackEventFunc, &m_pNewFocusedThing);
+	fsmNodeOccupiedWorkguy->addEvent("end_workguy", fsmNodeIdle, &endBusyEventFunc, &m_pEventTimer);
 
 	m_fsm.addNode(fsmNodeIdle);
 	m_fsm.addNode(fsmNodeSeeking);
@@ -88,7 +93,9 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 }
 
 MainCharacter::~MainCharacter() {
-
+	if (m_pCurrentJob != NULL) {
+		delete m_pCurrentJob;
+	}
 }
 
 void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
@@ -110,6 +117,7 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 		break;
 
 	case E_MAINCHAR_STATE_OCCUPIED_OBJ:
+	case E_MAINCHAR_STATE_OCCUPIED_WORKGUY:
 	{
         changeState(14);
         
@@ -139,8 +147,9 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 void MainCharacter::onEndState(FSM_MAINCHAR_STATE currState) {
 	switch (currState) {
 	case E_MAINCHAR_STATE_OCCUPIED_OBJ:
+	case E_MAINCHAR_STATE_OCCUPIED_WORKGUY:
 		onEndUsing();
-		m_pCurrFocusedThing->onEndUsing();
+		m_pCurrFocusedThing->onEndUsing(this);
 		break;
 
 	case E_MAINCHAR_STATE_OCCUPIED_CRIT:
@@ -206,6 +215,7 @@ void MainCharacter::update() {
 		}
 
 		case E_MAINCHAR_STATE_OCCUPIED_OBJ:
+		case E_MAINCHAR_STATE_OCCUPIED_WORKGUY:
 			onUsing(m_pEventTimer->currTime);
 			m_pCurrFocusedThing->onUsing();
 			break;
@@ -302,6 +312,18 @@ E_ORIENTATION MainCharacter::getOrientationFromVector(vect2df_t vDir) {
 	}
 }
 
+bool MainCharacter::hasWork() {
+	return m_bHasWork;
+}
+
+void MainCharacter::setFocusedThing(DraggableThing* pThing) {
+	m_pCurrFocusedThing = pThing;
+}
+
+void MainCharacter::setHasWork(bool bHasWork) {
+	m_bHasWork = bHasWork;
+}
+
 // Event funcs
 void MainCharacter::onBeginUsing() {
 	m_pProgressBar->setActive(true);
@@ -336,7 +358,18 @@ void MainCharacter::onAttacking() {
 }
 
 void MainCharacter::onSlay() {
+	TSGameMode::get()->decreaseHealth(1);
 	printf("SLAYED\n");
+}
+
+
+void MainCharacter::onEndWork() {
+	setHasWork(false);
+
+	TSGameMode::get()->increaseMoney(m_pCurrentJob->m_iPrice);
+
+	delete m_pCurrentJob;
+	m_pCurrentJob = NULL;
 }
 
 void MainCharacter::onThingMoved() {
@@ -350,11 +383,22 @@ void MainCharacter::onThingMoved() {
 	}
 }
 
+
+void MainCharacter::assignNewJob(WorkguyThing* pEmployer, int iPrice) {
+	setHasWork(true);
+
+	m_pCurrentJob = new work_job_t;
+	m_pCurrentJob->m_pEmployer = pEmployer;
+	m_pCurrentJob->m_iPrice = iPrice;
+	m_pCurrentJob->m_fTimeStarted = System::get()->getTime();
+}
+
+
 DraggableThing* MainCharacter::searchForAvailableThings() {
 	LinkedList llSortedAvailableThings;
 	initList(&llSortedAvailableThings);
 
-	m_pThingsManager->getClosestAvailableThingsToPoint(&llSortedAvailableThings, m_rect.getPosi());
+	m_pThingsManager->getClosestAvailableThingsToPoint(&llSortedAvailableThings, m_rect.getPosi(), this);
 
 	DraggableThing* pFoundThing = NULL;
 
@@ -474,6 +518,14 @@ bool MainCharacter::determineThingIsObjFuncEvent(void* arg) {
 bool MainCharacter::determineThingIsCritFuncEvent(void* arg) {
 	DraggableThing* pThing = *((DraggableThing**)arg);
 	if (pThing->getClassType()->getClassTypeName() == "CriticalThing") {
+		return true;
+	}
+	return false;
+}
+
+bool MainCharacter::determineThingIsWorkguyFuncEvent(void* arg) {
+	DraggableThing* pThing = *((DraggableThing**)arg);
+	if (pThing->getClassType()->getClassTypeName() == "WorkguyThing") {
 		return true;
 	}
 	return false;
