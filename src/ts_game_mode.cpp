@@ -9,15 +9,29 @@ TSGameMode::TSGameMode(Scene* pMainScene, ThingsManager* pThingsManager) {
 	TSGameMode::s_pInstance = this;
 	
 	m_fHealth = 100;
+	m_iMoney = 0;
 	m_pMainScene = pMainScene;
 	m_pThingsManager = pThingsManager;
 	
 	initList(&m_llCharacters); // TODO: libérer la mémoire
+
+	vect2df_t vTextPos;
+
+	vTextPos.x = 10;
+	vTextPos.y = 225;
+	m_pMoneyLabel = new Text(Text::intToStr(0), RscManager::get()->getFontRsc(4), vTextPos);
+	
+	vTextPos.x = 270;
+	vTextPos.y = 225;
+	m_pHealthLabel = new Text(Text::intToStr(100), RscManager::get()->getFontRsc(4), vTextPos);
+
+	m_pMainScene->addComponent(m_pMoneyLabel);
+	m_pMainScene->addComponent(m_pHealthLabel);
 }
 
-
 TSGameMode::~TSGameMode() {
-	
+	delete m_pMoneyLabel;
+	delete m_pHealthLabel;
 }
 
 void TSGameMode::spawnCharacter(vect2df_t vCharPos) {
@@ -27,12 +41,16 @@ void TSGameMode::spawnCharacter(vect2df_t vCharPos) {
 	m_pMainScene->addComponent(newChar);
 }
 
+
 float TSGameMode::getHealth() {
 	return m_fHealth;
 }
 
 void TSGameMode::setHealth(float fHealth) {
 	m_fHealth = fHealth;
+	char* szNewHealth = Text::intToStr((int) m_fHealth);
+	m_pHealthLabel->setText(szNewHealth);
+	delete szNewHealth;
 }
 
 void TSGameMode::decreaseHealth(float fHealthMalus) {
@@ -42,6 +60,27 @@ void TSGameMode::decreaseHealth(float fHealthMalus) {
 void TSGameMode::increaseHealth(float fHealthBonus) {
 	setHealth(m_fHealth + fHealthBonus);
 }
+
+
+int TSGameMode::getMoney() {
+	return m_iMoney;
+}
+
+void TSGameMode::setMoney(int iMoney) {
+	m_iMoney = iMoney;
+	char* szNewMoney = Text::intToStr(iMoney);
+	m_pMoneyLabel->setText(szNewMoney);
+	delete szNewMoney;
+}
+
+void TSGameMode::decreaseMoney(int iMoneyMalus) {
+	setMoney(m_iMoney - iMoneyMalus);
+}
+
+void TSGameMode::increaseMoney(int iMoneyBonus) {
+	setMoney(m_iMoney + iMoneyBonus);
+}
+
 
 void TSGameMode::onThingMoved() {
 	LLNode* pCurrNode = m_llCharacters.pHead;
