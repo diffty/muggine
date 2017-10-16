@@ -7,6 +7,8 @@
 
 class DraggableThing;
 class ThingsStore;
+class MainCharacter;
+
 
 class ThingsManager
 {
@@ -19,10 +21,12 @@ public:
 	~ThingsManager();
 
 	void addThing(DraggableThing* pNewThing);
-	void getClosestAvailableThingsToPoint(LinkedList* pllAvailableThings, vect2d_t vPos);
+	void getClosestAvailableThingsToPoint(LinkedList* pllAvailableThings, vect2d_t vPos, MainCharacter* pChar = NULL);
 	void renewThingInStore(DraggableThing* pThingToRenew);
+	void replaceThingInStore(DraggableThing* pThingToReplace);
 
 	void onCriticalThingUsed();
+	void onWorkguyThingUsed();
 	void onThingMoved();
 };
 

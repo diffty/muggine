@@ -18,7 +18,7 @@ void ThingsManager::addThing(DraggableThing* pNewThing) {
 	addDataToList(&m_llThingsList, pNewThing);
 }
 
-void ThingsManager::getClosestAvailableThingsToPoint(LinkedList* pllAvailableThings, vect2d_t vPos) {
+void ThingsManager::getClosestAvailableThingsToPoint(LinkedList* pllAvailableThings, vect2d_t vPos, MainCharacter* pChar) {
 	LLNode* pCurrNode = m_llThingsList.pHead;
 	
 	while (pCurrNode != NULL) {
@@ -28,7 +28,10 @@ void ThingsManager::getClosestAvailableThingsToPoint(LinkedList* pllAvailableThi
 
 		if ((pCurrThing->isSingleUser()
 			&& !pCurrThing->isUsed())
-			&& ((float) pCurrThing->getActionRadius() > fCurrDistance || pCurrThing->getActionRadius() == -1)) {
+			&& ((float) pCurrThing->getActionRadius() > fCurrDistance || pCurrThing->getActionRadius() == -1)
+			&& (pCurrThing->getCharOwner() == NULL || pCurrThing->getCharOwner() == pChar)
+			&& (!pCurrThing->isUsableOnlyDuringWork() || (pChar != NULL && (pChar->hasWork() && pCurrThing->isUsableOnlyDuringWork())))
+			&& !((pCurrThing->getClassType()->getClassTypeName() == "WorkguyThing" && pChar->hasWork()))) {
 
 			LLNode* pClonedNode = new LLNode(*pCurrNode);
 			pClonedNode->pNext = NULL;
@@ -78,8 +81,16 @@ void ThingsManager::renewThingInStore(DraggableThing* pThingToRenew) {
 	m_pStore->renewThing(pThingToRenew);
 }
 
+void ThingsManager::replaceThingInStore(DraggableThing* pThingToReplace) {
+	m_pStore->replaceThingInStore(pThingToReplace);
+}
+
 void ThingsManager::onCriticalThingUsed() {
 	TSGameMode::get()->decreaseHealth(0.01);
+}
+
+void ThingsManager::onWorkguyThingUsed() {
+
 }
 
 void ThingsManager::onThingMoved() {
