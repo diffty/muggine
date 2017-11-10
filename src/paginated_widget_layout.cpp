@@ -10,7 +10,8 @@ PaginatedWidgetLayout::PaginatedWidgetLayout(vect2df_t vPos, size2df_t sSize) :
 }
 
 PaginatedWidgetLayout::~PaginatedWidgetLayout() {
-
+	destroyAllWidgets();
+	//clearList(&m_llWidgetList);
 }
 
 void PaginatedWidgetLayout::addWidget(IWidget* pWidget) {
@@ -76,4 +77,18 @@ void PaginatedWidgetLayout::updateChildren() {
 
 		currNode = currNode->pNext;
 	}
+}
+
+void PaginatedWidgetLayout::destroyAllWidgets() {
+	LLNode* currNode = m_llWidgetList.pHead;
+
+	while (currNode != NULL) {
+		IWidget* pCurrWidget = ((IWidget*) currNode->pData);
+
+		delete pCurrWidget;
+
+		currNode = currNode->pNext;
+	}
+
+	clearList(&m_llWidgetList);
 }

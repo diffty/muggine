@@ -20,7 +20,7 @@ public:
 
 	bool loadImg(char* imgPath);
 	bool loadSprSht(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength);
-	bool loadFont(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength);
+	bool loadFont(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset);
 	void unloadRsc(uint rscId);
 	void freeAllRsc();
 	LLNode* getRscNode(uint rscId);

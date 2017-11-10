@@ -4,11 +4,12 @@
 #include "paginated_widget_layout.hpp"
 #include "ts_draggable_thing.hpp"
 #include "grid_widget_layout.hpp"
-#include "ts_things_store_page.hpp"
 #include "image_button_widget.hpp"
 #include "ts_things_manager.hpp"
 #include "ts_things_store_item.hpp"
 
+
+class ThingsStorePage;
 
 class ThingsStore : public PaginatedWidgetLayout
 {
@@ -27,7 +28,7 @@ public:
 	void addThingToStore(DraggableThing* pThing);
 	void createNewPage();
 	bool findThingInPages(DraggableThing* pThing, ThingsStorePage** pLayoutWithThing, int* piThingWidgetId);
-	void renewThing(DraggableThing* pThingToRenew);
+	DraggableThing* renewThing(DraggableThing* pThingToRenew);
 	void replaceThingInStore(DraggableThing* pThingToRenew);
 
 	void updateChildren();

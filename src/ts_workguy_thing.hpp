@@ -4,6 +4,7 @@
 #include "ts_draggable_thing.hpp"
 
 
+
 class WorkguyThing : public DraggableThing
 {
 private:

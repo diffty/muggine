@@ -10,7 +10,7 @@ System::System() {
 	QueryPerformanceFrequency(&m_tickFrequency);
 #endif
 
-	isMainLoopRunning = true;
+	m_bIsMainLoopRunning = true;
 	initLoop();
 
 #ifdef TARGET_SDL
@@ -130,7 +130,7 @@ bool System::mainLoop() {
 #elif TARGET_SDL
 	while (SDL_PollEvent(&m_event) != 0) {
 		if (m_event.type == SDL_QUIT) {
-			isMainLoopRunning = false;
+			m_bIsMainLoopRunning = false;
 		}
 
 		else if (m_event.type == SDL_KEYDOWN || m_event.type == SDL_KEYUP) {
@@ -149,12 +149,16 @@ bool System::mainLoop() {
 		}
 	}
 
-	return isMainLoopRunning;
+	return m_bIsMainLoopRunning;
 
 #else
-	return isMainLoopRunning;
+	return m_bIsMainLoopRunning;
 
 #endif
+}
+
+void System::quitLoop() {
+	m_bIsMainLoopRunning = false;
 }
 
 void System::exit() {

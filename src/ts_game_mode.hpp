@@ -3,35 +3,62 @@
 
 #include <stdio.h>
 
-#include "ts_main_character.hpp"
 #include "scene.hpp"
 #include "linked_list.hpp"
 #include "text.hpp"
+#include "ts_clone_machine.hpp"
+#include "csv_reader.hpp"
 
 
 class ThingsManager;
+class ThingsStore;
+
+class DraggableThing;
+class WinningThing;
+class CriticalThing;
+class WorkguyThing;
+
+class MainCharacter;
+class WinCharacter;
+
 
 class TSGameMode
 {
 private:
 	float m_fHealth;
 	int m_iMoney;
+	int m_iNbActiveWinThings = 0;
+	int m_iNbInitSpawns;
+	float m_fTimeBetweenInitSpawns;
+	float m_fTimeBeforeFirstSpawn;
 
 	LinkedList m_llCharacters;
-	Scene* m_pMainScene;
 	Text* m_pMoneyLabel;
 	Text* m_pHealthLabel;
+	Text* m_pTimerLabel;
+
+	MainCharacter* m_pFinalMainCharacter;
+	WinCharacter* m_pWinCharacter;
 
 	ThingsManager* m_pThingsManager;
+	ThingsStore* m_pThingsStore;
+	Scene* m_pMainScene;
 
 	static TSGameMode* s_pInstance;
 
+	float m_fWinTimer;
+
+	bool m_bWinTimerActivated = false;
+
 
 public:
-	TSGameMode(Scene* pMainScene, ThingsManager* pThingsManager);
+	TSGameMode(Scene* pMainScene, int iNbInitSpawns, float fTimeBetweenInitSpawns);
 	~TSGameMode();
 
-	void spawnCharacter(vect2df_t vCharPos);
+	void initScene();
+
+	void spawnMainCharacter(vect2df_t vCharPos);
+	void spawnWinCharacter(vect2df_t vCharPos);
 
 	float getHealth();
 	void setHealth(float fHealth);
@@ -45,7 +72,25 @@ public:
 
 	void onThingMoved();
 
+	void launchWinTimer();
+	void stopWinTimer();
+
+	void onWinTimerEnd();
+
+	MainCharacter* getFinalMainCharacter();
+	WinCharacter* getWinCharacter();
+	WinCharacter* findWinCharacter();
+
+	void destroyCharacters();
+
+	void update();
+
+	ThingsStore* getThingsStore();
+	ThingsManager* getThingsManager();
+	Scene* getScene();
+
 	static TSGameMode* get();
+	static void initGameMode(TSGameMode** pGameMode, Scene* pScene, int iNbInitSpawns, float fTimeBetweenInitSpawns);
 };
 
 

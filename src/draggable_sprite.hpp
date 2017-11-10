@@ -25,15 +25,21 @@ public:
 	virtual void onDragEnd() {};
 	virtual void onDragging() {};
 
+	virtual void onHoverStart(vect2d_t vStartHoverPt) {};
+	virtual void onHoverEnd() {};
+	virtual void onHovering() {};
+
 protected:
+	bool m_bIsDraggable;
 	bool m_bIsGrabbed;
+
+	bool m_bIsHoverable = false;
+	bool m_bIsHovered = false;
 
 	Input* m_pInputManager;
 
 	vect2d_t m_vCurrMousePos;
 	vect2d_t m_vGrabPos;
-
-	bool m_bIsDraggable;
 };
 
 

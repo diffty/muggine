@@ -1,18 +1,27 @@
 #include "ts_main_character.hpp"
-#include "math_tools.hpp"
+#include "ts_win_character.hpp"
+
+#define BUBBLE_STAY_TIME 3
 
 
 MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager* pThingsManager)
 	: AnimatedSprite(pSprSh, vPos)
 {
+	getClassType()->setClassTypeName("MainCharacter");
+	
 	// Creating FSM
 	m_pEventTimer = new eventTimer_t;
-	m_pDistToFocusedThing = new float(0);
+	m_pEventDist = new eventDist_t;
 
 	m_pEventTimer->currTime = 0;
 	m_pEventTimer->limit = 5;
 
+	m_pEventDist->currDist = 0;
+	m_pEventDist->limit = 5;
+
 	m_pCurrentJob = NULL;
+
+	m_fBubbleTextTimeLeft = -1;
 
 	// Init progress bar
 	vect2df_t vProgressBarPos;
@@ -37,25 +46,46 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 	FSMNode* fsmNodeOccupiedObj = new FSMNode(E_MAINCHAR_STATE_OCCUPIED_OBJ, "occupied_object");
 	FSMNode* fsmNodeOccupiedCrit = new FSMNode(E_MAINCHAR_STATE_OCCUPIED_CRIT, "occupied_critical");
 	FSMNode* fsmNodeOccupiedWorkguy = new FSMNode(E_MAINCHAR_STATE_OCCUPIED_WORKGUY, "occupied_workguy");
+	FSMNode* fsmNodeWinAppealed = new FSMNode(E_MAINCHAR_STATE_WIN_APPEALED, "win_appealed");
+	FSMNode* fsmNodeWinWalkingToChar = new FSMNode(E_MAINCHAR_STATE_WIN_WALKING_TO_CHAR, "win_walking_to_char");
+	FSMNode* fsmNodeWinArrivedAtChar = new FSMNode(E_MAINCHAR_STATE_WIN_ARRIVED_AT_CHAR, "win_arrived_at_win_char");
+	FSMNode* fsmNodeWinWalkingToExit = new FSMNode(E_MAINCHAR_STATE_WIN_WALKING_TO_EXIT, "win_walking_to_exit");
+	FSMNode* fsmNodeWinVanish = new FSMNode(E_MAINCHAR_STATE_WIN_VANISH, "win_vanish");
+	FSMNode* fsmNodeWinOut = new FSMNode(E_MAINCHAR_STATE_WIN_OUT, "win_out");
 
-	fsmNodeIdle->addEvent("bored", fsmNodeSeeking, &boredEventFunc, &m_pEventTimer);
-	fsmNodeSeeking->addEvent("found", fsmNodeAppealed, &foundThingEventFunc, &m_pCurrFocusedThing);
-	fsmNodeAppealed->addEvent("start_walking", fsmNodeWalking, &startWalkingEventFunc, &m_pEventTimer);
-	fsmNodeWalking->addEvent("arrived_on_thing", fsmNodeArrived, &startBusyEventFunc, &m_pDistToFocusedThing);
+	fsmNodeIdle->addEvent("bored", fsmNodeSeeking, &timedEventFunc, &m_pEventTimer);
+	fsmNodeSeeking->addEvent("found", fsmNodeAppealed, &validThingEventFunc, &m_pCurrFocusedThing);
+	fsmNodeAppealed->addEvent("start_walking", fsmNodeWalking, &timedEventFunc, &m_pEventTimer);
+	fsmNodeWalking->addEvent("arrived_on_thing", fsmNodeArrived, &distToEventFunc, &m_pEventDist);
 	fsmNodeWalking->addEvent("start_walking_to_another", fsmNodeAppealed, &seenAnotherThingEventFunc, &m_pEventTimer);
 	fsmNodeArrived->addEvent("thing_is_an_object", fsmNodeOccupiedObj, &determineThingIsObjFuncEvent, &m_pCurrFocusedThing);
 	fsmNodeArrived->addEvent("thing_is_a_work_guy", fsmNodeOccupiedWorkguy, &determineThingIsWorkguyFuncEvent, &m_pCurrFocusedThing);
 	fsmNodeArrived->addEvent("thing_is_a_critical_object", fsmNodeOccupiedCrit, &determineThingIsCritFuncEvent, &m_pCurrFocusedThing);
-	fsmNodeOccupiedObj->addEvent("end_busy", fsmNodeIdle, &endBusyEventFunc, &m_pEventTimer);
-	fsmNodeOccupiedCrit->addEvent("end_crit", fsmNodeAppealed, &endAttackEventFunc, &m_pNewFocusedThing);
-	fsmNodeOccupiedWorkguy->addEvent("end_workguy", fsmNodeIdle, &endBusyEventFunc, &m_pEventTimer);
+	fsmNodeOccupiedObj->addEvent("end_busy", fsmNodeIdle, &timedEventFunc, &m_pEventTimer);
+	fsmNodeOccupiedCrit->addEvent("end_crit", fsmNodeAppealed, &validThingEventFunc, &m_pNewFocusedThing);
+	fsmNodeOccupiedWorkguy->addEvent("end_workguy", fsmNodeIdle, &timedEventFunc, &m_pEventTimer);
+
+	fsmNodeWinAppealed->addEvent("win_appealed", fsmNodeWinWalkingToChar, &timedEventFunc, &m_pEventTimer);
+	fsmNodeWinWalkingToChar->addEvent("win_walking_to_char", fsmNodeWinArrivedAtChar, &distToEventFunc, &m_pEventDist);
+	fsmNodeWinArrivedAtChar->addEvent("win_arrived_at_char", fsmNodeWinWalkingToExit, &timedEventFunc, &m_pEventTimer);
+	fsmNodeWinWalkingToExit->addEvent("win_walking_to_exit", fsmNodeWinVanish, &distToEventFunc, &m_pEventDist);
+	fsmNodeWinVanish->addEvent("win_vanish", fsmNodeWinOut, &timedEventFunc, &m_pEventTimer);
+
 
 	m_fsm.addNode(fsmNodeIdle);
 	m_fsm.addNode(fsmNodeSeeking);
 	m_fsm.addNode(fsmNodeAppealed);
 	m_fsm.addNode(fsmNodeWalking);
+	m_fsm.addNode(fsmNodeArrived);
 	m_fsm.addNode(fsmNodeOccupiedObj);
 	m_fsm.addNode(fsmNodeOccupiedCrit);
+	m_fsm.addNode(fsmNodeOccupiedWorkguy);
+	m_fsm.addNode(fsmNodeWinAppealed);
+	m_fsm.addNode(fsmNodeWinWalkingToChar);
+	m_fsm.addNode(fsmNodeWinArrivedAtChar);
+	m_fsm.addNode(fsmNodeWinWalkingToExit);
+	m_fsm.addNode(fsmNodeWinVanish);
+
 
 	m_pThingsManager = pThingsManager;
 
@@ -73,54 +103,86 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
     addState("walk_so", 40, 47, 10, true);
     addState("walk_o", 48, 55, 10, true);
     addState("walk_no", 56, 63, 10, true);
-    addState("walk_amazed1_e", 64, 71, 10, true);
-    addState("walk_amazed2_e", 72, 79, 10, true);
-    addState("walk_amazed1_se", 80, 87, 10, true);
-    addState("walk_amazed2_se", 88, 95, 10, true);
-    addState("walk_amazed1_s", 96, 103, 10, true);
-    addState("walk_amazed2_s", 104, 111, 10, true);
-    addState("occupied", 112, 115, 5, true);
-    addState("idle_n", 116, 116, 5, true);
-    addState("idle_ne", 117, 117, 1, true);
-    addState("idle_e", 118, 121, 4, true);
-	addState("idle_se", 122, 125, 4, true);
-	addState("idle_s", 126, 130, 4, true);
-	addState("idle_so", 131, 134, 4, true);
-	addState("idle_o", 135, 138, 4, true);
-	addState("idle_no", 139, 139, 4, true);
+    addState("walk_surpr1_e", 156, 163, 10, true);
+    addState("walk_surpr2_e", 164, 171, 10, true);
+    addState("walk_surpr1_se", 140, 147, 10, true);
+    addState("walk_surpr2_se", 148, 455, 10, true);
+    addState("walk_surpr1_s", 124, 131, 10, true);
+    addState("walk_surpr2_s", 132, 139, 10, true);
+	addState("walk_surpr1_so", 108, 115, 10, true);
+	addState("walk_surpr2_so", 116, 123, 10, true);
+	addState("walk_surpr1_o", 92, 99, 10, true);
+	addState("walk_surpr2_o", 100, 107, 10, true);
+    addState("occupied", 64, 67, 5, true);
+    addState("idle_n", 68, 68, 5, true);
+    addState("idle_ne", 69, 69, 1, true);
+    addState("idle_e", 70, 73, 4, true);
+	addState("idle_se", 74, 77, 4, true);
+	addState("idle_s", 78, 82, 4, true);
+	addState("idle_so", 83, 86, 4, true);
+	addState("idle_o", 87, 90, 4, true);
+	addState("idle_no", 91, 91, 4, true);
+	addState("idle_surpr1_e", 196, 198, 10, true);
+	addState("idle_surpr2_e", 199, 201, 10, true);
+	addState("idle_surpr1_se", 190, 192, 10, true);
+	addState("idle_surpr2_se", 193, 195, 10, true);
+	addState("idle_surpr1_s", 184, 186, 10, true);
+	addState("idle_surpr2_s", 187, 189, 10, true);
+	addState("idle_surpr1_so", 178, 180, 10, true);
+	addState("idle_surpr2_so", 181, 183, 10, true);
+	addState("idle_surpr1_o", 172, 174, 10, true);
+	addState("idle_surpr2_o", 175, 177, 10, true);
 
 	updateAnimationState();
+
+	m_pTextBubble = new TextBubble("", RscManager::get()->getFontRsc(12), 0, 0, 0, 0);
+	m_pTextBubble->setActive(false);
+
+	showBubble("\"YO\"");
 }
 
 MainCharacter::~MainCharacter() {
 	if (m_pCurrentJob != NULL) {
 		delete m_pCurrentJob;
 	}
+
+	delete m_pTextBubble;
 }
 
 void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 	switch (currState) {
 	case E_MAINCHAR_STATE_IDLE:
-		m_pEventTimer->currTime = 0;
-		m_pEventTimer->limit = 5;
-		m_pCurrFocusedThing = NULL;
-
 		updateAnimationState();
+		m_pCurrFocusedThing = NULL;
+		setEventTimer(3);
 
 		break;
 
 	case E_MAINCHAR_STATE_SEEKING:
+		updateAnimationState();
 		m_pCurrFocusedThing = NULL;
 
-		updateAnimationState();
+		break;
 
+	case E_MAINCHAR_STATE_APPEALED:
+		updateOrientationFromVector(vectfSub(m_rect.getPos(), m_pCurrFocusedThing->getRect()->getPos()));
+
+		updateAnimationState();
+		setEventTimer(1);
+
+		break;
+
+	case E_MAINCHAR_STATE_WALKING:
+		updateAnimationState();
+		setEventDist(8);
+		
 		break;
 
 	case E_MAINCHAR_STATE_OCCUPIED_OBJ:
 	case E_MAINCHAR_STATE_OCCUPIED_WORKGUY:
 	{
-        changeState(14);
-        
+		updateAnimationState();
+
 		m_pEventTimer->currTime = 0;
 		m_pEventTimer->limit = m_pCurrFocusedThing->getOccupationTime();
 
@@ -131,15 +193,57 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 		addDataToList(&m_llThingsHistory, pHistoryThingInfo);
 
 		onBeginUsing();
-		m_pCurrFocusedThing->onBeginUsing();
+		m_pCurrFocusedThing->onBeginUsing(this);
 		break;
 	}
 
 	case E_MAINCHAR_STATE_OCCUPIED_CRIT:
+		updateAnimationState();
+
 		m_pNewFocusedThing = NULL;
-		m_pEventTimer->currTime = 0;
-		m_pEventTimer->limit = 1;
+		setEventTimer(4);
+
 		onBeginAttack();
+
+		break;
+
+	case E_MAINCHAR_STATE_WIN_APPEALED:
+		m_eCurrOrientation = getOrientationFromVector(vectfSub(m_rect.getPos(), TSGameMode::get()->getWinCharacter()->getRect()->getPos()));
+
+		updateAnimationState();
+		setEventTimer(7);
+
+		m_pNewFocusedThing = NULL;
+
+		break;
+
+	case E_MAINCHAR_STATE_WIN_WALKING_TO_CHAR:
+		updateAnimationState();
+		setEventDist(20);
+
+		break;
+
+	case E_MAINCHAR_STATE_WIN_ARRIVED_AT_CHAR:
+		updateAnimationState();
+		setEventTimer(3);
+
+		break;
+
+	case E_MAINCHAR_STATE_WIN_WALKING_TO_EXIT:
+		updateAnimationState();
+		setEventDist(1);
+
+		break;
+
+	case E_MAINCHAR_STATE_WIN_VANISH:
+		updateAnimationState();
+		setEventTimer(1);
+
+		break;
+
+	case E_MAINCHAR_STATE_WIN_OUT:
+		setActive(false);
+
 		break;
 	}
 }
@@ -159,11 +263,14 @@ void MainCharacter::onEndState(FSM_MAINCHAR_STATE currState) {
 	}
 }
 
-void MainCharacter::draw(uint8* fb) {
-	AnimatedSprite::draw(fb);
+void MainCharacter::draw(uint8* buffer) {
+	AnimatedSprite::draw(buffer);
 
 	if (m_pProgressBar->isActive())
-		m_pProgressBar->draw(fb);
+		m_pProgressBar->draw(buffer);
+
+	if (m_pTextBubble->isActive())
+		m_pTextBubble->draw(buffer);
 }
 
 void MainCharacter::update() {
@@ -173,7 +280,7 @@ void MainCharacter::update() {
 
 	m_fsm.update();
 
-	FSM_MAINCHAR_STATE currState = (FSM_MAINCHAR_STATE) m_fsm.getActiveState()->getStateId();
+	FSM_MAINCHAR_STATE currState = getCurrentState();
 
 	if (m_prevState != currState) {
 		if (m_prevState != NULL)
@@ -182,7 +289,7 @@ void MainCharacter::update() {
 		onNewState(currState);
 
 		m_prevState = currState;
-		printf("Current state: %s\n", m_fsm.getActiveState()->getName());
+		printf("Current state: %p: %s\n", this, m_fsm.getActiveState()->getName());
 	}
 
 	switch (currState) {
@@ -194,22 +301,7 @@ void MainCharacter::update() {
 
 		case E_MAINCHAR_STATE_WALKING:
 		{
-			vect2df_t vCurrFocusedThingPos = m_pCurrFocusedThing->getRect()->getPos();
-			vect2df_t vCurrPos = m_rect.getPos();
-
-			vect2df_t vMoveVector;
-			vect2df_t vNormalizedVect;
-
-			vMoveVector.x = vCurrPos.x - vCurrFocusedThingPos.x;
-			vMoveVector.y = vCurrPos.y - vCurrFocusedThingPos.y;
-
-			vNormalizedVect = getNormalizedVect(vMoveVector);
-
-			//printf("(%f, %f) ", vNormalizedVect.x, vNormalizedVect.y);
-
-			*m_pDistToFocusedThing = (float) sqrt((vMoveVector.x * vMoveVector.x) + (vMoveVector.y * vMoveVector.y));
-
-			translate((-vNormalizedVect.x * deltaTime * m_fWalkSpeed), (-vNormalizedVect.y * deltaTime * m_fWalkSpeed), TRANSFORM_REL);
+			walkTo(m_pCurrFocusedThing);
 
 			break;
 		}
@@ -229,6 +321,16 @@ void MainCharacter::update() {
 			onAttacking();
 			break;
 		}
+
+		case E_MAINCHAR_STATE_WIN_WALKING_TO_CHAR:
+			walkTo(TSGameMode::get()->getWinCharacter());
+
+			break;
+
+		case E_MAINCHAR_STATE_WIN_WALKING_TO_EXIT:
+			walkTo(TSGameMode::get()->getWinCharacter());
+
+			break;
 	}
 
 	// Updating things cooldown countdown
@@ -254,6 +356,36 @@ void MainCharacter::update() {
 		}
 		currHistoryThingsNode = nextHistoryThingsNode;
 	}
+
+	if (m_fBubbleTextTimeLeft > 0) {
+		m_fBubbleTextTimeLeft -= deltaTime;
+
+		if (m_fBubbleTextTimeLeft <= 0) {
+			m_pTextBubble->setActive(false);
+		}
+	}
+}
+
+void MainCharacter::walkTo(vect2df_t vDstPos) {
+	double deltaTime = System::get()->getDeltaTime();
+
+	vect2df_t vCurrPos = m_rect.getPos();
+
+	vect2df_t vMoveVector;
+	vect2df_t vNormalizedVect;
+
+	vMoveVector.x = vCurrPos.x - vDstPos.x;
+	vMoveVector.y = vCurrPos.y - vDstPos.y;
+
+	vNormalizedVect = getNormalizedVect(vMoveVector);
+
+	m_pEventDist->currDist = (float)sqrt((vMoveVector.x * vMoveVector.x) + (vMoveVector.y * vMoveVector.y));
+
+	translate((-vNormalizedVect.x * deltaTime * m_fWalkSpeed), (-vNormalizedVect.y * deltaTime * m_fWalkSpeed), TRANSFORM_REL);
+}
+
+void MainCharacter::walkTo(IWidget* pDstObj) {
+	walkTo(pDstObj->getRect()->getPos());
 }
 
 void MainCharacter::translate(float x, float y, ETransformMode transformMode) {
@@ -312,6 +444,10 @@ E_ORIENTATION MainCharacter::getOrientationFromVector(vect2df_t vDir) {
 	}
 }
 
+FSM_MAINCHAR_STATE MainCharacter::getCurrentState() {
+	return (FSM_MAINCHAR_STATE) m_fsm.getActiveState()->getStateId();
+}
+
 bool MainCharacter::hasWork() {
 	return m_bHasWork;
 }
@@ -322,6 +458,23 @@ void MainCharacter::setFocusedThing(DraggableThing* pThing) {
 
 void MainCharacter::setHasWork(bool bHasWork) {
 	m_bHasWork = bHasWork;
+}
+
+void MainCharacter::setEventTimer(int iNewTime) {
+	m_pEventTimer->currTime = 0;
+	m_pEventTimer->limit = iNewTime;
+}
+
+void MainCharacter::setEventDist(int iNewDistLimit) {
+	m_pEventDist->currDist = 0;
+	m_pEventDist->limit = iNewDistLimit;
+}
+
+void MainCharacter::showBubble(char* szStr) {
+	m_pTextBubble->translate(m_rect.getPos().x, m_rect.getPos().y - 15, TRANSFORM_ABS);
+	m_pTextBubble->setText(szStr);
+	m_pTextBubble->setActive(true);
+	m_fBubbleTextTimeLeft = BUBBLE_STAY_TIME;
 }
 
 // Event funcs
@@ -340,7 +493,7 @@ void MainCharacter::onUsing(float fUsageTimeLeft) {
 }
 
 void MainCharacter::onBeginAttack() {
-
+	
 }
 
 void MainCharacter::onEndAttack() {
@@ -358,8 +511,8 @@ void MainCharacter::onAttacking() {
 }
 
 void MainCharacter::onSlay() {
-	TSGameMode::get()->decreaseHealth(1);
-	printf("SLAYED\n");
+	TSGameMode::get()->decreaseHealth(5);
+	showBubble("\"DE LA MERDE\"");
 }
 
 
@@ -374,7 +527,7 @@ void MainCharacter::onEndWork() {
 
 void MainCharacter::onThingMoved() {
 	if (m_pCurrFocusedThing != NULL) {
-		FSM_MAINCHAR_STATE currState = (FSM_MAINCHAR_STATE) m_fsm.getActiveState()->getStateId();
+		FSM_MAINCHAR_STATE currState = getCurrentState();
 
 		if (currState == E_MAINCHAR_STATE_WALKING) {
 			m_pCurrFocusedThing = NULL;
@@ -383,6 +536,13 @@ void MainCharacter::onThingMoved() {
 	}
 }
 
+void MainCharacter::onWinWalk() {
+	m_fsm.changeState(E_MAINCHAR_STATE_WIN_APPEALED);
+}
+
+void MainCharacter::onWinVanish() {
+	m_fsm.changeState(E_MAINCHAR_STATE_WIN_VANISH);
+}
 
 void MainCharacter::assignNewJob(WorkguyThing* pEmployer, int iPrice) {
 	setHasWork(true);
@@ -437,13 +597,13 @@ DraggableThing* MainCharacter::searchForAvailableThings() {
 		currAvailThingsNode = currAvailThingsNode->pNext;
 	}
 
-	destroyList(&llSortedAvailableThings);
+	clearList(&llSortedAvailableThings);
 
 	return pFoundThing;
 }
 
 // Static FSM events funcs
-bool MainCharacter::boredEventFunc(void* arg) {
+bool MainCharacter::timedEventFunc(void* arg) {
 	eventTimer_t* pTimerArg = *((eventTimer_t**) arg);
 
 	if (pTimerArg->currTime > pTimerArg->limit) {
@@ -456,7 +616,17 @@ bool MainCharacter::boredEventFunc(void* arg) {
 	return false;
 }
 
-bool MainCharacter::foundThingEventFunc(void* arg) {
+bool MainCharacter::distToEventFunc(void* arg) {
+	eventDist_t* pEventDist = (eventDist_t*) *((eventDist_t**)arg);
+
+	if (pEventDist->currDist < pEventDist->limit) {
+		return true;
+	}
+
+	return false;
+}
+
+bool MainCharacter::validThingEventFunc(void* arg) {
 	DraggableThing* pCurrThing = *((DraggableThing**) arg);
 
 	if (pCurrThing) {
@@ -470,46 +640,14 @@ bool MainCharacter::startWalkingEventFunc(void* arg) {
 	return true;
 }
 
-bool MainCharacter::startBusyEventFunc(void* arg) {
-	float* fDistToFocusedThing = (float*) *((float**) arg);
-
-	if (*fDistToFocusedThing < 5) {
-		return true;
-	}
-
-	return false;
-}
-
 bool MainCharacter::seenAnotherThingEventFunc(void* arg) {
-	return false;
-}
-
-bool MainCharacter::endBusyEventFunc(void* arg) {
-	eventTimer_t* pTimerArg = *((eventTimer_t**)arg);
-
-	if (pTimerArg->currTime > pTimerArg->limit) {
-		pTimerArg->currTime = 0;
-		return true;
-	}
-
-	pTimerArg->currTime += System::get()->getDeltaTime();
-
-	return false;
-}
-
-bool MainCharacter::endAttackEventFunc(void* arg) {
-	DraggableThing* pNewThing = *((DraggableThing**) arg);
-
-	if (pNewThing != NULL) {
-		return true;
-	}
-
 	return false;
 }
 
 bool MainCharacter::determineThingIsObjFuncEvent(void* arg) {
 	DraggableThing* pThing = *((DraggableThing**)arg);
-	if (pThing->getClassType()->getClassTypeName() == "DraggableThing") {
+	if (pThing->getClassType()->getClassTypeName() == "DraggableThing"
+		|| pThing->getClassType()->getClassTypeName() == "WinningThing") {
 		return true;
 	}
 	return false;
@@ -539,7 +677,9 @@ void MainCharacter::updateOrientationFromVector(vect2df_t vDeltaPos) {
 }
 
 void MainCharacter::updateAnimationState() {
-	switch (m_fsm.getActiveState()->getStateId()) {
+	switch (getCurrentState()) {
+		case E_MAINCHAR_STATE_WIN_WALKING_TO_CHAR:
+		case E_MAINCHAR_STATE_WIN_WALKING_TO_EXIT:
 		case E_MAINCHAR_STATE_WALKING:
 		{
 			switch (m_eCurrOrientation) {
@@ -578,39 +718,86 @@ void MainCharacter::updateAnimationState() {
 			break;
 		}
 
+		case E_MAINCHAR_STATE_OCCUPIED_OBJ:
+			changeState(18);
+			break;
+		
+		case E_MAINCHAR_STATE_WIN_ARRIVED_AT_CHAR:
+		case E_MAINCHAR_STATE_OCCUPIED_WORKGUY:
+		case E_MAINCHAR_STATE_OCCUPIED_CRIT:
+		case E_MAINCHAR_STATE_WIN_VANISH:
 		case E_MAINCHAR_STATE_IDLE:
 		{
 			switch (m_eCurrOrientation) {
 			case E_ORIENTATION_N:
-				changeState(15);
-				break;
-
-			case E_ORIENTATION_NE:
-				changeState(16);
-				break;
-
-			case E_ORIENTATION_E:
-				changeState(17);
-				break;
-
-			case E_ORIENTATION_SE:
-				changeState(18);
-				break;
-
-			case E_ORIENTATION_S:
 				changeState(19);
 				break;
 
-			case E_ORIENTATION_SO:
+			case E_ORIENTATION_NE:
 				changeState(20);
 				break;
 
-			case E_ORIENTATION_O:
+			case E_ORIENTATION_E:
 				changeState(21);
 				break;
 
-			case E_ORIENTATION_NO:
+			case E_ORIENTATION_SE:
 				changeState(22);
+				break;
+
+			case E_ORIENTATION_S:
+				changeState(23);
+				break;
+
+			case E_ORIENTATION_SO:
+				changeState(24);
+				break;
+
+			case E_ORIENTATION_O:
+				changeState(25);
+				break;
+
+			case E_ORIENTATION_NO:
+				changeState(26);
+				break;
+			}
+			break;
+		}
+
+		case E_MAINCHAR_STATE_WIN_APPEALED:
+		case E_MAINCHAR_STATE_APPEALED:
+		{
+			switch (m_eCurrOrientation) {
+			case E_ORIENTATION_N:
+				changeState(19);
+				break;
+
+			case E_ORIENTATION_NE:
+				changeState(20);
+				break;
+
+			case E_ORIENTATION_E:
+				changeState(27);
+				break;
+
+			case E_ORIENTATION_SE:
+				changeState(29);
+				break;
+
+			case E_ORIENTATION_S:
+				changeState(31);
+				break;
+
+			case E_ORIENTATION_SO:
+				changeState(33);
+				break;
+
+			case E_ORIENTATION_O:
+				changeState(35);
+				break;
+
+			case E_ORIENTATION_NO:
+				changeState(26);
 				break;
 			}
 			break;

@@ -1,11 +1,14 @@
 #include "ts_workguy_thing.hpp"
 #include "ts_things_manager.hpp"
+#include "ts_main_character.hpp"
 
 
 WorkguyThing::WorkguyThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, ThingsManager* pThingsManager, Input* pInputManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser) :
 	DraggableThing(pSprSht, uFrameNb, vPos, pThingsManager, pInputManager, iAppealPower, iOccupationTime, iCooldownTime, iActionRadius, bUsableOnce, bSingleUser, false, false) {
 		
 		m_classInfo.setClassTypeName("WorkguyThing");
+
+		m_bIsHoverable = false;
 }
 
 
@@ -23,6 +26,9 @@ void WorkguyThing::onEndUsing(MainCharacter* pChar) {
 
 	pChar->assignNewJob(this, 50);
 
+	m_bIsHoverable = false;
+	m_bIsDraggable = false;
+
 	// Faire apparaitre le travail (un draggable thing éphémère qui fait gagner de l'argent une fois complété)
 
 	/*vect2df_t workThingPos;
@@ -39,3 +45,4 @@ void WorkguyThing::onEndUsing(MainCharacter* pChar) {
 	m_pThingsManager->addThing(workThing);
 	getParentScene()->addComponent(workThing);*/
 }
+

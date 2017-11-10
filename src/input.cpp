@@ -51,6 +51,23 @@ bool Input::IsButtonPressed(EMouseButton btn) {
 	return false;
 }
 
+bool Input::DoMouseMoved(vect2df_t* vDest) {
+	LLNode* currNode = currMouseList.pHead;
+	
+	while (currNode != NULL) {
+		MouseEvent* currEvent = (MouseEvent*)currNode->pData;
+
+		if (currEvent->type == MOUSE_EVT_MOTION) {
+			printf("test");
+			return true;
+		}
+
+		currNode = currNode->pNext;
+	}
+
+	return false;
+}
+
 MouseEvent* Input::GetButtonPressEvent(EMouseButton btn) {
 	LLNode* currNode = currMouseList.pHead;
 	MouseEvent* currMouseBtn;
@@ -182,16 +199,27 @@ void Input::RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseB
 
 	vCurrMousePos = mousePos;
 
+	// printf("caca %d\n", mouseBtn);
+
+	// mouseEvt = new MouseEvent;
+	// mouseEvt->position = mousePos;
+
 	if (eventType != SDL_MOUSEMOTION) {
 		mouseEvt = new MouseEvent;
 		mouseEvt->position = mousePos;
+
 		if		(mouseBtn == 1) mouseEvt->btn = MOUSE_BTN_LEFT;
 		else if (mouseBtn == 2) mouseEvt->btn = MOUSE_BTN_MIDDLE;
 		else if (mouseBtn == 3) mouseEvt->btn = MOUSE_BTN_RIGHT;
 		else					mouseEvt->btn = MOUSE_BTN_UNKNOWN;
 	}
+	else {
+		// mouseEvt->type = MOUSE_EVT_MOTION;
+	}
 
 	if (eventType == SDL_MOUSEBUTTONDOWN) {
+		mouseEvt->type = MOUSE_EVT_BTN_DOWN;
+
 		if (IsButtonPressed(mouseEvt->btn)) {
 			delete mouseEvt;
 		}
@@ -202,6 +230,8 @@ void Input::RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseB
 		}
 	}
 	else if (eventType == SDL_MOUSEBUTTONUP) {
+		mouseEvt->type = MOUSE_EVT_BTN_UP;
+
 		LLNode* prevNode = NULL;
 		currNode = currMouseList.pHead;
 

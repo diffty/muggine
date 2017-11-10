@@ -12,42 +12,27 @@ ThingsStorePage::~ThingsStorePage() {
 
 }
 
-/*void ThingsStorePage::renewThing(DraggableThing* pThingToRenew) {
-	LLNode* currNode = m_llContentList.pHead;
-	uint uWidgetId = 0;
-
-	while (currNode != NULL) {
-		DraggableThing* pCurrThing = (DraggableThing*)currNode->pData;
-
-		if (pCurrThing == pThingToRenew) {
-			DraggableThing* pNewClonedThing = new DraggableThing(*pCurrThing);
-
-			pNewClonedThing->setIsInStore(true);
-
-			currNode->pData = (void*)pNewClonedThing;
-			Scene* parentScene = pCurrThing->getParentScene();
-			pCurrThing->getParentScene()->addComponent(pCurrThing);
-
-			break;
-		}
-
-		uWidgetId++;
-		currNode = currNode->pNext;
-	}
-
-	moveWidgetToGrid(uWidgetId);
-}*/
-
-void ThingsStorePage::renewThing(DraggableThing* pThingToRenew) {
+DraggableThing* ThingsStorePage::renewThing(DraggableThing* pThingToRenew) {
 	uint uWidgetId = 0;
 
 	ThingsStoreItem* pThingWidget = getThingItemInLayout(pThingToRenew);
 
-	DraggableThing* pNewClonedThing = new DraggableThing(*pThingToRenew);
+	DraggableThing* pNewClonedThing = NULL;
+
+	if (pThingToRenew->getClassType()->getClassTypeName() == "WinningThing")
+		pNewClonedThing = new WinningThing(*((WinningThing*) pThingToRenew));
+	else {
+		pNewClonedThing = new DraggableThing(*pThingToRenew);
+	}
+
+	pNewClonedThing->clone();
+
 	pNewClonedThing->setIsInStore(true);
 	getParentScene()->addComponent(pThingToRenew);
 
 	pThingWidget->replaceThing(pNewClonedThing);
+
+	return pNewClonedThing;
 }
 
 uint ThingsStorePage::countWidgets() {

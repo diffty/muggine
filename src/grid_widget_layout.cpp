@@ -12,7 +12,7 @@ GridWidgetLayout::GridWidgetLayout(vect2df_t vPos, size2df_t sSize, uint uNbCell
 }
 
 GridWidgetLayout::~GridWidgetLayout() {
-
+	destroyAllWidgets();
 }
 
 void GridWidgetLayout::addWidget(IWidget* pWidget) {
@@ -110,4 +110,18 @@ void GridWidgetLayout::updateChildren() {
 
 		currNode = currNode->pNext;
 	}
+}
+
+void GridWidgetLayout::destroyAllWidgets() {
+	LLNode* currNode = m_llContentList.pHead;
+
+	while (currNode != NULL) {
+		IWidget* pCurrWidget = ((IWidget*)currNode->pData);
+
+		delete pCurrWidget;
+
+		currNode = currNode->pNext;
+	}
+
+	clearList(&m_llContentList);
 }

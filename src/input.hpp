@@ -35,11 +35,18 @@ enum EMouseButton {
 	MOUSE_BTN_UNKNOWN
 };
 
+enum EMouseEventType {
+	MOUSE_EVT_MOTION,
+	MOUSE_EVT_BTN_UP,
+	MOUSE_EVT_BTN_DOWN
+};
+
 struct KeyEvent {
     EKey key;
 };
 
 struct MouseEvent {
+	EMouseEventType type;
     EMouseButton btn;
     vect2d_t position;
 };
@@ -60,6 +67,7 @@ public:
 	bool IsKeyPressed(EKey key);
 	bool IsJoyBtnPressed(EJoy joyBtn);
 	bool IsButtonPressed(EMouseButton btn);
+	bool DoMouseMoved(vect2df_t* vDest = NULL);
 	MouseEvent* GetButtonPressEvent(EMouseButton btn);
 	bool GetTouch(vect2d_t* touch);
 	vect2d_t getCurrInputPos();

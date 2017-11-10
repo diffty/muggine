@@ -42,7 +42,9 @@ public:
     void changeState(uint uStateId);
     
     void update();
-    void draw(uint8* fb);
+    void draw(uint8* buffer);
+
+	void destroyAllStates();
 };
 
 

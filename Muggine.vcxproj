@@ -87,7 +87,16 @@
     <ClCompile Include="src\bko_grid.cpp" />
     <ClCompile Include="src\bko_paddle.cpp" />
     <ClCompile Include="src\buttonwidget.cpp" />
+    <ClCompile Include="src\csv_reader.cpp" />
+    <ClCompile Include="src\image_button_widget.cpp" />
     <ClCompile Include="src\iobject.cpp" />
+    <ClCompile Include="src\paginated_widget_layout.cpp" />
+    <ClCompile Include="src\ts_clone_machine.cpp" />
+    <ClCompile Include="src\ts_game_manager.cpp" />
+    <ClCompile Include="src\ts_main_menu.cpp" />
+    <ClCompile Include="src\ts_text_bubble.cpp" />
+    <ClCompile Include="src\ts_things_store_item.cpp" />
+    <ClCompile Include="src\ts_things_store_page.cpp" />
     <ClCompile Include="src\ts_critical_thing.cpp" />
     <ClCompile Include="src\draggable_sprite.cpp" />
     <ClCompile Include="src\drawing.cpp" />
@@ -99,13 +108,12 @@
     <ClCompile Include="src\image.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\iwidget.cpp" />
-    <ClCompile Include="src\paginated_widget_layout.cpp" />
+    <ClCompile Include="src\grid_widget_layout.cpp" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\tiny_progress_bar.cpp" />
     <ClCompile Include="src\ts_game_mode.cpp" />
     <ClCompile Include="src\ts_things_store.cpp" />
     <ClCompile Include="src\ts_draggable_thing.cpp" />
-    <ClCompile Include="src\ts_interactable_thing.cpp" />
     <ClCompile Include="src\keys.cpp" />
     <ClCompile Include="src\linked_list.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -119,6 +127,9 @@
     <ClCompile Include="src\system.cpp" />
     <ClCompile Include="src\ts_main_character.cpp" />
     <ClCompile Include="src\ts_things_manager.cpp" />
+    <ClCompile Include="src\ts_win_character.cpp" />
+    <ClCompile Include="src\ts_workguy_thing.cpp" />
+    <ClCompile Include="src\ts_winning_thing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\animatedsprite.hpp" />
@@ -129,8 +140,18 @@
     <ClInclude Include="src\buttonwidget.hpp" />
     <ClInclude Include="src\common_types.hpp" />
     <ClInclude Include="src\constants.hpp" />
+    <ClInclude Include="src\csv_reader.hpp" />
+    <ClInclude Include="src\image_button_widget.hpp" />
     <ClInclude Include="src\iobject.hpp" />
     <ClInclude Include="src\math_tools.hpp" />
+    <ClInclude Include="src\paginated_widget_layout.hpp" />
+    <ClInclude Include="src\ts_clone_machine.hpp" />
+    <ClInclude Include="src\ts_common_types.hpp" />
+    <ClInclude Include="src\ts_game_manager.hpp" />
+    <ClInclude Include="src\ts_main_menu.hpp" />
+    <ClInclude Include="src\ts_text_bubble.hpp" />
+    <ClInclude Include="src\ts_things_store_item.hpp" />
+    <ClInclude Include="src\ts_things_store_page.hpp" />
     <ClInclude Include="src\ts_critical_thing.hpp" />
     <ClInclude Include="src\draggable_sprite.hpp" />
     <ClInclude Include="src\drawing.hpp" />
@@ -142,13 +163,12 @@
     <ClInclude Include="src\idrawable.hpp" />
     <ClInclude Include="src\image.hpp" />
     <ClInclude Include="src\input.hpp" />
-    <ClInclude Include="src\paginated_widget_layout.hpp" />
+    <ClInclude Include="src\grid_widget_layout.hpp" />
     <ClInclude Include="src\text.hpp" />
     <ClInclude Include="src\tiny_progress_bar.hpp" />
     <ClInclude Include="src\ts_game_mode.hpp" />
     <ClInclude Include="src\ts_things_store.hpp" />
     <ClInclude Include="src\ts_draggable_thing.hpp" />
-    <ClInclude Include="src\ts_interactable_thing.hpp" />
     <ClInclude Include="src\keys.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
     <ClInclude Include="src\mathf.hpp" />
@@ -162,6 +182,9 @@
     <ClInclude Include="src\iwidget.hpp" />
     <ClInclude Include="src\ts_main_character.hpp" />
     <ClInclude Include="src\ts_things_manager.hpp" />
+    <ClInclude Include="src\ts_win_character.hpp" />
+    <ClInclude Include="src\ts_workguy_thing.hpp" />
+    <ClInclude Include="src\ts_winning_thing.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -37,12 +37,15 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 	}
 
 #elif TARGET_SDL
-	int boxWidth = fabs((float) (toX - fromX));
+	fromX = min(max(min(fromX, toX), 0), SCREEN_WIDTH-1);
+	toX = min(max(max(fromX, toX), 0), SCREEN_WIDTH-1);
+
+	fromY = min(max(fromY, 0), SCREEN_HEIGHT-1);
+	toY = min(max(toY, 0), SCREEN_HEIGHT-1);
+
+	int boxWidth = fabs((float)(toX - fromX));
 
 	uint8* oneColorCol = new uint8[SCREEN_BPP * boxWidth];
-
-	fromX = min(fromX, toX);
-	toX = max(fromX, toX);
 
 	for (x = 0; x < boxWidth; x++) {
 		memmove(oneColorCol + (x * SCREEN_BPP * sizeof(uint8)),

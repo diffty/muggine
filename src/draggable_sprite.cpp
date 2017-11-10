@@ -25,11 +25,12 @@ void DraggableSprite::init(Input* pInputManager, bool bIsDraggable) {
 }
 
 void DraggableSprite::update() {
+	m_vCurrMousePos = m_pInputManager->getCurrInputPos();
+
 	if (m_bIsGrabbed) {
 		if (m_pInputManager->IsButtonPressed(MOUSE_BTN_LEFT)) {
 			// On dragging
-			m_vCurrMousePos = m_pInputManager->getCurrInputPos();
-
+			
 			translate(
 				m_vCurrMousePos.x - m_vGrabPos.x,
 				m_vCurrMousePos.y - m_vGrabPos.y, TRANSFORM_ABS
@@ -44,19 +45,40 @@ void DraggableSprite::update() {
 			onDragEnd();
 		}
 	}
+
+	if (m_bIsHoverable) {
+		// printf("%d\n", m_rect.isPointInRect(m_vCurrMousePos.x, m_vCurrMousePos.y));
+
+		if (m_rect.isPointInRect(m_vCurrMousePos.x, m_vCurrMousePos.y)) {
+			if (!m_bIsHovered) {
+				m_bIsHovered = true;
+
+				onHoverStart(m_vCurrMousePos);
+			}
+			else {
+				onHovering();
+			}
+		}
+		else if (m_bIsHovered) {
+			m_bIsHovered = false;
+			onHoverEnd();
+		}
+	}
 }
 
 void DraggableSprite::receiveTouchInput(vect2d_t vTouchPt) {
-	if (m_bIsDraggable && !m_bIsGrabbed && m_rect.isPointInRect(vTouchPt.x, vTouchPt.y)) {
-		// On start dragging
-		m_bIsGrabbed = true;
+	if (m_rect.isPointInRect(vTouchPt.x, vTouchPt.y)) {
+		if (m_bIsDraggable && !m_bIsGrabbed) {
+			// On start dragging
+			m_bIsGrabbed = true;
 		
-		vect2df_t vCurrTouchPos = m_rect.getPos();
+			vect2df_t vCurrTouchPos = m_rect.getPos();
 
-		m_vGrabPos.x = vTouchPt.x - vCurrTouchPos.x;
-		m_vGrabPos.y = vTouchPt.y - vCurrTouchPos.y;
+			m_vGrabPos.x = vTouchPt.x - vCurrTouchPos.x;
+			m_vGrabPos.y = vTouchPt.y - vCurrTouchPos.y;
 
-		onDragStart(vTouchPt);
+			onDragStart(vTouchPt);
+		}
 	}
 
 	m_vCurrMousePos = vTouchPt;

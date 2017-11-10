@@ -19,12 +19,12 @@ typedef struct LinkedList {
 
 
 void initList(LinkedList* pList);
-void destroyList(LinkedList* pList);
+void clearList(LinkedList* pList);
 void appendList(LinkedList* pllSrcList, LinkedList* pllDstList);
 void addNodeToList(LinkedList* pList, LLNode* nodeToAdd, bool bAddToHead = false);
 void addDataToList(LinkedList* pList, void* pDataToAdd);
 LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode);
-LLNode* searchForNodeInList(LinkedList* pList, LLNode* pNode);
+LLNode* searchForNodeInList(LinkedList* pList, void* pDataToSearch);
 int countNodesInList(LinkedList* pList);
 LLNode* getNodeInList(LinkedList* pList, uint nodeNum);
 

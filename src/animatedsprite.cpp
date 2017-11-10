@@ -25,7 +25,7 @@ AnimatedSprite::AnimatedSprite(SpriteSheet* pSprSht, vect2df_t vPos, float fPlay
 }
 
 AnimatedSprite::~AnimatedSprite() {
-    
+	destroyAllStates();
 }
 
 void AnimatedSprite::addState(char* szName, uint uFrameStart, uint uFrameEnd, uint uFPS, bool bLooped) {
@@ -59,8 +59,8 @@ void AnimatedSprite::changeState(uint uStateId) {
     }
 }
 
-void AnimatedSprite::draw(uint8* fb) {
-    Sprite::draw(fb);
+void AnimatedSprite::draw(uint8* buffer) {
+    Sprite::draw(buffer);
 }
 
 void AnimatedSprite::update() {
@@ -81,4 +81,15 @@ void AnimatedSprite::update() {
             m_fCurrFrameTime = 0.;
         }
     }
+}
+
+void AnimatedSprite::destroyAllStates() {
+	LLNode* pCurrNode = m_llAnimStates.pHead;
+
+	while (pCurrNode != NULL) {
+		delete ((AnimationState*) pCurrNode->pData);
+		pCurrNode = pCurrNode->pNext;
+	}
+
+	clearList(&m_llAnimStates);
 }

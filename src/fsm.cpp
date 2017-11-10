@@ -33,8 +33,6 @@ void FSM::update() {
 void FSM::changeState(FSMNode* pNewStateNode) {
 	m_pActiveNode = pNewStateNode;
 
-	printf("changeState: %s\n", m_pActiveNode->getName());
-
 	if (m_pOnStateChangeCallback != NULL) {
 		(*m_pOnStateChangeCallback)(m_pOnStateChangeCallbackArgs);
 	}

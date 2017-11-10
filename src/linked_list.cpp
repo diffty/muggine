@@ -7,7 +7,7 @@ void initList(LinkedList* pList) {
 	pList->size = 0;
 }
 
-void destroyList(LinkedList* pList) {
+void clearList(LinkedList* pList) {
 	LLNode* pCurrNode = pList->pHead;
 
 	if (pCurrNode) {
@@ -19,6 +19,9 @@ void destroyList(LinkedList* pList) {
 			pCurrNode = pNextNode;
 		}
 	}
+
+	pList->pHead = NULL;
+	pList->pTail = NULL;
 }
 
 void appendList(LinkedList* pllSrcList, LinkedList* pllDstList) {
@@ -71,6 +74,7 @@ LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode) {
     if (pNode == pList->pHead) {
         pList->pHead = pNode->pNext;
 		if (pNode == pList->pTail) {
+			pList->size--;
 			pList->pTail = NULL;
 		}
         return pNode;
@@ -97,21 +101,17 @@ LLNode* popNodeFromList(LinkedList* pList) {
 	return pList->pTail;
 }
 
-LLNode* searchForNodeInList(LinkedList* pList, LLNode* pNode) {
-	if (pList->pHead == NULL) {
-		return NULL;
-	}
-
+LLNode* searchForNodeInList(LinkedList* pList, void* pDataToSearch) {
 	LLNode* pCurrNode = pList->pHead;
 
-	while(pCurrNode != NULL) {
-		if (pCurrNode == pNode) {
+	while (pCurrNode != NULL) {
+		if (pCurrNode->pData == pDataToSearch) {
 			return pCurrNode;
 		}
 		pCurrNode = pCurrNode->pNext;
 	}
-    
-    return NULL;
+
+	return NULL;
 }
 
 int countNodesInList(LinkedList* pList) {
@@ -122,7 +122,7 @@ int countNodesInList(LinkedList* pList) {
 	int nbNodes = 0;
 	LLNode* pCurrNode = pList->pHead;
 
-	while(pCurrNode->pNext != NULL) {
+	while(pCurrNode != NULL) {
 		nbNodes++;
 		pCurrNode = pCurrNode->pNext;
 	}

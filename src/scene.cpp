@@ -3,6 +3,7 @@
 
 Scene::Scene() {
     initList(&m_contentList);
+	initList(&m_llHoverAwareWidgets);
 }
 
 Scene::~Scene() {
@@ -91,6 +92,7 @@ void Scene::update() {
 	LLNode* currNode = m_contentList.pHead;
 
 	while (currNode != NULL) {
+		IWidget* temp = (IWidget*)currNode->pData;
 		((IWidget*) currNode->pData)->update();
 		currNode = currNode->pNext;
 	}
@@ -116,4 +118,19 @@ void Scene::clear() {
     }
     
     m_contentList.pHead = NULL;
+}
+
+void Scene::destroy() {
+	LLNode* currNode = m_contentList.pHead;
+	LLNode* nextNode;
+
+	while (currNode != NULL) {
+		nextNode = currNode->pNext;
+		IWidget* currWidget = ((IWidget*)currNode->pData);
+		delete currWidget;
+		delete currNode;
+		currNode = nextNode;
+	}
+
+	m_contentList.pHead = NULL;
 }

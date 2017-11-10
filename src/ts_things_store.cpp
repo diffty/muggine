@@ -1,6 +1,5 @@
 #include "ts_things_store.hpp"
-
-
+#include "ts_things_store_page.hpp"
 
 ThingsStore::ThingsStore(vect2df_t vPos, size2df_t sSize, uint uNbCellX, uint uNbCellY) :
 	PaginatedWidgetLayout(vPos, sSize) {
@@ -22,8 +21,8 @@ ThingsStore::ThingsStore(vect2df_t vPos, size2df_t sSize, uint uNbCellX, uint uN
 }
 
 ThingsStore::~ThingsStore() {
-	delete m_pPageUpStoreBtn;
-	delete m_pPageDownStoreBtn;
+	//delete m_pPageUpStoreBtn;
+	//delete m_pPageDownStoreBtn;
 }
 
 // sale
@@ -71,16 +70,19 @@ bool ThingsStore::findThingInPages(DraggableThing* pThing, ThingsStorePage** pLa
 
 		currNode = currNode->pNext;
 	}
+
 	return false;
 }
 
-void ThingsStore::renewThing(DraggableThing* pThingToRenew) {
+DraggableThing* ThingsStore::renewThing(DraggableThing* pThingToRenew) {
 	ThingsStorePage* pLayoutWithThing = NULL;
 	int piThingWidgetId;
 
 	if (findThingInPages(pThingToRenew, &pLayoutWithThing, &piThingWidgetId)) {
-		pLayoutWithThing->renewThing(pThingToRenew);
+		return pLayoutWithThing->renewThing(pThingToRenew);
 	}
+
+	return NULL;
 }
 
 void ThingsStore::replaceThingInStore(DraggableThing* pThingToMove) {
@@ -107,10 +109,10 @@ void ThingsStore::updateChildren() {
 
 void ThingsStore::onPressPageUpBtnCallback(void* pArg) {
 	ThingsStore* pThingsStore = ((ThingsStore*) pArg);
-	pThingsStore->switchToNextWidget();
+	pThingsStore->switchToPrevWidget();
 }
 
 void ThingsStore::onPressPageDownBtnCallback(void* pArg) {
 	ThingsStore* pThingsStore = ((ThingsStore*)pArg);
-	pThingsStore->switchToPrevWidget();
+	pThingsStore->switchToNextWidget();
 }

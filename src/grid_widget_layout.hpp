@@ -30,6 +30,8 @@ public:
 	void receiveTouchInput(vect2d_t inputPos);
 
 	void updateChildren();
+
+	void destroyAllWidgets();
 };
 
 

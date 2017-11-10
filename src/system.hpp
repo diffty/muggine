@@ -40,13 +40,14 @@ public:
 
 	bool mainLoop();
 	void initLoop();
+	void quitLoop();
 	void exit();
 
 
 private:
 	static System* m_pInstance;
 
-	bool isMainLoopRunning;
+	bool m_bIsMainLoopRunning;
 	Input m_inputSys;
 
 #ifdef TARGET_SDL

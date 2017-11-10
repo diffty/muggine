@@ -10,8 +10,19 @@ ImageButtonWidget::ImageButtonWidget(SpriteSheet *pSprSht, vect2df_t vPos, int i
 	m_state = initalState;
 	m_bPressedThisLoop = false;
 	m_mode = E_BTNMODE_INSTANT;
-	m_pCallback = pCallback;
-	m_pCallbackArg = pCallbackArg;
+
+	m_pOnPressCallback = pCallback;
+	m_pOnPressCallbackArg = pCallbackArg;
+}
+
+void ImageButtonWidget::setOnPressCallback(void(*pCallback)(void*), void* pCallbackArg) {
+	m_pOnPressCallback = pCallback;
+	m_pOnPressCallbackArg = pCallbackArg;
+}
+
+void ImageButtonWidget::setOnReleaseCallback(void(*pCallback)(void*), void* pCallbackArg) {
+	m_pOnReleaseCallback = pCallback;
+	m_pOnReleaseCallbackArg = pCallbackArg;
 }
 
 void ImageButtonWidget::onPress() {
@@ -25,8 +36,8 @@ void ImageButtonWidget::onPress() {
 
 	setFrame(m_iPressedFrameId);
 
-	if (m_pCallback != NULL)
-		(*m_pCallback)(m_pCallbackArg);
+	if (m_pOnPressCallback != NULL)
+		(*m_pOnPressCallback)(m_pOnPressCallbackArg);
 
 }
 
@@ -38,6 +49,9 @@ void ImageButtonWidget::onRelease() {
 		m_state = 0;
 		setFrame(m_iReleasedFrameId);
 	}
+
+	if (m_pOnReleaseCallback != NULL)
+		(*m_pOnReleaseCallback)(m_pOnReleaseCallbackArg);
 }
 
 void ImageButtonWidget::update() {
@@ -48,7 +62,7 @@ void ImageButtonWidget::update() {
 }
 
 void ImageButtonWidget::receiveTouchInput(vect2d_t touchPt) {
-	if (m_rect.isPointInRect(touchPt.x, touchPt.y)) {
+	if (m_bIsActive && m_rect.isPointInRect(touchPt.x, touchPt.y)) {
 		onPress();
 		m_bPressedThisLoop = true;
 	}

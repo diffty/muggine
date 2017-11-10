@@ -1,3 +1,6 @@
+#ifndef MATH_TOOLS_HPP
+#define MATH_TOOLS_HPP
+
 #include "common_types.hpp"
 #include <cmath>
 
@@ -20,3 +23,5 @@ vect2df_t getNormalizedVect(vect2df_t vVect) {
 
 	return vNormalizedVect;
 }
+
+#endif

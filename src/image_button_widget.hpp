@@ -27,11 +27,17 @@ private:
 
 	ButtonMode m_mode;
 
-	void (*m_pCallback)(void*) = NULL;
-	void *m_pCallbackArg = NULL;
+	void (*m_pOnPressCallback)(void*) = NULL;
+	void *m_pOnPressCallbackArg = NULL;
+
+	void (*m_pOnReleaseCallback)(void*) = NULL;
+	void *m_pOnReleaseCallbackArg = NULL;
 
 public:
 	ImageButtonWidget(SpriteSheet *pSprSht, vect2df_t vPos, int iPressedFrameId, int iReleasedFrameId, int initalState, void(*pCallback)(void*) = NULL, void* pCallbackArg = NULL);
+
+	void setOnPressCallback(void(*pCallback)(void*), void* pCallbackArg = NULL);
+	void setOnReleaseCallback(void(*pCallback)(void*), void* pCallbackArg = NULL);
 
 	void receiveTouchInput(vect2d_t touchPt);
 	void onPress();

@@ -17,7 +17,7 @@
 class Scene {
 private:
 	LinkedList m_contentList;
-
+	LinkedList m_llHoverAwareWidgets;
 public:
 	Scene();
     ~Scene();
@@ -32,6 +32,8 @@ public:
 	void update();
 	void draw(uint8* fb);
     void clear();
+
+	void destroy();
 
 	void test() { printf("LOLPIPI\n"); };
 };

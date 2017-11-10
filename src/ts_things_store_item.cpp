@@ -14,14 +14,16 @@ ThingsStoreItem::ThingsStoreItem(DraggableThing* pThing) :
 
 	m_pThing = pThing;
 
-	m_pPriceLabel = new Text(Text::intToStr(m_pThing->getPrice()), RscManager::get()->getFontRsc(5), vBgPos);
+	char* szPriceStr = Text::intToStr(m_pThing->getPrice());
+	m_pPriceLabel = new Text(szPriceStr, RscManager::get()->getFontRsc(5), vBgPos);
+	delete szPriceStr;
 
 	updateChildren();
-
 }
 
 
 ThingsStoreItem::~ThingsStoreItem() {
+	delete m_pThing;
 	delete m_pBgSpr;
 	delete m_pPriceLabel;
 }

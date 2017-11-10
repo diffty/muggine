@@ -14,10 +14,13 @@ private:
 
 public:
 	Text(char* aText, Font* pFont, vect2df_t vPos);
+	Text(int iNum, Font* pFont, vect2df_t vPos);
 	~Text();
 
 	char* getText();
 	void setText(char* szText);
+
+	void updateSize();
 
 	void draw(uint8* buffer);
 

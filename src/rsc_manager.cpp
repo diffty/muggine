@@ -45,8 +45,8 @@ bool RscManager::loadSprSht(char* szImgPath, int iGridWidth, int iGridHeight, ui
 	}
 }
 
-bool RscManager::loadFont(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength) {
-	Font* pNewFont = new Font(szImgPath, iGridWidth, iGridHeight, uLength);
+bool RscManager::loadFont(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset) {
+	Font* pNewFont = new Font(szImgPath, iGridWidth, iGridHeight, uLength, iSizeOffset);
 
 	if (pNewFont) {
 		LLNode* newRscNode = new LLNode;

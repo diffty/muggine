@@ -8,12 +8,22 @@ Text::Text(char* szText, Font* pFont, vect2df_t vPos)
 	m_pFont = pFont;
 	m_szText = new char[1];
 	m_szText[0] = '\0';
+
 	setText(szText);
 }
 
+Text::Text(int iNum, Font* pFont, vect2df_t vPos)
+	: IWidget(vPos.x, vPos.y, 1, 1) {
+
+	m_pFont = pFont;
+
+	char* newText = intToStr(iNum);
+	setText(newText);
+	delete newText;
+}
 
 Text::~Text() {
-
+	delete m_szText;
 }
 
 char* Text::getText() {
@@ -24,17 +34,45 @@ void Text::setText(char* szText) {
 	int iTextLen = strlen(szText);
 
 	delete m_szText;
+
 	m_szText = new char[iTextLen+1];
 
-	for (int i = 0; i < iTextLen; i++) {
-		m_szText[i] = szText[i];
+	strcpy(m_szText, szText);
+
+	updateSize();
+}
+
+void Text::updateSize() {
+	int i = 0;
+	int sizeW = 0;
+	int currSizeW = 0;
+	int sizeH = m_pFont->getFrameSize().h;
+
+	char c;
+
+	while ((c = m_szText[i]) != '\0') {
+		if (c == '\n') {
+			sizeH += m_pFont->getFrameSize().h;
+
+			if (sizeW < currSizeW) sizeW = currSizeW;
+
+			currSizeW = 0;
+		}
+		else {
+			currSizeW += m_pFont->getSizeForChar(c);
+		}
+
+		i++;
 	}
 
-	m_szText[iTextLen] = '\0';
+	if (sizeW < currSizeW) sizeW = currSizeW;
+
+	getRect()->setSize(sizeW, sizeH);
 }
 
 void Text::draw(uint8* buffer) {
-	drawStr(buffer, m_rect.getPos().x, m_rect.getPos().y, m_szText);
+	if (m_bIsActive)
+		drawStr(buffer, m_rect.getPos().x, m_rect.getPos().y, m_szText);
 }
 
 void Text::drawChar(uint8* buffer, float x, float y, char c) {
@@ -43,14 +81,26 @@ void Text::drawChar(uint8* buffer, float x, float y, char c) {
 
 void Text::drawStr(uint8* buffer, float x, float y, char* text) {
 	int i = 0;
+	int iDrawCurW = 0;
+	int iDrawCurH = 0;
 
-	while (text[i] != '\0') {
-		drawChar(buffer, x + (i * 8), y, text[i]);
+	char c;
+
+	while ((c = m_szText[i]) != '\0') {
+		if (c == '\n') {
+			iDrawCurW = 0;
+			iDrawCurH += m_pFont->getFrameSize().h;
+		}
+		else {
+			drawChar(buffer, x + iDrawCurW, y + iDrawCurH, c);
+			iDrawCurW += m_pFont->getSizeForChar(c);
+		}
+
 		i++;
 	}
 }
 
-// Grosse source de memory leaks cette merde
+// Grosse source de memory leaks AVEREE cette merde
 char* Text::intToStr(int iNum) {
 	unsigned int i, j;
 	char tmp;
