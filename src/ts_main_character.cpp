@@ -176,6 +176,11 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 
 	case E_MAINCHAR_STATE_SEEKING:
 		updateAnimationState();
+	
+		if (m_pCurrFocusedThing) {
+			m_pCurrFocusedThing->unregisterUser(this); // SALE. Faudrait mettre ça dans un helper dans draggable_thing #TODO #REFACTO
+		}
+
 		m_pCurrFocusedThing = NULL;
 
 		break;
@@ -342,6 +347,9 @@ void MainCharacter::update() {
 		case E_MAINCHAR_STATE_SEEKING:
 		{
 			m_pCurrFocusedThing = searchForAvailableThings();
+			if (m_pCurrFocusedThing) {
+				m_pCurrFocusedThing->registerUser(this); // SALESALESALESALE. Faudrait mettre ça dans un helper dans draggable_thing. #TODO #REFACTO
+			}
 			break;
 		}
 

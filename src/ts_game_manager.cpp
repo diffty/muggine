@@ -136,6 +136,10 @@ void TSGameManager::update() {
 			m_gameScene.receiveTouchInput(mouseEvt->position);
 		}
 
+		if (m_pSys->getInputSys()->IsKeyPressed(KEYB_E)) {
+			onLevelSuccess();
+		}
+
 		m_pGameMode->update();
 	}
 	else if (m_eCurrState == E_APP_STATE_MENU || m_eCurrState == E_APP_STATE_INGAME_MENU) {

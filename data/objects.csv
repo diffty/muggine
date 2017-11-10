@@ -1,23 +1,23 @@
-Nice Name;SprSht;FrameNum;XPos;Ypos;XBasePos;YBasePos;AppealPower;Price;OccupationTime;CooldownTime;ActionRadius;WorkEfficiency;bUsableOnce;bSingleUser;bIsDraggable;bInStore;bUsableOnlyDuringWork;bIsWorkThing;bDestroyAfterUse;bUsableOnlyDuringWork;Description;Name
-Billet d'Avion;1;17;0;0;0;0;1;0;10;40;80;0;N;O;O;O;N;N;O;N;Peut faire venir ceux qu'on aime\nmais qui vivent trop loin :(;BILLET D'AVION
-Carnet;1;30;0;0;0;0;1;0;10;20;80;1;N;O;O;O;O;O;O;N;a;CARNET
-Lego;1;1;0;0;0;0;1;30;15;50;80;0;N;O;O;O;N;N;N;N;a;LEGO
-Souitch;1;0;0;0;0;0;1;350;20;40;80;0;N;O;O;O;N;N;N;N;a;SOUITCH
-Artbook;1;21;0;0;0;0;1;30;10;60;80;0;N;O;O;O;N;N;N;N;a;ARTBOOK
-Soushis;1;12;0;0;0;0;1;0;10;20;80;0;N;O;O;O;N;N;O;N;a;SOUSHIS
-Pizza;1;16;0;0;0;0;1;15;10;20;80;0;N;O;O;O;N;N;O;N;a;PIZZA
-Plante;1;13;0;0;0;0;1;20;10;20;80;0;N;O;O;O;N;N;N;N;a;PLANTE
-Platine vinyl;1;15;0;0;0;0;1;300;10;20;80;0;N;O;O;O;N;N;N;N;a;PLATINE VINYL
-Pate a modeler;1;14;0;0;0;0;1;40;10;20;80;0;N;O;O;O;N;N;N;N;a;PATE A MODELER
-iPhone;1;20;0;0;0;0;1;600;10;20;80;2;N;O;O;O;N;O;N;N;a;IPHONE
-iPad;1;19;0;0;0;0;1;300;10;20;80;3;N;O;O;O;N;O;N;N;a;IPAD
-Macbook;1;22;0;0;0;0;1;1000;10;20;80;4;N;O;O;O;N;O;N;N;a;MACBOOK
-Grioche;1;18;0;0;0;0;1;3;10;20;80;0;N;O;O;O;N;N;O;N;a;GRIOCHE
-Mochis;1;23;0;0;0;0;1;10;10;20;80;0;N;O;O;O;N;N;N;N;a;MOCHIS
-Oculus;1;24;0;0;0;0;1;600;10;20;80;0;N;O;O;O;N;N;N;N;a;OCULUS
-PS2;1;25;0;0;0;0;1;200;10;20;80;0;N;O;O;O;N;N;N;N;a;PS2
-PS4;1;26;0;0;0;0;1;400;10;20;80;0;N;O;O;O;N;N;N;N;a;PS4
-TV;1;27;0;0;0;0;1;150;10;20;80;0;N;O;O;O;N;N;N;N;a;TV
-Appareil photo;1;28;0;0;0;0;1;300;10;20;80;0;N;O;O;O;N;N;N;N;a;APPAREIL PHOTO
-Beurre sale;1;29;0;0;0;0;1;7;10;20;80;0;N;O;O;O;N;N;O;N;a;BEURRE SALE
-Chocos;1;31;0;0;0;0;1;5;10;20;80;0;N;O;O;O;N;N;O;N;a;CHOCOS
+Nice Name;SprSht;FrameNum;XPos;Ypos;XBasePos;YBasePos;AppealPower;Price;OccupationTime;CooldownTime;ActionRadius;WorkEfficiency;bUsableOnce;bSingleUser;bIsDraggable;bInStore;bUsableOnlyDuringWork;bIsWorkThing;bDestroyAfterUse;bUsableOnlyDuringWork;Description;Name;Description Nice
+Billet d'Avion;1;17;0;0;0;0;1;200;10;40;90;0;N;O;O;O;N;N;O;N;PEUT FAIRE VENIR CEUX QU'ON AIME\NMAIS QUI VIVENT TROP LOIN :(;BILLET D'AVION;Peut faire venir ceux qu'on aime\nmais qui vivent trop loin :(
+Carnet;1;30;0;0;0;0;1;0;2;20;60;1;N;O;O;O;O;O;O;N;PERMET EXCLUSIVEMENT DE FAIRE LE TRAVAIL.\NPEU EFFICACE ET PEU RENTABLE,\NMAIS DISPONIBLE A VOLONTEE.\NUTILISABLE UNE FOIS.;CARNET;Permet exclusivement de faire le travail.\nPeu efficace et peu rentable,\nmais disponible a volontee.\nUtilisable une fois.
+iPad;1;19;0;0;0;0;1;300;10;20;100;2;N;O;O;O;N;O;N;N;UN GRAND IPHONE, MAIS UN PLUS PETIT RENDEMENT.\NLES JEUX INSTALLES DESSUS DISTRAIENT VITE UN ESPRIT FLEXIBLE.\UTILISABLE POUR LE TRAVAIL.;IPAD;Un grand iPhone, mais un plus petit rendement.\nLes jeux installes dessus distraient vite un esprit flexible.\Utilisable pour le travail.
+iPhone;1;20;0;0;0;0;1;600;12;10;80;3;N;O;O;O;N;O;N;N;PERMET DE TELEPHONER, JOUER, ET TRAVAILLER.\NY A UNE POMME DERRIERE.;IPHONE;Permet de telephoner, jouer, et travailler.\nY a une pomme derriere.
+Macbook;1;22;0;0;0;0;1;1000;14;20;120;4;N;O;O;O;N;O;N;N;FAIT GLOBALEMENT LA MEME CHOSE QU'UN IPHONE\NMAIS AVEC LE CONFORT.\NUNE POMME EST EGALEMENT PRESENTE DERRIERE L'APPAREIL.;MACBOOK;Fait globalement la meme chose qu'un iPhone\nmais avec le confort.\nUne pomme est egalement presente derriere l'appareil.
+Lego;1;1;0;0;0;0;1;30;15;50;100;0;N;O;O;O;N;N;N;N;S'ASSEMBLE COMME LES BONS COPAINS.;LEGO;S'assemble comme les bons copains.
+Pate a modeler;1;14;0;0;0;0;1;40;3;20;120;0;N;O;O;O;N;N;N;N;ON RACONTE QUE LES INFOGRAPHISTES DES ANNEES 60\NUTILISAIENT CE TYPE DE MATERIEL.;PATE A MODELER;On raconte que les infographistes des annees 60\nutilisaient ce type de materiel.
+Grioche;1;18;0;0;0;0;1;3;1;20;70;0;N;O;O;O;N;N;O;N;POURQUOI SE CONCENTER D'UNE BRIOCHE,\NQUAND ON PEUT AVOIR UNE GRIOCHE?!?;GRIOCHE;Pourquoi se concenter d'une brioche,\nquand on peut avoir une Grioche?!?
+Chocos;1;31;0;0;0;0;1;5;2;20;70;0;N;O;O;O;N;N;O;N;L'AMI DU PETIT DEJEUNER, SE MARIE TRES BIEN\NAVEC LA GRIOCHE ET LE BEURRE SALE.;CHOCOS;L'ami du petit dejeuner, se marie tres bien\navec la Grioche et le beurre sale.
+Beurre sale;1;29;0;0;0;0;1;7;3;20;80;0;N;O;O;O;N;N;O;N;A NE PAS CONFONDRE AVEC LE BEURRE\NDOUX QUI EST UNE CONTREFACON\NNORMANDE DE CE MET DES DIEUX.;BEURRE SALE;A ne pas confondre avec le beurre\ndoux qui est une contrefacon\nnormande de ce met des dieux.
+Mochis;1;23;0;0;0;0;1;10;5;20;90;0;N;O;O;O;N;N;N;N;ALIMENT GLACE EN FORME DE COUILLES,\NSE MANGE SANS FAIM;MOCHIS;Aliment glace en forme de couilles,\nse mange sans faim
+Pizza Dominos;1;16;0;0;0;0;1;12;8;20;110;0;N;O;O;O;N;N;O;N;ET PUIS DES FRITES ! UN COTE DE PORC !\NDU COCAAAAAAAA\NRESTE MOINS BON QUE PIZZA HUT.;PIZZA DOMINOS;Et puis des frites ! Un cote de porc !\nDu cocaaaaaaaa\nReste moins bon que Pizza Hut.
+Soushis;1;12;0;0;0;0;1;15;10;20;130;0;N;O;O;O;N;N;O;N;L'ALIMENT OMEGA.;SOUSHIS;L'aliment omega.
+Plante;1;13;0;0;0;0;1;20;2;20;80;0;N;O;O;O;N;N;N;N;PURIFIE L'AIR LORSQU'IL EST REMPLI DE SARCASME.;PLANTE;Purifie l'air lorsqu'il est rempli de sarcasme.
+Artbook;1;21;0;0;0;0;1;30;6;60;90;0;N;O;O;O;N;N;N;N;UN LIVRE COMPOSE EXCLUSIVEMENT DE JOLIS IMAGES,\NN'INSTRUIT PAS MAIS NE DONNE PAS MAL A LA TETE.;ARTBOOK;Un livre compose exclusivement de jolis images,\nN'instruit pas mais ne donne pas mal a la tete.
+Platine vinyl;1;15;0;0;0;0;1;300;10;20;100;0;N;O;O;O;N;N;N;N;DONNE UN BIEN MEILLEUR MUSIQUE QUE SON HOMOLOGUE NUMERIQUE,\NSAUF QUAND ON NE L'UTILISE PAS.;PLATINE VINYL;Donne un bien meilleur musique que son homologue numerique,\nsauf quand on ne l'utilise pas.
+Appareil photo;1;28;0;0;0;0;1;300;10;20;110;0;N;O;O;O;N;N;N;N;CAPTURE DES INSTANTS MAGIQUES, PUIS Y AJOUTE\NUNE COUCHE DE POUSSIERE ET DE GRAIN.;APPAREIL PHOTO;Capture des instants magiques, puis y ajoute\nune couche de poussiere et de grain.
+TV;1;27;0;0;0;0;1;150;10;30;80;0;N;O;O;O;N;N;N;N;ABRUTIT LES MASSES MAIS PASSE LE TEMPS EFFICACEMENT.;TV;Abrutit les masses mais passe le temps efficacement.
+PS2;1;25;0;0;0;0;1;200;12;25;100;0;N;O;O;O;N;N;N;N;QUELLE MEILLEUR SUPPORT POUR JOUER A CRASH BANDICOOT ??;PS2;Quelle meilleur support pour jouer a Crash Bandicoot ??
+Souitch;1;0;0;0;0;0;1;350;15;20;120;0;N;O;O;O;N;N;N;N;PERMET DE JOUER AUX CHIOTTES A DES\NSIMULATEURS DE CONCIERGE.;SOUITCH;Permet de jouer aux chiottes a des\nsimulateurs de concierge.
+PS4;1;26;0;0;0;0;1;400;16;15;130;0;N;O;O;O;N;N;N;N;QUEL PIRE SUPPORT POUR JOUER A CRASH BANDICOOT ??;PS4;Quel pire support pour jouer a Crash Bandicoot ??
+Oculus;1;24;0;0;0;0;1;600;20;50;130;0;N;O;O;O;N;N;N;N;INSTRUMENT DE VISIONNAGE DE FILMS PORNOGRAPHIQUES\NDISCRET ET ANONYME.;OCULUS;Instrument de visionnage de films pornographiques\ndiscret et anonyme.

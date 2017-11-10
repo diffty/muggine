@@ -79,9 +79,9 @@ void MainApp(System* sys, Graphics* gfx) {
 	// Sound system
 	Sound sound;
 
-	sound.addSound("data/thomas_bd.wav", true);
-	sound.addSound("data/thomas_bd.wav", true);
-	sound.addSound("data/thomas_bd.wav", true);
+	sound.addSound("data/sound/music-menu.wav", true);
+	sound.addSound("data/sound/music-menu.wav", true);
+	sound.addSound("data/sound/music-gameplay.wav", true);
 
 	// Initing game manager
 	TSGameManager gameManager;

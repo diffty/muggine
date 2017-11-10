@@ -285,7 +285,7 @@ void DraggableThing::onBeginUsing(MainCharacter* pChar) {
 	//m_bIsHoverable = false;
 	m_bIsDraggable = false;
 
-	registerUser(pChar);
+	//registerUser(pChar);
 }
 
 void DraggableThing::onEndUsing(MainCharacter* pChar) {

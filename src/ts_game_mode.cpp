@@ -95,6 +95,7 @@ void TSGameMode::initScene() {
 				(objectsData.getData("bIsDraggable", i)[0] == 'O') ? true : false,
 				(objectsData.getData("bInStore", i)[0] == 'O') ? true : false
 			);
+			newThing->setPrice(atoi(objectsData.getData("Price", i)) * m_iNbInitSpawns);
 		}
 		else {
 			newThing = (DraggableThing*) new DraggableThing(
@@ -112,9 +113,9 @@ void TSGameMode::initScene() {
 				(objectsData.getData("bIsDraggable", i)[0] == 'O') ? true : false,
 				(objectsData.getData("bInStore", i)[0] == 'O') ? true : false
 			);
+			newThing->setPrice(atoi(objectsData.getData("Price", i)));
 		}
 
-		newThing->setPrice(atoi(objectsData.getData("Price", i)));
 		newThing->setUsableOnlyDuringWork((objectsData.getData("bUsableOnlyDuringWork", i)[0] == 'O') ? true : false);
 		newThing->setIsWorkThing((objectsData.getData("bIsWorkThing", i)[0] == 'O') ? true : false);
 		newThing->setDestroyAfterUse((objectsData.getData("bDestroyAfterUse", i)[0] == 'O') ? true : false);

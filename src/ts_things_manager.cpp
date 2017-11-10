@@ -57,8 +57,7 @@ void ThingsManager::getClosestAvailableThingsToPoint(LinkedList* pllAvailableThi
 		vect2df_t vCurrThingPos = pCurrThing->getRect()->getPos();
 		float fCurrDistance = sqrt(powf(vPos.x - vCurrThingPos.x, 2) + powf(vPos.y - vCurrThingPos.y, 2));
 
-		if ((pCurrThing->isSingleUser()
-			&& !pCurrThing->isUsed())
+		if ((pCurrThing->isSingleUser() && !pCurrThing->isUsed())
 			&& ((float) pCurrThing->getActionRadius() > fCurrDistance || pCurrThing->getActionRadius() == -1)
 			&& (pCurrThing->getCharOwner() == NULL || pCurrThing->getCharOwner() == pChar)
 			&& (!pCurrThing->isUsableOnlyDuringWork() || (pChar != NULL && (pChar->hasWork() && pCurrThing->isUsableOnlyDuringWork())))

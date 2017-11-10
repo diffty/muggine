@@ -195,7 +195,7 @@ void CSVReader::convertReturnCharacters(char* szSrcString) {
 	char* tempConvertedStr = new char[strlen(szSrcString)+1];
 
 	while ((c = szSrcString[i]) != '\0') {
-		if (c == '\\' && szSrcString[i + 1] == 'n') {
+		if (c == '\\' && (szSrcString[i + 1] == 'n' || szSrcString[i + 1] == 'N')) {
 			tempConvertedStr[iTmp] = '\n';
 			i += 2;
 			iTmp++;
