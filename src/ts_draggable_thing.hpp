@@ -30,6 +30,7 @@ protected:
 	bool m_bSingleUser;
 	int m_iMoneyValue = -1;
 	int m_iPrice = 0;
+	int m_iWorkEfficiency = 0;
 	bool m_bDestroyAfterUse;
 	bool m_bUsableOnlyDuringWork = false;
 	bool m_bIsWorkThing = false;
@@ -70,10 +71,12 @@ public:
 	bool isUsableOnlyDuringWork();
 	bool isWorkThing();
 
+	int getWorkEfficiency();
 	int getPrice();
 	MainCharacter* getCharOwner();
 
 	void setIsInStore(bool bInStore);
+	void setWorkEfficiency(int iWorkEfficiency);
 	void setMoneyValue(int iMoneyValue);
 	void setPrice(int iPrice);
 	void setCharOwner(MainCharacter* pCharOwner);

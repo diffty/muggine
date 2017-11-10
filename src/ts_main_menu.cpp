@@ -14,25 +14,31 @@ TSMainMenu::~TSMainMenu() {
 
 
 void TSMainMenu::initScene() {
+	RscManager* pRscManager = RscManager::get();
+
 	vect2df_t vNewSprPos;
 	vNewSprPos.x = 60;
-	vNewSprPos.y = 20;
+	vNewSprPos.y = 10;
 
-	RscManager* pRscManager = RscManager::get();
 	Sprite* pTitleSpr = new Sprite(pRscManager->getImgRsc(10), vNewSprPos);
 
+	vNewSprPos.x = 0;
+	vNewSprPos.y = 0;
+	Sprite* pCreditsSpr = new Sprite(pRscManager->getImgRsc(14), vNewSprPos);
+
 	vNewSprPos.x = 130;
-	vNewSprPos.y = 140;
+	vNewSprPos.y = 110;
 	m_pContinueBtn = new ImageButtonWidget(pRscManager->getSprShtRsc(11), vNewSprPos, 5, 4, 0);
 	showContinueBtn(false);
 
-	vNewSprPos.y = 160;
+	vNewSprPos.y += 20;
 	m_pNewBtn = new ImageButtonWidget(pRscManager->getSprShtRsc(11), vNewSprPos, 1, 0, 0);
 
-	vNewSprPos.y = 180;
+	vNewSprPos.y += 20;
 	m_pQuitBtn = new ImageButtonWidget(pRscManager->getSprShtRsc(11), vNewSprPos, 3, 2, 0);
 
 	m_pScene->addComponent(pTitleSpr);
+	m_pScene->addComponent(pCreditsSpr);
 	m_pScene->addComponent(m_pContinueBtn);
 	m_pScene->addComponent(m_pNewBtn);
 	m_pScene->addComponent(m_pQuitBtn);

@@ -2,8 +2,11 @@
 #include "ts_things_store.hpp"
 
 
+TSGameManager* TSGameManager::s_pInstance = NULL;
+
+
 TSGameManager::TSGameManager() {
-	m_eCurrState = E_APP_STATE_MENU;
+	TSGameManager::s_pInstance = this;
 
 	// Instantiate game mode
 	m_pGameMode = NULL;
@@ -19,6 +22,12 @@ TSGameManager::TSGameManager() {
 	m_pMainMenu->setContinueBtnCallback(TSGameManager::continueGameMenuBtnCallback, this);
 
 	m_bMenuKeyWasPressedLastLoop = false;
+
+	m_pLevelBeginScreen = NULL;
+	m_pLevelFailScreen = NULL;
+	m_pLevelSuccessScreen = NULL;
+
+	onMainMenu();
 }
 
 
@@ -27,7 +36,7 @@ TSGameManager::~TSGameManager() {
 }
 
 void TSGameManager::newGameMenuBtnCallback(void* pObj) {
-	((TSGameManager*)pObj)->onStartLevel();
+	((TSGameManager*)pObj)->newGame();
 }
 
 void TSGameManager::quitGameMenuBtnCallback(void* pObj) {
@@ -38,25 +47,46 @@ void TSGameManager::continueGameMenuBtnCallback(void* pObj) {
 	((TSGameManager*)pObj)->hideMenu();
 }
 
-void TSGameManager::onNewLevel() {
-	m_eCurrState = E_APP_STATE_LEVEL_INTRO;
+void TSGameManager::onMainMenu() {
+	m_eCurrState = E_APP_STATE_MENU;
+
+	Sound::get()->playSound(1);
+}
+
+void TSGameManager::onNewLevel(bool bReplayLevel) {
+	m_eCurrState = E_APP_STATE_LEVEL_BEGIN;
+	if (!bReplayLevel) {
+		m_iCurrLevel++;
+	}
+	m_pLevelBeginScreen = new LevelBeginScreen(m_iCurrLevel);
+
+	fadeScreen(E_FADE_IN, 2);
+
+	Sound::get()->stopSound(1);
+	Sound::get()->playSound(2);
 }
 
 void TSGameManager::onLevelSuccess() {
 	m_eCurrState = E_APP_STATE_LEVEL_SUCCESS;
+	m_pLevelSuccessScreen = new LevelSuccessScreen(m_iCurrLevel);
+	m_iMoney = m_pGameMode->getMoney();
 }
 
 void TSGameManager::onLevelFail() {
 	m_eCurrState = E_APP_STATE_LEVEL_FAIL;
+	m_pLevelFailScreen = new LevelFailScreen();
+	
 }
 
 void TSGameManager::onStartLevel() {
-	TSGameMode::initGameMode(&m_pGameMode, &m_gameScene, 1, 10);
+	TSGameMode::initGameMode(&m_pGameMode, &m_gameScene, m_iCurrLevel, 10);
+	m_pGameMode->setMoney(m_iMoney);
 	m_eCurrState = E_APP_STATE_INGAME;
 }
 
 void TSGameManager::newGame() {
-	m_iCurrLevel = 1;
+	m_iCurrLevel = 0;
+	m_iMoney = 0;
 	onNewLevel();
 }
 
@@ -71,6 +101,13 @@ void TSGameManager::invokeMenu() {
 
 void TSGameManager::hideMenu() {
 	m_eCurrState = E_APP_STATE_INGAME;
+}
+
+void TSGameManager::fadeScreen(E_FADE_MODE eFadeMode, float fDuration) {
+	m_eFadeMode = eFadeMode;
+	m_bDoScreenFade = true;
+	m_fScreenFadeDuration = fDuration;
+	m_fScreenFadeCurrTime = fDuration;
 }
 
 Scene* TSGameManager::getGameScene() {
@@ -141,6 +178,31 @@ void TSGameManager::update() {
 		case E_APP_STATE_MENU:
 			m_menuScene.update();
 			break;
+
+		case E_APP_STATE_LEVEL_BEGIN:
+			m_pLevelBeginScreen->update();
+			if (m_pLevelBeginScreen->doMustDisappear()) {
+				delete m_pLevelBeginScreen;
+				onStartLevel();
+			}
+			break;
+
+		case E_APP_STATE_LEVEL_SUCCESS:
+			m_pLevelSuccessScreen->update();
+			if (m_pLevelSuccessScreen->doMustDisappear()) {
+				delete m_pLevelSuccessScreen;
+				onNewLevel();
+			}
+			break;
+
+		case E_APP_STATE_LEVEL_FAIL:
+			m_gameScene.update();
+			m_pLevelFailScreen->update();
+			if (m_pLevelFailScreen->doMustDisappear()) {
+				delete m_pLevelFailScreen;
+				onNewLevel(true);
+			}
+			break;
 	}
 }
 
@@ -161,7 +223,53 @@ void TSGameManager::draw(uint8* fb) {
 	case E_APP_STATE_MENU:
 		m_menuScene.draw(fb);
 		break;
+
+	case E_APP_STATE_LEVEL_BEGIN:
+		m_pLevelBeginScreen->draw(fb);
+		break;
+
+	case E_APP_STATE_LEVEL_SUCCESS:
+		m_gameScene.draw(fb);
+		m_pLevelSuccessScreen->draw(fb);
+		break;
+
+	case E_APP_STATE_LEVEL_FAIL:
+		m_gameScene.draw(fb);
+		m_pLevelFailScreen->draw(fb);
+		break;
 	}
 
-	// Fade in/Fade out code HERE
+	// Fade shit
+	if (m_bDoScreenFade) {
+		if (m_fScreenFadeCurrTime <= 0.) {
+			m_fScreenFadeCurrTime = 0.;
+			m_bDoScreenFade = false;
+		}
+
+		m_fScreenAlpha = (m_fScreenFadeCurrTime / m_fScreenFadeDuration);
+
+		switch (m_eFadeMode) {
+		case E_FADE_IN:
+			m_fScreenAlpha = 1. - m_fScreenAlpha;
+			break;
+
+		case E_FADE_OUT:
+			m_fScreenAlpha = m_fScreenAlpha;
+			break;
+		}
+
+		m_fScreenFadeCurrTime -= System::get()->getDeltaTime();
+	}
+	
+	if (m_fScreenAlpha < 1.) {
+		int iNbPixels = SCREEN_WIDTH * SCREEN_HEIGHT * SCREEN_BPP;
+
+		for (int i = 0; i < iNbPixels; i++) {
+			fb[i] *= m_fScreenAlpha;
+		}
+	}
+}
+
+TSGameManager* TSGameManager::get() {
+	return TSGameManager::s_pInstance;
 }

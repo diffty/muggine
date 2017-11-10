@@ -53,12 +53,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>TARGET_WIN;TARGET_SDL;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include\FMOD;.\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -87,12 +87,17 @@
     <ClCompile Include="src\bko_grid.cpp" />
     <ClCompile Include="src\bko_paddle.cpp" />
     <ClCompile Include="src\buttonwidget.cpp" />
+    <ClCompile Include="src\common_tools.cpp" />
     <ClCompile Include="src\csv_reader.cpp" />
     <ClCompile Include="src\image_button_widget.cpp" />
     <ClCompile Include="src\iobject.cpp" />
     <ClCompile Include="src\paginated_widget_layout.cpp" />
+    <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\ts_clone_machine.cpp" />
     <ClCompile Include="src\ts_game_manager.cpp" />
+    <ClCompile Include="src\ts_level_begin_screen.cpp" />
+    <ClCompile Include="src\ts_level_fail_screen.cpp" />
+    <ClCompile Include="src\ts_level_success_screen.cpp" />
     <ClCompile Include="src\ts_main_menu.cpp" />
     <ClCompile Include="src\ts_text_bubble.cpp" />
     <ClCompile Include="src\ts_things_store_item.cpp" />
@@ -138,6 +143,7 @@
     <ClInclude Include="src\bko_grid.hpp" />
     <ClInclude Include="src\bko_paddle.hpp" />
     <ClInclude Include="src\buttonwidget.hpp" />
+    <ClInclude Include="src\common_tools.hpp" />
     <ClInclude Include="src\common_types.hpp" />
     <ClInclude Include="src\constants.hpp" />
     <ClInclude Include="src\csv_reader.hpp" />
@@ -145,9 +151,13 @@
     <ClInclude Include="src\iobject.hpp" />
     <ClInclude Include="src\math_tools.hpp" />
     <ClInclude Include="src\paginated_widget_layout.hpp" />
+    <ClInclude Include="src\sound.hpp" />
     <ClInclude Include="src\ts_clone_machine.hpp" />
     <ClInclude Include="src\ts_common_types.hpp" />
     <ClInclude Include="src\ts_game_manager.hpp" />
+    <ClInclude Include="src\ts_level_begin_screen.hpp" />
+    <ClInclude Include="src\ts_level_fail_screen.hpp" />
+    <ClInclude Include="src\ts_level_success_screen.hpp" />
     <ClInclude Include="src\ts_main_menu.hpp" />
     <ClInclude Include="src\ts_text_bubble.hpp" />
     <ClInclude Include="src\ts_things_store_item.hpp" />

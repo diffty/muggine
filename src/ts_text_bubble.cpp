@@ -48,7 +48,7 @@ void TextBubble::translate(int x, int y, ETransformMode transformMode) {
 
 void TextBubble::updateSize() {
 	size2df_t sTextWidgetSize = m_pTextWidget->getRect()->getSize();
-	getRect()->setSize(sTextWidgetSize.w + 5, sTextWidgetSize.h + 5);
+	getRect()->setSize(sTextWidgetSize.w + 5, sTextWidgetSize.h);
 }
 
 void TextBubble::draw(uint8* fb) {

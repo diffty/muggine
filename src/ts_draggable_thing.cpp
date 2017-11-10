@@ -42,6 +42,7 @@ void DraggableThing::init(ThingsManager* pThingsManager, int iAppealPower, int i
 	m_bInStore = bInStore;
 	m_bUsableOnlyDuringWork = false;
 
+	m_iWorkEfficiency = 0;
 	m_iMoneyValue = -1;
 	m_iPrice = 0;
 	m_pCharOwner = NULL;
@@ -141,10 +142,6 @@ bool DraggableThing::isUsed() {
 	return m_llUsers.size > 0;
 }
 
-void DraggableThing::setIsInStore(bool bInStore) {
-	m_bInStore = bInStore;
-}
-
 bool DraggableThing::isInStore() {
 	return m_bInStore;
 }
@@ -161,12 +158,24 @@ bool DraggableThing::isWorkThing() {
 	return m_bIsWorkThing;
 }
 
+int DraggableThing::getWorkEfficiency() {
+	return m_iWorkEfficiency;
+}
+
 int DraggableThing::getPrice() {
 	return m_iPrice;
 }
 
 MainCharacter* DraggableThing::getCharOwner() {
 	return m_pCharOwner;
+}
+
+void DraggableThing::setIsInStore(bool bInStore) {
+	m_bInStore = bInStore;
+}
+
+void DraggableThing::setWorkEfficiency(int iWorkEfficiency) {
+	m_iWorkEfficiency = iWorkEfficiency;
 }
 
 void DraggableThing::setMoneyValue(int iMoneyValue) {
@@ -283,12 +292,12 @@ void DraggableThing::onEndUsing(MainCharacter* pChar) {
 	if (m_iMoneyValue != -1)
 		TSGameMode::get()->increaseMoney(m_iMoneyValue);
 
-	printf("%i, %i\n", m_bIsWorkThing, pChar->hasWork());
+	// printf("%i, %i\n", m_bIsWorkThing, pChar->hasWork());
 
 	unregisterUser(pChar);
 
 	if (m_bIsWorkThing && pChar->hasWork()) {
-		printf("c ok\n");
+		// printf("c ok\n");
 		pChar->onEndWork();
 	}
 

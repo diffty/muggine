@@ -36,6 +36,8 @@ private:
 	Text* m_pMoneyLabel;
 	Text* m_pHealthLabel;
 	Text* m_pTimerLabel;
+	Sprite* m_pTimerSprite;
+	AnimatedSprite* m_pArtistSpr;
 
 	MainCharacter* m_pFinalMainCharacter;
 	WinCharacter* m_pWinCharacter;
@@ -44,11 +46,11 @@ private:
 	ThingsStore* m_pThingsStore;
 	Scene* m_pMainScene;
 
-	static TSGameMode* s_pInstance;
-
 	float m_fWinTimer;
 
 	bool m_bWinTimerActivated = false;
+	
+	static TSGameMode* s_pInstance;
 
 
 public:
@@ -71,6 +73,7 @@ public:
 	void decreaseMoney(int iMoneyBonus);
 
 	void onThingMoved();
+	void onHealthUpdate();
 
 	void launchWinTimer();
 	void stopWinTimer();

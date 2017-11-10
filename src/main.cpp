@@ -14,6 +14,7 @@
 #include "scene.hpp"
 #include "system.hpp"
 #include "graphics.hpp"
+#include "sound.hpp"
 #include "input.hpp"
 #include "rsc_manager.hpp"
 #include "sprite.hpp"
@@ -42,24 +43,6 @@
 #endif
 
 
-int intFromStr(char* szStr) {
-	int i = 0;
-	int iStrLen = strlen(szStr);
-	int iDigitNum = 0;
-	int iRes = 0;
-
-	char c;
-
-	while ((c = szStr[i]) != '\0') {
-		iDigitNum = (iStrLen - 1) - i;
-		iRes += atoi(&c) * pow(10, iDigitNum);
-
-		i++;
-	}
-
-	return iRes;
-}
-
 void MainApp(System* sys, Graphics* gfx) {
 #ifdef TARGET_3DS
 	Result rc = romfsInit();
@@ -87,8 +70,20 @@ void MainApp(System* sys, Graphics* gfx) {
 	rscManager.loadImg("data/title.bmp");
 	rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 1, 6);
 	rscManager.loadFont("data/font-small-black.bmp", 16, 16, 256, -1);
+	rscManager.loadSprSht("data/state_icons.bmp", 6, 2, 8);
+	rscManager.loadImg("data/credits.bmp");
+	rscManager.loadSprSht("data/ui3.bmp", 2, 1, 2);
+	rscManager.loadSprSht("data/artist.bmp", 4, 2, 6);
 #endif
 
+	// Sound system
+	Sound sound;
+
+	sound.addSound("data/thomas_bd.wav", true);
+	sound.addSound("data/thomas_bd.wav", true);
+	sound.addSound("data/thomas_bd.wav", true);
+
+	// Initing game manager
 	TSGameManager gameManager;
 
 	// Building scene
@@ -116,6 +111,8 @@ void MainApp(System* sys, Graphics* gfx) {
 
 		gameManager.update();
 		gameManager.draw(fb);
+
+		sound.update();
 
 		// Flush and swap framebuffers
 		gfx->FlushBuffer();

@@ -1,11 +1,13 @@
 #include "ts_main_character.hpp"
 #include "ts_win_character.hpp"
 
+
 #define BUBBLE_STAY_TIME 3
 
 
 MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager* pThingsManager)
-	: AnimatedSprite(pSprSh, vPos)
+	: AnimatedSprite(pSprSh, vPos),
+	m_speechData("data/main_char_text.csv")
 {
 	getClassType()->setClassTypeName("MainCharacter");
 	
@@ -137,8 +139,20 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 
 	m_pTextBubble = new TextBubble("", RscManager::get()->getFontRsc(12), 0, 0, 0, 0);
 	m_pTextBubble->setActive(false);
+	
+	vect2df_t vStateSprPos;
+	vStateSprPos.x = m_rect.getPos().x;
+	vStateSprPos.y = m_rect.getPos().y - 22;
 
-	showBubble("\"YO\"");
+	m_pStateSprite = new AnimatedSprite(RscManager::get()->getFontRsc(13), vStateSprPos);
+	m_pStateSprite->setActive(false);
+
+	m_pStateSprite->addState("love", 0, 1, 2, true);
+	m_pStateSprite->addState("talk", 2, 3, 2, true);
+	m_pStateSprite->addState("attack", 4, 5, 2, true);
+	m_pStateSprite->addState("money", 6, 7, 2, true);
+
+	saySomething("Hello");
 }
 
 MainCharacter::~MainCharacter() {
@@ -147,6 +161,8 @@ MainCharacter::~MainCharacter() {
 	}
 
 	delete m_pTextBubble;
+	delete m_pProgressBar;
+	delete m_pStateSprite;
 }
 
 void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
@@ -194,6 +210,17 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 
 		onBeginUsing();
 		m_pCurrFocusedThing->onBeginUsing(this);
+
+		if (currState == E_MAINCHAR_STATE_OCCUPIED_WORKGUY) {
+			m_pStateSprite->changeState(1);
+			m_pStateSprite->setActive(true);
+		}
+
+		if (m_pCurrFocusedThing->isWorkThing() && hasWork()) {
+			m_pStateSprite->changeState(3);
+			m_pStateSprite->setActive(true);
+		}
+
 		break;
 	}
 
@@ -204,6 +231,9 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 		setEventTimer(4);
 
 		onBeginAttack();
+
+		m_pStateSprite->changeState(2);
+		m_pStateSprite->setActive(true);
 
 		break;
 
@@ -221,11 +251,17 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 		updateAnimationState();
 		setEventDist(20);
 
+		m_pStateSprite->changeState(0);
+		m_pStateSprite->setActive(true);
+
 		break;
 
 	case E_MAINCHAR_STATE_WIN_ARRIVED_AT_CHAR:
 		updateAnimationState();
 		setEventTimer(3);
+
+		m_pStateSprite->changeState(0);
+		m_pStateSprite->setActive(true);
 
 		break;
 
@@ -233,11 +269,17 @@ void MainCharacter::onNewState(FSM_MAINCHAR_STATE currState) {
 		updateAnimationState();
 		setEventDist(1);
 
+		m_pStateSprite->changeState(0);
+		m_pStateSprite->setActive(true);
+
 		break;
 
 	case E_MAINCHAR_STATE_WIN_VANISH:
 		updateAnimationState();
 		setEventTimer(1);
+
+		m_pStateSprite->changeState(0);
+		m_pStateSprite->setActive(true);
 
 		break;
 
@@ -261,6 +303,8 @@ void MainCharacter::onEndState(FSM_MAINCHAR_STATE currState) {
 		m_pCurrFocusedThing = m_pNewFocusedThing;
 		break;
 	}
+
+	m_pStateSprite->setActive(false);
 }
 
 void MainCharacter::draw(uint8* buffer) {
@@ -268,6 +312,8 @@ void MainCharacter::draw(uint8* buffer) {
 
 	if (m_pProgressBar->isActive())
 		m_pProgressBar->draw(buffer);
+
+	m_pStateSprite->draw(buffer);
 
 	if (m_pTextBubble->isActive())
 		m_pTextBubble->draw(buffer);
@@ -363,6 +409,13 @@ void MainCharacter::update() {
 		if (m_fBubbleTextTimeLeft <= 0) {
 			m_pTextBubble->setActive(false);
 		}
+
+		m_pTextBubble->translate(m_rect.getPos().x + (m_rect.getSize().w / 2) - (m_pTextBubble->getRect()->getSize().w / 2), m_rect.getPos().y - 15, TRANSFORM_ABS);
+	}
+
+	if (m_pStateSprite->isActive()) {
+		m_pStateSprite->update();
+		m_pStateSprite->getRect()->setPos(m_rect.getPos().x + 1, m_rect.getPos().y - 23);
 	}
 }
 
@@ -471,10 +524,26 @@ void MainCharacter::setEventDist(int iNewDistLimit) {
 }
 
 void MainCharacter::showBubble(char* szStr) {
-	m_pTextBubble->translate(m_rect.getPos().x, m_rect.getPos().y - 15, TRANSFORM_ABS);
 	m_pTextBubble->setText(szStr);
 	m_pTextBubble->setActive(true);
 	m_fBubbleTextTimeLeft = BUBBLE_STAY_TIME;
+}
+
+void MainCharacter::saySomething(char* szCategory) {
+	int iNbSpeechLines = intFromStr(m_speechData.getData(szCategory, 0));
+
+	printf("NbLines : %i\n", iNbSpeechLines);
+
+	std::srand(std::time(NULL));
+	int iRand = std::rand() % iNbSpeechLines;
+
+	int iSpeechLineId = std::rand() % iNbSpeechLines;
+
+	char* szSpeechLine = m_speechData.getData(szCategory, 1+iSpeechLineId);
+	printf("Line id : %i : %s\n", iSpeechLineId, szSpeechLine);
+
+	showBubble(szSpeechLine);
+
 }
 
 // Event funcs
@@ -488,7 +557,7 @@ void MainCharacter::onEndUsing() {
 }
 
 void MainCharacter::onUsing(float fUsageTimeLeft) {
-	m_pProgressBar->getRect()->setPos(m_rect.getPos().x, m_rect.getPos().y - 10);
+	m_pProgressBar->getRect()->setPos(m_rect.getPos().x + 2, m_rect.getPos().y - 2);
 	m_pProgressBar->setValue(fUsageTimeLeft / (float) m_pCurrFocusedThing->getOccupationTime());
 }
 
@@ -512,14 +581,14 @@ void MainCharacter::onAttacking() {
 
 void MainCharacter::onSlay() {
 	TSGameMode::get()->decreaseHealth(5);
-	showBubble("\"DE LA MERDE\"");
+	saySomething("Attack");
 }
 
 
 void MainCharacter::onEndWork() {
 	setHasWork(false);
 
-	TSGameMode::get()->increaseMoney(m_pCurrentJob->m_iPrice);
+	TSGameMode::get()->increaseMoney(m_pCurrentJob->m_iPrice * m_pCurrFocusedThing->getWorkEfficiency());
 
 	delete m_pCurrentJob;
 	m_pCurrentJob = NULL;

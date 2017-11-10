@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include "common_types.hpp"
+#include "common_tools.hpp"
 #include "mathf.hpp"
 #include "fsm.hpp"
 #include "fsm_node.hpp"
@@ -35,12 +36,14 @@ private:
 	float m_fWalkSpeed;
 	LinkedList m_llThingsHistory;
 	TinyProgressBar* m_pProgressBar;
+	AnimatedSprite* m_pStateSprite;
 	E_ORIENTATION m_eCurrOrientation;
 	FSM_MAINCHAR_STATE m_prevState;
 	bool m_bHasWork;
 	work_job_t* m_pCurrentJob;
 	TextBubble* m_pTextBubble;
 	float m_fBubbleTextTimeLeft;
+	CSVReader m_speechData;
 
 public:
 	MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager* pThingsManager);
@@ -66,6 +69,7 @@ public:
 	void setEventDist(int iNewDistLimit);
     
 	void showBubble(char* szStr);
+	void saySomething(char* szCategory);
 
 	void onBeginUsing();
 	void onEndUsing();

@@ -7,6 +7,7 @@
 #include "ts_winning_thing.hpp"
 #include "ts_main_character.hpp"
 #include "ts_win_character.hpp"
+#include "ts_game_manager.hpp"
 
 
 TSGameMode* TSGameMode::s_pInstance = NULL;
@@ -24,21 +25,6 @@ TSGameMode::TSGameMode(Scene* pMainScene, int iNbInitSpawns, float fTimeBetweenI
 	m_fTimeBeforeFirstSpawn = 5;
 	
 	initList(&m_llCharacters);
-
-	vect2df_t vTextPos;
-
-	vTextPos.x = 10;
-	vTextPos.y = 225;
-	m_pMoneyLabel = new Text(0, RscManager::get()->getFontRsc(4), vTextPos);
-	
-	vTextPos.x = 270;
-	vTextPos.y = 225;
-	m_pHealthLabel = new Text(100, RscManager::get()->getFontRsc(4), vTextPos);
-
-	vTextPos.x = 130;
-	vTextPos.y = 225;
-	m_pTimerLabel = new Text(0, RscManager::get()->getFontRsc(4), vTextPos);
-	m_pTimerLabel->setActive(false);
 
 	m_bWinTimerActivated = false;
 
@@ -134,6 +120,7 @@ void TSGameMode::initScene() {
 		newThing->setDestroyAfterUse((objectsData.getData("bDestroyAfterUse", i)[0] == 'O') ? true : false);
 		newThing->setTitle(objectsData.getData("Name", i));
 		newThing->setDesc(objectsData.getData("Description", i));
+		newThing->setWorkEfficiency(atoi(objectsData.getData("WorkEfficiency", i)));
 
 		m_pThingsStore->addThingToStore(newThing);
 	}
@@ -232,12 +219,38 @@ void TSGameMode::initScene() {
 	m_pMainScene->addComponent(ctE2);
 	m_pMainScene->addComponent(ctE3);*/
 
+	testThingPos.x = 20;
+	testThingPos.y = 226;
+	m_pMoneyLabel = new Text(0, RscManager::get()->getFontRsc(4), testThingPos);
+
+	testThingPos.x = 270;
+	m_pHealthLabel = new Text(100, RscManager::get()->getFontRsc(4), testThingPos);
+
+	testThingPos.x = 130;
+	m_pTimerLabel = new Text(0, RscManager::get()->getFontRsc(4), testThingPos);
+	m_pTimerLabel->setActive(false);
+
+	testThingPos.x = 5;
+	testThingPos.y = 227;
+	Sprite* pMoneySprite = new Sprite(rscManager->getSprShtRsc(15), 0, testThingPos);
+
+	testThingPos.x = 115;
+	m_pTimerSprite = new Sprite(rscManager->getSprShtRsc(15), 1, testThingPos);
+	m_pTimerSprite->setActive(false);
+
+	testThingPos.x = 249;
+	testThingPos.y = 220;
+	m_pArtistSpr = new AnimatedSprite(rscManager->getSprShtRsc(16), testThingPos);
+
 	m_pMainScene->addComponent(wg1);
 	m_pMainScene->addComponent(cloneMachine);
 
 	m_pMainScene->addComponent(m_pMoneyLabel);
 	m_pMainScene->addComponent(m_pHealthLabel);
 	m_pMainScene->addComponent(m_pTimerLabel);
+	m_pMainScene->addComponent(pMoneySprite);
+	m_pMainScene->addComponent(m_pTimerSprite);
+	m_pMainScene->addComponent(m_pArtistSpr);
 }
 
 void TSGameMode::spawnMainCharacter(vect2df_t vCharPos) {
@@ -262,10 +275,13 @@ float TSGameMode::getHealth() {
 }
 
 void TSGameMode::setHealth(float fHealth) {
+	if (fHealth <= 0) fHealth = 0;
 	m_fHealth = fHealth;
 	char* szNewHealth = Text::intToStr((int) m_fHealth);
 	m_pHealthLabel->setText(szNewHealth);
 	delete szNewHealth;
+	
+	onHealthUpdate();
 }
 
 void TSGameMode::decreaseHealth(float fHealthMalus) {
@@ -309,11 +325,20 @@ void TSGameMode::onThingMoved() {
 	}
 }
 
+void TSGameMode::onHealthUpdate() {
+	if (m_fHealth == 0) {
+		TSGameManager::get()->onLevelFail();
+	}
+
+	m_pArtistSpr->setFrame((int) 6 - ((m_fHealth / 100.) * 6));
+}
+
 void TSGameMode::launchWinTimer() {
 	if (!m_bWinTimerActivated) {
 		m_fWinTimer = 10;
 		m_bWinTimerActivated = true;
 		m_pTimerLabel->setActive(true);
+		m_pTimerSprite->setActive(true);
 	}
 
 	m_iNbActiveWinThings++;
@@ -325,6 +350,7 @@ void TSGameMode::stopWinTimer() {
 		printf("%i\n", m_iNbActiveWinThings);
 		m_bWinTimerActivated = false;
 		m_pTimerLabel->setActive(false);
+		m_pTimerSprite->setActive(false);
 	}
 }
 
@@ -404,6 +430,13 @@ void TSGameMode::destroyCharacters() {
 void TSGameMode::update() {
 	m_pThingsManager->processThingsToDeleteList();
 
+	if (System::get()->getInputSys()->IsKeyPressed(KEYB_A)) {
+		increaseMoney(10);
+	}
+	if (System::get()->getInputSys()->IsKeyPressed(KEYB_Z)) {
+		decreaseHealth(1);
+	}
+
 	if (m_bWinTimerActivated) {
 		m_fWinTimer -= System::get()->getDeltaTime();
 
@@ -415,6 +448,10 @@ void TSGameMode::update() {
 			onWinTimerEnd();
 			m_bWinTimerActivated = false;
 		}
+	}
+
+	if (m_pFinalMainCharacter && m_pFinalMainCharacter->getCurrentState() == E_MAINCHAR_STATE_WIN_OUT) {
+		TSGameManager::get()->onLevelSuccess();
 	}
 }
 
@@ -431,10 +468,6 @@ Scene* TSGameMode::getScene() {
 }
 
 TSGameMode* TSGameMode::get() {
-	/*if (TSGameMode::s_pInstance == NULL) {
-		return new TSGameMode;
-	}*/
-	
 	return TSGameMode::s_pInstance;
 }
 
