@@ -79,9 +79,19 @@ void MainApp(System* sys, Graphics* gfx) {
 	// Sound system
 	Sound sound;
 
-	sound.addSound("data/sound/music-menu.wav", true);
-	sound.addSound("data/sound/music-menu.wav", true);
-	sound.addSound("data/sound/music-gameplay.wav", true);
+	sound.addSound("data/sound/intro-rix.mp3", true);
+	sound.addSound("data/sound/music-menu.mp3", true);
+	sound.addSound("data/sound/music-gameplay.mp3", true);
+	sound.addSound("data/sound/sfx-clara.mp3", true);
+	sound.addSound("data/sound/sfx-gain-cash.mp3", false);
+	sound.addSound("data/sound/sfx-no-cash-no-game.mp3", false);
+	sound.addSound("data/sound/sfx-object-buy-and-drop.mp3", false);
+	sound.addSound("data/sound/sfx-object-taken.mp3", false);
+	sound.addSound("data/sound/sfx-tlg-critical.mp3", true);
+	sound.addSound("data/sound/sfx-tlg-disappear.mp3", false);
+	sound.addSound("data/sound/sfx-tlg-is-busy.mp3", true);
+	sound.addSound("data/sound/sfx-tlg-spawn.mp3", false);
+	sound.addSound("data/sound/sfx-tlg-triggered.mp3", false);
 
 	// Initing game manager
 	TSGameManager gameManager;
