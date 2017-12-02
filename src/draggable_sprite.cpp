@@ -1,16 +1,17 @@
 #include "draggable_sprite.hpp"
+#include "system.hpp"
 
 
-
-DraggableSprite::DraggableSprite(Image* pImg, vect2df_t vPos, Input* pInputManager, bool bIsDraggable) :
+DraggableSprite::DraggableSprite(Image* pImg, vect2df_t vPos, bool bIsDraggable) :
 	Sprite(pImg, vPos) {
 
-	init(pInputManager, bIsDraggable);
+	init(bIsDraggable);
 }
-DraggableSprite::DraggableSprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, Input* pInputManager, bool bIsDraggable) :
+
+DraggableSprite::DraggableSprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, bool bIsDraggable) :
 	Sprite(pSprSht, uFrameNb, vPos) {
 
-	init(pInputManager, bIsDraggable);
+	init(bIsDraggable);
 }
 
 
@@ -18,17 +19,20 @@ DraggableSprite::~DraggableSprite() {
 
 }
 
-void DraggableSprite::init(Input* pInputManager, bool bIsDraggable) {
-	m_pInputManager = pInputManager;
+void DraggableSprite::init(bool bIsDraggable) {
 	m_bIsGrabbed = false;
 	m_bIsDraggable = bIsDraggable;
 }
 
 void DraggableSprite::update() {
-	m_vCurrMousePos = m_pInputManager->getCurrInputPos();
+	updateChildren();
+
+	Input* pInputManager = System::get()->getInputSys();
+
+	m_vCurrMousePos = pInputManager->getCurrInputPos();
 
 	if (m_bIsGrabbed) {
-		if (m_pInputManager->IsButtonPressed(MOUSE_BTN_LEFT)) {
+		if (pInputManager->IsButtonPressed(MOUSE_BTN_LEFT)) {
 			// On dragging
 			
 			translate(

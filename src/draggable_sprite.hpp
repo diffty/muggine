@@ -9,11 +9,11 @@
 class DraggableSprite : public Sprite
 {
 public:
-	DraggableSprite(Image* pImg, vect2df_t vPos, Input* pInputManager, bool bIsDraggable = true);
-	DraggableSprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, Input* pInputManager, bool bIsDraggable = true);
+	DraggableSprite(Image* pImg, vect2df_t vPos, bool bIsDraggable = true);
+	DraggableSprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, bool bIsDraggable = true);
 	~DraggableSprite();
 
-	void init(Input* pInputManager, bool bIsDraggable = true);
+	void init(bool bIsDraggable = true);
 	void update();
 	void receiveTouchInput(vect2d_t touchPt);
 
