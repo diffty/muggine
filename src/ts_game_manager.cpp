@@ -63,7 +63,7 @@ void TSGameManager::onNewLevel(bool bReplayLevel) {
 	fadeScreen(E_FADE_IN, 2);
 
 	Sound::get()->stopSound(1);
-	Sound::get()->playSound(2);
+	//Sound::get()->playSound(2);
 }
 
 void TSGameManager::onLevelSuccess() {
