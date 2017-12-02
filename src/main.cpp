@@ -92,7 +92,39 @@ void MainApp(System* sys, Graphics* gfx) {
 	sound.addSound("data/sound/sfx-tlg-is-busy.mp3", true);
 	sound.addSound("data/sound/sfx-tlg-spawn.mp3", false);
 	sound.addSound("data/sound/sfx-tlg-triggered.mp3", false);
+	
 
+	// TESTS
+	/*Scene testScene;
+
+	Sprite test(rscManager.getSprShtRsc(1), 3, { 0, 0 });
+
+	Sprite test1(rscManager.getSprShtRsc(1), 12, { 0, 0 }); // sushis
+	test1.setDrawOrder(100);
+	Sprite test2(rscManager.getSprShtRsc(1), 13, { 4, 4 }); // plante
+	test2.setDrawOrder(800);
+	Sprite test3(rscManager.getSprShtRsc(1), 15, { 8, 8 }); // vinyl
+	test3.setDrawOrder(50);
+	Sprite test4(rscManager.getSprShtRsc(1), 16, { 12, 12 }); // pizza
+	test4.setDrawOrder(500);
+
+	test1.setParentWidget(&test);
+	test2.setParentWidget(&test);
+	test3.setParentWidget(&test);
+	test4.setParentWidget(&test);
+
+	testScene.addComponent(&test);
+
+	printf("*** CHANGING DRAW ORDERZ ***\n");
+	test1.setDrawOrder(1000);
+	test2.setDrawOrder(800);
+	test3.setDrawOrder(1200);
+	test4.setDrawOrder(600);
+	test2.setDrawOrder(1100);
+	test2.setDrawOrder(1000);*/
+
+
+	
 	// Initing game manager
 	TSGameManager gameManager;
 
@@ -100,15 +132,15 @@ void MainApp(System* sys, Graphics* gfx) {
 	Scene* gameScene = gameManager.getGameScene();
 	Scene* menuScene = gameManager.getMenuScene();
 
+	
 	TSGameMode* gameMode = NULL;
+	
 	
 	gfx->SetDoubleBuffering(false);
 
 	uint8* fb = gfx->GetFramebuffer();
 
 	sys->initLoop();
-
-	int i = 0;
 
 	// Main loop
 	while (sys->mainLoop())
@@ -122,6 +154,17 @@ void MainApp(System* sys, Graphics* gfx) {
 		gameManager.update();
 		gameManager.draw(fb);
 
+		/*if (sys->getInputSys()->IsKeyPressed(KEYB_A)) {
+			test4.setDrawOrder(test4.getDrawOrder() + 1);
+			printf("%i\n", test4.getDrawOrder());
+		}
+		if (sys->getInputSys()->IsKeyPressed(KEYB_Z)) {
+			test4.setDrawOrder(test4.getDrawOrder() - 1);
+			printf("%i\n", test4.getDrawOrder());
+		}
+
+		testScene.draw(fb);*/
+
 		sound.update();
 
 		// Flush and swap framebuffers
@@ -130,9 +173,8 @@ void MainApp(System* sys, Graphics* gfx) {
 
 		// Wait for VBlank
 		gfx->WaitForBlank();
-
-		i++;
 	}
+	
 
 	rscManager.freeAllRsc();
 
