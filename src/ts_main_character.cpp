@@ -37,6 +37,8 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 	m_pProgressBar = new TinyProgressBar(vProgressBarPos, sProgressBarSize);
 	m_pProgressBar->setActive(false);
 
+	addChildWidget(m_pProgressBar);
+
 	m_eCurrOrientation = E_ORIENTATION_S;
 
 	// Init FSM
@@ -88,7 +90,6 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 	m_fsm.addNode(fsmNodeWinWalkingToExit);
 	m_fsm.addNode(fsmNodeWinVanish);
 
-
 	m_pThingsManager = pThingsManager;
 
 	m_pCurrFocusedThing = NULL;
@@ -139,6 +140,9 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 
 	m_pTextBubble = new TextBubble("", RscManager::get()->getFontRsc(12), 0, 0, 0, 0);
 	m_pTextBubble->setActive(false);
+	m_pTextBubble->setDrawOrder(5000);
+
+	addChildWidget(m_pTextBubble);
 	
 	vect2df_t vStateSprPos;
 	vStateSprPos.x = m_rect.getPos().x;
@@ -152,7 +156,11 @@ MainCharacter::MainCharacter(SpriteSheet* pSprSh, vect2df_t vPos, ThingsManager*
 	m_pStateSprite->addState("attack", 4, 5, 2, true);
 	m_pStateSprite->addState("money", 6, 7, 2, true);
 
+	addChildWidget(m_pStateSprite);
+
 	saySomething("Hello");
+
+	setDrawOrder(5000 + getRect()->getPos().y);
 }
 
 MainCharacter::~MainCharacter() {
@@ -315,13 +323,13 @@ void MainCharacter::onEndState(FSM_MAINCHAR_STATE currState) {
 void MainCharacter::draw(uint8* buffer) {
 	AnimatedSprite::draw(buffer);
 
-	if (m_pProgressBar->isActive())
+	/*if (m_pProgressBar->isActive())
 		m_pProgressBar->draw(buffer);
 
 	m_pStateSprite->draw(buffer);
 
 	if (m_pTextBubble->isActive())
-		m_pTextBubble->draw(buffer);
+		m_pTextBubble->draw(buffer);*/
 }
 
 void MainCharacter::update() {
@@ -422,7 +430,7 @@ void MainCharacter::update() {
 	}
 
 	if (m_pStateSprite->isActive()) {
-		m_pStateSprite->update();
+		//m_pStateSprite->update();
 		m_pStateSprite->getRect()->setPos(m_rect.getPos().x + 1, m_rect.getPos().y - 23);
 	}
 }
@@ -467,6 +475,8 @@ void MainCharacter::translate(float x, float y, ETransformMode transformMode) {
 	updateAnimationState();
     
     Sprite::translate(x, y, transformMode);
+
+	setDrawOrder(5000 + getRect()->getPos().y);
 }
 
 E_ORIENTATION MainCharacter::getOrientationFromVector(vect2df_t vDir) {

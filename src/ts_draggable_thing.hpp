@@ -20,8 +20,6 @@ class MainCharacter;
 class DraggableThing : public DraggableSprite
 {
 protected:
-	ThingsManager* m_pThingsManager;
-
 	int m_iAppealPower;
 	int m_iOccupationTime;
 	int m_iCooldownTime;
@@ -52,11 +50,11 @@ protected:
 	TextBubble* m_pTextBubble;
 
 public:
-	DraggableThing(Image* pImg, vect2df_t vPos, ThingsManager* pThingsManager, Input* pInputManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser, bool bIsDraggable = true, bool bInStore = false);
-	DraggableThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, ThingsManager* pThingsManager, Input* pInputManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser, bool bIsDraggable = true, bool bInStore = false);
+	DraggableThing(Image* pImg, vect2df_t vPos);
+	DraggableThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos);
 	~DraggableThing();
 
-	void init(ThingsManager* pThingsManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser, bool bInStore);
+	void init(char* szTitle, char* szDesc);
 	void clone();
 
 	void registerUser(MainCharacter* pCharUser);
@@ -67,13 +65,28 @@ public:
 
 	bool isUsed();
 	bool isInStore();
+	bool isUsableOnce();
 	bool isSingleUser();
 	bool isUsableOnlyDuringWork();
 	bool isWorkThing();
 
+	int getAppealPower();
+	int getOccupationTime();
+	int getCooldownTime();
+	int getActionRadius();
 	int getWorkEfficiency();
 	int getPrice();
 	MainCharacter* getCharOwner();
+
+	char* getTitle();
+	char* getDesc();
+
+	void setAppealPower(int iAppealPower);
+	void setOccupationTime(int iOccupationTime);
+	void setCooldownTime(int iCooldownTime);
+	void setActionRadius(int iActionRadius);
+	void setUsableOnce(bool bUsableOnce);
+	void setSingleUser(bool bSingleUser);
 
 	void setIsInStore(bool bInStore);
 	void setWorkEfficiency(int iWorkEfficiency);
@@ -101,10 +114,6 @@ public:
 	void onHoverStart(vect2d_t vStartHoverPt);
 	void onHoverEnd();
 	void onHovering();
-
-	int getOccupationTime();
-	int getActionRadius();
-	int getCooldownTime();
 };
 
 

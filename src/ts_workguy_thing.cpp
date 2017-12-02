@@ -3,12 +3,15 @@
 #include "ts_main_character.hpp"
 
 
-WorkguyThing::WorkguyThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, ThingsManager* pThingsManager, Input* pInputManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser) :
-	DraggableThing(pSprSht, uFrameNb, vPos, pThingsManager, pInputManager, iAppealPower, iOccupationTime, iCooldownTime, iActionRadius, bUsableOnce, bSingleUser, false, false) {
+WorkguyThing::WorkguyThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos) :
+	DraggableThing(pSprSht, uFrameNb, vPos) {
 		
-		m_classInfo.setClassTypeName("WorkguyThing");
+	setDraggable(false);
+	setIsInStore(false);
+	
+	m_classInfo.setClassTypeName("WorkguyThing");
 
-		m_bIsHoverable = false;
+	m_bIsHoverable = false;
 }
 
 
@@ -18,7 +21,7 @@ WorkguyThing::~WorkguyThing() {
 
 
 void WorkguyThing::onUsing() {
-	m_pThingsManager->onWorkguyThingUsed();
+	TSGameMode::get()->getThingsManager()->onWorkguyThingUsed();
 }
 
 void WorkguyThing::onEndUsing(MainCharacter* pChar) {
@@ -43,6 +46,6 @@ void WorkguyThing::onEndUsing(MainCharacter* pChar) {
 	workThing->setDestroyAfterUse(true);
 
 	m_pThingsManager->addThing(workThing);
-	getParentScene()->addComponent(workThing);*/
+	getRootWidget()->addComponent(workThing);*/
 }
 

@@ -18,6 +18,14 @@ ThingsStore::ThingsStore(vect2df_t vPos, size2df_t sSize, uint uNbCellX, uint uN
 	vBtnPos.x = 305;
 	vBtnPos.y = 210;
 	m_pPageDownStoreBtn = new ImageButtonWidget(RscManager::get()->getSprShtRsc(6), vBtnPos, 3, 2, 0, onPressPageDownBtnCallback, this);
+
+	setDrawOrder(5000);
+
+	addChildWidget(m_pPageUpStoreBtn);
+	addChildWidget(m_pPageDownStoreBtn);
+
+	m_pPageUpStoreBtn->setDrawOrder(5100);
+	m_pPageDownStoreBtn->setDrawOrder(5100);
 }
 
 ThingsStore::~ThingsStore() {
@@ -27,18 +35,18 @@ ThingsStore::~ThingsStore() {
 
 // sale
 void ThingsStore::addPageBtnComponentsToMainScene() {
-	getParentScene()->addComponent(m_pPageUpStoreBtn);
-	getParentScene()->addComponent(m_pPageDownStoreBtn);
+	//getRootWidget()->addChildWidget(m_pPageUpStoreBtn);
+	//getRootWidget()->addChildWidget(m_pPageDownStoreBtn);
 }
 
 void ThingsStore::addThingToStore(DraggableThing* pThing) {
-	ThingsStorePage* lastPage = ((ThingsStorePage*)m_llWidgetList.pTail->pData);
+	ThingsStorePage* lastPage = ((ThingsStorePage*) m_llWidgetList.pTail->pData);
 	ThingsStoreItem* pNewStoreItem = new ThingsStoreItem(pThing);
 
 	if (lastPage != NULL) {
 		if (lastPage->countWidgets() >= 7) {
 			createNewPage();
-			lastPage = ((ThingsStorePage*)m_llWidgetList.pTail->pData);
+			lastPage = ((ThingsStorePage*) m_llWidgetList.pTail->pData);
 		}
 
 		lastPage->addWidget(pNewStoreItem);
@@ -95,16 +103,9 @@ void ThingsStore::replaceThingInStore(DraggableThing* pThingToMove) {
 	}
 }
 
-void ThingsStore::updateChildren() {
-	LLNode* currNode = m_llWidgetList.pHead;
-
-	while (currNode != NULL) {
-		IWidget* pCurrWidget = (IWidget*) currNode->pData;
-		pCurrWidget->setParentScene(getParentScene());
-		pCurrWidget->updateChildren();
-
-		currNode = currNode->pNext;
-	}
+void ThingsStore::receiveTouchInput(vect2d_t touchPt) {
+	PaginatedWidgetLayout::receiveTouchInput(touchPt);
+	receiveTouchInputChildren(touchPt);
 }
 
 void ThingsStore::onPressPageUpBtnCallback(void* pArg) {

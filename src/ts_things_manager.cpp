@@ -39,7 +39,7 @@ void ThingsManager::processThingsToDeleteList() {
 
 		DraggableThing* pThingToDelete = (DraggableThing*) pCurrNode->pData;
 		if (pThingToDelete) {
-			m_pStore->getParentScene()->removeComponent(pThingToDelete);
+			m_pStore->getRootWidget()->removeChildWidget(pThingToDelete);
 			delete pThingToDelete;
 		}
 

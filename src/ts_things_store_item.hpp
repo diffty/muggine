@@ -16,7 +16,7 @@ public:
 	ThingsStoreItem(DraggableThing* pThing);
 	~ThingsStoreItem();
 	
-	void draw(uint8* fb);
+	void draw(uint8* buffer);
 	void update();
 	void receiveTouchInput(vect2d_t touchPt);
 

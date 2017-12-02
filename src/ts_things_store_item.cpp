@@ -18,6 +18,17 @@ ThingsStoreItem::ThingsStoreItem(DraggableThing* pThing) :
 	m_pPriceLabel = new Text(szPriceStr, RscManager::get()->getFontRsc(5), vBgPos);
 	delete szPriceStr;
 
+	m_pBgSpr->setDrawOrder(4900);
+	m_pThing->setDrawOrder(5000);
+	m_pPriceLabel->setDrawOrder(5100);
+
+	printf("f\n");
+	m_pBgSpr->setParentWidget(this);
+	printf("a\n");
+	m_pThing->setParentWidget(this);
+	printf("s\n");
+	m_pPriceLabel->setParentWidget(this);
+
 	updateChildren();
 }
 
@@ -28,14 +39,20 @@ ThingsStoreItem::~ThingsStoreItem() {
 	delete m_pPriceLabel;
 }
 
-void ThingsStoreItem::draw(uint8* fb) {
-	m_pBgSpr->draw(fb);
-	m_pThing->draw(fb);
-	m_pPriceLabel->draw(fb);
+void ThingsStoreItem::draw(uint8* buffer) {
+	if (m_bIsActive) {
+		drawChildren(buffer);
+
+		/*m_pBgSpr->draw(buffer);
+		m_pThing->draw(buffer);
+		m_pPriceLabel->draw(buffer);*/
+	}
 }
 
 void ThingsStoreItem::update() {
-	m_pThing->update();
+	updateChildren();
+
+	//m_pThing->update();
 }
 
 void ThingsStoreItem::receiveTouchInput(vect2d_t touchPt) {
@@ -61,9 +78,11 @@ DraggableThing* ThingsStoreItem::getThing() {
 }
 
 void ThingsStoreItem::updateChildren() {
-	m_pBgSpr->setParentScene(getParentScene());
+	IWidget::updateChildren();
+
+	m_pBgSpr->setRootWidget(getRootWidget());
 	m_pBgSpr->updateChildren();
 
-	m_pThing->setParentScene(getParentScene());
+	m_pThing->setRootWidget(getRootWidget());
 	m_pThing->updateChildren();
 }

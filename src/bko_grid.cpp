@@ -35,12 +35,16 @@ void Grid::init() {
 }
 
 void Grid::update() {
-
+	updateChildren();
 }
 
 void Grid::draw(uint8* buffer) {
-	for (int i = 0; i < m_nbBricksW * m_nbBricksH; i++) {
-		m_brickList[i]->draw(buffer);
+	if (m_bIsActive) {
+		drawChildren(buffer);
+
+		for (int i = 0; i < m_nbBricksW * m_nbBricksH; i++) {
+			m_brickList[i]->draw(buffer);
+		}
 	}
 }
 

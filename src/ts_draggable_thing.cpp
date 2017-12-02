@@ -3,19 +3,24 @@
 #include "ts_main_character.hpp"
 #include "ts_game_mode.hpp"
 
+
 #define OBJ_HOVER_ELEVATION 5
 
 
-DraggableThing::DraggableThing(Image* pImg, vect2df_t vPos, ThingsManager* pThingsManager, Input* pInputManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser, bool bIsDraggable, bool bInStore) :
-	DraggableSprite(pImg, vPos, pInputManager, bIsDraggable) {
+DraggableThing::DraggableThing(Image* pImg, vect2df_t vPos) :
+	DraggableSprite(pImg, vPos) {
 
-	init(pThingsManager, iAppealPower, iOccupationTime, iCooldownTime, iActionRadius, bUsableOnce, bSingleUser, bInStore);
+	m_classInfo.setClassTypeName("DraggableThing");
+	m_bIsHoverable = true;
+
 }
 
-DraggableThing::DraggableThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, ThingsManager* pThingsManager, Input* pInputManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser, bool bIsDraggable, bool bInStore) :
-	DraggableSprite(pSprSht, uFrameNb, vPos, pInputManager, bIsDraggable) {
+DraggableThing::DraggableThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos) :
+	DraggableSprite(pSprSht, uFrameNb, vPos) {
 
-	init(pThingsManager, iAppealPower, iOccupationTime, iCooldownTime, iActionRadius, bUsableOnce, bSingleUser, bInStore);
+	m_classInfo.setClassTypeName("DraggableThing");
+	m_bIsHoverable = true;
+
 }
 
 DraggableThing::~DraggableThing() {
@@ -28,40 +33,24 @@ DraggableThing::~DraggableThing() {
 }
 
 
-void DraggableThing::init(ThingsManager* pThingsManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser, bool bInStore) {
-	m_classInfo.setClassTypeName("DraggableThing");
-
-	m_pThingsManager = pThingsManager;
-
-	m_iAppealPower = iAppealPower;
-	m_iOccupationTime = iOccupationTime;
-	m_iCooldownTime = iCooldownTime;
-	m_iActionRadius = iActionRadius;
-	m_bUsableOnce = bUsableOnce;
-	m_bSingleUser = bSingleUser;
-	m_bInStore = bInStore;
-	m_bUsableOnlyDuringWork = false;
-
-	m_iWorkEfficiency = 0;
-	m_iMoneyValue = -1;
-	m_iPrice = 0;
-	m_pCharOwner = NULL;
-
+void DraggableThing::init(char* szTitle, char* szDesc) {
 	m_pShadowSprSht = RscManager::get()->getSprShtRsc(1);
 
 	initList(&m_llUsers);
 
 	m_pTextBubble = new TextBubble("", RscManager::get()->getFontRsc(12), 0, 0, 0, 0);
 	m_pTextBubble->setActive(false);
+	m_pTextBubble->setDrawOrder(5500);
+	addChildWidget(m_pTextBubble);
 
-	m_szTitle = new char[1];
-	m_szTitle[0] = '\0';
-	m_szDesc = new char[1];
-	m_szDesc[0] = '\0';
+	m_szTitle = new char[strlen(szTitle)+1];
+	memcpy(m_szTitle, szTitle, strlen(szTitle)+1);
+	m_szDesc = new char[strlen(szDesc)+1];
+	memcpy(m_szDesc, szDesc, strlen(szDesc)+1);
+
+	setDrawOrder(5000);
 
 	updateTextBubbleContent();
-		
-	m_bIsHoverable = true;
 }
 
 void DraggableThing::clone() {
@@ -128,14 +117,14 @@ void DraggableThing::update() {
 }
 
 void DraggableThing::draw(uint8* fb) {
-	if ((!m_bInStore || m_bIsGrabbed)) {
+	if (m_pShadowSprSht && (!m_bInStore || m_bIsGrabbed)) {
 		m_pShadowSprSht->draw(fb, 7 + (int) (m_fAnimOffsetCoef * (OBJ_HOVER_ELEVATION - 2)), m_rect.getPos().x, m_rect.getPos().y + m_fAnimOffsetCoef * OBJ_HOVER_ELEVATION, false, true);
 	}
 
 	DraggableSprite::draw(fb);
 
-	if (m_bInStore)
-		m_pTextBubble->draw(fb);
+	//if (m_bInStore)
+		//m_pTextBubble->draw(fb);
 }
 
 bool DraggableThing::isUsed() {
@@ -144,6 +133,10 @@ bool DraggableThing::isUsed() {
 
 bool DraggableThing::isInStore() {
 	return m_bInStore;
+}
+
+bool DraggableThing::isUsableOnce() {
+	return m_bUsableOnce;
 }
 
 bool DraggableThing::isSingleUser() {
@@ -158,6 +151,22 @@ bool DraggableThing::isWorkThing() {
 	return m_bIsWorkThing;
 }
 
+int DraggableThing::getAppealPower() {
+	return m_iAppealPower;
+}
+
+int DraggableThing::getOccupationTime() {
+	return m_iOccupationTime;
+}
+
+int DraggableThing::getCooldownTime() {
+	return m_iCooldownTime;
+}
+
+int DraggableThing::getActionRadius() {
+	return m_iActionRadius;
+}
+
 int DraggableThing::getWorkEfficiency() {
 	return m_iWorkEfficiency;
 }
@@ -168,6 +177,38 @@ int DraggableThing::getPrice() {
 
 MainCharacter* DraggableThing::getCharOwner() {
 	return m_pCharOwner;
+}
+
+char* DraggableThing::getTitle() {
+	return m_szTitle;
+}
+
+char* DraggableThing::getDesc() {
+	return m_szDesc;
+}
+
+void DraggableThing::setAppealPower(int iAppealPower) {
+	m_iAppealPower = iAppealPower;
+}
+
+void DraggableThing::setOccupationTime(int iOccupationTime) {
+	m_iOccupationTime = iOccupationTime;
+}
+
+void DraggableThing::setCooldownTime(int iCooldownTime) {
+	m_iCooldownTime = iCooldownTime;
+}
+
+void DraggableThing::setActionRadius(int iActionRadius) {
+	m_iActionRadius = iActionRadius;
+}
+
+void DraggableThing::setUsableOnce(bool bUsableOnce) {
+	m_bUsableOnce = bUsableOnce;
+}
+
+void DraggableThing::setSingleUser(bool bSingleUser) {
+	m_bSingleUser = bSingleUser;
 }
 
 void DraggableThing::setIsInStore(bool bInStore) {
@@ -248,19 +289,25 @@ void DraggableThing::resetAnimCoef() {
 
 void DraggableThing::onDragStart(vect2d_t vStartDragPt) {
 	//m_bIsHoverable = true;  // alors si je mets des tooltip ça peut être emmerdant donc faudra faire un autre attr
+	m_pTextBubble->setActive(false);
+	setDrawOrder(5450);
 }
 
 void DraggableThing::onDragEnd() {
-	m_pThingsManager->onThingMoved();
+	ThingsManager* pThingsManager = TSGameMode::get()->getThingsManager();
+
+	pThingsManager->onThingMoved();
 
 	if (m_bInStore) {
 		if (TSGameMode::get()->getMoney() - m_iPrice >= 0 && 
 			(m_rect.getPos().x < 256 && m_rect.getPos().y < 191 &&
 			 m_rect.getPos().x > 32 && m_rect.getPos().y > 32)) {
 
-			m_pThingsManager->addThing(this);
+			pThingsManager->addThing(this);
 
-			DraggableThing* pClonedThing = m_pThingsManager->renewThingInStore(this);
+			DraggableThing* pClonedThing = pThingsManager->renewThingInStore(this);
+
+			setParentWidget(NULL);
 
 			//pClonedThing->m_bIsHoverable = false;
 			pClonedThing->resetAnimCoef();
@@ -270,11 +317,16 @@ void DraggableThing::onDragEnd() {
 			TSGameMode::get()->decreaseMoney(m_iPrice);
 		}
 		else {
-			m_pThingsManager->replaceThingInStore(this);
+			pThingsManager->replaceThingInStore(this);
 			//m_bIsHoverable = false;
 			resetAnimCoef();
 		}
 	}
+
+	m_pTextBubble->setActive(false);
+
+	printf("dropped\n");
+	setDrawOrder(5000 + getRect()->getPos().y);
 }
 
 void DraggableThing::onDragging() {
@@ -303,7 +355,7 @@ void DraggableThing::onEndUsing(MainCharacter* pChar) {
 
 	if (m_bDestroyAfterUse) {
 		m_bIsActive = false;
-		m_pThingsManager->deleteThing(this);
+		TSGameMode::get()->getThingsManager()->deleteThing(this);
 		// TODO: faire un appel au thingsmanager pour qu'il delete l'objet au prochain update
 	}
 	
@@ -318,26 +370,18 @@ void DraggableThing::onUsing() {
 }
 
 void DraggableThing::onHoverStart(vect2d_t vStartHoverPt) {
-	m_pTextBubble->setActive(true);
-	m_pTextBubble->translate(getRect()->getPos().x - m_pTextBubble->getRect()->getSize().w - 10, getRect()->getPos().y, TRANSFORM_ABS);
+	if (m_bInStore) {
+		m_pTextBubble->setActive(true);
+		m_pTextBubble->translate(getRect()->getPos().x - m_pTextBubble->getRect()->getSize().w - 10, getRect()->getPos().y, TRANSFORM_ABS);
+	}
 }
 
 void DraggableThing::onHoverEnd() {
-	m_pTextBubble->setActive(false);
+	if (m_bInStore) {
+		m_pTextBubble->setActive(false);
+	}
 }
 
 void DraggableThing::onHovering() {
 	
-}
-
-int DraggableThing::getOccupationTime() {
-	return m_iOccupationTime;
-}
-
-int DraggableThing::getActionRadius() {
-	return m_iActionRadius;
-}
-
-int DraggableThing::getCooldownTime() {
-	return m_iCooldownTime;
 }

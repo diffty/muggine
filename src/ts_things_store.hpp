@@ -31,7 +31,7 @@ public:
 	DraggableThing* renewThing(DraggableThing* pThingToRenew);
 	void replaceThingInStore(DraggableThing* pThingToRenew);
 
-	void updateChildren();
+	void receiveTouchInput(vect2d_t touchPt);
 	
 	static void onPressPageUpBtnCallback(void* pArg);
 	static void onPressPageDownBtnCallback(void* pArg);

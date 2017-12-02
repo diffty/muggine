@@ -35,6 +35,8 @@ void ButtonWidget::onRelease() {
 }
 
 void ButtonWidget::update() {
+	updateChildren();
+
 	if (!m_bPressedThisLoop && (m_state == 2 || m_state == 4)) {
 		onRelease();
 	}
@@ -49,31 +51,35 @@ void ButtonWidget::receiveTouchInput(vect2d_t touchPt) {
 }
 
 void ButtonWidget::draw(uint8* buffer) {
-	if (m_state == 1) {
-		drawBox(buffer,
-			m_rect.getPos().x,
-			m_rect.getPos().y,
-			m_rect.getPos().x + m_rect.getSize().w,
-			m_rect.getPos().y + m_rect.getSize().h,
-			&m_colorOn
-		);
-	}
-	else if (m_state == 2 || m_state == 4){
-		drawBox(buffer,
-			m_rect.getPos().x,
-			m_rect.getPos().y,
-			m_rect.getPos().x + m_rect.getSize().w,
-			m_rect.getPos().y + m_rect.getSize().h,
-			&m_colorPressed
-		);
-	}
-	else {
-		drawBox(buffer,
-			m_rect.getPos().x,
-			m_rect.getPos().y,
-			m_rect.getPos().x + m_rect.getSize().w,
-			m_rect.getPos().y + m_rect.getSize().h,
-			&m_colorOff
-		);
+	if (m_bIsActive) {
+		drawChildren(buffer);
+
+		if (m_state == 1) {
+			drawBox(buffer,
+				m_rect.getPos().x,
+				m_rect.getPos().y,
+				m_rect.getPos().x + m_rect.getSize().w,
+				m_rect.getPos().y + m_rect.getSize().h,
+				&m_colorOn
+			);
+		}
+		else if (m_state == 2 || m_state == 4) {
+			drawBox(buffer,
+				m_rect.getPos().x,
+				m_rect.getPos().y,
+				m_rect.getPos().x + m_rect.getSize().w,
+				m_rect.getPos().y + m_rect.getSize().h,
+				&m_colorPressed
+			);
+		}
+		else {
+			drawBox(buffer,
+				m_rect.getPos().x,
+				m_rect.getPos().y,
+				m_rect.getPos().x + m_rect.getSize().w,
+				m_rect.getPos().y + m_rect.getSize().h,
+				&m_colorOff
+			);
+		}
 	}
 }

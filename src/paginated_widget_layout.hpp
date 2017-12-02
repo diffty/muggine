@@ -8,8 +8,8 @@
 class PaginatedWidgetLayout : public IWidget {
 protected:
 	LinkedList m_llWidgetList;
-	IWidget* pCurrWidget;
-	int pCurrWidgetId;
+	IWidget* m_pCurrWidget;
+	int m_pCurrWidgetId;
 
 public:
 	PaginatedWidgetLayout(vect2df_t vPos, size2df_t sSize);
@@ -21,7 +21,7 @@ public:
 	void switchToNextWidget();
 
 	void update();
-	void draw(uint8* fb);
+	void draw(uint8* buffer);
 	void receiveTouchInput(vect2d_t inputPos);
 
 	void updateChildren();

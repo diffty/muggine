@@ -28,6 +28,8 @@ void CloneMachine::spawnCharacter() {
 }
 
 void CloneMachine::update() {
+	updateChildren();
+
 	if (m_iCurrInitSpawnNb < m_iNbInitSpawns) {
 		if (m_fTimeBeforeNextSpawn <= 0) {
 			spawnCharacter();

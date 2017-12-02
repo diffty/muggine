@@ -44,6 +44,8 @@ void ParallaxBackground::deleteLayer(int layerNum) {
 }
 
 void ParallaxBackground::update() {
+	updateChildren();
+
     LLNode* currNode = m_lLayers.pHead;
     
     while (currNode != NULL) {
@@ -71,26 +73,30 @@ void ParallaxBackground::update() {
 }
 
 void ParallaxBackground::draw(uint8* buffer) {
-    LLNode* currNode = m_lLayers.pHead;
-    
-    while (currNode != NULL) {
-        Layer* currLayer = (Layer*) currNode->pData;
-        
-        int currXPos = currLayer->v2dPos.x;
-        
-        while (currXPos + currLayer->img->getSize().w > 0) {
-            currXPos -= currLayer->img->getSize().w;
-        }
-        
-        do {
-            currXPos += currLayer->img->getSize().w;
+	if (m_bIsActive) {
+		drawChildren(buffer);
 
-            currLayer->img->draw(buffer, m_rect.getPos().x + currXPos, m_rect.getPos().y + currLayer->v2dPos.y, false, m_bDrawTransparency);
-            
-        } while (m_rect.getPos().x + currXPos < SCREEN_WIDTH);
+		LLNode* currNode = m_lLayers.pHead;
 
-        currNode = currNode->pNext;
-    }
+		while (currNode != NULL) {
+			Layer* currLayer = (Layer*)currNode->pData;
+
+			int currXPos = currLayer->v2dPos.x;
+
+			while (currXPos + currLayer->img->getSize().w > 0) {
+				currXPos -= currLayer->img->getSize().w;
+			}
+
+			do {
+				currXPos += currLayer->img->getSize().w;
+
+				currLayer->img->draw(buffer, m_rect.getPos().x + currXPos, m_rect.getPos().y + currLayer->v2dPos.y, false, m_bDrawTransparency);
+
+			} while (m_rect.getPos().x + currXPos < SCREEN_WIDTH);
+
+			currNode = currNode->pNext;
+		}
+	}
 }
 
 void ParallaxBackground::setCamPos(int x, int y) {

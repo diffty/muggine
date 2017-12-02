@@ -1,12 +1,16 @@
 #include "ts_winning_thing.hpp"
+#include "ts_game_mode.hpp"
 
 
 
-WinningThing::WinningThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, ThingsManager* pThingsManager, Input* pInputManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser, bool bIsDraggable, bool bInStore) :
+WinningThing::WinningThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos) :
 
-	DraggableThing(pSprSht, uFrameNb, vPos, pThingsManager, pInputManager, iAppealPower, iOccupationTime, iCooldownTime, iActionRadius, bUsableOnce, bSingleUser, true, true) {
+	DraggableThing(pSprSht, uFrameNb, vPos) {
 
 	m_classInfo.setClassTypeName("WinningThing");
+
+	setUsableOnce(true);
+	setSingleUser(true);
 }
 
 

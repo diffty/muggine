@@ -11,7 +11,7 @@ private:
 
 
 public:
-	WorkguyThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, ThingsManager* pThingsManager, Input* pInputManager, int iAppealPower, int iOccupationTime, int iCooldownTime, int iActionRadius, bool bUsableOnce, bool bSingleUser);
+	WorkguyThing(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos);
 	~WorkguyThing();
 
 	void onUsing();

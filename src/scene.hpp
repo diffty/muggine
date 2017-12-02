@@ -14,10 +14,10 @@
 #include "bko_grid.hpp"
 
 
-class Scene {
+class Scene : public IWidget {
 private:
-	LinkedList m_contentList;
 	LinkedList m_llHoverAwareWidgets;
+
 public:
 	Scene();
     ~Scene();

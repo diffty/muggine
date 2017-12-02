@@ -25,10 +25,9 @@ DraggableThing* ThingsStorePage::renewThing(DraggableThing* pThingToRenew) {
 		pNewClonedThing = new DraggableThing(*pThingToRenew);
 	}
 
-	pNewClonedThing->clone();
-
+	pNewClonedThing->init(pThingToRenew->getTitle(), pThingToRenew->getDesc());
 	pNewClonedThing->setIsInStore(true);
-	getParentScene()->addComponent(pThingToRenew);
+	pNewClonedThing->setParentWidget(pThingWidget);
 
 	pThingWidget->replaceThing(pNewClonedThing);
 
@@ -36,11 +35,11 @@ DraggableThing* ThingsStorePage::renewThing(DraggableThing* pThingToRenew) {
 }
 
 uint ThingsStorePage::countWidgets() {
-	return m_llContentList.size;
+	return m_llChildrenWidgets.size;
 }
 
 int ThingsStorePage::getThingWidgetIdInLayout(DraggableThing* pThing) {
-	LLNode* currNode = m_llContentList.pHead;
+	LLNode* currNode = m_llChildrenWidgets.pHead;
 	int i = 0;
 
 	while (currNode != NULL) {
@@ -56,7 +55,7 @@ int ThingsStorePage::getThingWidgetIdInLayout(DraggableThing* pThing) {
 }
 
 ThingsStoreItem* ThingsStorePage::getThingItemInLayout(DraggableThing* pThing) {
-	LLNode* currNode = m_llContentList.pHead;
+	LLNode* currNode = m_llChildrenWidgets.pHead;
 	int i = 0;
 
 	while (currNode != NULL) {
@@ -71,11 +70,11 @@ ThingsStoreItem* ThingsStorePage::getThingItemInLayout(DraggableThing* pThing) {
 }
 
 void ThingsStorePage::updateChildren() {
-	LLNode* currNode = m_llContentList.pHead;
+	LLNode* currNode = m_llChildrenWidgets.pHead;
 
 	while (currNode != NULL) {
 		IWidget* pCurrWidget = (IWidget*)currNode->pData;
-		pCurrWidget->setParentScene(getParentScene());
+		pCurrWidget->setRootWidget(getRootWidget());
 		pCurrWidget->updateChildren();
 
 		currNode = currNode->pNext;

@@ -13,10 +13,14 @@ TextBubble::TextBubble(char* szText, Font* pFont, float x, float y, float w, flo
 
 	m_pTextWidget = new Text(szText, pFont, textPos);
 
+	addChildWidget(m_pTextWidget);
+
 	// setText(szText);
 
 	m_szText = new char[1];
 	m_szText[0] = '\0';
+
+	setDrawOrder(5000);
 }
 
 
@@ -51,14 +55,16 @@ void TextBubble::updateSize() {
 	getRect()->setSize(sTextWidgetSize.w + 5, sTextWidgetSize.h);
 }
 
-void TextBubble::draw(uint8* fb) {
+void TextBubble::draw(uint8* buffer) {
 	if (m_bIsActive) {
 		vect2df_t vPos = getRect()->getPos();
 		size2df_t sSize = getRect()->getSize();
 
-		drawBox(fb, vPos.x, vPos.y, vPos.x + sSize.w, vPos.y + sSize.h, &m_cBorderColor);
-		drawBox(fb, vPos.x+1, vPos.y+1, vPos.x + sSize.w - 1 , vPos.y + sSize.h - 1, &m_cFillColor);
+		drawBox(buffer, vPos.x, vPos.y, vPos.x + sSize.w, vPos.y + sSize.h, &m_cBorderColor);
+		drawBox(buffer, vPos.x+1, vPos.y+1, vPos.x + sSize.w - 1 , vPos.y + sSize.h - 1, &m_cFillColor);
 
-		m_pTextWidget->draw(fb);
+		//m_pTextWidget->draw(buffer);
+
+		drawChildren(buffer);
 	}
 }

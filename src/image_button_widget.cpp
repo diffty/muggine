@@ -55,6 +55,8 @@ void ImageButtonWidget::onRelease() {
 }
 
 void ImageButtonWidget::update() {
+	updateChildren();
+
 	if (!m_bPressedThisLoop && (m_state == 2 || m_state == 4)) {
 		onRelease();
 	}

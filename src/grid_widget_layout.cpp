@@ -7,8 +7,6 @@ GridWidgetLayout::GridWidgetLayout(vect2df_t vPos, size2df_t sSize, uint uNbCell
 
 	m_uNbCellX = uNbCellX;
 	m_uNbCellY = uNbCellY;
-
-	initList(&m_llContentList);
 }
 
 GridWidgetLayout::~GridWidgetLayout() {
@@ -16,17 +14,12 @@ GridWidgetLayout::~GridWidgetLayout() {
 }
 
 void GridWidgetLayout::addWidget(IWidget* pWidget) {
-	LLNode* newNode = new LLNode;
-	newNode->pData = pWidget;
-
-	pWidget->setParentScene(getParentScene());
-
-	addNodeToList(&m_llContentList, newNode);
-	moveWidgetToGrid(m_llContentList.size - 1);
+	addChildWidget(pWidget);
+	moveWidgetToGrid(m_llChildrenWidgets.size - 1);
 }
 
 int GridWidgetLayout::getWidgetIdInLayout(IWidget* pWidget) {
-	LLNode* currNode = m_llContentList.pHead;
+	LLNode* currNode = m_llChildrenWidgets.pHead;
 	int i = 0;
 
 	while (currNode != NULL) {
@@ -42,7 +35,7 @@ int GridWidgetLayout::getWidgetIdInLayout(IWidget* pWidget) {
 }
 
 void GridWidgetLayout::moveWidgetToGrid(uint uWidgetId) {
-	LLNode* currNode = getNodeInList(&m_llContentList, uWidgetId);
+	LLNode* currNode = getNodeInList(&m_llChildrenWidgets, uWidgetId);
 	IWidget* currWidget = (IWidget*)currNode->pData;
 
 	moveWidgetToGrid(currWidget, uWidgetId);
@@ -70,26 +63,32 @@ void GridWidgetLayout::moveWidgetToGrid(IWidget* pWidget, uint uGridPos) {
 }
 
 void GridWidgetLayout::update() {
-	LLNode* currNode = m_llContentList.pHead;
+	LLNode* currNode = m_llChildrenWidgets.pHead;
 
 	while (currNode != NULL) {
 		((IWidget*)currNode->pData)->update();
 		currNode = currNode->pNext;
 	}
+
+	updateChildren();
 }
 
-void GridWidgetLayout::draw(uint8* fb) {
-	LLNode* currNode = m_llContentList.pHead;
+void GridWidgetLayout::draw(uint8* buffer) {
+	if (m_bIsActive) {
+		drawChildren(buffer);
+
+		LLNode* currNode = m_llChildrenWidgets.pHead;
 	
-	while (currNode != NULL) {
-		((IWidget*)currNode->pData)->draw(fb);
+		while (currNode != NULL) {
+			((IWidget*)currNode->pData)->draw(buffer);
 		
-		currNode = currNode->pNext;
+			currNode = currNode->pNext;
+		}
 	}
 }
 
 void GridWidgetLayout::receiveTouchInput(vect2d_t inputPos) {
-	LLNode* currNode = m_llContentList.pHead;
+	LLNode* currNode = m_llChildrenWidgets.pHead;
 
 	while (currNode != NULL) {
 		((IWidget*)currNode->pData)->receiveTouchInput(inputPos);
@@ -97,23 +96,8 @@ void GridWidgetLayout::receiveTouchInput(vect2d_t inputPos) {
 	}
 }
 
-void GridWidgetLayout::updateChildren() {
-	LLNode* currNode = m_llContentList.pHead;
-
-	Scene* pParentScene = getParentScene();
-
-	while (currNode != NULL) {
-		IWidget* pCurrentWidget = ((IWidget*)currNode->pData);
-
-		pCurrentWidget->setParentScene(pParentScene);
-		pCurrentWidget->updateChildren();
-
-		currNode = currNode->pNext;
-	}
-}
-
 void GridWidgetLayout::destroyAllWidgets() {
-	LLNode* currNode = m_llContentList.pHead;
+	LLNode* currNode = m_llChildrenWidgets.pHead;
 
 	while (currNode != NULL) {
 		IWidget* pCurrWidget = ((IWidget*)currNode->pData);
@@ -123,5 +107,5 @@ void GridWidgetLayout::destroyAllWidgets() {
 		currNode = currNode->pNext;
 	}
 
-	clearList(&m_llContentList);
+	clearList(&m_llChildrenWidgets);
 }

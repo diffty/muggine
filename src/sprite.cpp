@@ -41,12 +41,14 @@ void Sprite::setFrame(uint uNewFrame) {
 
 void Sprite::draw(uint8* buffer) {
 	// TODO: faire ce test à l'échelle de l'objet Scene qui va appeler les draw et update
-    if (m_bIsActive) { 
+    if (m_bIsActive) {
         vect2df_t pos = m_rect.getPos();
 
 		if (m_pSprSht)
 			m_pSprSht->draw(buffer, m_uFrameNb, pos.x, pos.y, false, true);
 		else
 			m_pImg->draw(buffer, pos.x, pos.y, false, true); 
-    }
+	
+		drawChildren(buffer);
+	}
 }

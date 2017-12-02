@@ -72,6 +72,8 @@ void Text::updateSize() {
 
 void Text::draw(uint8* buffer) {
 	if (m_bIsActive)
+		drawChildren(buffer);
+		
 		drawStr(buffer, m_rect.getPos().x, m_rect.getPos().y, m_szText);
 }
 

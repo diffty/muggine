@@ -28,25 +28,29 @@ void TinyProgressBar::setMaxValue(float fMaxValue) {
 }
 
 void TinyProgressBar::draw(uint8* fb) {
-	vect2df_t vCurPos = m_rect.getPos();
-	size2df_t sCurSize = m_rect.getSize();
+	if (m_bIsActive) {
+		drawChildren(fb);
 
-	float completedBarSize = m_fCurValue / (m_fMaxValue - m_fMinValue) * sCurSize.w;
+		vect2df_t vCurPos = m_rect.getPos();
+		size2df_t sCurSize = m_rect.getSize();
 
-	Color completedColor(0, 255, 0);
-	Color remainingColor(255, 0, 0);
+		float completedBarSize = m_fCurValue / (m_fMaxValue - m_fMinValue) * sCurSize.w;
 
-	drawBox(fb,
-		vCurPos.x,
-		vCurPos.y,
-		vCurPos.x + completedBarSize,
-		vCurPos.y + sCurSize.h,
-		&completedColor);
+		Color completedColor(0, 255, 0);
+		Color remainingColor(255, 0, 0);
 
-	drawBox(fb,
-		vCurPos.x + completedBarSize,
-		vCurPos.y,
-		vCurPos.x + sCurSize.w,
-		vCurPos.y + sCurSize.h,
-		&remainingColor);
+		drawBox(fb,
+			vCurPos.x,
+			vCurPos.y,
+			vCurPos.x + completedBarSize,
+			vCurPos.y + sCurSize.h,
+			&completedColor);
+
+		drawBox(fb,
+			vCurPos.x + completedBarSize,
+			vCurPos.y,
+			vCurPos.x + sCurSize.w,
+			vCurPos.y + sCurSize.h,
+			&remainingColor);
+	}
 }

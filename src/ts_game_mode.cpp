@@ -52,6 +52,8 @@ void TSGameMode::initScene() {
 	roomPos.y = 0.;
 
 	Sprite* pRoom = new Sprite(rscManager->getImgRsc(2), roomPos);
+	pRoom->setDrawOrder(1000);
+	m_pMainScene->addComponent(pRoom);
 
 	vect2df_t vStorePos;
 	vStorePos.x = 290;
@@ -64,7 +66,6 @@ void TSGameMode::initScene() {
 	m_pThingsStore = new ThingsStore(vStorePos, sStoreSize, 1, 6);
 	m_pThingsManager = new ThingsManager(m_pThingsStore);
 
-	m_pMainScene->addComponent(pRoom);
 
 	vect2df_t testThingPos;
 	testThingPos.x = 0;
@@ -83,51 +84,42 @@ void TSGameMode::initScene() {
 			newThing = (DraggableThing*) new WinningThing(
 				rscManager->getSprShtRsc(atoi(objectsData.getData("SprSht", i))),
 				atoi(objectsData.getData("FrameNum", i)),
-				vNewThingPos,
-				m_pThingsManager,
-				sys->getInputSys(),
-				atoi(objectsData.getData("AppealPower", i)),
-				atoi(objectsData.getData("OccupationTime", i)),
-				atoi(objectsData.getData("CooldownTime", i)),
-				atoi(objectsData.getData("ActionRadius", i)),
-				(objectsData.getData("bUsableOnce", i)[0] == 'O') ? true : false,
-				(objectsData.getData("bSingleUser", i)[0] == 'O') ? true : false,
-				(objectsData.getData("bIsDraggable", i)[0] == 'O') ? true : false,
-				(objectsData.getData("bInStore", i)[0] == 'O') ? true : false
-			);
+				vNewThingPos);
+
 			newThing->setPrice(atoi(objectsData.getData("Price", i)) * m_iNbInitSpawns);
 		}
 		else {
 			newThing = (DraggableThing*) new DraggableThing(
 				rscManager->getSprShtRsc(atoi(objectsData.getData("SprSht", i))),
 				atoi(objectsData.getData("FrameNum", i)),
-				vNewThingPos,
-				m_pThingsManager,
-				sys->getInputSys(),
-				atoi(objectsData.getData("AppealPower", i)),
-				atoi(objectsData.getData("OccupationTime", i)),
-				atoi(objectsData.getData("CooldownTime", i)),
-				atoi(objectsData.getData("ActionRadius", i)),
-				(objectsData.getData("bUsableOnce", i)[0] == 'O') ? true : false,
-				(objectsData.getData("bSingleUser", i)[0] == 'O') ? true : false,
-				(objectsData.getData("bIsDraggable", i)[0] == 'O') ? true : false,
-				(objectsData.getData("bInStore", i)[0] == 'O') ? true : false
-			);
+				vNewThingPos);
+
 			newThing->setPrice(atoi(objectsData.getData("Price", i)));
 		}
 
+		newThing->setAppealPower(atoi(objectsData.getData("AppealPower", i)));
+		newThing->setOccupationTime(atoi(objectsData.getData("OccupationTime", i)));
+		newThing->setCooldownTime(atoi(objectsData.getData("CooldownTime", i)));
+		newThing->setActionRadius(atoi(objectsData.getData("ActionRadius", i)));
+		newThing->setUsableOnce((objectsData.getData("bUsableOnce", i)[0] == 'O') ? true : false);
+		newThing->setSingleUser((objectsData.getData("bSingleUser", i)[0] == 'O') ? true : false);
+		newThing->setDraggable((objectsData.getData("bIsDraggable", i)[0] == 'O') ? true : false);
+		newThing->setIsInStore((objectsData.getData("bInStore", i)[0] == 'O') ? true : false);
 		newThing->setUsableOnlyDuringWork((objectsData.getData("bUsableOnlyDuringWork", i)[0] == 'O') ? true : false);
 		newThing->setIsWorkThing((objectsData.getData("bIsWorkThing", i)[0] == 'O') ? true : false);
 		newThing->setDestroyAfterUse((objectsData.getData("bDestroyAfterUse", i)[0] == 'O') ? true : false);
-		newThing->setTitle(objectsData.getData("Name", i));
-		newThing->setDesc(objectsData.getData("Description", i));
+		//newThing->setTitle(objectsData.getData("Name", i));
+		//newThing->setDesc(objectsData.getData("Description", i));
 		newThing->setWorkEfficiency(atoi(objectsData.getData("WorkEfficiency", i)));
+
+		newThing->init(objectsData.getData("Name", i), objectsData.getData("Description", i));
 
 		m_pThingsStore->addThingToStore(newThing);
 	}
 
 	m_pMainScene->addComponent(m_pThingsStore);
-	m_pThingsStore->addPageBtnComponentsToMainScene(); // lol
+
+	// m_pThingsStore->addPageBtnComponentsToMainScene(); // lol
 
 	// Tableaux Nord
 	testThingPos.x = 45;
@@ -179,15 +171,27 @@ void TSGameMode::initScene() {
 	testThingPos.y = 155;
 	CriticalThing* ctE3 = new CriticalThing(rscManager->getSprShtRsc(1), 4, testThingPos, m_pThingsManager, sys->getInputSys(), 1, -1, false, true);
 
+	// Mec du travail
 	testThingPos.x = 165;
 	testThingPos.y = 130;
-	WorkguyThing* wg1 = new WorkguyThing(rscManager->getSprShtRsc(3), 0, testThingPos, m_pThingsManager, sys->getInputSys(), 1, 5, 90, 75, false, true);
+	WorkguyThing* wg1 = new WorkguyThing(rscManager->getSprShtRsc(3), 0, testThingPos);
+
+	wg1->setAppealPower(1);
+	wg1->setOccupationTime(5);
+	wg1->setCooldownTime(90);
+	wg1->setActionRadius(75);
+	wg1->setUsableOnce(false);
+	wg1->setSingleUser(true);
+	wg1->setDrawOrder(5000 + wg1->getRect()->getPos().y);
 
 	vect2df_t cloneMachinePos;
 	cloneMachinePos.x = 132.;
 	cloneMachinePos.y = 95.;
 
+	// Clone machine/Spawn
 	CloneMachine* cloneMachine = new CloneMachine(rscManager->getSprShtRsc(9), cloneMachinePos, m_iNbInitSpawns, m_fTimeBetweenInitSpawns, m_fTimeBeforeFirstSpawn);
+
+	cloneMachine->setDrawOrder(3000);
 
 	m_pThingsManager->addThing(ctN1);
 	m_pThingsManager->addThing(ctN2);
@@ -255,10 +259,11 @@ void TSGameMode::initScene() {
 }
 
 void TSGameMode::spawnMainCharacter(vect2df_t vCharPos) {
-	MainCharacter* newChar = new MainCharacter(RscManager::get()->getSprShtRsc(0), vCharPos, m_pThingsManager);
+	MainCharacter* pNewChar = new MainCharacter(RscManager::get()->getSprShtRsc(0), vCharPos, m_pThingsManager);
 
-	addDataToList(&m_llCharacters, newChar);
-	m_pMainScene->addComponent(newChar);
+	addDataToList(&m_llCharacters, pNewChar);
+	//m_pMainScene->addComponent(pNewChar);
+	pNewChar->setParentWidget(m_pMainScene);
 }
 
 void TSGameMode::spawnWinCharacter(vect2df_t vCharPos) {

@@ -9,8 +9,6 @@
 class GridWidgetLayout : public IWidget
 {
 protected:
-	LinkedList m_llContentList;
-
 	uint m_uNbCellX;
 	uint m_uNbCellY;
 
@@ -26,10 +24,8 @@ public:
 	int getWidgetIdInLayout(IWidget* pWidget);
 
 	void update();
-	void draw(uint8* fb);
+	void draw(uint8* buffer);
 	void receiveTouchInput(vect2d_t inputPos);
-
-	void updateChildren();
 
 	void destroyAllWidgets();
 };

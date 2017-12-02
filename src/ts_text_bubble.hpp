@@ -26,7 +26,7 @@ public:
 
 	void updateSize();
 
-	void draw(uint8* fb);
+	void draw(uint8* buffer);
 };
 
 

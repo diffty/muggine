@@ -64,6 +64,8 @@ void AnimatedSprite::draw(uint8* buffer) {
 }
 
 void AnimatedSprite::update() {
+	updateChildren();
+
     if (m_pCurrAnimState != NULL) {
         m_fCurrFrameTime += System::get()->getDeltaTime();
         

@@ -33,6 +33,8 @@ void Ball::reinit(Paddle* pPaddle) {
 }
 
 void Ball::update() {
+	updateChildren();
+
 	if (m_bIsMoving) {
 		// move();
 	}

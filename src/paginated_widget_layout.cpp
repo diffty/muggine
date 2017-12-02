@@ -3,38 +3,44 @@
 
 PaginatedWidgetLayout::PaginatedWidgetLayout(vect2df_t vPos, size2df_t sSize) :
 	IWidget(vPos.x, vPos.y, sSize.w, sSize.h) {
-
+	
 	initList(&m_llWidgetList);
-	pCurrWidget = NULL;
-	pCurrWidgetId = -1;
+	
+	m_pCurrWidget = NULL;
+	m_pCurrWidgetId = -1;
 }
 
 PaginatedWidgetLayout::~PaginatedWidgetLayout() {
 	destroyAllWidgets();
-	//clearList(&m_llWidgetList);
+	clearList(&m_llWidgetList);
 }
 
 void PaginatedWidgetLayout::addWidget(IWidget* pWidget) {
+	addChildWidget(pWidget);
+
 	addDataToList(&m_llWidgetList, pWidget);
 
-	pWidget->setParentScene(getParentScene());
-
-	if (pCurrWidget == NULL) {
-		pCurrWidget = pWidget;
-		pCurrWidgetId = 0;
+	if (m_pCurrWidget == NULL) {
+		m_pCurrWidget = pWidget;
+		m_pCurrWidgetId = 0;
+	}
+	else {
+		pWidget->setActive(false);
 	}
 }
 
 void PaginatedWidgetLayout::switchWidget(uint uNum) {
 	LLNode* pNode = getNodeInList(&m_llWidgetList, uNum);
 	if (pNode != NULL) {
-		pCurrWidget = (IWidget*) pNode->pData;
-		pCurrWidgetId = uNum;
+		m_pCurrWidget->setActive(false);
+		m_pCurrWidget = (IWidget*) pNode->pData;
+		m_pCurrWidget->setActive(true);
+		m_pCurrWidgetId = uNum;
 	}
 }
 
 void PaginatedWidgetLayout::switchToPrevWidget() {
-	int iNewWidgetId = (pCurrWidgetId - 1);
+	int iNewWidgetId = (m_pCurrWidgetId - 1);
 
 	if (iNewWidgetId < 0)
 		iNewWidgetId = m_llWidgetList.size - 1;
@@ -43,40 +49,50 @@ void PaginatedWidgetLayout::switchToPrevWidget() {
 }
 
 void PaginatedWidgetLayout::switchToNextWidget() {
-	switchWidget((pCurrWidgetId + 1) % m_llWidgetList.size);
+	switchWidget((m_pCurrWidgetId + 1) % m_llWidgetList.size);
 }
 
 void PaginatedWidgetLayout::update() {
-	if (pCurrWidget != NULL) {
-		pCurrWidget->update();
-	}
+	updateChildren();
+
+	/*if (m_pCurrWidget != NULL) {
+		m_pCurrWidget->update();
+	}*/
 }
 
-void PaginatedWidgetLayout::draw(uint8* fb) {
-	if (pCurrWidget != NULL) {
-		pCurrWidget->draw(fb);
+void PaginatedWidgetLayout::draw(uint8* buffer) {
+	if (m_bIsActive) {
+		drawChildren(buffer);
+
+		/*if (m_pCurrWidget != NULL) {
+			m_pCurrWidget->draw(buffer);
+		}*/
 	}
 }
 
 void PaginatedWidgetLayout::receiveTouchInput(vect2d_t inputPos) {
-	if (pCurrWidget != NULL) {
-		pCurrWidget->receiveTouchInput(inputPos);
-	}
+	IWidget::receiveTouchInput(inputPos);
+
+	/*if (m_pCurrWidget != NULL) {
+		m_pCurrWidget->receiveTouchInput(inputPos);
+	}*/
 }
 
 void PaginatedWidgetLayout::updateChildren() {
-	LLNode* currNode = m_llWidgetList.pHead;
+	IWidget::update();
 
-	Scene* pParentScene = getParentScene();
+	/*LLNode* currNode = m_llWidgetList.pHead;
+
+	IWidget* pRootWidget = getRootWidget();
 
 	while (currNode != NULL) {
 		IWidget* pCurrWidget = ((IWidget*)currNode->pData);
 
-		pCurrWidget->setParentScene(pParentScene);
+		pCurrWidget->setRootWidget(pRootWidget);
 		pCurrWidget->updateChildren();
 
 		currNode = currNode->pNext;
-	}
+	}*/
 }
 
 void PaginatedWidgetLayout::destroyAllWidgets() {
