@@ -1,9 +1,9 @@
-#include "ts_level_success_screen.hpp"
+#include "ld_level_success_screen.hpp"
 #include "rsc_manager.hpp"
 #include "system.hpp"
 
 
-LevelSuccessScreen::LevelSuccessScreen(int iLevelNum) {
+LDLevelSuccessScreen::LDLevelSuccessScreen(int iLevelNum) {
 	vect2df_t vTextPos;
 	vTextPos.x = 100;
 	vTextPos.y = 80;
@@ -15,20 +15,20 @@ LevelSuccessScreen::LevelSuccessScreen(int iLevelNum) {
 }
 
 
-LevelSuccessScreen::~LevelSuccessScreen() {
+LDLevelSuccessScreen::~LDLevelSuccessScreen() {
 	delete m_pLevelTextLabel;
 	delete m_pLevelNumTextLabel;
 }
 
-void LevelSuccessScreen::update() {
+void LDLevelSuccessScreen::update() {
 	m_fTimeBeforeEnd -= System::get()->getDeltaTime();
 }
 
-void LevelSuccessScreen::draw(uint8* fb) {
+void LDLevelSuccessScreen::draw(uint8* fb) {
 	m_pLevelTextLabel->draw(fb);
 	m_pLevelNumTextLabel->draw(fb);
 }
 
-bool LevelSuccessScreen::doMustDisappear() {
+bool LDLevelSuccessScreen::doMustDisappear() {
 	return m_fTimeBeforeEnd <= 0.;
 }

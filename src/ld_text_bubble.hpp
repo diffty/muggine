@@ -1,5 +1,5 @@
-#ifndef TS_TEXT_BUBBLE_HPP
-#define TS_TEXT_BUBBLE_HPP
+#ifndef LD_TEXT_BUBBLE_HPP
+#define LD_TEXT_BUBBLE_HPP
 
 #include "iwidget.hpp"
 #include "text.hpp"

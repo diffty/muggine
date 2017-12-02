@@ -1,15 +1,15 @@
-#ifndef TS_GAME_MANAGER_HPP
-#define TS_GAME_MANAGER_HPP
+#ifndef LD_GAME_MANAGER_HPP
+#define LD_GAME_MANAGER_HPP
 
 #include "input.hpp"
 #include "system.hpp"
 #include "sound.hpp"
 #include "scene.hpp"
-#include "ts_game_mode.hpp"
-#include "ts_main_menu.hpp"
-#include "ts_level_begin_screen.hpp"
-#include "ts_level_fail_screen.hpp"
-#include "ts_level_success_screen.hpp"
+#include "ld_game_mode.hpp"
+#include "ld_main_menu.hpp"
+#include "ld_level_begin_screen.hpp"
+#include "ld_level_fail_screen.hpp"
+#include "ld_level_success_screen.hpp"
 
 
 enum E_APP_STATE {
@@ -28,17 +28,17 @@ enum E_FADE_MODE {
 };
 
 
-class TSGameManager
+class LDGameManager
 {
 private:
 	System* m_pSys;
 	Input* m_pInputSys;
-	TSGameMode* m_pGameMode = NULL;
-	TSMainMenu* m_pMainMenu;
+	LDGameMode* m_pGameMode = NULL;
+	LDMainMenu* m_pMainMenu;
 	Scene m_gameScene;
 	Scene m_menuScene;
 	E_APP_STATE m_eCurrState;
-	int m_iMoney = 0;
+
 	int m_iCurrLevel = 0;
 
 	// Fade shit
@@ -50,15 +50,15 @@ private:
 
 	bool m_bMenuKeyWasPressedLastLoop = false;
 
-	LevelBeginScreen* m_pLevelBeginScreen;
-	LevelFailScreen* m_pLevelFailScreen;
-	LevelSuccessScreen* m_pLevelSuccessScreen;
+	LDLevelBeginScreen* m_pLevelBeginScreen;
+	LDLevelFailScreen* m_pLevelFailScreen;
+	LDLevelSuccessScreen* m_pLevelSuccessScreen;
 
-	static TSGameManager* s_pInstance;
+	static LDGameManager* s_pInstance;
 
 public:
-	TSGameManager();
-	~TSGameManager();
+	LDGameManager();
+	~LDGameManager();
 
 	void onMainMenu();
 	void onNewLevel(bool bReplayLevel = false);
@@ -87,7 +87,7 @@ public:
 
 	E_APP_STATE getCurrentState();
 
-	static TSGameManager* get();
+	static LDGameManager* get();
 };
 
 

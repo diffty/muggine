@@ -82,10 +82,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\animatedsprite.cpp" />
-    <ClCompile Include="src\bko_ball.cpp" />
-    <ClCompile Include="src\bko_brick.cpp" />
-    <ClCompile Include="src\bko_grid.cpp" />
-    <ClCompile Include="src\bko_paddle.cpp" />
     <ClCompile Include="src\buttonwidget.cpp" />
     <ClCompile Include="src\common_tools.cpp" />
     <ClCompile Include="src\csv_reader.cpp" />
@@ -93,16 +89,12 @@
     <ClCompile Include="src\iobject.cpp" />
     <ClCompile Include="src\paginated_widget_layout.cpp" />
     <ClCompile Include="src\sound.cpp" />
-    <ClCompile Include="src\ts_clone_machine.cpp" />
-    <ClCompile Include="src\ts_game_manager.cpp" />
-    <ClCompile Include="src\ts_level_begin_screen.cpp" />
-    <ClCompile Include="src\ts_level_fail_screen.cpp" />
-    <ClCompile Include="src\ts_level_success_screen.cpp" />
-    <ClCompile Include="src\ts_main_menu.cpp" />
-    <ClCompile Include="src\ts_text_bubble.cpp" />
-    <ClCompile Include="src\ts_things_store_item.cpp" />
-    <ClCompile Include="src\ts_things_store_page.cpp" />
-    <ClCompile Include="src\ts_critical_thing.cpp" />
+    <ClCompile Include="src\ld_game_manager.cpp" />
+    <ClCompile Include="src\ld_level_begin_screen.cpp" />
+    <ClCompile Include="src\ld_level_fail_screen.cpp" />
+    <ClCompile Include="src\ld_level_success_screen.cpp" />
+    <ClCompile Include="src\ld_main_menu.cpp" />
+    <ClCompile Include="src\ld_text_bubble.cpp" />
     <ClCompile Include="src\draggable_sprite.cpp" />
     <ClCompile Include="src\drawing.cpp" />
     <ClCompile Include="src\font.cpp" />
@@ -116,9 +108,7 @@
     <ClCompile Include="src\grid_widget_layout.cpp" />
     <ClCompile Include="src\text.cpp" />
     <ClCompile Include="src\tiny_progress_bar.cpp" />
-    <ClCompile Include="src\ts_game_mode.cpp" />
-    <ClCompile Include="src\ts_things_store.cpp" />
-    <ClCompile Include="src\ts_draggable_thing.cpp" />
+    <ClCompile Include="src\ld_game_mode.cpp" />
     <ClCompile Include="src\keys.cpp" />
     <ClCompile Include="src\linked_list.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -130,18 +120,9 @@
     <ClCompile Include="src\sprite.cpp" />
     <ClCompile Include="src\spritesheet.cpp" />
     <ClCompile Include="src\system.cpp" />
-    <ClCompile Include="src\ts_main_character.cpp" />
-    <ClCompile Include="src\ts_things_manager.cpp" />
-    <ClCompile Include="src\ts_win_character.cpp" />
-    <ClCompile Include="src\ts_workguy_thing.cpp" />
-    <ClCompile Include="src\ts_winning_thing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\animatedsprite.hpp" />
-    <ClInclude Include="src\bko_ball.hpp" />
-    <ClInclude Include="src\bko_brick.hpp" />
-    <ClInclude Include="src\bko_grid.hpp" />
-    <ClInclude Include="src\bko_paddle.hpp" />
     <ClInclude Include="src\buttonwidget.hpp" />
     <ClInclude Include="src\common_tools.hpp" />
     <ClInclude Include="src\common_types.hpp" />
@@ -152,17 +133,13 @@
     <ClInclude Include="src\math_tools.hpp" />
     <ClInclude Include="src\paginated_widget_layout.hpp" />
     <ClInclude Include="src\sound.hpp" />
-    <ClInclude Include="src\ts_clone_machine.hpp" />
-    <ClInclude Include="src\ts_common_types.hpp" />
-    <ClInclude Include="src\ts_game_manager.hpp" />
-    <ClInclude Include="src\ts_level_begin_screen.hpp" />
-    <ClInclude Include="src\ts_level_fail_screen.hpp" />
-    <ClInclude Include="src\ts_level_success_screen.hpp" />
-    <ClInclude Include="src\ts_main_menu.hpp" />
-    <ClInclude Include="src\ts_text_bubble.hpp" />
-    <ClInclude Include="src\ts_things_store_item.hpp" />
-    <ClInclude Include="src\ts_things_store_page.hpp" />
-    <ClInclude Include="src\ts_critical_thing.hpp" />
+    <ClInclude Include="src\ld_common_types.hpp" />
+    <ClInclude Include="src\ld_game_manager.hpp" />
+    <ClInclude Include="src\ld_level_begin_screen.hpp" />
+    <ClInclude Include="src\ld_level_fail_screen.hpp" />
+    <ClInclude Include="src\ld_level_success_screen.hpp" />
+    <ClInclude Include="src\ld_main_menu.hpp" />
+    <ClInclude Include="src\ld_text_bubble.hpp" />
     <ClInclude Include="src\draggable_sprite.hpp" />
     <ClInclude Include="src\drawing.hpp" />
     <ClInclude Include="src\font.hpp" />
@@ -176,9 +153,7 @@
     <ClInclude Include="src\grid_widget_layout.hpp" />
     <ClInclude Include="src\text.hpp" />
     <ClInclude Include="src\tiny_progress_bar.hpp" />
-    <ClInclude Include="src\ts_game_mode.hpp" />
-    <ClInclude Include="src\ts_things_store.hpp" />
-    <ClInclude Include="src\ts_draggable_thing.hpp" />
+    <ClInclude Include="src\ld_game_mode.hpp" />
     <ClInclude Include="src\keys.hpp" />
     <ClInclude Include="src\linked_list.hpp" />
     <ClInclude Include="src\mathf.hpp" />
@@ -190,11 +165,6 @@
     <ClInclude Include="src\spritesheet.hpp" />
     <ClInclude Include="src\system.hpp" />
     <ClInclude Include="src\iwidget.hpp" />
-    <ClInclude Include="src\ts_main_character.hpp" />
-    <ClInclude Include="src\ts_things_manager.hpp" />
-    <ClInclude Include="src\ts_win_character.hpp" />
-    <ClInclude Include="src\ts_workguy_thing.hpp" />
-    <ClInclude Include="src\ts_winning_thing.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

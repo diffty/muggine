@@ -1,4 +1,4 @@
-#include "ts_text_bubble.hpp"
+#include "ld_text_bubble.hpp"
 
 
 
@@ -62,8 +62,6 @@ void TextBubble::draw(uint8* buffer) {
 
 		drawBox(buffer, vPos.x, vPos.y, vPos.x + sSize.w, vPos.y + sSize.h, &m_cBorderColor);
 		drawBox(buffer, vPos.x+1, vPos.y+1, vPos.x + sSize.w - 1 , vPos.y + sSize.h - 1, &m_cFillColor);
-
-		//m_pTextWidget->draw(buffer);
 
 		drawChildren(buffer);
 	}

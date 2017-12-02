@@ -1,11 +1,11 @@
-#ifndef TS_LEVEL_SUCCESS_SCREEN
-#define TS_LEVEL_SUCCESS_SCREEN
+#ifndef LD_LEVEL_SUCCESS_SCREEN
+#define LD_LEVEL_SUCCESS_SCREEN
 
 #include "common_types.hpp"
 #include "text.hpp"
 
 
-class LevelSuccessScreen
+class LDLevelSuccessScreen
 {
 private:
 	Text* m_pLevelTextLabel;
@@ -14,8 +14,8 @@ private:
 	float m_fTimeBeforeEnd = 5;
 
 public:
-	LevelSuccessScreen::LevelSuccessScreen(int iLevelNum);
-	~LevelSuccessScreen();
+	LDLevelSuccessScreen(int iLevelNum);
+	~LDLevelSuccessScreen();
 
 	void update();
 	void draw(uint8* fb);

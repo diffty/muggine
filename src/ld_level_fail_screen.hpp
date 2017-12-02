@@ -1,11 +1,12 @@
-#ifndef TS_LEVEL_BEGIN_SCREEN
-#define TS_LEVEL_BEGIN_SCREEN
+#ifndef LD_LEVEL_FAIL_SCREEN
+#define LD_LEVEL_FAIL_SCREEN
+
 
 #include "common_types.hpp"
 #include "text.hpp"
 
 
-class LevelBeginScreen
+class LDLevelFailScreen
 {
 private:
 	Text* m_pLevelTextLabel;
@@ -14,8 +15,8 @@ private:
 	float m_fTimeBeforeEnd = 3;
 
 public:
-	LevelBeginScreen::LevelBeginScreen(int iLevelNum);
-	~LevelBeginScreen();
+	LDLevelFailScreen::LDLevelFailScreen();
+	~LDLevelFailScreen();
 
 	void update();
 	void draw(uint8* fb);

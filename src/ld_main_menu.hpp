@@ -1,12 +1,12 @@
-#ifndef TS_MAIN_MENU_HPP
-#define TS_MAIN_MENU_HPP
+#ifndef LD_MAIN_MENU_HPP
+#define LD_MAIN_MENU_HPP
 
 #include "scene.hpp"
 #include "animatedsprite.hpp"
 #include "image_button_widget.hpp"
 
 
-class TSMainMenu
+class LDMainMenu
 {
 private:
 	Scene* m_pScene;
@@ -16,8 +16,8 @@ private:
 	ImageButtonWidget* m_pQuitBtn;
 
 public:
-	TSMainMenu(Scene* pScene);
-	~TSMainMenu();
+	LDMainMenu(Scene* pScene);
+	~LDMainMenu();
 
 	void initScene();
 

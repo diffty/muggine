@@ -11,7 +11,6 @@
 
 #include "linked_list.hpp"
 #include "iwidget.hpp"
-#include "bko_grid.hpp"
 
 
 class Scene : public IWidget {
