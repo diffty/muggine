@@ -22,6 +22,7 @@ void initList(LinkedList* pList);
 void clearList(LinkedList* pList);
 void appendList(LinkedList* pllSrcList, LinkedList* pllDstList);
 void addNodeToList(LinkedList* pList, LLNode* nodeToAdd, bool bAddToHead = false);
+void addAfterNodeInList(LinkedList* pList, LLNode* pNodeToAdd, LLNode* pPrevNodeInList);
 void addDataToList(LinkedList* pList, void* pDataToAdd);
 LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode);
 LLNode* searchForNodeInList(LinkedList* pList, void* pDataToSearch);

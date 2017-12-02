@@ -59,6 +59,15 @@ void addNodeToList(LinkedList* pList, LLNode*  pNodeToAdd, bool bAddToHead) {
 	pList->size++;
 }
 
+void addAfterNodeInList(LinkedList* pList, LLNode* pNodeToAdd, LLNode* pPrevNodeInList) {
+	if (pPrevNodeInList == pList->pTail) {
+		pList->pTail = pNodeToAdd;
+	}
+
+	pNodeToAdd->pNext = pPrevNodeInList->pNext;
+	pPrevNodeInList->pNext = pNodeToAdd;
+}
+
 void addDataToList(LinkedList* pList, void* pDataToAdd) {
 	LLNode* pNewNode = new LLNode;
 	pNewNode->pData = pDataToAdd;
