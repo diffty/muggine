@@ -7,7 +7,8 @@ Scene::Scene() {
 }
 
 Scene::~Scene() {
-    clear();
+	garbageCollect();
+	clear();
 }
 
 void Scene::addComponent(IWidget* pWidget) {
@@ -37,14 +38,14 @@ unsigned int Scene::getComponentCount() {
 }
 
 
-void Scene::receiveTouchInput(vect2d_t inputPos) {
+/*void Scene::receiveTouchInput(vect2d_t inputPos) {
 	LLNode* currNode = m_llChildrenWidgets.pHead;
 
 	while (currNode != NULL) {
 		((IWidget*) currNode->pData)->receiveTouchInput(inputPos);
 		currNode = currNode->pNext;
 	}
-}
+}*/
 
 void Scene::update() {
 	LLNode* currNode = m_llChildrenWidgets.pHead;
@@ -71,7 +72,7 @@ void Scene::draw(uint8* fb) {
 }
 
 void Scene::clear() {
-    LLNode* currNode = m_llChildrenWidgets.pHead;
+	LLNode* currNode = m_llChildrenWidgets.pHead;
     LLNode* nextNode;
     
     while (currNode != NULL) {
@@ -81,19 +82,21 @@ void Scene::clear() {
     }
     
 	m_llChildrenWidgets.pHead = NULL;
+
+	garbageCollect();
 }
 
 void Scene::destroy() {
 	LLNode* currNode = m_llChildrenWidgets.pHead;
-	LLNode* nextNode;
 
 	while (currNode != NULL) {
-		nextNode = currNode->pNext;
 		IWidget* currWidget = ((IWidget*)currNode->pData);
 		delete currWidget;
-		delete currNode;
-		currNode = nextNode;
+		currNode = currNode->pNext;
 	}
 
 	m_llChildrenWidgets.pHead = NULL;
+	m_llChildrenWidgets.pTail = NULL;
+
+	garbageCollect();
 }

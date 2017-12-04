@@ -44,8 +44,8 @@
     <LibraryPath>./lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>X:\TMP\Freddy\muggine\muggine\include;$(IncludePath)</IncludePath>
-    <LibraryPath>X:\TMP\Freddy\muggine\muggine\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>./include;$(IncludePath)</IncludePath>
+    <LibraryPath>./lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -69,15 +69,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>TARGET_WIN;TARGET_SDL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>TARGET_WIN;TARGET_SDL;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\include\FMOD;.\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>X:\TMP\Freddy\muggine\muggine\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -87,6 +89,9 @@
     <ClCompile Include="src\csv_reader.cpp" />
     <ClCompile Include="src\image_button_widget.cpp" />
     <ClCompile Include="src\iobject.cpp" />
+    <ClCompile Include="src\ld_object.cpp" />
+    <ClCompile Include="src\ld_object_card.cpp" />
+    <ClCompile Include="src\ld_truck_content.cpp" />
     <ClCompile Include="src\paginated_widget_layout.cpp" />
     <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\ld_game_manager.cpp" />
@@ -130,6 +135,9 @@
     <ClInclude Include="src\csv_reader.hpp" />
     <ClInclude Include="src\image_button_widget.hpp" />
     <ClInclude Include="src\iobject.hpp" />
+    <ClInclude Include="src\ld_object.hpp" />
+    <ClInclude Include="src\ld_object_card.hpp" />
+    <ClInclude Include="src\ld_truck_content.hpp" />
     <ClInclude Include="src\math_tools.hpp" />
     <ClInclude Include="src\paginated_widget_layout.hpp" />
     <ClInclude Include="src\sound.hpp" />

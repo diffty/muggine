@@ -30,6 +30,13 @@ bool Input::IsKeyPressed(EKey key) {
 	return false;
 }
 
+bool Input::IsAnyKeyPressed() {
+	if (currInputList.size > 0)
+		return true;
+	else
+		return false;
+}
+
 bool Input::IsJoyBtnPressed(EJoy joyBtn) {
 #ifdef TARGET_3DS
 	return hidKeysHeld() & (convertMuggineKeyTo3DS(joyBtn));

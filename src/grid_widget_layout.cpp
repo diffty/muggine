@@ -14,8 +14,8 @@ GridWidgetLayout::~GridWidgetLayout() {
 }
 
 void GridWidgetLayout::addWidget(IWidget* pWidget) {
-	addChildWidget(pWidget);
-	moveWidgetToGrid(m_llChildrenWidgets.size - 1);
+	pWidget->setParentWidget(this);
+	moveWidgetToGrid(pWidget, m_llChildrenWidgets.size - 1);
 }
 
 int GridWidgetLayout::getWidgetIdInLayout(IWidget* pWidget) {
@@ -49,6 +49,13 @@ void GridWidgetLayout::moveWidgetToGrid(IWidget* pWidget) {
 }
 
 void GridWidgetLayout::moveWidgetToGrid(IWidget* pWidget, uint uGridPos) {
+	vect2df_t vPosInGrid = getPosInGrid(pWidget, uGridPos);
+	pWidget->translate(vPosInGrid.x, vPosInGrid.y, TRANSFORM_ABS);
+}
+
+vect2df_t GridWidgetLayout::getPosInGrid(IWidget* pWidget, uint uGridPos) {
+	vect2d_t vPosInGrid;
+
 	uint posXOnGrid = uGridPos % m_uNbCellX;
 	uint posYOnGrid = uGridPos / m_uNbCellX;
 
@@ -57,9 +64,14 @@ void GridWidgetLayout::moveWidgetToGrid(IWidget* pWidget, uint uGridPos) {
 
 	size2df_t sCurrWidgetSize = pWidget->getRect()->getSize();
 
-	pWidget->translate(m_rect.getPos().x + iGridCellW * posXOnGrid + iGridCellW / 2 - sCurrWidgetSize.w / 2,
-						  m_rect.getPos().y + iGridCellH * posYOnGrid + iGridCellH / 2 - sCurrWidgetSize.h / 2,
-						  TRANSFORM_ABS);
+	return {
+		m_rect.getPos().x + iGridCellW * posXOnGrid + iGridCellW / 2 - sCurrWidgetSize.w / 2,
+		m_rect.getPos().y + iGridCellH * posYOnGrid + iGridCellH / 2 - sCurrWidgetSize.h / 2
+	};
+}
+
+vect2df_t GridWidgetLayout::getNextPosInGrid(IWidget* pWidget) {
+	return getPosInGrid(pWidget, m_llChildrenWidgets.size);
 }
 
 void GridWidgetLayout::update() {
@@ -87,14 +99,14 @@ void GridWidgetLayout::draw(uint8* buffer) {
 	}
 }
 
-void GridWidgetLayout::receiveTouchInput(vect2d_t inputPos) {
+/*void GridWidgetLayout::receiveTouchInput(vect2d_t inputPos) {
 	LLNode* currNode = m_llChildrenWidgets.pHead;
 
 	while (currNode != NULL) {
 		((IWidget*)currNode->pData)->receiveTouchInput(inputPos);
 		currNode = currNode->pNext;
 	}
-}
+}*/
 
 void GridWidgetLayout::destroyAllWidgets() {
 	LLNode* currNode = m_llChildrenWidgets.pHead;

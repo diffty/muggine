@@ -34,7 +34,7 @@ private:
 public:
 	ButtonWidget(int x, int y, int w, int h, int initalState, int (*pCallback)(void));
 
-	void receiveTouchInput(vect2d_t touchPt);
+	bool receiveTouchInput(vect2d_t touchPt);
 	void onPress();
 	void onRelease();
 

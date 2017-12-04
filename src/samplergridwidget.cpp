@@ -100,7 +100,7 @@ void SamplerGridWidget::draw(uint8* buffer) {
 	}
 }
 
-void SamplerGridWidget::receiveTouchInput(vect2d_t touchPt) {
+bool SamplerGridWidget::receiveTouchInput(vect2d_t touchPt) {
 	vect2d_t inGridTouchPt;
 	
 	if (getCellInSamplerGridFromPoint(touchPt, &inGridTouchPt)) {
@@ -113,7 +113,10 @@ void SamplerGridWidget::receiveTouchInput(vect2d_t touchPt) {
 
 		m_aPressedCellsCurrentLoop[m_nbPressedCellsCurrentLoop] = cellId;
 		m_nbPressedCellsCurrentLoop++;
+		return true;
 	}
+
+	return false;
 }
 
 void SamplerGridWidget::onCellPress(vect2d_t gridCell) {

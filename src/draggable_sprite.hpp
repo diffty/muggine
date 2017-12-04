@@ -15,7 +15,7 @@ public:
 
 	void init(bool bIsDraggable = true);
 	void update();
-	void receiveTouchInput(vect2d_t touchPt);
+	bool receiveTouchInput(vect2d_t touchPt);
 
 	bool isDraggable();
 

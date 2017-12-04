@@ -63,9 +63,11 @@ void ImageButtonWidget::update() {
 	m_bPressedThisLoop = false;
 }
 
-void ImageButtonWidget::receiveTouchInput(vect2d_t touchPt) {
+bool ImageButtonWidget::receiveTouchInput(vect2d_t touchPt) {
 	if (m_bIsActive && m_rect.isPointInRect(touchPt.x, touchPt.y)) {
 		onPress();
 		m_bPressedThisLoop = true;
+		return true;
 	}
+	return false;
 }

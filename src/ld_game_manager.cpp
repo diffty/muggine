@@ -26,7 +26,11 @@ LDGameManager::LDGameManager() {
 	m_pLevelFailScreen = NULL;
 	m_pLevelSuccessScreen = NULL;
 
-	onMainMenu();
+	//onMainMenu(); //DEBUG: decommenter ca
+	// DEBUG
+	m_iCurrLevel = 1;
+	onStartLevel();
+	// --
 }
 
 
@@ -54,6 +58,7 @@ void LDGameManager::onMainMenu() {
 
 void LDGameManager::onNewLevel(bool bReplayLevel) {
 	m_eCurrState = E_APP_STATE_LEVEL_BEGIN;
+
 	if (!bReplayLevel) {
 		m_iCurrLevel++;
 	}
@@ -77,7 +82,16 @@ void LDGameManager::onLevelFail() {
 }
 
 void LDGameManager::onStartLevel() {
-	LDGameMode::initGameMode(&m_pGameMode, &m_gameScene, m_iCurrLevel, 10);
+	int nbFreeObjects = 0;
+
+	if (m_iCurrLevel <= 1) {
+		nbFreeObjects = 3;
+	}
+	else {
+		nbFreeObjects = 1;
+	}
+
+	LDGameMode::initGameMode(&m_pGameMode, &m_gameScene, nbFreeObjects);
 	m_eCurrState = E_APP_STATE_INGAME;
 }
 

@@ -22,7 +22,7 @@ public:
 
 	void update();
 	void draw(uint8* buffer);
-	void receiveTouchInput(vect2d_t inputPos);
+	bool receiveTouchInput(vect2d_t inputPos);
 
 	void updateChildren();
 

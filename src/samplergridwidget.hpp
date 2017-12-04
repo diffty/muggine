@@ -28,7 +28,7 @@ public:
 	SamplerGridWidget(int x, int y, int w, int h, int nbCellX, int nbCellY);
 	~SamplerGridWidget();
 	
-	void receiveTouchInput(vect2d_t touchPt);
+	bool receiveTouchInput(vect2d_t touchPt);
 	void update();
 	void draw(uint8* fb);
 

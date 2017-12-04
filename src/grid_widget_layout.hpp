@@ -21,11 +21,14 @@ public:
 	void moveWidgetToGrid(IWidget* pWidget);
 	void moveWidgetToGrid(IWidget* pWidget, uint gridPos);
 
+	vect2df_t getPosInGrid(IWidget* pWidget, uint uGridPos);
+	vect2df_t getNextPosInGrid(IWidget* pWidget);
+
 	int getWidgetIdInLayout(IWidget* pWidget);
 
 	void update();
 	void draw(uint8* buffer);
-	void receiveTouchInput(vect2d_t inputPos);
+	//void receiveTouchInput(vect2d_t inputPos);
 
 	void destroyAllWidgets();
 };

@@ -19,6 +19,7 @@ public:
 
 	char* getText();
 	void setText(char* szText);
+	void setText(int iNum);
 
 	void updateSize();
 

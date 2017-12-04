@@ -46,6 +46,12 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 1, 6);
 	rscManager.loadImg("data/title.bmp");
 	rscManager.loadImg("data/credits.bmp");
+	rscManager.loadImg("data/bg.bmp");
+	rscManager.loadImg("data/card.bmp");
+	rscManager.loadSprSht("data/ui1.bmp", 3, 1, 3);
+	rscManager.loadSprSht("data/objects.bmp", 6, 1, 6);
+	rscManager.loadImg("data/truck-slot.bmp");
+	rscManager.loadSprSht("data/ui2.bmp", 1, 1, 1);
 
 	// Sound system
 	Sound sound;
@@ -58,9 +64,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Scene* pGameScene = gameManager.getGameScene();
 	Scene* pMenuScene = gameManager.getMenuScene();
 
-	
 	LDGameMode* pGameMode = NULL;
-	
 	
 	pGfx->SetDoubleBuffering(false);
 

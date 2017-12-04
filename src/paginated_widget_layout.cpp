@@ -70,8 +70,8 @@ void PaginatedWidgetLayout::draw(uint8* buffer) {
 	}
 }
 
-void PaginatedWidgetLayout::receiveTouchInput(vect2d_t inputPos) {
-	IWidget::receiveTouchInput(inputPos);
+bool PaginatedWidgetLayout::receiveTouchInput(vect2d_t inputPos) {
+	return IWidget::receiveTouchInput(inputPos);
 
 	/*if (m_pCurrWidget != NULL) {
 		m_pCurrWidget->receiveTouchInput(inputPos);

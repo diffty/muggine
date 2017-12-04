@@ -70,7 +70,9 @@ void DraggableSprite::update() {
 	}
 }
 
-void DraggableSprite::receiveTouchInput(vect2d_t vTouchPt) {
+bool DraggableSprite::receiveTouchInput(vect2d_t vTouchPt) {
+	bool bIsHit = false;
+
 	if (m_rect.isPointInRect(vTouchPt.x, vTouchPt.y)) {
 		if (m_bIsDraggable && !m_bIsGrabbed) {
 			// On start dragging
@@ -82,10 +84,13 @@ void DraggableSprite::receiveTouchInput(vect2d_t vTouchPt) {
 			m_vGrabPos.y = vTouchPt.y - vCurrTouchPos.y;
 
 			onDragStart(vTouchPt);
+			bIsHit = true;
 		}
 	}
 
 	m_vCurrMousePos = vTouchPt;
+
+	return bIsHit;
 }
 
 bool DraggableSprite::isDraggable() {

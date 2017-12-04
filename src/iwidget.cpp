@@ -2,9 +2,22 @@
 
 
 IWidget::~IWidget() {
+	//printf("delete widget \n");
 	if (m_pParentWidget) {
 		m_pParentWidget->removeChildWidget(this);
 	}
+
+	LLNode* pCurrNode = m_llChildrenWidgets.pHead;
+
+	while (pCurrNode != NULL) {
+		IWidget* pCurrWidget = (IWidget*) pCurrNode->pData;
+		delete pCurrWidget;
+		pCurrNode = pCurrNode->pNext;
+	}
+
+	clearList(&m_llChildrenWidgets);
+
+	garbageCollect();
 };
 
 void IWidget::drawChildren(uint8* buffer) {
@@ -29,14 +42,23 @@ void IWidget::updateChildren() {
 	garbageCollect();
 }
 
-void IWidget::receiveTouchInputChildren(vect2d_t touchPt) {
+bool IWidget::receiveTouchInputChildren(vect2d_t touchPt) {
 	LLNode* pCurrNode = m_llChildrenWidgets.pHead;
+
+	bool bInputHit = false;
 
 	while (pCurrNode != NULL) {
 		IWidget* pCurrWidget = (IWidget*)pCurrNode->pData;
-		if (pCurrWidget->isActive()) pCurrWidget->receiveTouchInput(touchPt);
+		if (pCurrWidget->isActive()) {
+			bInputHit = pCurrWidget->receiveTouchInput(touchPt);
+
+			if (bInputHit && m_bStopOnFirstInput) {
+				break;
+			}
+		}
 		pCurrNode = pCurrNode->pNext;
 	}
+	return bInputHit;
 }
 
 void IWidget::translate(float x, float y, ETransformMode transformMode) {
@@ -84,7 +106,7 @@ void IWidget::addChildWidget(IWidget* pWidget) {
 		addWidgetToDrawOrder(pWidget);
 		pWidget->setRootWidget(getRootWidget());
 
-		printf("* New Draw Order :\n");
+		/*printf("* New Draw Order :\n");
 
 		LLNode* pCurrNode = m_llChildrenWidgets.pHead;
 
@@ -93,7 +115,7 @@ void IWidget::addChildWidget(IWidget* pWidget) {
 			printf("%p: %i\n", pCurrWidget, pCurrWidget->getDrawOrder());
 			pCurrNode = pCurrNode->pNext;
 		}
-		printf("--**--\n");
+		printf("--**--\n");*/
 	}
 	else {
 		printf("<!> Widget %p already in children !\n", pWidget);
@@ -108,13 +130,24 @@ void IWidget::removeChildWidget(IWidget* pWidget) {
 	}
 }
 
+void IWidget::unlinkAllWidgets() {
+	LLNode* pCurrNode = m_llChildrenWidgets.pHead;
+
+	while (pCurrNode) {
+		((IWidget*)pCurrNode->pData)->setParentWidget(NULL);
+		pCurrNode = pCurrNode->pNext;
+	}
+	
+	clearList(&m_llChildrenWidgets);
+}
+
 void IWidget::garbageCollect() {
 	LLNode* pCurrNode = m_llWidgetNodesToDelete.pHead;
 	LLNode* pNextCurr;
 
 	while (pCurrNode != NULL) {
 		pNextCurr = pCurrNode->pNext;
-		delete pCurrNode->pData;
+		delete (LLNode*) pCurrNode->pData;
 		pCurrNode = pNextCurr;
 	}
 
@@ -132,7 +165,8 @@ void IWidget::setParentWidget(IWidget* pWidget) {
 		m_pParentWidget = pWidget;
 	}
 	else {
-		setParentWidget(getRootWidget());
+		m_pParentWidget = NULL;
+		m_pRootWidget = NULL;
 	}
 }
 
@@ -157,7 +191,7 @@ void IWidget::addWidgetToDrawOrder(IWidget* pWidgetToAdd) {
 
 	if (m_llChildrenWidgets.pHead == NULL) {
 		addDataToList(&m_llChildrenWidgets, pWidgetToAdd);
-		printf("!%p: %i! (first)\n", pWidgetToAdd, pWidgetToAdd->getDrawOrder());
+		//printf("!%p: %i! (first)\n", pWidgetToAdd, pWidgetToAdd->getDrawOrder());
 		return;
 	}
 
@@ -168,14 +202,14 @@ void IWidget::addWidgetToDrawOrder(IWidget* pWidgetToAdd) {
 		pNewNode->pNext = m_llChildrenWidgets.pHead;
 		pNewNode->pData = pWidgetToAdd;
 		m_llChildrenWidgets.pHead = pNewNode;
-		printf("!%p: %i! (first)\n", pWidgetToAdd, pWidgetToAdd->getDrawOrder());
+		//printf("!%p: %i! (first)\n", pWidgetToAdd, pWidgetToAdd->getDrawOrder());
 		return;
 	}
 
 	while (pCurrNode != NULL) {
 		pCurrWidget = (IWidget*)pCurrNode->pData;
 
-		printf("%p: %i, ", pCurrWidget, pCurrWidget->getDrawOrder());
+		//printf("%p: %i, ", pCurrWidget, pCurrWidget->getDrawOrder());
 
 		if (pCurrWidget->getDrawOrder() > pWidgetToAdd->getDrawOrder()) {
 			LLNode* pNewNode = new LLNode;
@@ -188,7 +222,7 @@ void IWidget::addWidgetToDrawOrder(IWidget* pWidgetToAdd) {
 				pNewNode->pNext = m_llChildrenWidgets.pHead;
 				m_llChildrenWidgets.pHead = pNewNode;
 			}
-			printf("<- !%p: %i!\n", pWidgetToAdd, pWidgetToAdd->getDrawOrder());
+			//printf("<- !%p: %i!\n", pWidgetToAdd, pWidgetToAdd->getDrawOrder());
 			return;
 		}
 
@@ -196,7 +230,7 @@ void IWidget::addWidgetToDrawOrder(IWidget* pWidgetToAdd) {
 		pCurrNode = pCurrNode->pNext;
 	}
 
-	printf("!%p: %i! (last)\n", pWidgetToAdd, pWidgetToAdd->getDrawOrder());
+	//printf("!%p: %i! (last)\n", pWidgetToAdd, pWidgetToAdd->getDrawOrder());
 	addDataToList(&m_llChildrenWidgets, pWidgetToAdd);
 }
 
@@ -221,88 +255,6 @@ void IWidget::updateWidgetInDrawOrder(IWidget* pWidget) {
 }
 
 void IWidget::updateWidgetNodeInDrawOrder(LLNode* pWidgetNodeToUpdate) {
-	/*LLNode* pCurrNode = m_llChildrenWidgets.pHead;
-	LLNode* pPrevNode = NULL;
-	IWidget* pWidgetToUpdate = (IWidget*)pWidgetNodeToUpdate->pData;
-
-	LLNode* pOldNextNode = pWidgetNodeToUpdate->pNext;
-
-	bool bNodeHasBeenChained = false;
-	bool bNodeHasBeenDetached = false;
-
-
-	// Si le widget est mal placé dans la draw order et que c'était le premier
-	if (m_llChildrenWidgets.pHead == pWidgetNodeToUpdate) {
-		printf("Le node a update %p est en premier", pWidgetNodeToUpdate);
-
-		if (m_llChildrenWidgets.pHead->pNext != NULL) {
-			LLNode* pNextWidgetNode = pWidgetNodeToUpdate->pNext;
-			IWidget* pNextWidget = (IWidget*)pNextWidgetNode->pData;
-
-			if (pWidgetToUpdate->getDrawOrder() > pNextWidget->getDrawOrder()) {
-				printf(" mais plus grand que le suivant\n");
-				m_llChildrenWidgets.pHead = pNextWidgetNode;
-				pCurrNode = pNextWidgetNode;
-				pWidgetNodeToUpdate->pNext = NULL;
-				bNodeHasBeenDetached = true;
-			}
-			else {
-				printf(" et est bien place\n");
-				// On est bon on arrête tout
-				return;
-			}
-		}
-		else {
-			printf(" et seul dans la liste\n");
-			return;
-		}
-	}
-	else {
-		IWidget* pFirstWidget = (IWidget*) m_llChildrenWidgets.pHead;
-
-		if (pWidgetToUpdate->getDrawOrder() < pFirstWidget->getDrawOrder()) {
-			printf("Le node a update %p est maintenant plus petit que le premier \n", pWidgetNodeToUpdate);
-			pWidgetNodeToUpdate->pNext = m_llChildrenWidgets.pHead;
-			m_llChildrenWidgets.pHead = pWidgetNodeToUpdate;
-			pCurrNode = pWidgetNodeToUpdate;
-		}
-	}
-
-	pPrevNode = NULL;
-
-	while (pCurrNode != NULL) {
-		IWidget* pCurrWidget = (IWidget*)pCurrNode->pData;
-
-		if (pCurrWidget->getDrawOrder() > pWidgetToUpdate->getDrawOrder()) {
-			printf("Le node a update %p est plus petit que le node en cours %p \n", pWidgetNodeToUpdate, pCurrWidget);
-			if (pPrevNode) {
-				addAfterNodeInList(&m_llChildrenWidgets, pWidgetNodeToUpdate, pPrevNode);
-			}
-			else {
-				pWidgetNodeToUpdate->pNext = pCurrNode;
-				m_llChildrenWidgets.pHead = pWidgetNodeToUpdate;
-			}
-			bNodeHasBeenChained = true;
-		}
-		else if (pCurrNode->pNext == pWidgetNodeToUpdate) {
-			printf("Le suivant c'est le node a update %p \n", pWidgetNodeToUpdate, pCurrWidget);
-			pCurrNode->pNext = pOldNextNode;
-
-			if (m_llChildrenWidgets.pTail == pWidgetNodeToUpdate) {
-				m_llChildrenWidgets.pTail = pOldNextNode;
-			}
-		}
-
-		//printf("%p: %d\n", pCurrWidget, pCurrWidget->getDrawOrder());
-
-		pPrevNode = pCurrNode;
-		pCurrNode = pCurrNode->pNext;
-	}
-
-	if (!bNodeHasBeenChained) {
-		addNodeToList(&m_llChildrenWidgets, pWidgetNodeToUpdate);
-	}*/
-
 	LLNode* pPrevNode = NULL;
 	LLNode* pCurrNode = m_llChildrenWidgets.pHead;
 	IWidget* pWidgetToUpdate = (IWidget*)pWidgetNodeToUpdate->pData;
@@ -343,12 +295,12 @@ void IWidget::updateWidgetNodeInDrawOrder(LLNode* pWidgetNodeToUpdate) {
 			}
 
 			if (bAllIsOk && !bNodeToUpdateDisconnected) {
-				printDrawOrder();
+				//printDrawOrder();
 				return;
 			}
 			else {
 				bNodeToUpdateDisconnected = true;
-				printf("disconnected\n");
+				//printf("disconnected\n");
 
 				if (pPrevNode) {
 					pPrevNode->pNext = pOldNextNode;
@@ -375,15 +327,15 @@ void IWidget::updateWidgetNodeInDrawOrder(LLNode* pWidgetNodeToUpdate) {
 				}
 
 				bNodeToUpdateReconnected = true;
-				if (pPrevNode)
+				/*if (pPrevNode)
 					printf("reconnected to %p\n", pPrevNode->pData);
 				else
-					printf("reconnected\n");
+					printf("reconnected\n");*/
 			}
 		}
 
 		if (bNodeToUpdateReconnected && bNodeToUpdateDisconnected) {
-			printDrawOrder();
+			//printDrawOrder();
 			return;
 		}
 		
@@ -397,11 +349,11 @@ void IWidget::updateWidgetNodeInDrawOrder(LLNode* pWidgetNodeToUpdate) {
 		if (pPrevNode) {
 			pPrevNode->pNext = pWidgetNodeToUpdate;
 			pWidgetNodeToUpdate->pNext = NULL;
-			printf("reconnected to %p\n", pPrevNode->pData);
+			//printf("reconnected to %p\n", pPrevNode->pData);
 		}
 	}
 
-	printDrawOrder();
+	//printDrawOrder();
 }
 
 void IWidget::printDrawOrder() {

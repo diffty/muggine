@@ -27,7 +27,7 @@ public:
 	IWidget* getNComponent(int n);
 	unsigned int getComponentCount();
 
-	void receiveTouchInput(vect2d_t inputPos);
+	//void receiveTouchInput(vect2d_t inputPos);
 	void update();
 	void draw(uint8* fb);
     void clear();

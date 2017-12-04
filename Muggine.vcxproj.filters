@@ -105,10 +105,16 @@
     <ClCompile Include="src\csv_reader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\common_tools.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ld_truck_content.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ld_object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ld_object_card.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ld_game_manager.cpp">
@@ -130,6 +136,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ld_text_bubble.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\common_tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -239,6 +248,12 @@
     <ClInclude Include="src\sound.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ld_truck_content.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ld_common_types.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\ld_game_manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -260,7 +275,10 @@
     <ClInclude Include="src\ld_text_bubble.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ld_common_types.hpp">
+    <ClInclude Include="src\ld_object.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ld_object_card.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -39,7 +39,7 @@ public:
 	void setOnPressCallback(void(*pCallback)(void*), void* pCallbackArg = NULL);
 	void setOnReleaseCallback(void(*pCallback)(void*), void* pCallbackArg = NULL);
 
-	void receiveTouchInput(vect2d_t touchPt);
+	bool receiveTouchInput(vect2d_t touchPt);
 	void onPress();
 	void onRelease();
 

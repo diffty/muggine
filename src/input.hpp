@@ -65,6 +65,7 @@ public:
 	//uint32 GetInput();
 	bool IsPressed(uint32 key);
 	bool IsKeyPressed(EKey key);
+	bool IsAnyKeyPressed();
 	bool IsJoyBtnPressed(EJoy joyBtn);
 	bool IsButtonPressed(EMouseButton btn);
 	bool DoMouseMoved(vect2df_t* vDest = NULL);

@@ -42,6 +42,12 @@ void Text::setText(char* szText) {
 	updateSize();
 }
 
+void Text::setText(int iNum) {
+	char* newText = intToStr(iNum);
+	setText(newText);
+	delete newText;
+}
+
 void Text::updateSize() {
 	int i = 0;
 	int sizeW = 0;

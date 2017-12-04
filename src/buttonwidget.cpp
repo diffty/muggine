@@ -43,10 +43,14 @@ void ButtonWidget::update() {
 	m_bPressedThisLoop = false;
 }
 
-void ButtonWidget::receiveTouchInput(vect2d_t touchPt) {
+bool ButtonWidget::receiveTouchInput(vect2d_t touchPt) {
 	if (m_rect.isPointInRect(touchPt.x, touchPt.y)) {
 		onPress();
 		m_bPressedThisLoop = true;
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 

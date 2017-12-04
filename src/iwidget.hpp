@@ -17,6 +17,7 @@ class IWidget : public IDrawable {
 protected:
 	Rectf m_rect;
     bool m_bIsActive = true;
+	bool m_bStopOnFirstInput = true;
 	IWidget* m_pRootWidget = NULL;
 	IWidget* m_pParentWidget = NULL;
 	LinkedList m_llChildrenWidgets;
@@ -30,6 +31,8 @@ public:
 		m_rect(x, y, w, h) {
 
 		initList(&m_llChildrenWidgets);
+
+		m_bStopOnFirstInput = true;
 	};
 
 	IWidget(float x, float y)
@@ -37,6 +40,9 @@ public:
 		m_rect(x, y, 0., 0.) {
 	
 		initList(&m_llChildrenWidgets);
+
+		m_bStopOnFirstInput = true;
+
 	};
 
 	IWidget()
@@ -44,6 +50,8 @@ public:
 		m_rect(0., 0., 0., 0.) {
 	
 		initList(&m_llChildrenWidgets);
+
+		m_bStopOnFirstInput = true;
 	};
 
 	virtual ~IWidget();
@@ -54,13 +62,13 @@ public:
 		updateChildren();
 	};
 
-	virtual void receiveTouchInput(vect2d_t touchPt) {
-		receiveTouchInputChildren(touchPt);
+	virtual bool receiveTouchInput(vect2d_t touchPt) {
+		return receiveTouchInputChildren(touchPt);
 	};
 
 	void drawChildren(uint8* buffer);
 	void updateChildren();
-	void receiveTouchInputChildren(vect2d_t touchPt);
+	bool receiveTouchInputChildren(vect2d_t touchPt);
     
     void translate(float x, float y, ETransformMode transformMode = TRANSFORM_REL);
     
@@ -70,6 +78,7 @@ public:
 	void addChildWidget(IWidget* pWidget);
 	void removeChildWidget(IWidget* pWidget);
 	void updateChildrenRootWidget();
+	void unlinkAllWidgets();
 
 	void garbageCollect();
 
