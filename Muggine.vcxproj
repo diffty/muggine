@@ -77,7 +77,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
@@ -91,8 +91,11 @@
     <ClCompile Include="src\iobject.cpp" />
     <ClCompile Include="src\ld_object.cpp" />
     <ClCompile Include="src\ld_object_card.cpp" />
+    <ClCompile Include="src\ld_transition_screen.cpp" />
     <ClCompile Include="src\ld_truck_content.cpp" />
     <ClCompile Include="src\paginated_widget_layout.cpp" />
+    <ClCompile Include="src\particle.cpp" />
+    <ClCompile Include="src\particle_system.cpp" />
     <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\ld_game_manager.cpp" />
     <ClCompile Include="src\ld_level_begin_screen.cpp" />
@@ -125,6 +128,7 @@
     <ClCompile Include="src\sprite.cpp" />
     <ClCompile Include="src\spritesheet.cpp" />
     <ClCompile Include="src\system.cpp" />
+    <ClCompile Include="src\ld_truck.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\animatedsprite.hpp" />
@@ -137,9 +141,12 @@
     <ClInclude Include="src\iobject.hpp" />
     <ClInclude Include="src\ld_object.hpp" />
     <ClInclude Include="src\ld_object_card.hpp" />
+    <ClInclude Include="src\ld_transition_screen.hpp" />
     <ClInclude Include="src\ld_truck_content.hpp" />
     <ClInclude Include="src\math_tools.hpp" />
     <ClInclude Include="src\paginated_widget_layout.hpp" />
+    <ClInclude Include="src\particle.hpp" />
+    <ClInclude Include="src\particle_system.hpp" />
     <ClInclude Include="src\sound.hpp" />
     <ClInclude Include="src\ld_common_types.hpp" />
     <ClInclude Include="src\ld_game_manager.hpp" />
@@ -173,6 +180,7 @@
     <ClInclude Include="src\spritesheet.hpp" />
     <ClInclude Include="src\system.hpp" />
     <ClInclude Include="src\iwidget.hpp" />
+    <ClInclude Include="src\ld_truck.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,6 +12,9 @@
 #include "ld_object_card.hpp"
 #include "ld_object.hpp"
 #include "ld_truck_content.hpp"
+#include "ld_truck.hpp"
+
+#include "particle_system.hpp"
 
 
 class LDGameMode
@@ -29,9 +32,11 @@ private:
 	int m_iHealth = 100;
 	float m_fTimer = 30.;
 	float m_fTimeBeforeSellNextObj = -1;
+	float m_fTimeBeforeEnd = -1;
+	bool m_bWaitForEnd = false;
 
 	Sprite* m_pBgSpr;
-	TruckContent* m_pTruckContent;
+	Truck* m_pTruck;
 
 	LinkedList m_llWidgetTrash;
 	LinkedList m_llObjectsOwned;
@@ -52,6 +57,8 @@ private:
 	bool m_bLevelEnded = false;
 	bool m_bSellingLeftObj = false;
 
+	ParticleSystem* m_pParticleSystem;
+
 
 public:
 	LDGameMode(Scene* pMainScene, LinkedList pllMachinesOwned, int iStartMoney, int iStartHealth, int iGiveNFreeObjects = 0);
@@ -64,6 +71,7 @@ public:
 	void buyObjects();
 	Object* generateNewObject();
 	ObjectCard* spawnNewCard(Object* pNewObj);
+	size2d_t calculateTruckSize();
 
 	void update();
 

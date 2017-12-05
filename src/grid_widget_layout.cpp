@@ -34,6 +34,10 @@ int GridWidgetLayout::getWidgetIdInLayout(IWidget* pWidget) {
 	return -1;
 }
 
+void GridWidgetLayout::setGridOffsetX(int x) {
+	m_iGridOffsetX = x;
+}
+
 void GridWidgetLayout::moveWidgetToGrid(uint uWidgetId) {
 	LLNode* currNode = getNodeInList(&m_llChildrenWidgets, uWidgetId);
 	IWidget* currWidget = (IWidget*)currNode->pData;
@@ -50,14 +54,18 @@ void GridWidgetLayout::moveWidgetToGrid(IWidget* pWidget) {
 
 void GridWidgetLayout::moveWidgetToGrid(IWidget* pWidget, uint uGridPos) {
 	vect2df_t vPosInGrid = getPosInGrid(pWidget, uGridPos);
-	pWidget->translate(vPosInGrid.x, vPosInGrid.y, TRANSFORM_ABS);
+	pWidget->translate(
+		vPosInGrid.x,
+		vPosInGrid.y,
+		TRANSFORM_ABS
+	);
 }
 
 vect2df_t GridWidgetLayout::getPosInGrid(IWidget* pWidget, uint uGridPos) {
 	vect2d_t vPosInGrid;
 
-	uint posXOnGrid = uGridPos % m_uNbCellX;
-	uint posYOnGrid = uGridPos / m_uNbCellX;
+	int posXOnGrid = uGridPos % m_uNbCellX;
+	int posYOnGrid = uGridPos / m_uNbCellX;
 
 	int iGridCellW = (m_rect.getSize().w / m_uNbCellX);
 	int iGridCellH = (m_rect.getSize().h / m_uNbCellY);
@@ -65,7 +73,7 @@ vect2df_t GridWidgetLayout::getPosInGrid(IWidget* pWidget, uint uGridPos) {
 	size2df_t sCurrWidgetSize = pWidget->getRect()->getSize();
 
 	return {
-		m_rect.getPos().x + iGridCellW * posXOnGrid + iGridCellW / 2 - sCurrWidgetSize.w / 2,
+		m_rect.getPos().x + iGridCellW * posXOnGrid + iGridCellW / 2 - sCurrWidgetSize.w / 2 + m_iGridOffsetX * posYOnGrid,
 		m_rect.getPos().y + iGridCellH * posYOnGrid + iGridCellH / 2 - sCurrWidgetSize.h / 2
 	};
 }

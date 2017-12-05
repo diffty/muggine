@@ -22,9 +22,18 @@ LDLevelSuccessScreen::LDLevelSuccessScreen(int iLevelNum) {
 	m_pTotalScoreLabel		= new Text("TOTAL",				RscManager::get()->getFontRsc(0), { 80, 160 });
 	m_pTotalScoreValue		= new Text("",					RscManager::get()->getFontRsc(0), { 220, 160 });
 
+	m_pUpgradeButton = new ImageButtonWidget(
+		RscManager::get()->getSprShtRsc(3),
+		{ 120 , 200 },
+		6,
+		7,
+		0,
+		NULL,
+		NULL
+	);
 	onNewState();
 
-	bDoMustDisappear = false;
+	m_bDoMustDisappear = false;
 }
 
 
@@ -46,17 +55,17 @@ LDLevelSuccessScreen::~LDLevelSuccessScreen() {
 }
 
 void LDLevelSuccessScreen::update() {
-	if (iIsMouseBtnState == 0 && System::get()->getInputSys()->IsButtonPressed(MOUSE_BTN_LEFT)) {
-		iIsMouseBtnState = 1;
+	if (m_iIsMouseBtnState == 0 && System::get()->getInputSys()->IsButtonPressed(MOUSE_BTN_LEFT)) {
+		m_iIsMouseBtnState = 1;
 	}
-	else if (iIsMouseBtnState == 1 && System::get()->getInputSys()->IsButtonPressed(MOUSE_BTN_LEFT)) {
-		iIsMouseBtnState = 2;
+	else if (m_iIsMouseBtnState == 1 && System::get()->getInputSys()->IsButtonPressed(MOUSE_BTN_LEFT)) {
+		m_iIsMouseBtnState = 2;
 	}
-	else if (iIsMouseBtnState > 0 && !System::get()->getInputSys()->IsButtonPressed(MOUSE_BTN_LEFT)) {
-		iIsMouseBtnState = 0;
+	else if (m_iIsMouseBtnState > 0 && !System::get()->getInputSys()->IsButtonPressed(MOUSE_BTN_LEFT)) {
+		m_iIsMouseBtnState = 0;
 	}
 
-	if (iIsMouseBtnState == 1) {
+	if (m_iIsMouseBtnState == 1) {
 		onEndState();
 	}
 
@@ -95,7 +104,7 @@ void LDLevelSuccessScreen::update() {
 		break;
 	}
 
-	if (bTimerActive && m_fTimeBeforeStateEnd > 0) {
+	if (m_bTimerActive && m_fTimeBeforeStateEnd > 0) {
 		m_fTimeBeforeStateEnd -= System::get()->getDeltaTime();
 
 		if (m_fTimeBeforeStateEnd <= 0) {
@@ -110,24 +119,24 @@ void LDLevelSuccessScreen::onNewState() {
 	switch (m_iState) {
 	case 0:
 		m_fTimeBeforeStateEnd = 2;
-		bTimerActive = true;
+		m_bTimerActive = true;
 		break;
 
 	case 1:
 	case 3:
 	case 5:
-		bTimerActive = false;
+		m_bTimerActive = false;
 		break;
 
 	case 2:
 	case 4:
 		m_fTimeBeforeStateEnd = 1;
-		bTimerActive = true;
+		m_bTimerActive = true;
 		break;
 
 	case 6:
 		m_fTimeBeforeStateEnd = 2;
-		bTimerActive = true;
+		m_bTimerActive = true;
 		break;
 	}
 }
@@ -153,7 +162,7 @@ void LDLevelSuccessScreen::onEndState() {
 		break;
 
 	case 7:
-		bDoMustDisappear = true;
+		m_bDoMustDisappear = true;
 	}
 
 	m_iState++;
@@ -177,6 +186,10 @@ void LDLevelSuccessScreen::draw(uint8* fb) {
 	m_pTotalScoreValue->draw(fb);
 }
 
+void LDLevelSuccessScreen::onUpgradeButtonPressed(void* args) {
+	//GameManager::
+}
+
 bool LDLevelSuccessScreen::doMustDisappear() {
-	return bDoMustDisappear;
+	return m_bDoMustDisappear;
 }

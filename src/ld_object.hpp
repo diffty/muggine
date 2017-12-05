@@ -21,6 +21,8 @@ private:
 	vect2df_t m_vAnimDst;
 	EANIM_TYPE m_eAnimType;
 
+	bool m_bIsCrate = false;
+
 public:
 	Object(char* szTitle, SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, bool bIsDraggable = true);
 	~Object();
@@ -29,7 +31,10 @@ public:
 	void goToKeep();
 	void parentToRoot();
 
+	void setIsCrate(bool bIsCrate);
+
 	void update();
+	void draw(uint8* pBuffer);
 
 	void setPrice(int iPrice);
 	void setLoveFactor(int iLoveFactor);

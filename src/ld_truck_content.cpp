@@ -5,6 +5,7 @@
 TruckContent::TruckContent(vect2df_t vPos, size2df_t sSize, uint uNbCellX, uint uNbCellY)
 	: GridWidgetLayout(vPos, sSize, uNbCellX, uNbCellY) {
 
+	setGridOffsetX(-12);
 	m_pSlotBgImg = RscManager::get()->getImgRsc(10);
 }
 
@@ -35,7 +36,7 @@ void TruckContent::draw(uint8* pBuffer) {
 	vect2df_t vCurPos = getRect()->getPos();
 	size2df_t vSlotImgSize = m_pSlotBgImg->getSize();
 
-	for (int i = 0; i < m_uNbCellX; i++) {
+	/*for (int i = 0; i < m_uNbCellX; i++) {
 		for (int j = 0; j < m_uNbCellY; j++) {
 			m_pSlotBgImg->draw(
 				pBuffer,
@@ -44,7 +45,7 @@ void TruckContent::draw(uint8* pBuffer) {
 				false, true
 			);
 		}
-	}
+	}*/
 
 	GridWidgetLayout::draw(pBuffer);
 }

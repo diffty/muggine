@@ -112,6 +112,11 @@ double System::getDeltaTime() {
 	return m_deltaTime;
 }
 
+int System::getRandInt(int iMin, int iMax) {
+	srand((uint)((System::get()->getTime() - (long)System::get()->getTime()) * 1000000000));
+	return iMin + rand() % (iMax - iMin);
+}
+
 void System::initLoop() {
 	m_startLoopTime = getTime();
 	m_prevLoopTime = m_startLoopTime;

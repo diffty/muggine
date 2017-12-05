@@ -3,6 +3,10 @@
 #include "rsc_manager.hpp"
 
 
+#define START_HEALTH 50
+#define UPGRADE_COST 750
+
+
 LDGameMode* LDGameMode::s_pInstance = NULL;
 
 
@@ -17,17 +21,26 @@ LDGameMode::LDGameMode(Scene* pMainScene, LinkedList llObjectsOwned, int iStartM
 
 	initScene();
 
-	size2df_t iSlotSize = RscManager::get()->getImgRsc(10)->getSize();
-
-	m_pTruckContent = new TruckContent({ 12, 105 }, { 2 * (iSlotSize.w - 1), 1 * (iSlotSize.h - 1) }, 2, 1);
-	m_pTruckContent->setDrawOrder(1000);
-	m_pTruckContent->setParentWidget(m_pMainScene);
-
-	m_llObjectsOwned = llObjectsOwned;
-
 	setMoney(iStartMoney);
 	setHealth(iStartHealth);
-	setTimer(10);
+	setTimer(11);
+
+	// Level up the truck if >UPGRADE_COST$
+	int iTruckLevel = LDGameManager::get()->getTruckLevel();
+
+	if (m_iMoney > UPGRADE_COST && iTruckLevel < 6) {
+		LDGameManager::get()->setTruckLevel(iTruckLevel + 1);
+		m_iMoney -= UPGRADE_COST;
+	}
+
+	size2df_t iSlotSize = RscManager::get()->getImgRsc(10)->getSize();
+	size2d_t sTruckSlotSize = calculateTruckSize();
+	
+	m_pTruck = new Truck({ 12, 105 }, sTruckSlotSize.w, sTruckSlotSize.h);
+	m_pTruck->setDrawOrder(1100);
+	m_pTruck->setParentWidget(m_pMainScene);
+
+	m_llObjectsOwned = llObjectsOwned;
 
 	initList(&m_llWidgetTrash);
 
@@ -49,6 +62,12 @@ LDGameMode::LDGameMode(Scene* pMainScene, LinkedList llObjectsOwned, int iStartM
 	}
 	
 	m_bLevelEnded = false;
+
+	m_pParticleSystem = new ParticleSystem;
+
+	m_pParticleSystem->getRect()->setPos(150, 100);
+	m_pParticleSystem->setParentWidget(pMainScene);
+	m_pParticleSystem->setDrawOrder(6000);
 }
 
 LDGameMode::~LDGameMode() {
@@ -64,21 +83,9 @@ void LDGameMode::initScene() {
 	m_pBgSpr->setDrawOrder(10);
 	m_pBgSpr->setParentWidget(m_pMainScene);
 
-	m_pTimerLabel = new Text("0", rscManager->getFontRsc(0), { 52, 75 });
-	m_pHealthLabel = new Text("100", rscManager->getFontRsc(0), { 155, 75 });
-	m_pMoneyLabel = new Text("0", rscManager->getFontRsc(0), { 242, 75 });
-
-	m_pTimerLabel->setDrawOrder(10);
-	m_pHealthLabel->setDrawOrder(10);
-	m_pMoneyLabel->setDrawOrder(10);
-
-	m_pTimerLabel->setParentWidget(m_pMainScene);
-	m_pHealthLabel->setParentWidget(m_pMainScene);
-	m_pMoneyLabel->setParentWidget(m_pMainScene);
-
-	m_pTimerSpr = new Sprite(rscManager->getSprShtRsc(8), 0, { 35, 76 });;
-	m_pHealthSpr = new Sprite(rscManager->getSprShtRsc(8), 1, { 138, 76 });
-	m_pMoneySpr = new Sprite(rscManager->getSprShtRsc(8), 2, { 225, 76 });
+	m_pTimerSpr = new Sprite(rscManager->getSprShtRsc(8), 0, { 270, 185 });
+	m_pHealthSpr = new Sprite(rscManager->getSprShtRsc(8), 1, { 270, 200 });
+	m_pMoneySpr = new Sprite(rscManager->getSprShtRsc(8), 2, { 270, 215 });
 
 	m_pTimerSpr->setDrawOrder(10);
 	m_pHealthSpr->setDrawOrder(10);
@@ -87,6 +94,27 @@ void LDGameMode::initScene() {
 	m_pTimerSpr->setParentWidget(m_pMainScene);
 	m_pHealthSpr->setParentWidget(m_pMainScene);
 	m_pMoneySpr->setParentWidget(m_pMainScene);
+
+	m_pTimerLabel = new Text("0", rscManager->getFontRsc(16), {
+		m_pTimerSpr->getRect()->getPos().x + 17,
+		m_pTimerSpr->getRect()->getPos().y + 2
+	});
+	m_pHealthLabel = new Text("100", rscManager->getFontRsc(16), {
+		m_pHealthSpr->getRect()->getPos().x + 17,
+		m_pHealthSpr->getRect()->getPos().y + 2
+	});
+	m_pMoneyLabel = new Text("0", rscManager->getFontRsc(16), {
+		m_pMoneySpr->getRect()->getPos().x + 17,
+		m_pMoneySpr->getRect()->getPos().y + 2
+	});
+
+	m_pTimerLabel->setDrawOrder(10);
+	m_pHealthLabel->setDrawOrder(10);
+	m_pMoneyLabel->setDrawOrder(10);
+
+	m_pTimerLabel->setParentWidget(m_pMainScene);
+	m_pHealthLabel->setParentWidget(m_pMainScene);
+	m_pMoneyLabel->setParentWidget(m_pMainScene);
 }
 
 void LDGameMode::giveFreeObjects(int nbObjects) {
@@ -147,10 +175,17 @@ ObjectCard* LDGameMode::spawnNewCard(Object* pNewObj) {
 	return pNewCard;
 }
 
+size2d_t LDGameMode::calculateTruckSize() {
+	int iTruckLevel = LDGameManager::get()->getTruckLevel();
+	size2d_t sTruckSize = { 2, iTruckLevel };
+
+	return sTruckSize;
+}
+
 void LDGameMode::update() {
-	if (System::get()->getInputSys()->IsKeyPressed(KEYB_A)) {
-	
-	}
+	/*if (System::get()->getInputSys()->IsKeyPressed(KEYB_G)) {
+		giveFreeObjects(1);
+	}*/
 	
 	if (!m_bLevelEnded) {
 		float fNewTimer = m_fTimer - System::get()->getDeltaTime();
@@ -161,6 +196,14 @@ void LDGameMode::update() {
 		else {
 			m_bLevelEnded = true;
 			onLevelEndBeforeSell();
+		}
+	}
+
+	if (m_bWaitForEnd) {
+		m_fTimeBeforeEnd -= System::get()->getDeltaTime();
+		if (m_fTimeBeforeEnd < 0.) {
+			onLevelEndAfterSell();
+			m_bWaitForEnd = false;
 		}
 	}
 
@@ -190,7 +233,7 @@ Scene* LDGameMode::getScene() {
 }
 
 TruckContent* LDGameMode::getTruckContent() {
-	return m_pTruckContent;
+	return m_pTruck->getContent();
 }
 
 void LDGameMode::destroyObjectCard(ObjectCard* pObjCard) {
@@ -220,21 +263,55 @@ void LDGameMode::destroyObjectCard(ObjectCard* pObjCard) {
 }
 
 void LDGameMode::onObjKeep(Object* pObj) {
+	for (int i = 0; i < 10; i++) {
+		m_pParticleSystem->emitParticle(
+			RscManager::get()->getSprShtRsc(18),
+			pObj->getRect()->getPos(),
+			{
+				(float)System::get()->getRandInt(-40, 40),
+				(float)System::get()->getRandInt(-40, 40)
+			},
+			0,
+			3,
+			5
+		);
+	}
+
+	m_pTruck->doLoadAnim();
+
 	if (!m_pCurrCard) {
-		onLevelEndAfterSell();
+		m_bWaitForEnd = true;
+		m_fTimeBeforeEnd = 2.;
+		//onLevelEndAfterSell();
 	}
 }
 
 void LDGameMode::onObjSold(Object* pObj) {
 	increaseMoney(pObj->getPrice());
-	decreaseHealth(pObj->getLoveFactor() * 3);
+	decreaseHealth((pObj->getLoveFactor()+1) * 2);
 
 	if (!m_pCurrCard) {
-		onLevelEndAfterSell();
+		m_bWaitForEnd = true;
+		m_fTimeBeforeEnd = 2.;
+		//onLevelEndAfterSell();
 	}
 
 	pObj->setParentWidget(NULL);
 	addDataToList(&m_llWidgetTrash, pObj);
+
+	for (int i = 0; i < 10; i++) {
+		m_pParticleSystem->emitParticle(
+			RscManager::get()->getSprShtRsc(18),
+			pObj->getRect()->getPos(),
+			{
+				(float)System::get()->getRandInt(-40, 40),
+				(float)System::get()->getRandInt(-40, 40)
+			},
+			4,
+			7,
+			5
+		);
+	}
 }
 
 void LDGameMode::onLevelEndBeforeSell() {
@@ -242,10 +319,16 @@ void LDGameMode::onLevelEndBeforeSell() {
 		m_bSellingLeftObj = true;
 		m_fTimeBeforeSellNextObj = 0.3;
 	}
+	else {
+		m_fTimeBeforeEnd = 2.;
+	}
 }
 
 void LDGameMode::onLevelEndAfterSell() {
-	LDGameManager::get()->onLevelSuccess();
+	if (getHealth() == 0)
+		LDGameManager::get()->onLevelFail();
+	else 
+		LDGameManager::get()->onLevelSuccess();
 }
 
 void LDGameMode::onNoMoreCard() {
@@ -290,6 +373,10 @@ void LDGameMode::setMoney(int iMoney) {
 }
 
 void LDGameMode::setHealth(int iHealth) {
+	if (iHealth <= 0) {
+		iHealth = 0;
+	}
+
 	m_iHealth = iHealth;
 	updateHealthLabel();
 }
@@ -330,7 +417,7 @@ LDGameMode* LDGameMode::get() {
 void LDGameMode::initGameMode(LDGameMode** pGameMode, Scene* pScene, int iGiveNFreeObjects) {
 	LinkedList llObjectsOwned;
 	int iStartMoney = 0;
-	int iStartHealth = 100;
+	int iStartHealth = START_HEALTH;
 
 	if (*pGameMode) {
 		llObjectsOwned = (*pGameMode)->getTruckContent()->getObjectsList();

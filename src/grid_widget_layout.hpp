@@ -12,6 +12,8 @@ protected:
 	uint m_uNbCellX;
 	uint m_uNbCellY;
 
+	int m_iGridOffsetX = 0;
+
 public:
 	GridWidgetLayout(vect2df_t vPos, size2df_t sSize, uint uNbCellX, uint uNbCellY);
 	~GridWidgetLayout();
@@ -25,6 +27,8 @@ public:
 	vect2df_t getNextPosInGrid(IWidget* pWidget);
 
 	int getWidgetIdInLayout(IWidget* pWidget);
+
+	void setGridOffsetX(int x);
 
 	void update();
 	void draw(uint8* buffer);

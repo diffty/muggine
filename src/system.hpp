@@ -33,6 +33,7 @@ public:
 	Input* getInputSys();
 	double getTime();
 	double getDeltaTime();
+	int getRandInt(int iMin, int iMax);
 
 #ifdef TARGET_SDL
 	SDL_Window* getWindow();

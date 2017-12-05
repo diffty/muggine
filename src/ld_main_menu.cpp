@@ -17,14 +17,14 @@ void LDMainMenu::initScene() {
 	RscManager* pRscManager = RscManager::get();
 
 	vect2df_t vNewSprPos;
-	vNewSprPos.x = 60;
-	vNewSprPos.y = 10;
+	vNewSprPos.x = 0;
+	vNewSprPos.y = 0;
 
 	Sprite* pTitleSpr = new Sprite(pRscManager->getImgRsc(4), vNewSprPos);
 
 	vNewSprPos.x = 0;
 	vNewSprPos.y = 0;
-	Sprite* pCreditsSpr = new Sprite(pRscManager->getImgRsc(5), vNewSprPos);
+	//Sprite* pCreditsSpr = new Sprite(pRscManager->getImgRsc(5), vNewSprPos);
 
 	vNewSprPos.x = 130;
 	vNewSprPos.y = 110;
@@ -38,7 +38,7 @@ void LDMainMenu::initScene() {
 	m_pQuitBtn = new ImageButtonWidget(pRscManager->getSprShtRsc(3), vNewSprPos, 3, 2, 0);
 
 	m_pScene->addComponent(pTitleSpr);
-	m_pScene->addComponent(pCreditsSpr);
+	//m_pScene->addComponent(pCreditsSpr);
 	m_pScene->addComponent(m_pContinueBtn);
 	m_pScene->addComponent(m_pNewBtn);
 	m_pScene->addComponent(m_pQuitBtn);

@@ -36,6 +36,10 @@ void Object::parentToRoot() {
 	setParentWidget(getRootWidget());
 }
 
+void Object::setIsCrate(bool bIsCrate) {
+	m_bIsCrate = bIsCrate;
+}
+
 void Object::update() {
 	if (m_bAnimActive) {
 		//m_fAnimCoef *= System::get()->getDeltaTime() / m_fAnimDuration;
@@ -55,6 +59,17 @@ void Object::update() {
 			TRANSFORM_ABS
 		);
 
+	}
+}
+
+void Object::draw(uint8* pBuffer) {
+	if (!m_bIsCrate) {
+		DraggableSprite::draw(pBuffer);
+	}
+	else {
+		vect2df_t vPos = getRect()->getPos();
+		RscManager::get()->getImgRsc(15)->draw(pBuffer, vPos.x, vPos.y - getRect()->getSize().h/2, false, true);
+		drawChildren(pBuffer);
 	}
 }
 
@@ -89,6 +104,7 @@ void Object::onEndAnim() {
 	case ANIM_OBJ_KEEP:
 		LDGameMode::get()->getTruckContent()->addObject(this);
 		LDGameMode::get()->onObjKeep(this);
+		setIsCrate(true);
 		break;
 
 	case ANIM_OBJ_SELL:
@@ -96,3 +112,4 @@ void Object::onEndAnim() {
 		break;
 	}
 }
+

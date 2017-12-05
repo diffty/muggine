@@ -49,9 +49,17 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	rscManager.loadImg("data/bg.bmp");
 	rscManager.loadImg("data/card.bmp");
 	rscManager.loadSprSht("data/ui1.bmp", 3, 1, 3);
-	rscManager.loadSprSht("data/objects.bmp", 6, 1, 6);
+	rscManager.loadSprSht("data/objects.bmp", 6, 2, 8);
 	rscManager.loadImg("data/truck-slot.bmp");
 	rscManager.loadSprSht("data/ui2.bmp", 1, 1, 1);
+	rscManager.loadSprSht("data/truck.bmp", 3, 1, 3);
+	rscManager.loadSprSht("data/truck_wheels.bmp", 1, 1, 1);
+	rscManager.loadSprSht("data/transition-stripes.bmp", 2, 1, 2);
+	rscManager.loadImg("data/crate.bmp");
+	rscManager.loadFont("data/font-pixel.bmp", 16, 16, 256, 1);
+	rscManager.loadImg("data/heart.bmp");
+	rscManager.loadSprSht("data/particles.bmp", 4, 2, 8);
+
 
 	// Sound system
 	Sound sound;
@@ -117,7 +125,7 @@ int main(int argc, char **argv)
 #endif
 
 	gfx.Init();
-	pSys->consoleInit();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
+	//pSys->consoleInit();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
 
 	MainApp(pSys, &gfx);
 

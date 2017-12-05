@@ -3,6 +3,7 @@
 
 #include "common_types.hpp"
 #include "text.hpp"
+#include "image_button_widget.hpp"
 
 
 class LDLevelSuccessScreen
@@ -23,16 +24,18 @@ private:
 	Text* m_pTotalScoreLabel;
 	Text* m_pTotalScoreValue;
 
+	ImageButtonWidget* m_pUpgradeButton;
+
 	float m_fTimeBeforeStateEnd = 5;
 
 	float m_fMoneyScoreCount = 0;
 	float m_fHealthScoreCount = 0;
 	float m_fTimeScoreCount = 0;
 
-	bool bTimerActive = false;
-	bool bDoMustDisappear = false;
-	int iIsMouseBtnState = 0;
+	bool m_bTimerActive = false;
+	bool m_bDoMustDisappear = false;
 
+	int m_iIsMouseBtnState = 0;
 	int m_iState;
 
 public:
@@ -44,6 +47,8 @@ public:
 
 	void onNewState();
 	void onEndState();
+
+	static void onUpgradeButtonPressed(void* args);
 
 	bool doMustDisappear();
 };

@@ -10,6 +10,7 @@
 #include "ld_level_begin_screen.hpp"
 #include "ld_level_fail_screen.hpp"
 #include "ld_level_success_screen.hpp"
+#include "ld_transition_screen.hpp"
 
 
 enum E_APP_STATE {
@@ -20,6 +21,7 @@ enum E_APP_STATE {
 	E_APP_STATE_LEVEL_FAIL,
 	E_APP_STATE_INGAME,
 	E_APP_STATE_INGAME_MENU,
+	E_APP_STATE_NULL
 };
 
 enum E_FADE_MODE {
@@ -38,6 +40,7 @@ private:
 	Scene m_gameScene;
 	Scene m_menuScene;
 	E_APP_STATE m_eCurrState;
+	E_APP_STATE m_ePostTransitionState = E_APP_STATE_NULL;
 
 	int m_iCurrLevel = 0;
 
@@ -53,8 +56,11 @@ private:
 	LDLevelBeginScreen* m_pLevelBeginScreen;
 	LDLevelFailScreen* m_pLevelFailScreen;
 	LDLevelSuccessScreen* m_pLevelSuccessScreen;
+	LDTransitionScreen* m_pTransitionScreen;
 
 	static LDGameManager* s_pInstance;
+
+	int m_iTruckLevel;
 
 public:
 	LDGameManager();
@@ -65,6 +71,10 @@ public:
 	void onLevelSuccess();
 	void onLevelFail();
 	void onStartLevel();
+	void onEndTransition(ETransitionAnimType eTransType);
+	void onTruckUpgrade();
+
+	void changeState(E_APP_STATE eNewState, bool bWithTransition = false);
 	
 	void newGame();
 	static void newGameMenuBtnCallback(void* pObj);
@@ -81,6 +91,10 @@ public:
 
 	Scene* getGameScene();
 	Scene* getMenuScene();
+
+	int getTruckLevel();
+
+	void setTruckLevel(int iTruckLevel);
 
 	void update();
 	void draw(uint8* fb);
