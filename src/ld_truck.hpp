@@ -17,7 +17,7 @@ private:
 	int m_iNbSlotW;
 	int m_iNbSlotH;
 
-	int m_iLoadAnimOffY;
+	int m_iLoadAnimOffY = 0;
 
 	float m_fLoadAnim = 0;
 	bool m_bDoLoadAnim = false;

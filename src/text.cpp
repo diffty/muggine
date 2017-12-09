@@ -16,6 +16,8 @@ Text::Text(int iNum, Font* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
 	m_pFont = pFont;
+    m_szText = new char[1];
+    m_szText[0] = '\0';
 
 	char* newText = intToStr(iNum);
 	setText(newText);
@@ -33,7 +35,7 @@ char* Text::getText() {
 void Text::setText(char* szText) {
 	int iTextLen = strlen(szText);
 
-	delete m_szText;
+	if (m_szText) delete m_szText;
 
 	m_szText = new char[iTextLen+1];
 

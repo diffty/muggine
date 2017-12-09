@@ -14,7 +14,7 @@ private:
 	float m_fTimeBeforeEnd = 3;
 
 public:
-	LDLevelBeginScreen::LDLevelBeginScreen(int iLevelNum);
+	LDLevelBeginScreen(int iLevelNum);
 	~LDLevelBeginScreen();
 
 	void update();

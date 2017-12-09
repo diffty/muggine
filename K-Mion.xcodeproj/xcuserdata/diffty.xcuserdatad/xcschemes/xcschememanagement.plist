@@ -4,7 +4,17 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Muggine.xcscheme</key>
+		<key>Cyberpunk Nerd Move copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>Cyberpunk Nerd Move.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>K-Mion.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +22,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>955C6F411E6769CF00097C33</key>
+		<key>95360F561FD6FD9D00F8CBEA</key>
 		<dict>
 			<key>primary</key>
 			<true/>

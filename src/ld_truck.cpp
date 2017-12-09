@@ -34,7 +34,7 @@ Truck::Truck(vect2df_t vPos, int iNbSlotW, int iNbSlotH) :
 
 	m_iNbSlotW = iNbSlotW;
 	m_iNbSlotH = iNbSlotH;
-
+        
 	m_pContent = new TruckContent(
 		{
 			0,
@@ -99,7 +99,7 @@ void Truck::draw(uint8* pBuffer) {
 	vect2df_t vTruckPos = getRect()->getPos();
 
 	// printf("%d, %f\n", loadAnimOffY, m_fLoadAnim);
-
+    
 	int iCurX = vTruckPos.x;
 	int iCurY = vTruckPos.y;
 

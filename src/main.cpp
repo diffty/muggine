@@ -14,7 +14,7 @@
 #include "scene.hpp"
 #include "system.hpp"
 #include "graphics.hpp"
-#include "sound.hpp"
+//#include "sound.hpp"
 #include "input.hpp"
 #include "rsc_manager.hpp"
 #include "sprite.hpp"
@@ -32,8 +32,43 @@
 #include <windows.h>
 #endif
 
+#ifdef TARGET_OSX
+#include <unistd.h>
+#include <stdio.h>
+#include <errno.h>
+#endif
+
+#ifdef __APPLE__
+namespace CoreFoundation {
+    #include "CoreFoundation/CoreFoundation.h"
+}
+#endif
+
 
 void MainApp(System* pSys, Graphics* pGfx) {
+#if DEBUG==1
+    
+        char cwd[1024];
+        if (getcwd(cwd, sizeof(cwd)) != NULL)
+            fprintf(stdout, "Current working dir: %s\n", cwd);
+        else
+            perror("getcwd() error");
+#endif
+    
+#ifdef __APPLE__
+    CoreFoundation::CFBundleRef mainBundle = CoreFoundation::CFBundleGetMainBundle();
+    CoreFoundation::CFURLRef resourcesURL = CoreFoundation::CFBundleCopyResourcesDirectoryURL(mainBundle);
+    char path[PATH_MAX];
+    if (!CoreFoundation::CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (CoreFoundation::UInt8 *)path, PATH_MAX))
+    {
+        // error!
+    }
+    CoreFoundation::CFRelease(resourcesURL);
+    
+    chdir(path);
+    std::cout << "Current Path: " << path << std::endl;
+#endif
+    
 #ifdef TARGET_3DS
 	Result rc = romfsInit();
 #endif
@@ -43,7 +78,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	rscManager.loadFont("data/font-big.bmp", 16, 16, 256, -1);
 	rscManager.loadFont("data/font-small.bmp", 16, 16, 256, -1);
 	rscManager.loadFont("data/font-small-black.bmp", 16, 16, 256, -1);
-	rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 1, 6);
+	rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 2, 8);
 	rscManager.loadImg("data/title.bmp");
 	rscManager.loadImg("data/credits.bmp");
 	rscManager.loadImg("data/bg.bmp");
@@ -62,7 +97,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 
 	// Sound system
-	Sound sound;
+	//Sound sound;
 	//sound.addSound("data/sound/intro-rix.mp3", true);
 	
 	// Initing game manager
@@ -98,7 +133,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 		}
 		*/
 
-		sound.update();
+		//sound.update();
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();

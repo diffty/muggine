@@ -15,7 +15,7 @@ private:
 	float m_fTimeBeforeEnd = 3;
 
 public:
-	LDLevelFailScreen::LDLevelFailScreen();
+	LDLevelFailScreen();
 	~LDLevelFailScreen();
 
 	void update();

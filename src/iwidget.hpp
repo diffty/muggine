@@ -31,6 +31,7 @@ public:
 		m_rect(x, y, w, h) {
 
 		initList(&m_llChildrenWidgets);
+        initList(&m_llWidgetNodesToDelete);
 
 		m_bStopOnFirstInput = true;
 	};
@@ -40,6 +41,7 @@ public:
 		m_rect(x, y, 0., 0.) {
 	
 		initList(&m_llChildrenWidgets);
+        initList(&m_llWidgetNodesToDelete);
 
 		m_bStopOnFirstInput = true;
 
@@ -50,6 +52,7 @@ public:
 		m_rect(0., 0., 0., 0.) {
 	
 		initList(&m_llChildrenWidgets);
+        initList(&m_llWidgetNodesToDelete);
 
 		m_bStopOnFirstInput = true;
 	};

@@ -1,7 +1,6 @@
 #include "csv_reader.hpp"
 
 
-
 CSVReader::CSVReader(char* szFilename) {
 	initList(&m_llFields);
 	initList(&m_llData);
@@ -30,7 +29,13 @@ void CSVReader::destroyData() {
 }
 
 void CSVReader::readFile() {
-	FILE* pFile = fopen(m_szFilename, "r");
+	FILE* pFile;
+    
+    if ((pFile = fopen(m_szFilename, "r")) == NULL) {
+        printf("Can't read file %s. Aborting.\n", m_szFilename);
+        exit(1);
+    }
+    
 	long lFileSize;
 	char* buffer;
 
