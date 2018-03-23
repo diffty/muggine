@@ -2,16 +2,22 @@
 #include "csv_reader.hpp"
 
 
-Font::Font(char* szFileName, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset)
-	: SpriteSheet(szFileName, iGridWidth, iGridHeight, uLength) {
+Font::Font(char* szFileName, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset) : SpriteSheet(szFileName, iGridWidth, iGridHeight, uLength) {
 
 	m_iSizeOffset = iSizeOffset;
-
-	char* szCsvFileName = new char[strlen(szFileName)];
+        
+    size_t strLen = strlen(szFileName);
+        
+	char* szCsvFileName = new char[strLen+1];
 	strcpy(szCsvFileName, szFileName);
-	strcat(szCsvFileName, ".csv");
-
+        
+    szCsvFileName[strLen-3] = 'c';
+    szCsvFileName[strLen-2] = 's';
+    szCsvFileName[strLen-1] = 'v';
+    
 	m_pCharSizesCsv = new CSVReader(szCsvFileName);
+        
+    delete[] szCsvFileName;
 
 	int fieldsCount = m_pCharSizesCsv->countFields();
 

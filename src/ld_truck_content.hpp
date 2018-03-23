@@ -2,7 +2,7 @@
 #define LD_TRUCK_CONTENT_HPP
 
 #include "grid_widget_layout.hpp"
-#include "sprite.hpp";
+#include "sprite.hpp"
 #include "ld_object.hpp"
 #include "linked_list.hpp"
 

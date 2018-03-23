@@ -75,7 +75,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
     
 	RscManager rscManager;
 
-	rscManager.loadFont("data/font-big.bmp", 16, 16, 256, -1);
+    rscManager.loadFont("data/font-big.bmp", 16, 16, 256, -1);
 	rscManager.loadFont("data/font-small.bmp", 16, 16, 256, -1);
 	rscManager.loadFont("data/font-small-black.bmp", 16, 16, 256, -1);
 	rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 2, 8);
@@ -94,7 +94,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	rscManager.loadFont("data/font-pixel.bmp", 16, 16, 256, 1);
 	rscManager.loadImg("data/heart.bmp");
 	rscManager.loadSprSht("data/particles.bmp", 4, 2, 8);
-
 
 	// Sound system
 	//Sound sound;
@@ -127,11 +126,8 @@ void MainApp(System* pSys, Graphics* pGfx) {
 		gameManager.update();
 		gameManager.draw(fb);
 
-		/*
-		if (sys->getInputSys()->IsKeyPressed(KEYB_A)) {
-
-		}
-		*/
+		
+		//if (sys->getInputSys()->IsKeyPressed(KEYB_A)) { }
 
 		//sound.update();
 
@@ -160,7 +156,8 @@ int main(int argc, char **argv)
 #endif
 
 	gfx.Init();
-	//pSys->consoleInit();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
+    pSys->initConsole();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
+    // printf("lol");
 
 	MainApp(pSys, &gfx);
 

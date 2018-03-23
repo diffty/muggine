@@ -8,6 +8,7 @@
 #include "text.hpp"
 #include "csv_reader.hpp"
 #include "common_tools.hpp"
+#include "platform_tools.hpp"
 
 #include "ld_object_card.hpp"
 #include "ld_object.hpp"
@@ -41,7 +42,7 @@ private:
 	LinkedList m_llWidgetTrash;
 	LinkedList m_llObjectsOwned;
 
-	CSVReader m_objectsData;
+	CSVReader* m_objectsData;
 
 	ObjectCard* m_pCurrCard = NULL;
 	ObjectCard* m_pNextCard = NULL;

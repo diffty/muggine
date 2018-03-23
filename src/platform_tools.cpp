@@ -7,3 +7,19 @@
 //
 
 #include "platform_tools.hpp"
+
+
+char* platformConformPath(char* szPath) {
+    char* szConformedPath = NULL;
+    
+#ifdef TARGET_3DS
+    szConformedPath = new char[strlen(szPath)+1+7];
+    strcpy(szConformedPath, "romfs:/");
+    strcat(szConformedPath, szPath);
+#else
+    szConformedPath = new char[strlen(szPath)+1];
+    strcpy(szConformedPath, szPath);
+#endif
+    
+    return szConformedPath;
+}

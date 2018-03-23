@@ -6,8 +6,10 @@ CSVReader::CSVReader(char* szFilename) {
 	initList(&m_llData);
 
 	m_iNbFields = 0;
-
-	m_szFilename = szFilename;
+    
+    size_t iCharLen = strlen(szFilename);
+    m_szFilename = new char[iCharLen+1];
+	memcpy(m_szFilename, szFilename, iCharLen+1);
 
 	readFile();
 }
@@ -17,6 +19,7 @@ CSVReader::~CSVReader() {
 	destroyData();
 	clearList(&m_llFields);
 	clearList(&m_llData);
+    delete[] m_szFilename;
 }
 
 void CSVReader::destroyData() {

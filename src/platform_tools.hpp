@@ -10,5 +10,10 @@
 #define platform_tools_hpp
 
 #include <stdio.h>
+#include <cstring>
+
+
+char* platformConformPath(char* szPath);
+
 
 #endif /* platform_tools_hpp */

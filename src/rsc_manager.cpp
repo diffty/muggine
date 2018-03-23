@@ -13,8 +13,10 @@ RscManager::~RscManager() {
 	freeAllRsc();
 }
 
-bool RscManager::loadImg(char* imgPath) {
-    Image* newImage = new Image(imgPath);
+bool RscManager::loadImg(char* szImgPath) {
+    char* szConformedPath = platformConformPath(szImgPath);
+    Image* newImage = new Image(szConformedPath);
+    delete szConformedPath;
 
 	if (newImage) {
 		LLNode* newRscNode = new LLNode;
@@ -30,8 +32,10 @@ bool RscManager::loadImg(char* imgPath) {
 }
 
 bool RscManager::loadSprSht(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength) {
-	SpriteSheet* pNewSprSht = new SpriteSheet(szImgPath, iGridWidth, iGridHeight, uLength);
-
+    char* szConformedPath = platformConformPath(szImgPath);
+	SpriteSheet* pNewSprSht = new SpriteSheet(szConformedPath, iGridWidth, iGridHeight, uLength);
+    delete szConformedPath;
+    
 	if (pNewSprSht) {
 		LLNode* newRscNode = new LLNode;
 		newRscNode->pData = (void *)pNewSprSht;
@@ -46,8 +50,10 @@ bool RscManager::loadSprSht(char* szImgPath, int iGridWidth, int iGridHeight, ui
 }
 
 bool RscManager::loadFont(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset) {
-	Font* pNewFont = new Font(szImgPath, iGridWidth, iGridHeight, uLength, iSizeOffset);
-
+    char* szConformedPath = platformConformPath(szImgPath);
+	Font* pNewFont = new Font(szConformedPath, iGridWidth, iGridHeight, uLength, iSizeOffset);
+    delete szConformedPath;
+    
 	if (pNewFont) {
 		LLNode* newRscNode = new LLNode;
 		newRscNode->pData = (void *)pNewFont;

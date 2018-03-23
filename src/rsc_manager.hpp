@@ -6,6 +6,7 @@
 #include "image.hpp"
 #include "spritesheet.hpp"
 #include "font.hpp"
+#include "platform_tools.hpp"
 
 
 class RscManager {
@@ -18,7 +19,7 @@ public:
 	RscManager();
     ~RscManager();
 
-	bool loadImg(char* imgPath);
+	bool loadImg(char* szImgPath);
 	bool loadSprSht(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength);
 	bool loadFont(char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset);
 	void unloadRsc(uint rscId);
@@ -28,7 +29,7 @@ public:
 	SpriteSheet* getSprShtRsc(uint rscId);
 	Font* getFontRsc(uint rscId);
 	uint getRscCount();
-
+    
 	static RscManager* get();
 };
 

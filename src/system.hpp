@@ -17,6 +17,7 @@
 #include "input.hpp"
 #include "constants.hpp"
 #include <time.h>
+#include <cstdlib>
 
 
 
@@ -27,7 +28,7 @@ public:
 
 	static System* get();
 
-	void consoleInit();
+	void initConsole();
 	void initWindow();
 
 	Input* getInputSys();

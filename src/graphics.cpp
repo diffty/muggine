@@ -4,6 +4,7 @@
 Graphics::Graphics(System* sys) {
 	m_sys = sys;
 
+    #ifdef TARGET_SDL
 	m_drawBufBlitRect.x = 0;
 	m_drawBufBlitRect.y = 0;
 	m_drawBufBlitRect.w = SCREEN_WIDTH;
@@ -13,6 +14,7 @@ Graphics::Graphics(System* sys) {
 	m_screenBufBlitRect.y = 0;
 	m_screenBufBlitRect.w = SCREEN_WIDTH * SCREEN_SCALE;
 	m_screenBufBlitRect.h = SCREEN_HEIGHT * SCREEN_SCALE;
+    #endif
 }
 
 void Graphics::Init() {

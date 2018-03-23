@@ -59,7 +59,7 @@ SDL_Window* System::getWindow() {
 }
 #endif
 
-void System::consoleInit() {
+void System::initConsole() {
 #ifdef TARGET_3DS
 	
 	consoleInit(GFX_TOP, NULL);

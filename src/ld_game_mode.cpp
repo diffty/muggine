@@ -3,21 +3,27 @@
 #include "rsc_manager.hpp"
 
 
-#define START_HEALTH 50
-#define UPGRADE_COST 750
+#define START_HEALTH            50
+#define UPGRADE_BASE_COST       500
+#define UPGRADE_COST_PER_LVL    250
 
 
 LDGameMode* LDGameMode::s_pInstance = NULL;
 
 
-LDGameMode::LDGameMode(Scene* pMainScene, LinkedList llObjectsOwned, int iStartMoney, int iStartHealth, int iGiveNFreeObjects)
-	: m_objectsData("data/objects_data.csv") {
+LDGameMode::LDGameMode(Scene* pMainScene, LinkedList llObjectsOwned, int iStartMoney, int iStartHealth, int iGiveNFreeObjects) {
 
 	LDGameMode::s_pInstance = this;
 
 	m_pMainScene = pMainScene;
 
 	m_bWinTimerActivated = false;
+    
+    printf("test\n");
+    char* platformPath = platformConformPath("data/objects_data.csv");
+    printf("%s\n", platformPath);
+    m_objectsData = new CSVReader(platformPath);
+    delete platformPath;
 
 	initScene();
 
@@ -27,10 +33,12 @@ LDGameMode::LDGameMode(Scene* pMainScene, LinkedList llObjectsOwned, int iStartM
 
 	// Level up the truck if >UPGRADE_COST$
 	int iTruckLevel = LDGameManager::get()->getTruckLevel();
-
-	if (m_iMoney > UPGRADE_COST && iTruckLevel < 6) {
+        
+    int iCurrUpgradeCost = UPGRADE_BASE_COST + UPGRADE_COST_PER_LVL * (iTruckLevel - 1);
+        
+	if (m_iMoney > iCurrUpgradeCost && iTruckLevel < 6) {
 		LDGameManager::get()->setTruckLevel(iTruckLevel + 1);
-		m_iMoney -= UPGRADE_COST;
+		m_iMoney -= iCurrUpgradeCost;
 	}
 
 	size2df_t iSlotSize = RscManager::get()->getImgRsc(10)->getSize();
@@ -73,6 +81,7 @@ LDGameMode::LDGameMode(Scene* pMainScene, LinkedList llObjectsOwned, int iStartM
 LDGameMode::~LDGameMode() {
 	m_pMainScene->garbageCollect();
 	m_pMainScene->destroy();
+    delete m_objectsData;
 }
 
 void LDGameMode::initScene() {
@@ -135,7 +144,7 @@ void LDGameMode::buyObjects() {
 		else {
 			addDataToList(&m_llObjectsOwned, pNewObj);
 			decreaseMoney(pNewObj->getPrice());
-			increaseHealth(pNewObj->getLoveFactor());
+			//increaseHealth(pNewObj->getLoveFactor());
 		}
 	}
 }
@@ -152,12 +161,12 @@ Object* LDGameMode::pickObject() {
 Object* LDGameMode::generateNewObject() {
 	srand((uint)((System::get()->getTime() - (long)System::get()->getTime()) * 1000000000));
 
-	int newObjId = rand() % m_objectsData.countDataRows();
+	int newObjId = rand() % m_objectsData->countDataRows();
 
-	char* szName = m_objectsData.getData("Name", newObjId);
-	int iPriceMin = intFromStr(m_objectsData.getData("PriceMin", newObjId));
-	int iPriceMax = intFromStr(m_objectsData.getData("PriceMax", newObjId));
-	int iSprShtFrameId = intFromStr(m_objectsData.getData("SprShtFrameId", newObjId));
+    char* szName = m_objectsData->getData("Name", newObjId);
+	int iPriceMin = intFromStr(m_objectsData->getData("PriceMin", newObjId));
+	int iPriceMax = intFromStr(m_objectsData->getData("PriceMax", newObjId));
+	int iSprShtFrameId = intFromStr(m_objectsData->getData("SprShtFrameId", newObjId));
 
 	Object* pNewObj = new Object(szName, RscManager::get()->getSprShtRsc(9), iSprShtFrameId, { 0, 0 }, false);
 	pNewObj->setPrice(iPriceMin + rand() % (iPriceMax - iPriceMin));
@@ -277,6 +286,8 @@ void LDGameMode::onObjKeep(Object* pObj) {
 		);
 	}
 
+    increaseHealth(pObj->getLoveFactor()+1);
+    
 	m_pTruck->doLoadAnim();
 
 	if (!m_pCurrCard) {

@@ -19,17 +19,17 @@ float maxf(float a, float b) {
 vect2df_t getNormalizedVect(vect2df_t vVect) {
 	vect2df_t vNormalizedVect;
 
-	if (abs(vVect.x) < abs(vVect.y)) {
-		vNormalizedVect.x = vVect.x / abs(vVect.y);
-		vNormalizedVect.y = vVect.y / abs(vVect.y);
+	if (fabs(vVect.x) < fabs(vVect.y)) {
+		vNormalizedVect.x = vVect.x / fabs(vVect.y);
+		vNormalizedVect.y = vVect.y / fabs(vVect.y);
 	}
-	else if (abs(vVect.x) > abs(vVect.y)) {
-		vNormalizedVect.x = vVect.x / abs(vVect.x);
-		vNormalizedVect.y = vVect.y / abs(vVect.x);
+	else if (fabs(vVect.x) > fabs(vVect.y)) {
+		vNormalizedVect.x = vVect.x / fabs(vVect.x);
+		vNormalizedVect.y = vVect.y / fabs(vVect.x);
 	}
 	else {
-		vNormalizedVect.x = vVect.x / abs(vVect.x);
-		vNormalizedVect.y = vVect.y / abs(vVect.y);
+		vNormalizedVect.x = vVect.x / fabs(vVect.x);
+		vNormalizedVect.y = vVect.y / fabs(vVect.y);
 	}
 
 	return vNormalizedVect;

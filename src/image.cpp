@@ -8,6 +8,7 @@ Image::Image(char* fileName) {
 Image::~Image() {
 	free(m_pImgData);
 	free(m_aPalette);
+    delete m_nbZoneByLine;
 }
 
 
@@ -25,8 +26,7 @@ void Image::loadFromFile(char* fileName) {
 	int* startOffset = (int *) malloc(4);
 	int* headerSize  = (int *) malloc(4);
 	unsigned long nbPixels;
-
-	byte* fileBuf = (byte *) malloc(FREAD_BUFFER_SIZE);
+    
 	long seekPtr;
 
 	byte* paletteData;
@@ -40,7 +40,7 @@ void Image::loadFromFile(char* fileName) {
     
 	if ((fp = fopen(fileName, "rb")) == NULL) {
 		printf("Can't read image file %s. Aborting.\n", fileName);
-		exit(1);
+		//exit(1);
 	}
     
 	// Reading header
@@ -77,6 +77,13 @@ void Image::loadFromFile(char* fileName) {
 	printf("Palette size : %d\n", m_paletteSize);
 	printf("Nb pixels : %d\n", nbPixels);
 	printf("Padding: %d\n", rowPadding);
+    
+    // Un buffer trop gros peut être problématique sur une ptite machine
+    // int bufferSize = (int) (*imgW + rowPadding) * 3 * 10;
+    int bufferSize = (int) (*imgW + rowPadding) * 3 * *imgH;
+    
+    // Allocating read buffer
+    byte* fileBuf = (byte *) malloc(bufferSize);
 
 	// Reading palette
 	paletteData = (byte *) malloc(m_paletteSize*4);
@@ -98,11 +105,12 @@ void Image::loadFromFile(char* fileName) {
 	seekPtr = *startOffset;
 
 	int nbPixelsWPadding = nbPixels + (m_size.h - 1) * rowPadding;
+    int imgWidthWPadding = m_size.w + rowPadding;
+    
     long currPixNb = 0;
     
     long imgDataPtr = 0;
     
-    bool inTransp = false;
     bool inOpaque = false;
     
     LinkedList lOpaqueInfo;
@@ -110,32 +118,47 @@ void Image::loadFromFile(char* fileName) {
     
 	int currZoneIdx = 0;
 
-	m_nbZoneByLine = new long[m_size.h];
-	for (int i = 0; i < m_size.h; i++)
+#if TARGET_3DS
+	m_nbZoneByLine = new long[m_size.w];
+	for (int i = 0; i < m_size.w; i++)
 		m_nbZoneByLine[i] = 0;
+#else
+    m_nbZoneByLine = new long[m_size.h];
+    for (int i = 0; i < m_size.h; i++)
+        m_nbZoneByLine[i] = 0;
+#endif
 
 	while (seekPtr < (nbPixelsWPadding + (*startOffset))) {
-		nBytesToRead = min((nbPixelsWPadding - (seekPtr - (*startOffset))), FREAD_BUFFER_SIZE);
+		nBytesToRead = min((nbPixelsWPadding - (seekPtr - (*startOffset))), bufferSize);
         
 		fseek(fp, seekPtr, SEEK_SET);
 		fread(fileBuf, 1, nBytesToRead, fp);
 
         long fileBufSeek = 0;
 
-        for (int i = 0; i < nBytesToRead; i++) {
-			if (currPixNb % m_size.w == 0 && currPixNb > 0) {
-				i += rowPadding;
-			}
+        int j = 0;
 
-#ifdef TARGET_3DS
-            fileBufSeek = i;
+#if TARGET_3DS
+        for (int i = 0; i < nBytesToRead - rowPadding * m_size.h; i++) {
+#else
+        for (int i = 0; i < nBytesToRead; i++) {
+#endif
+            
+
+            if (currPixNb % m_size.w == 0 && currPixNb > 0) {
+                j += rowPadding;
+            }
+
+#if TARGET_3DS
+            fileBufSeek = ((currPixNb % m_size.w) * imgWidthWPadding) + (currPixNb / m_size.w);
             imgDataPtr = ((currPixNb % m_size.w) * m_size.h) + (currPixNb / m_size.w);
 #else
-			fileBufSeek = i;
+			fileBufSeek = j;
             imgDataPtr = currPixNb;
 #endif
 
             byte currByte = fileBuf[fileBufSeek];
+            byte currByteGoodOrder = fileBuf[j];
             
 			bool doEndNow = false;
 
@@ -147,12 +170,14 @@ void Image::loadFromFile(char* fileName) {
 					lnOpaqueInfo->pData = new long;
 					*((long*)lnOpaqueInfo->pData) = currPixNb;
 					addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
-
-					//printf("begin: %ld/%ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb, currPixNb % m_size.w, currPixNb / m_size.w);
 				}
 			}
 			else {
-				if ((inOpaque && (currByte == 0 || (currPixNb + 1) % m_size.w == 0)) || (!inOpaque && currByte != 0)) {
+#if TARGET_3DS
+				if ((inOpaque && (currByte == 0 || (currPixNb + 1) % m_size.h == 0)) || (!inOpaque && currByte != 0)) {
+#else
+                if ((inOpaque && (currByte == 0 || (currPixNb + 1) % m_size.w == 0)) || (!inOpaque && currByte != 0)) {
+#endif
 					LLNode* lnOpaqueInfo = new LLNode;
 					lnOpaqueInfo->pData = new long;
 
@@ -164,17 +189,24 @@ void Image::loadFromFile(char* fileName) {
 							*((long*) lnOpaqueInfo->pData) = currPixNb;
 						}
 
-						m_nbZoneByLine[currPixNb / m_size.w]++;
-						//printf("end: %ld/%ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb, currPixNb % m_size.w, currPixNb / m_size.w);
-						//printf("NbZoneInLine %ld : %ld\n", currPixNb / m_size.w, m_nbZoneByLine[currPixNb / m_size.w]);
+#if TARGET_3DS
+						m_nbZoneByLine[currPixNb / m_size.h]++;
+#else
+                        m_nbZoneByLine[currPixNb / m_size.w]++;
+#endif
 					}
 					else {
 						*((long*) lnOpaqueInfo->pData) = currPixNb;
-						//printf("begin: %ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb % m_size.w, currPixNb / m_size.w);
 
-						if ((currPixNb + 1) % m_size.w == 0) {
-							doEndNow = true;
-						}
+#if TARGET_3DS
+                        if ((currPixNb + 1) % m_size.h == 0) {
+                            doEndNow = true;
+                        }
+#else
+                        if ((currPixNb + 1) % m_size.w == 0) {
+                            doEndNow = true;
+                        }
+#endif
 					}
 
 					addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
@@ -196,15 +228,17 @@ void Image::loadFromFile(char* fileName) {
 				}
 			}
 
-            m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
-			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
-			m_pImgData[(imgDataPtr * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
+            m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByteGoodOrder].b;
+			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByteGoodOrder].g;
+			m_pImgData[(imgDataPtr * SCREEN_BPP) + 2] = m_aPalette[(int)currByteGoodOrder].r;
 #if TARGET_SDL
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 3] = 0;
 #endif
 			currPixNb++;
+                
+            j++;
 		}
-
+        
 		seekPtr += nBytesToRead;
 	}
 
@@ -214,10 +248,11 @@ void Image::loadFromFile(char* fileName) {
 
 		*((long*)lnOpaqueInfo->pData) = currPixNb - 1;
 
-		m_nbZoneByLine[currPixNb / m_size.w]++;
-
-		//printf("end2: %ld (%ld, %ld)\n", *((long*)lnOpaqueInfo->pData), currPixNb % m_size.w, currPixNb / m_size.w);
-		//printf("NbZoneInLine %ld : %ld\n", currPixNb / m_size.w, m_nbZoneByLine[currPixNb / m_size.w]);
+#if TARGET_3DS
+		m_nbZoneByLine[currPixNb / m_size.h]++;
+#else
+        m_nbZoneByLine[currPixNb / m_size.w]++;
+#endif
 
 		addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
 	}
@@ -225,20 +260,31 @@ void Image::loadFromFile(char* fileName) {
 	m_maskNbZone = lOpaqueInfo.size;
     m_mask = new long[m_maskNbZone];
     
-    //printf("NbZones: %ld\n", m_maskNbZone);
+    printf("NbZones: %u\n", m_maskNbZone);
     LLNode* currNode = lOpaqueInfo.pHead;
     
-    
-	m_maskIdByLine = new long*[m_size.h];
+#if TARGET_3DS
+	m_maskIdByLine = new long*[m_size.w];
+#else
+    m_maskIdByLine = new long*[m_size.h];
+#endif
 
-	for (int i = 0; i < m_size.h; i++) {
+#if TARGET_3DS
+	for (int i = 0; i < m_size.w; i++) {
+#else
+    for (int i = 0; i < m_size.h; i++) {
+#endif
 		m_maskIdByLine[i] = new long[m_nbZoneByLine[i]];
 	}
 
 	i = 0;
 	j = 0;
 
-	int lastY = 0;
+#if TARGET_3DS
+	int lastX = 0;
+#else
+    int lastY = 0;
+#endif
 
 	while (currNode != NULL) {
 		long* pPosData = (long *)currNode->pData;
@@ -246,14 +292,25 @@ void Image::loadFromFile(char* fileName) {
 		if (i % 2 == 0) {
 			m_mask[i] = *pPosData;
 
-			int currY = m_mask[i] / m_size.w;
+#if TARGET_3DS
+			int currX = m_mask[i] / m_size.h;
+            
+            if (lastX != currX) {
+                lastX = currX;
+                j = 0;
+            }
+            
+            m_maskIdByLine[currX][j] = i;
+#else
+            int currY = m_mask[i] / m_size.w;
 
-			if (lastY != currY) {
-				lastY = currY;
-				j = 0;
-			}
-
-			m_maskIdByLine[currY][j] = i;
+            if (lastY != currY) {
+                lastY = currY;
+                j = 0;
+            }
+            
+            m_maskIdByLine[currY][j] = i;
+#endif
 
 			j++;
 		}
@@ -285,6 +342,7 @@ void Image::loadFromFile(char* fileName) {
 }
 
 void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked) {
+    
     int xb, yb;
     unsigned int imgBufIdx, zoneSize;
 	unsigned int overflowLeft = 0, overflowRight = 0, overflowTop = 0, overflowBottom = 0;
@@ -322,56 +380,110 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 	}
     
   	if (masked) {
-		for (int y = srcY; y < srcY + srcH; y++) {
-			int reversedY = (m_size.h - 1) - (m_size.h - 1 - srcY) + (y % srcH);
+#if TARGET_3DS
+		for (int x = srcX; x < srcX + srcW; x++) {
+			int reversedX = (m_size.w - 1) - (m_size.w - 1 - srcX) + (x % srcW);
+            reversedX = x;
 
-			if (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > SCREEN_HEIGHT-1) {
+			if (dstX + ((srcW-1) - (x % srcW)) < 0 || dstX + ((srcW-1) - (x % srcW)) > SCREEN_WIDTH-1) {
 				continue;
 			}
 
-			for (int j = 0; j < m_nbZoneByLine[reversedY]; j++) {
-				int maskIdx = m_maskIdByLine[reversedY][j];
+			for (int j = 0; j < m_nbZoneByLine[reversedX]; j++) {
+				int maskIdx = m_maskIdByLine[reversedX][j];
 
 				imgBufIdx = (unsigned int) m_mask[maskIdx];
 				zoneSize  = (unsigned int) m_mask[maskIdx + 1];
 
-				int posOnImgX = imgBufIdx % m_size.w;
-				int posOnImgY = (srcH - 1) - (imgBufIdx / m_size.w);
+				int posOnImgY = imgBufIdx % m_size.h;
+				int posOnImgX = (srcW - 1) - (imgBufIdx / m_size.h);
 
 				// Skipping out of bounds zones
-				if (posOnImgX + zoneSize < srcX || posOnImgX > srcX + srcW || (posOnImgX - srcX) + zoneSize + dstX < 0 || (posOnImgX - srcX) + dstX > SCREEN_WIDTH-1) {
+				if (posOnImgY + zoneSize < srcY || posOnImgY > srcY + srcH || (posOnImgY - srcY) + zoneSize + dstY < 0 || (posOnImgY - srcY) + dstY > SCREEN_HEIGHT-1) {
 					continue;
 				}
 
 				// Custom clipping
-				int newPosOnImgX = min(max(posOnImgX, srcX), srcX + srcW);
-				int newPosOnImgXDelta = (newPosOnImgX - posOnImgX);
+				int newPosOnImgY = min(max(posOnImgY, srcY), srcY + srcH);
+				int newPosOnImgYDelta = (newPosOnImgY - posOnImgY);
 
-				int newZoneSize = min((posOnImgX + zoneSize), srcX + srcW) - posOnImgX - newPosOnImgXDelta;
-				int newImgBufIdx = imgBufIdx + newPosOnImgXDelta;
+				int newZoneSize = min((posOnImgY + zoneSize), srcY + srcH) - posOnImgY - newPosOnImgYDelta;
+				int newImgBufIdx = imgBufIdx + newPosOnImgYDelta;
 
 				// Buffer edge clipping
-				int transpZoneX = max(-dstX - (newPosOnImgX - srcX), 0);
+				int transpZoneY = max(-dstY - (newPosOnImgY - srcY), 0);
 
-				if (dstX < 0) {
-					newPosOnImgX += transpZoneX;
-					newZoneSize = max(0, newZoneSize - transpZoneX);
-					newImgBufIdx += transpZoneX;
+				if (dstY < 0) {
+					newPosOnImgY += transpZoneY;
+					newZoneSize = max(0, newZoneSize - transpZoneY);
+					newImgBufIdx += transpZoneY;
 				}
-				else if (dstX + (newPosOnImgX - srcX) + newZoneSize > SCREEN_WIDTH-1) {
-					newZoneSize = max(0, newZoneSize - (dstX + (newPosOnImgX - srcX) + newZoneSize - SCREEN_WIDTH));
+				else if (dstY + (newPosOnImgY - srcY) + newZoneSize > SCREEN_HEIGHT-1) {
+					newZoneSize = max(0, newZoneSize - (dstY + (newPosOnImgY - srcY) + newZoneSize - SCREEN_HEIGHT));
 				}
 
 				// Building final coordinates
-				int posOnBufferX = (newPosOnImgX + dstX - srcX);
-				int posOnBufferY = (((srcH - 1 + srcY) - reversedY) + dstY);
+				int posOnBufferY = (newPosOnImgY + dstY - srcY);
+				int posOnBufferX = (((srcW - 1 + srcX) - reversedX) + dstX);
 
 				// Blittin'
-				memcpy(buffer + (posOnBufferX * SCREEN_BPP) + (posOnBufferY * SCREEN_WIDTH * SCREEN_BPP),
+				memcpy(buffer + (posOnBufferY * SCREEN_BPP) + (posOnBufferX * SCREEN_HEIGHT * SCREEN_BPP),
 					m_pImgData + newImgBufIdx * SCREEN_BPP,
 					newZoneSize * SCREEN_BPP);
 			}
 		}
+#else
+        for (int y = srcY; y < srcY + srcH; y++) {
+            int reversedY = (m_size.h - 1) - (m_size.h - 1 - srcY) + (y % srcH);
+            
+            if (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > SCREEN_HEIGHT-1) {
+                continue;
+            }
+            
+            for (int j = 0; j < m_nbZoneByLine[reversedY]; j++) {
+                int maskIdx = m_maskIdByLine[reversedY][j];
+                
+                imgBufIdx = (unsigned int) m_mask[maskIdx];
+                zoneSize  = (unsigned int) m_mask[maskIdx + 1];
+                
+                int posOnImgX = imgBufIdx % m_size.w;
+                int posOnImgY = (srcH - 1) - (imgBufIdx / m_size.w);
+                
+                // Skipping out of bounds zones
+                if (posOnImgX + zoneSize < srcX || posOnImgX > srcX + srcW || (posOnImgX - srcX) + zoneSize + dstX < 0 || (posOnImgX - srcX) + dstX > SCREEN_WIDTH-1) {
+                    continue;
+                }
+                
+                // Custom clipping
+                int newPosOnImgX = min(max(posOnImgX, srcX), srcX + srcW);
+                int newPosOnImgXDelta = (newPosOnImgX - posOnImgX);
+                
+                int newZoneSize = min((posOnImgX + zoneSize), srcX + srcW) - posOnImgX - newPosOnImgXDelta;
+                int newImgBufIdx = imgBufIdx + newPosOnImgXDelta;
+                
+                // Buffer edge clipping
+                int transpZoneX = max(-dstX - (newPosOnImgX - srcX), 0);
+                
+                if (dstX < 0) {
+                    newPosOnImgX += transpZoneX;
+                    newZoneSize = max(0, newZoneSize - transpZoneX);
+                    newImgBufIdx += transpZoneX;
+                }
+                else if (dstX + (newPosOnImgX - srcX) + newZoneSize > SCREEN_WIDTH-1) {
+                    newZoneSize = max(0, newZoneSize - (dstX + (newPosOnImgX - srcX) + newZoneSize - SCREEN_WIDTH));
+                }
+                
+                // Building final coordinates
+                int posOnBufferX = (newPosOnImgX + dstX - srcX);
+                int posOnBufferY = (((srcH - 1 + srcY) - reversedY) + dstY);
+                
+                // Blittin'
+                memcpy(buffer + (posOnBufferX * SCREEN_BPP) + (posOnBufferY * SCREEN_WIDTH * SCREEN_BPP),
+                       m_pImgData + newImgBufIdx * SCREEN_BPP,
+                       newZoneSize * SCREEN_BPP);
+            }
+        }
+#endif
 	}
 	else {
 #if TARGET_3DS

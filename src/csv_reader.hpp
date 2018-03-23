@@ -1,5 +1,7 @@
 #include "linked_list.hpp"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstring>
 
 class CSVReader
 {
