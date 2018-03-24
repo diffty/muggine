@@ -144,21 +144,20 @@ void Image::loadFromFile(char* fileName) {
         for (int i = 0; i < nBytesToRead; i++) {
 #endif
             
-
             if (currPixNb % m_size.w == 0 && currPixNb > 0) {
-                j += rowPadding;
+                i += rowPadding;
             }
 
 #if TARGET_3DS
             fileBufSeek = ((currPixNb % m_size.w) * imgWidthWPadding) + (currPixNb / m_size.w);
             imgDataPtr = ((currPixNb % m_size.w) * m_size.h) + (currPixNb / m_size.w);
 #else
-			fileBufSeek = j;
+			fileBufSeek = i;
             imgDataPtr = currPixNb;
 #endif
 
             byte currByte = fileBuf[fileBufSeek];
-            byte currByteGoodOrder = fileBuf[j];
+            byte currByteGoodOrder = fileBuf[i];
             
 			bool doEndNow = false;
 
