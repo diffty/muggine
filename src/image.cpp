@@ -149,15 +149,17 @@ void Image::loadFromFile(char* fileName) {
             }
 
 #if TARGET_3DS
-            fileBufSeek = ((currPixNb % m_size.w) * imgWidthWPadding) + (currPixNb / m_size.w);
-            imgDataPtr = ((currPixNb % m_size.w) * m_size.h) + (currPixNb / m_size.w);
+            /*fileBufSeek = ((currPixNb % m_size.w) * imgWidthWPadding) + (currPixNb / m_size.w);
+            imgDataPtr = ((currPixNb % m_size.w) * m_size.h) + (currPixNb / m_size.w);*/
+            
+            fileBufSeek = (currPixNb % m_size.h) * imgWidthWPadding + (currPixNb / m_size.h);
+            imgDataPtr = currPixNb;
 #else
 			fileBufSeek = i;
             imgDataPtr = currPixNb;
 #endif
 
             byte currByte = fileBuf[fileBufSeek];
-            byte currByteGoodOrder = fileBuf[i];
             
 			bool doEndNow = false;
 
@@ -227,9 +229,9 @@ void Image::loadFromFile(char* fileName) {
 				}
 			}
 
-            m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByteGoodOrder].b;
-			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByteGoodOrder].g;
-			m_pImgData[(imgDataPtr * SCREEN_BPP) + 2] = m_aPalette[(int)currByteGoodOrder].r;
+            m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
+			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
+			m_pImgData[(imgDataPtr * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
 #if TARGET_SDL
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 3] = 0;
 #endif
