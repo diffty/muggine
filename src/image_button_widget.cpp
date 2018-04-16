@@ -26,8 +26,6 @@ void ImageButtonWidget::setOnReleaseCallback(void(*pCallback)(void*), void* pCal
 }
 
 void ImageButtonWidget::onPress() {
-	int i;
-
 	if (m_state == 2 || m_state == 4) {
 		return;
 	}

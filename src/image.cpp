@@ -14,9 +14,8 @@ Image::~Image() {
 
 void Image::loadFromFile(char* fileName) {
 	FILE* fp;
-	int fh;
-	int nBytes, nBytesToRead;
-	int i, j, k;
+	int nBytesToRead;
+	int i, j;
 
 	int* imgW = (int *) malloc(4);
 	int* imgH = (int *) malloc(4);
@@ -72,11 +71,11 @@ void Image::loadFromFile(char* fileName) {
 	printf("Size : %ld\n", *dataSize);
 	printf("Start offset : %d\n", *startOffset);
 	printf("Header size : %d\n", *headerSize);
-	printf("Image width : %d\n", m_size.w);
-	printf("Image height : %d\n", m_size.h);
+	printf("Image width : %ld\n", m_size.w);
+	printf("Image height : %ld\n", m_size.h);
 	printf("Palette size : %d\n", m_paletteSize);
-	printf("Nb pixels : %d\n", nbPixels);
-	printf("Padding: %d\n", rowPadding);
+	printf("Nb pixels : %ld\n", nbPixels);
+	printf("Padding: %ld\n", rowPadding);
     
     // Un buffer trop gros peut être problématique sur une ptite machine
     // int bufferSize = (int) (*imgW + rowPadding) * 3 * 10;
@@ -104,8 +103,8 @@ void Image::loadFromFile(char* fileName) {
 
 	seekPtr = *startOffset;
 
-	int nbPixelsWPadding = nbPixels + (m_size.h - 1) * rowPadding;
-    int imgWidthWPadding = m_size.w + rowPadding;
+	long nbPixelsWPadding = nbPixels + (m_size.h - 1) * rowPadding;
+    long imgWidthWPadding = m_size.w + rowPadding;
     
     long currPixNb = 0;
     
@@ -115,8 +114,6 @@ void Image::loadFromFile(char* fileName) {
     
     LinkedList lOpaqueInfo;
     initList(&lOpaqueInfo);
-    
-	int currZoneIdx = 0;
 
 #if TARGET_3DS
 	m_nbZoneByLine = new long[m_size.w];
@@ -129,7 +126,7 @@ void Image::loadFromFile(char* fileName) {
 #endif
 
 	while (seekPtr < (nbPixelsWPadding + (*startOffset))) {
-		nBytesToRead = min((nbPixelsWPadding - (seekPtr - (*startOffset))), bufferSize);
+		nBytesToRead = min((int) (nbPixelsWPadding - (seekPtr - (long) (*startOffset))), bufferSize);
         
 		fseek(fp, seekPtr, SEEK_SET);
 		fread(fileBuf, 1, nBytesToRead, fp);
@@ -344,9 +341,9 @@ void Image::loadFromFile(char* fileName) {
 
 void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked) {
     
-    int xb, yb;
-    unsigned int imgBufIdx, zoneSize;
+    unsigned int imgBufIdx;
 	unsigned int overflowLeft = 0, overflowRight = 0, overflowTop = 0, overflowBottom = 0;
+    int zoneSize;
 
     if (srcX >= m_size.w || srcY >= m_size.h) {
         return;
@@ -394,7 +391,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 				int maskIdx = m_maskIdByLine[reversedX][j];
 
 				imgBufIdx = (unsigned int) m_mask[maskIdx];
-				zoneSize  = (unsigned int) m_mask[maskIdx + 1];
+				zoneSize  = (int)          m_mask[maskIdx + 1];
 
 				int posOnImgY = imgBufIdx % m_size.h;
 				int posOnImgX = (srcW - 1) - (imgBufIdx / m_size.h);
@@ -445,7 +442,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
                 int maskIdx = m_maskIdByLine[reversedY][j];
                 
                 imgBufIdx = (unsigned int) m_mask[maskIdx];
-                zoneSize  = (unsigned int) m_mask[maskIdx + 1];
+                zoneSize  = (int)          m_mask[maskIdx + 1];
                 
                 int posOnImgX = imgBufIdx % m_size.w;
                 int posOnImgY = (srcH - 1) - (imgBufIdx / m_size.w);
@@ -504,5 +501,5 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 }
 
 void Image::draw(uint8* buffer, int dstX, int dstY, bool reversed, bool masked) {
-    draw(buffer, dstX, dstY, 0, 0, m_size.w, m_size.h, reversed, masked);
+    draw(buffer, dstX, dstY, 0, 0, (int) m_size.w, (int) m_size.h, reversed, masked);
 }

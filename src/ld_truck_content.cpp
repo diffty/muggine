@@ -33,20 +33,6 @@ LinkedList TruckContent::getObjectsList() {
 }
 
 void TruckContent::draw(uint8* pBuffer) {
-	vect2df_t vCurPos = getRect()->getPos();
-	size2df_t vSlotImgSize = m_pSlotBgImg->getSize();
-
-	/*for (int i = 0; i < m_uNbCellX; i++) {
-		for (int j = 0; j < m_uNbCellY; j++) {
-			m_pSlotBgImg->draw(
-				pBuffer,
-				vCurPos.x + (vSlotImgSize.w - 1) * i,
-				vCurPos.y + (vSlotImgSize.h - 1) * j,
-				false, true
-			);
-		}
-	}*/
-
 	GridWidgetLayout::draw(pBuffer);
 }
 

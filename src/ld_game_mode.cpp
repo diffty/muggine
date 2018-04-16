@@ -41,10 +41,10 @@ LDGameMode::LDGameMode(Scene* pMainScene, LinkedList llObjectsOwned, int iStartM
 		m_iMoney -= iCurrUpgradeCost;
 	}
 
-	size2df_t iSlotSize = RscManager::get()->getImgRsc(10)->getSize();
+	//size2df_t iSlotSize = RscManager::get()->getImgRsc(10)->getSize();
 	size2d_t sTruckSlotSize = calculateTruckSize();
 	
-	m_pTruck = new Truck({ 12, 105 }, sTruckSlotSize.w, sTruckSlotSize.h);
+	m_pTruck = new Truck({ 12, 105 }, (int) sTruckSlotSize.w, (int) sTruckSlotSize.h);
 	m_pTruck->setDrawOrder(1100);
 	m_pTruck->setParentWidget(m_pMainScene);
 
@@ -56,11 +56,11 @@ LDGameMode::LDGameMode(Scene* pMainScene, LinkedList llObjectsOwned, int iStartM
 	buyObjects();
 
 	Object* pPickedObj;
-	if (pPickedObj = pickObject()) {
+	if ((pPickedObj = pickObject())) {
 		m_pCurrCard = spawnNewCard(pPickedObj);
 		m_pCurrCard->setDraggable(true);
 
-		if (pPickedObj = pickObject()) {
+		if ((pPickedObj = pickObject())) {
 			m_pNextCard = m_pCurrCard;
 			m_pNextCard->setDraggable(false);
 
@@ -86,7 +86,6 @@ LDGameMode::~LDGameMode() {
 
 void LDGameMode::initScene() {
 	RscManager* rscManager = RscManager::get();
-	System* sys = System::get();
 
 	m_pBgSpr = new Sprite(rscManager->getImgRsc(6), {0, 0});
 	m_pBgSpr->setDrawOrder(10);
@@ -258,7 +257,7 @@ void LDGameMode::destroyObjectCard(ObjectCard* pObjCard) {
 		}
 
 		Object* pPickedObj;
-		if (pPickedObj = pickObject()) {
+		if ((pPickedObj = pickObject())) {
 			m_pNextCard = spawnNewCard(pPickedObj);
 			m_pNextCard->setDrawOrder(5050);
 		}
@@ -441,8 +440,6 @@ void LDGameMode::initGameMode(LDGameMode** pGameMode, Scene* pScene, int iGiveNF
 	else {
 		initList(&llObjectsOwned);
 	}
-
-	IWidget* w = (IWidget*)llObjectsOwned.pHead;
 
 	*pGameMode = new LDGameMode(pScene, llObjectsOwned, iStartMoney, iStartHealth, iGiveNFreeObjects);
 }

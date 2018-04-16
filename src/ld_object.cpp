@@ -82,9 +82,9 @@ void Object::setLoveFactor(int iLoveFactor) {
 }
 
 void Object::setTitle(char* szTitle) {
-	int iStrLen = strlen(szTitle);
-	m_szTitle = new char[iStrLen+1];
-	memcpy(m_szTitle, szTitle, iStrLen + 1);
+	long lStrLen = strlen(szTitle);
+	m_szTitle = new char[lStrLen+1];
+	memcpy(m_szTitle, szTitle, lStrLen + 1);
 }
 
 int Object::getPrice() {

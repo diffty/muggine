@@ -49,7 +49,7 @@ void SpriteSheet::nextFrame() {
 }
 
 void SpriteSheet::prevFrame() {
-    uint newFrame = (m_currFrame - 1);
+    int newFrame = (m_currFrame - 1);
     
     if (newFrame < 0) {
         newFrame = m_length - 1;

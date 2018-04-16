@@ -88,9 +88,20 @@ double System::getTime() {
     
 #elif TARGET_OSX
     timespec timeStruct;
-    clock_gettime(CLOCK_REALTIME, &timeStruct);
-    return ((double) timeStruct.tv_nsec / 1000000000) + timeStruct.tv_sec;
     
+/*#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
+    clock_gettime(CLOCK_REALTIME, &timeStruct);
+#else*/
+    clock_serv_t cclock;
+    mach_timespec_t machTimeStruct;
+    host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+    clock_get_time(cclock, &machTimeStruct);
+    mach_port_deallocate(mach_task_self(), cclock);
+    timeStruct.tv_sec = machTimeStruct.tv_sec;
+    timeStruct.tv_nsec = machTimeStruct.tv_nsec;
+/*#endif*/
+    
+    return ((double) timeStruct.tv_nsec / 1000000000) + timeStruct.tv_sec;
 
 #elif TARGET_SDL
 	return SDL_GetTicks();

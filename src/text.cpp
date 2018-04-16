@@ -2,7 +2,7 @@
 
 
 
-Text::Text(char* szText, Font* pFont, vect2df_t vPos)
+Text::Text(const char* szText, Font* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
 	m_pFont = pFont;
@@ -32,12 +32,12 @@ char* Text::getText() {
 	return m_szText;
 }
 
-void Text::setText(char* szText) {
-	int iTextLen = strlen(szText);
+void Text::setText(const char* szText) {
+	long lTextLen = strlen(szText);
 
 	if (m_szText) delete m_szText;
 
-	m_szText = new char[iTextLen+1];
+	m_szText = new char[lTextLen+1];
 
 	strcpy(m_szText, szText);
 
@@ -54,7 +54,7 @@ void Text::updateSize() {
 	int i = 0;
 	int sizeW = 0;
 	int currSizeW = 0;
-	int sizeH = m_pFont->getFrameSize().h;
+	long sizeH = m_pFont->getFrameSize().h;
 
 	char c;
 

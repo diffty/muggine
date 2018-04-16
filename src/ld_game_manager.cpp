@@ -110,6 +110,9 @@ void LDGameManager::onEndTransition(ETransitionAnimType eTransType) {
 		}
 		m_pTransitionScreen->doTransition(TRANSITION_OUT);
 		break;
+        
+    case TRANSITION_OUT:
+        break;
 	}
 }
 
@@ -262,6 +265,9 @@ void LDGameManager::update() {
 				onMainMenu();
 			}
 			break;
+        
+        case E_APP_STATE_NULL:
+            break;
 	}
 
 	m_pTransitionScreen->update();
@@ -298,6 +304,9 @@ void LDGameManager::draw(uint8* fb) {
 		//m_gameScene.draw(fb);
 		m_pLevelFailScreen->draw(fb);
 		break;
+    
+    case E_APP_STATE_NULL:
+        break;
 	}
 
 	// Fade shit
@@ -315,7 +324,6 @@ void LDGameManager::draw(uint8* fb) {
 			break;
 
 		case E_FADE_OUT:
-			m_fScreenAlpha = m_fScreenAlpha;
 			break;
 		}
 

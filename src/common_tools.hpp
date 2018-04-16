@@ -5,7 +5,7 @@
 #include <cmath>
 
 
-int intFromStr(char* szStr);
+int intFromStr(const char* szStr);
 
 
 #endif

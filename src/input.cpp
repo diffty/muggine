@@ -277,9 +277,13 @@ void Input::RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseB
 
 void Input::ProcessEvent(InputEvent* evt) {
 	switch (evt->type) {
-		case IN_KEYB:
+        case IN_KEYB: {
 			KeyEvent* keyEvt = (KeyEvent*) evt->event;
-		break;
+            break;
+        }
+            
+        default:
+            break;
 	}
 }
 

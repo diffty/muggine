@@ -19,6 +19,11 @@
 #include <time.h>
 #include <cstdlib>
 
+#ifdef TARGET_OSX
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
+
 
 
 class System {

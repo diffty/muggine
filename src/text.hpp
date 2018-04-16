@@ -13,12 +13,12 @@ private:
 	char* m_szText;
 
 public:
-	Text(char* aText, Font* pFont, vect2df_t vPos);
+	Text(const char* szText, Font* pFont, vect2df_t vPos);
 	Text(int iNum, Font* pFont, vect2df_t vPos);
 	~Text();
 
 	char* getText();
-	void setText(char* szText);
+	void setText(const char* szText);
 	void setText(int iNum);
 
 	void updateSize();

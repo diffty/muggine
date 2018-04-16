@@ -60,8 +60,6 @@ void CSVReader::readFile() {
 }
 
 void CSVReader::decodeBuffer(char* szBuffer) {
-	long lBufferSize = strlen(szBuffer);
-
 	char c;
 
 	int iCellSize = 0;
@@ -100,7 +98,7 @@ void CSVReader::decodeBuffer(char* szBuffer) {
 	}
 }
 
-char* CSVReader::getData(char* szFieldName, int iRowNum) {
+char* CSVReader::getData(const char* szFieldName, int iRowNum) {
 	int iFieldId = getFieldId(szFieldName);
 
 	if (iFieldId == -1) {
@@ -113,7 +111,7 @@ char* CSVReader::getData(char* szFieldName, int iRowNum) {
 	return (char*) pNode->pData;
 }
 
-int CSVReader::getFieldId(char* szFieldName) {
+int CSVReader::getFieldId(const char* szFieldName) {
 	LLNode* pCurrNode = m_llData.pHead;
 
 	for (int i = 0; i < m_iNbFields; i++) {
@@ -187,7 +185,7 @@ void CSVReader::fillArrayWithDataPtr(char*** pArrayToFill) {
 	}
 }
 
-void CSVReader::spliceString(char* szSrcString, int iStartPos, int iEndPos, char* szDstString) {
+void CSVReader::spliceString(const char* szSrcString, int iStartPos, int iEndPos, char* szDstString) {
 	for (int i = iStartPos; i <= iEndPos; i++) {
 		szDstString[i - iStartPos] = szSrcString[i];
 	}

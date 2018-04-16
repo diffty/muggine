@@ -28,7 +28,7 @@ AnimatedSprite::~AnimatedSprite() {
 	destroyAllStates();
 }
 
-void AnimatedSprite::addState(char* szName, uint uFrameStart, uint uFrameEnd, uint uFPS, bool bLooped) {
+void AnimatedSprite::addState(const char* szName, uint uFrameStart, uint uFrameEnd, uint uFPS, bool bLooped) {
     AnimationState newAnimState;
     
     newAnimState.szName = szName;

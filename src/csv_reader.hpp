@@ -21,14 +21,14 @@ public:
 	void destroyData();
 	void readFile();
 	void decodeBuffer(char* szBuffer);
-	char* getData(char* szFieldName, int iRowNum);
-	int getFieldId(char* szFieldName);
+	char* getData(const char* szFieldName, int iRowNum);
+	int getFieldId(const char* szFieldName);
 	void printContent();
 	int countDataRows();
 	int countFields();
 	void fillArrayWithData(char*** pArrayToFill);
 	void fillArrayWithDataPtr(char*** pArrayToFill);
 
-	static void spliceString(char* szSrcString, int iStartPos, int iEndPos, char* pSzDstString);
+	static void spliceString(const char* szSrcString, int iStartPos, int iEndPos, char* pSzDstString);
 	static void convertReturnCharacters(char* szSrcString);
 };

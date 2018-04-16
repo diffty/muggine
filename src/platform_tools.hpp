@@ -13,7 +13,7 @@
 #include <cstring>
 
 
-char* platformConformPath(char* szPath);
+char* platformConformPath(const char* szPath);
 
 
 #endif /* platform_tools_hpp */

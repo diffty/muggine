@@ -53,7 +53,7 @@ void ObjectCard::setObject(Object* pObjectInCard) {
 	strcpy(tmpChar, m_pPriceWidget->getText());
 	strcat(tmpChar, "$");
 	m_pPriceWidget->setText(tmpChar);
-	delete tmpChar;
+	delete[] tmpChar;
 
 	placeWidgetsInCard();
 }

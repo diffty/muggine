@@ -17,7 +17,7 @@
 
 
 struct AnimationState {
-    char* szName;
+    const char* szName;
     uint uFrameStart;
     uint uFrameEnd;
     uint uFPS;
@@ -37,7 +37,7 @@ public:
     AnimatedSprite(SpriteSheet* pSprSht, vect2df_t vPos, float fPlaySpeed = 1.);
     ~AnimatedSprite();
     
-    void addState(char* szName, uint uFrameStart, uint uFrameEnd, uint uFPS = 1., bool bLooped = true);
+    void addState(const char* szName, uint uFrameStart, uint uFrameEnd, uint uFPS = 1., bool bLooped = true);
     void addState(AnimationState animState);
     void changeState(uint uStateId);
     

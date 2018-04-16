@@ -9,7 +9,7 @@
 #include "platform_tools.hpp"
 
 
-char* platformConformPath(char* szPath) {
+char* platformConformPath(const char* szPath) {
     char* szConformedPath = NULL;
     
 #ifdef TARGET_3DS

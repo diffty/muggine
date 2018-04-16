@@ -14,8 +14,6 @@ ButtonWidget::ButtonWidget(int x, int y, int w, int h, int initalState, int (*pC
 }
 
 void ButtonWidget::onPress() {
-	int i;
-
 	if (m_state == 2 || m_state == 4) {
 		return;
 	}

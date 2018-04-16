@@ -6,9 +6,8 @@ SamplerGridWidget::SamplerGridWidget(int x, int y, int w, int h, int nbCellX, in
 	  IWidget(x, y, w, h),
 	  m_colorOn(255, 0, 3),
 	  m_colorOff(3, 0, 255),
-	  m_colorPressed(3, 255, 3) {
-
-	int nbCells;
+	  m_colorPressed(3, 255, 3)
+{
 
 	m_nbCellX = nbCellX;
 	m_nbCellY = nbCellY;
@@ -120,7 +119,6 @@ bool SamplerGridWidget::receiveTouchInput(vect2d_t touchPt) {
 }
 
 void SamplerGridWidget::onCellPress(vect2d_t gridCell) {
-	int i;
 	unsigned int cellId = gridCell.x + gridCell.y * m_nbCellX;
 
 	if (m_aCellState[cellId] == 2 || m_aCellState[cellId] == 4) {

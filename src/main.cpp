@@ -106,14 +106,15 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Scene* pGameScene = gameManager.getGameScene();
 	Scene* pMenuScene = gameManager.getMenuScene();
 
-	LDGameMode* pGameMode = NULL;
-	
 	pGfx->SetDoubleBuffering(false);
 
 	uint8* fb = pGfx->GetFramebuffer();
 
 	pSys->initLoop();
-
+    
+    // DEBUG 3DS
+    pMenuScene->addComponent(new Sprite(rscManager.getImgRsc(15), { 10, 10 }));
+    
 	// Main loop
 	while (pSys->mainLoop())
 	{
@@ -121,14 +122,19 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		// printf("FPS: %u\n", (uint) (1./deltaTime));
 
-		pGfx->FillWithColor(0x00);
+		pGfx->FillWithColor(0x40);
 
 		gameManager.update();
 		gameManager.draw(fb);
 
 		
 		//if (sys->getInputSys()->IsKeyPressed(KEYB_A)) { }
-
+        
+        // DEBUG 3DS
+        if (pSys->getInputSys()->IsJoyBtnPressed(JOY_BTN_1)) {
+            gameManager.onNewLevel();
+        }
+        
 		//sound.update();
 
 		// Flush and swap framebuffers

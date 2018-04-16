@@ -63,5 +63,5 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 
 #endif
 
-	delete oneColorCol;
+	delete[] oneColorCol;
 }
