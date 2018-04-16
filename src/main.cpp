@@ -113,7 +113,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	pSys->initLoop();
     
     // DEBUG 3DS
-    pMenuScene->addComponent(new Sprite(rscManager.getImgRsc(15), { 10, 10 }));
+    //pMenuScene->addComponent(new Sprite(rscManager.getImgRsc(15), { 10, 10 }));
     
 	// Main loop
 	while (pSys->mainLoop())
@@ -122,7 +122,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		// printf("FPS: %u\n", (uint) (1./deltaTime));
 
-		pGfx->FillWithColor(0x40);
+		pGfx->FillWithColor(0x00);
 
 		gameManager.update();
 		gameManager.draw(fb);

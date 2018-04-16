@@ -30,7 +30,8 @@ LDGameManager::LDGameManager() {
 
 	m_iTruckLevel = 1;
 
-	onMainMenu(); //DEBUG: decommenter ca
+	onMainMenu(); // DEBUG: decommenter ca
+    
 	/*// DEBUG
 	m_iCurrLevel = 1;
 	onStartLevel();
