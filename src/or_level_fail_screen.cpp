@@ -1,9 +1,9 @@
-#include "ld_level_fail_screen.hpp"
+#include "or_level_fail_screen.hpp"
 #include "rsc_manager.hpp"
 #include "system.hpp"
 
 
-LDLevelFailScreen::LDLevelFailScreen() {
+ORLevelFailScreen::ORLevelFailScreen() {
 	vect2df_t vTextPos;
 	vTextPos.x = 130;
 	vTextPos.y = 80;
@@ -12,18 +12,18 @@ LDLevelFailScreen::LDLevelFailScreen() {
 }
 
 
-LDLevelFailScreen::~LDLevelFailScreen() {
+ORLevelFailScreen::~ORLevelFailScreen() {
 	delete m_pLevelTextLabel;
 }
 
-void LDLevelFailScreen::update() {
+void ORLevelFailScreen::update() {
 	m_fTimeBeforeEnd -= System::get()->getDeltaTime();
 }
 
-void LDLevelFailScreen::draw(uint8* fb) {
+void ORLevelFailScreen::draw(uint8* fb) {
 	m_pLevelTextLabel->draw(fb);
 }
 
-bool LDLevelFailScreen::doMustDisappear() {
+bool ORLevelFailScreen::doMustDisappear() {
 	return m_fTimeBeforeEnd <= 0.;
 }

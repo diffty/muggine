@@ -5,7 +5,7 @@
 #include "text.hpp"
 
 
-class LDLevelBeginScreen
+class ORLevelBeginScreen
 {
 private:
 	Text* m_pLevelTextLabel;
@@ -14,8 +14,8 @@ private:
 	float m_fTimeBeforeEnd = 3;
 
 public:
-	LDLevelBeginScreen(int iLevelNum);
-	~LDLevelBeginScreen();
+	ORLevelBeginScreen(int iLevelNum);
+	~ORLevelBeginScreen();
 
 	void update();
 	void draw(uint8* fb);

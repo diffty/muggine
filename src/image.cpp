@@ -39,7 +39,7 @@ void Image::loadFromFile(char* fileName) {
     
 	if ((fp = fopen(fileName, "rb")) == NULL) {
 		printf("Can't read image file %s. Aborting.\n", fileName);
-		//exit(1);
+		exit(1);
 	}
     
 	// Reading header

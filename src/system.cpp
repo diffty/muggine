@@ -38,7 +38,7 @@ void System::initWindow() {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
 	else {
-		m_window = SDL_CreateWindow("LD40",
+		m_window = SDL_CreateWindow("Hyper Mayor Drifter",
 									SDL_WINDOWPOS_UNDEFINED,
 									SDL_WINDOWPOS_UNDEFINED,
 									SCREEN_WIDTH * SCREEN_SCALE,

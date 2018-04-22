@@ -49,6 +49,7 @@
       language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
+      customWorkingDirectory = "/Users/diffty/Documents/Projets/Gamedev/2017_07_LD40"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"

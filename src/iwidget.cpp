@@ -62,7 +62,18 @@ bool IWidget::receiveTouchInputChildren(vect2d_t touchPt) {
 }
 
 void IWidget::translate(float x, float y, ETransformMode transformMode) {
-	vect2df_t currPos = m_rect.getPos();
+    vect2df_t currPos = m_rect.getPos();
+
+    vect2df_t vDeltaPos;
+    if (transformMode == TRANSFORM_ABS) {
+        vDeltaPos.x = x - currPos.x;
+        vDeltaPos.y = y - currPos.y;
+    }
+    else {
+        vDeltaPos.x = x;
+        vDeltaPos.y = y;
+    }
+    
 	if (transformMode == TRANSFORM_REL) {
 		currPos.x += x;
 		currPos.y += y;
@@ -72,6 +83,16 @@ void IWidget::translate(float x, float y, ETransformMode transformMode) {
 		currPos.y = y;
 	}
 	m_rect.setPos(currPos.x, currPos.y);
+    
+    // Move children too (assuming their pos is relative to parent)
+    LLNode* pCurrNode = m_llChildrenWidgets.pHead;
+
+    while (pCurrNode != NULL) {
+        IWidget* pCurrWidget = (IWidget*)pCurrNode->pData;
+        
+        pCurrWidget->translate(vDeltaPos.x, vDeltaPos.y, TRANSFORM_REL);
+        pCurrNode = pCurrNode->pNext;
+    }
 }
 
 void IWidget::setActive(bool bIsActive) {

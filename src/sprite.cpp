@@ -22,15 +22,6 @@ Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos)
 	m_rect.setSize(imgSize.w, imgSize.h);
 }
 
-Sprite::Sprite(uint rscId, RscManager* rscManager, float x, float y)
-	: IWidget(x, y)
-{
-	m_rscId = rscId;
-	m_pImg = rscManager->getImgRsc(m_rscId);
-	size2df_t imgSize = m_pImg->getSize();
-	m_rect.setSize(imgSize.w, imgSize.h);
-}
-
 uint Sprite::getFrame() {
 	return m_uFrameNb;
 }

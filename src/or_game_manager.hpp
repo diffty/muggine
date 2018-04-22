@@ -5,12 +5,12 @@
 #include "system.hpp"
 //#include "sound.hpp"
 #include "scene.hpp"
-#include "ld_game_mode.hpp"
-#include "ld_main_menu.hpp"
-#include "ld_level_begin_screen.hpp"
-#include "ld_level_fail_screen.hpp"
-#include "ld_level_success_screen.hpp"
-#include "ld_transition_screen.hpp"
+#include "or_game_mode.hpp"
+#include "or_main_menu.hpp"
+#include "or_level_begin_screen.hpp"
+#include "or_level_fail_screen.hpp"
+#include "or_level_success_screen.hpp"
+#include "or_transition_screen.hpp"
 
 
 enum E_APP_STATE {
@@ -30,19 +30,17 @@ enum E_FADE_MODE {
 };
 
 
-class LDGameManager
+class ORGameManager
 {
 private:
 	System* m_pSys;
 	Input* m_pInputSys;
-	LDGameMode* m_pGameMode = NULL;
-	LDMainMenu* m_pMainMenu;
+	ORGameMode* m_pGameMode = NULL;
+	ORMainMenu* m_pMainMenu;
 	Scene m_gameScene;
 	Scene m_menuScene;
 	E_APP_STATE m_eCurrState;
 	E_APP_STATE m_ePostTransitionState = E_APP_STATE_NULL;
-
-	int m_iCurrLevel = 0;
 
 	// Fade shit
 	float m_fScreenAlpha = 1;
@@ -53,18 +51,16 @@ private:
 
 	bool m_bMenuKeyWasPressedLastLoop = false;
 
-	LDLevelBeginScreen* m_pLevelBeginScreen;
-	LDLevelFailScreen* m_pLevelFailScreen;
-	LDLevelSuccessScreen* m_pLevelSuccessScreen;
-	LDTransitionScreen* m_pTransitionScreen;
+	ORLevelBeginScreen* m_pLevelBeginScreen;
+	ORLevelFailScreen* m_pLevelFailScreen;
+	ORLevelSuccessScreen* m_pLevelSuccessScreen;
+	ORTransitionScreen* m_pTransitionScreen;
 
-	static LDGameManager* s_pInstance;
-
-	int m_iTruckLevel;
+	static ORGameManager* s_pInstance;
 
 public:
-	LDGameManager();
-	~LDGameManager();
+	ORGameManager();
+	~ORGameManager();
 
 	void onMainMenu();
 	void onNewLevel(bool bReplayLevel = false);
@@ -72,7 +68,6 @@ public:
 	void onLevelFail();
 	void onStartLevel();
 	void onEndTransition(ETransitionAnimType eTransType);
-	void onTruckUpgrade();
 
 	void changeState(E_APP_STATE eNewState, bool bWithTransition = false);
 	
@@ -92,16 +87,12 @@ public:
 	Scene* getGameScene();
 	Scene* getMenuScene();
 
-	int getTruckLevel();
-
-	void setTruckLevel(int iTruckLevel);
-
 	void update();
 	void draw(uint8* fb);
 
 	E_APP_STATE getCurrentState();
 
-	static LDGameManager* get();
+	static ORGameManager* get();
 };
 
 

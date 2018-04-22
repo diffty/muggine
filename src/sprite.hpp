@@ -10,8 +10,7 @@ class Sprite : public IWidget {
 public:
 	Sprite(Image* pImg, vect2df_t vPos);
 	Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos);
-	Sprite(uint rscId, RscManager* rscManager, float x = 0, float y = 0);
-
+    
 	uint getFrame();
 	void setFrame(uint uNewFrame);
 

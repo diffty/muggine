@@ -6,7 +6,7 @@
 #include "text.hpp"
 
 
-class LDLevelFailScreen
+class ORLevelFailScreen
 {
 private:
 	Text* m_pLevelTextLabel;
@@ -15,8 +15,8 @@ private:
 	float m_fTimeBeforeEnd = 3;
 
 public:
-	LDLevelFailScreen();
-	~LDLevelFailScreen();
+	ORLevelFailScreen();
+	~ORLevelFailScreen();
 
 	void update();
 	void draw(uint8* fb);

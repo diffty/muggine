@@ -1,20 +1,20 @@
-#include "ld_transition_screen.hpp"
+#include "or_transition_screen.hpp"
 #include "rsc_manager.hpp"
 #include "system.hpp"
-#include "ld_game_manager.hpp"
+#include "or_game_manager.hpp"
 
 
-LDTransitionScreen::LDTransitionScreen() {
+ORTransitionScreen::ORTransitionScreen() {
 	m_pStripesSprSht = RscManager::get()->getSprShtRsc(14);
 }
 
 
-LDTransitionScreen::~LDTransitionScreen() {
+ORTransitionScreen::~ORTransitionScreen() {
 
 }
 
 
-void LDTransitionScreen::doTransition(ETransitionAnimType eTransitionType) {
+void ORTransitionScreen::doTransition(ETransitionAnimType eTransitionType) {
 	m_fAnimActive = true;
 	m_eAnimType = eTransitionType;
 
@@ -29,11 +29,11 @@ void LDTransitionScreen::doTransition(ETransitionAnimType eTransitionType) {
 	}
 }
 
-bool LDTransitionScreen::isActive() {
+bool ORTransitionScreen::isActive() {
 	return m_fAnimActive;
 }
 
-void LDTransitionScreen::update() {
+void ORTransitionScreen::update() {
 	if (m_fAnimActive) {
 		switch (m_eAnimType) {
 		case TRANSITION_IN:
@@ -42,7 +42,7 @@ void LDTransitionScreen::update() {
 			if (m_fAnimCoef >= 0.99) {
 				m_fAnimCoef = 1;
 				m_fAnimActive = false;
-				LDGameManager::get()->onEndTransition(m_eAnimType);
+				ORGameManager::get()->onEndTransition(m_eAnimType);
 			}
 			break;
 
@@ -52,14 +52,14 @@ void LDTransitionScreen::update() {
 			if (m_fAnimCoef <= 0.01) {
 				m_fAnimCoef = 0;
 				m_fAnimActive = false;
-				LDGameManager::get()->onEndTransition(m_eAnimType);
+				ORGameManager::get()->onEndTransition(m_eAnimType);
 			}
 			break;
 		}
 	}
 }
 
-void LDTransitionScreen::draw(uint8* pBuffer) {
+void ORTransitionScreen::draw(uint8* pBuffer) {
 	if (m_fAnimActive) {
 		int iStripeWSize = m_pStripesSprSht->getFrameSize().w;
 		int iStripeYPos = m_fAnimCoef * 240;

@@ -1,75 +1,64 @@
-#include "ld_game_manager.hpp"
+#include "or_game_manager.hpp"
 
 
-LDGameManager* LDGameManager::s_pInstance = NULL;
+ORGameManager* ORGameManager::s_pInstance = NULL;
 
 
-LDGameManager::LDGameManager() {
-	LDGameManager::s_pInstance = this;
+ORGameManager::ORGameManager() {
+	ORGameManager::s_pInstance = this;
 
 	// Instantiate game mode
 	m_pGameMode = NULL;
 	
 	// Instantiate menu
-	m_pMainMenu = new LDMainMenu(&m_menuScene);
+	m_pMainMenu = new ORMainMenu(&m_menuScene);
 
 	m_pSys = System::get();
 	m_pInputSys = System::get()->getInputSys();
 
-	m_pMainMenu->setNewBtnCallback(LDGameManager::newGameMenuBtnCallback, this);
-	m_pMainMenu->setQuitBtnCallback(LDGameManager::quitGameMenuBtnCallback, this);
-	m_pMainMenu->setContinueBtnCallback(LDGameManager::continueGameMenuBtnCallback, this);
+	m_pMainMenu->setNewBtnCallback(ORGameManager::newGameMenuBtnCallback, this);
+	m_pMainMenu->setQuitBtnCallback(ORGameManager::quitGameMenuBtnCallback, this);
+	m_pMainMenu->setContinueBtnCallback(ORGameManager::continueGameMenuBtnCallback, this);
 
 	m_bMenuKeyWasPressedLastLoop = false;
-
-	m_pTransitionScreen = new LDTransitionScreen;
 
 	m_pLevelBeginScreen = NULL;
 	m_pLevelFailScreen = NULL;
 	m_pLevelSuccessScreen = NULL;
 
-	m_iTruckLevel = 1;
-
-	onMainMenu(); // DEBUG: decommenter ca
+	// onMainMenu(); // DEBUG: decommenter ca
     
-	/*// DEBUG
-	m_iCurrLevel = 1;
 	onStartLevel();
-	// --*/
 }
 
 
-LDGameManager::~LDGameManager() {
+ORGameManager::~ORGameManager() {
 
 }
 
-void LDGameManager::newGameMenuBtnCallback(void* pObj) {
-	((LDGameManager*)pObj)->newGame();
+void ORGameManager::newGameMenuBtnCallback(void* pObj) {
+	((ORGameManager*)pObj)->newGame();
 }
 
-void LDGameManager::quitGameMenuBtnCallback(void* pObj) {
-	((LDGameManager*)pObj)->quitGame();
+void ORGameManager::quitGameMenuBtnCallback(void* pObj) {
+	((ORGameManager*)pObj)->quitGame();
 }
 
-void LDGameManager::continueGameMenuBtnCallback(void* pObj) {
-	((LDGameManager*)pObj)->hideMenu();
+void ORGameManager::continueGameMenuBtnCallback(void* pObj) {
+	((ORGameManager*)pObj)->hideMenu();
 }
 
-void LDGameManager::onMainMenu() {
+void ORGameManager::onMainMenu() {
 	m_eCurrState = E_APP_STATE_MENU;
 	//Sound::get()->playSound(1);
 }
 
-void LDGameManager::onNewLevel(bool bReplayLevel) {
+void ORGameManager::onNewLevel(bool bReplayLevel) {
 	changeState(E_APP_STATE_LEVEL_BEGIN, true);
-
-	if (!bReplayLevel) {
-		m_iCurrLevel++;
-	}
 
 	if (m_pLevelBeginScreen) delete m_pLevelBeginScreen;
 
-	m_pLevelBeginScreen = new LDLevelBeginScreen(m_iCurrLevel);
+	m_pLevelBeginScreen = new ORLevelBeginScreen(0);
 
 	//fadeScreen(E_FADE_IN, 2);
 
@@ -77,33 +66,24 @@ void LDGameManager::onNewLevel(bool bReplayLevel) {
 	//Sound::get()->playSound(2);
 }
 
-void LDGameManager::onLevelSuccess() {
+void ORGameManager::onLevelSuccess() {
 	changeState(E_APP_STATE_LEVEL_SUCCESS, true);
 	if (m_pLevelSuccessScreen) delete m_pLevelSuccessScreen;
-	m_pLevelSuccessScreen = new LDLevelSuccessScreen(m_iCurrLevel);
+	m_pLevelSuccessScreen = new ORLevelSuccessScreen(0);
 }
 
-void LDGameManager::onLevelFail() {
+void ORGameManager::onLevelFail() {
 	changeState(E_APP_STATE_LEVEL_FAIL, true);
 	if (m_pLevelFailScreen) delete m_pLevelFailScreen;
-	m_pLevelFailScreen = new LDLevelFailScreen();
+	m_pLevelFailScreen = new ORLevelFailScreen();
 }
 
-void LDGameManager::onStartLevel() {
-	int nbFreeObjects = 0;
-
-	if (m_iCurrLevel <= 1) {
-		nbFreeObjects = 3;
-	}
-	else {
-		nbFreeObjects = 1;
-	}
-
-	LDGameMode::initGameMode(&m_pGameMode, &m_gameScene, nbFreeObjects);
-	changeState(E_APP_STATE_INGAME, true);
+void ORGameManager::onStartLevel() {
+	ORGameMode::initGameMode(&m_pGameMode, &m_gameScene);
+	changeState(E_APP_STATE_INGAME, false);
 }
 
-void LDGameManager::onEndTransition(ETransitionAnimType eTransType) {
+void ORGameManager::onEndTransition(ETransitionAnimType eTransType) {
 	switch (eTransType) {
 	case TRANSITION_IN:
 		if (m_ePostTransitionState != E_APP_STATE_NULL) {
@@ -117,72 +97,57 @@ void LDGameManager::onEndTransition(ETransitionAnimType eTransType) {
 	}
 }
 
-void LDGameManager::onTruckUpgrade() {
-	m_iTruckLevel++;
-}
-
-void LDGameManager::changeState(E_APP_STATE eNewState, bool bWithTransition) {
+void ORGameManager::changeState(E_APP_STATE eNewState, bool bWithTransition) {
 	if (bWithTransition) {
 		m_ePostTransitionState = eNewState;
-		m_pTransitionScreen->doTransition(TRANSITION_IN);
+		//m_pTransitionScreen->doTransition(TRANSITION_IN);
 	}
 	else {
 		m_eCurrState = eNewState;
 	}
 }
 
-void LDGameManager::newGame() {
-	m_iCurrLevel = 0;
-	m_iTruckLevel = 1;
-
+void ORGameManager::newGame() {
 	if (m_pGameMode) delete m_pGameMode;
 	m_pGameMode = NULL;
 
 	onNewLevel();
 }
 
-void LDGameManager::quitGame() {
+void ORGameManager::quitGame() {
 	m_pSys->quitLoop();
 }
 
-void LDGameManager::invokeMenu() {
+void ORGameManager::invokeMenu() {
 	m_eCurrState = E_APP_STATE_INGAME_MENU;
 	m_pMainMenu->showContinueBtn(true);
 }
 
-void LDGameManager::hideMenu() {
+void ORGameManager::hideMenu() {
 	m_eCurrState = E_APP_STATE_INGAME;
 }
 
-void LDGameManager::fadeScreen(E_FADE_MODE eFadeMode, float fDuration) {
+void ORGameManager::fadeScreen(E_FADE_MODE eFadeMode, float fDuration) {
 	m_eFadeMode = eFadeMode;
 	m_bDoScreenFade = true;
 	m_fScreenFadeDuration = fDuration;
 	m_fScreenFadeCurrTime = fDuration;
 }
 
-Scene* LDGameManager::getGameScene() {
+Scene* ORGameManager::getGameScene() {
 	return &m_gameScene;
 }
 
-Scene* LDGameManager::getMenuScene() {
+Scene* ORGameManager::getMenuScene() {
 	return &m_menuScene;
 }
 
-int LDGameManager::getTruckLevel() {
-	return m_iTruckLevel;
-}
 
-void LDGameManager::setTruckLevel(int iTruckLevel) {
-	m_iTruckLevel = iTruckLevel;
-}
-
-
-E_APP_STATE LDGameManager::getCurrentState() {
+E_APP_STATE ORGameManager::getCurrentState() {
 	return m_eCurrState;
 }
 
-void LDGameManager::update() {
+void ORGameManager::update() {
 	// Scan all the inputs. This should be done once for each frame
 	vect2d_t touchPt;
 	if (m_pSys->getInputSys()->GetTouch(&touchPt)) {
@@ -245,36 +210,25 @@ void LDGameManager::update() {
 
 		case E_APP_STATE_LEVEL_BEGIN:
 			m_pLevelBeginScreen->update();
-			if (m_pLevelBeginScreen->doMustDisappear() && !m_pTransitionScreen->isActive()) {
-				//delete m_pLevelBeginScreen;
-				onStartLevel();
-			}
+            onStartLevel();
 			break;
 
 		case E_APP_STATE_LEVEL_SUCCESS:
 			m_pLevelSuccessScreen->update();
-			if (m_pLevelSuccessScreen->doMustDisappear() && !m_pTransitionScreen->isActive()) {
-				//delete m_pLevelSuccessScreen;
-				onNewLevel();
-			}
+			onNewLevel();
 			break;
 
 		case E_APP_STATE_LEVEL_FAIL:
 			m_pLevelFailScreen->update();
-			if (m_pLevelFailScreen->doMustDisappear() && !m_pTransitionScreen->isActive()) {
-				//delete m_pLevelFailScreen;
-				onMainMenu();
-			}
+            onMainMenu();
 			break;
         
         case E_APP_STATE_NULL:
             break;
 	}
-
-	m_pTransitionScreen->update();
 }
 
-void LDGameManager::draw(uint8* fb) {
+void ORGameManager::draw(uint8* fb) {
 	switch (m_eCurrState) {
 	case E_APP_STATE_LOGO:
 		break;
@@ -338,10 +292,8 @@ void LDGameManager::draw(uint8* fb) {
 			fb[i] *= m_fScreenAlpha;
 		}
 	}
-
-	m_pTransitionScreen->draw(fb);
 }
 
-LDGameManager* LDGameManager::get() {
-	return LDGameManager::s_pInstance;
+ORGameManager* ORGameManager::get() {
+	return ORGameManager::s_pInstance;
 }

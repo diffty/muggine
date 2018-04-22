@@ -10,7 +10,7 @@ enum ETransitionAnimType {
 	TRANSITION_OUT,
 };
 
-class LDTransitionScreen
+class ORTransitionScreen
 {
 private:
 	float m_fAnimCoef = 0;
@@ -20,8 +20,8 @@ private:
 	SpriteSheet* m_pStripesSprSht;
 
 public:
-	LDTransitionScreen();
-	~LDTransitionScreen();
+	ORTransitionScreen();
+	~ORTransitionScreen();
 
 	void doTransition(ETransitionAnimType eTransitionType);
 

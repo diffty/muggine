@@ -22,9 +22,9 @@
 #include "fsm.hpp"
 #include "font.hpp"
 #include "text.hpp"
-#include "ld_game_manager.hpp"
-#include "ld_game_mode.hpp"
-#include "ld_main_menu.hpp"
+#include "or_game_manager.hpp"
+#include "or_game_mode.hpp"
+#include "or_main_menu.hpp"
 
 #include <time.h>
 
@@ -47,12 +47,12 @@ namespace CoreFoundation {
 
 void MainApp(System* pSys, Graphics* pGfx) {
 #if DEBUG==1
-    
         char cwd[1024];
         if (getcwd(cwd, sizeof(cwd)) != NULL)
             fprintf(stdout, "Current working dir: %s\n", cwd);
         else
             perror("getcwd() error");
+
 #endif
     
 #ifdef __APPLE__
@@ -75,32 +75,26 @@ void MainApp(System* pSys, Graphics* pGfx) {
     
 	RscManager rscManager;
 
-    rscManager.loadFont("data/font-big.bmp", 16, 16, 256, -1);
-	rscManager.loadFont("data/font-small.bmp", 16, 16, 256, -1);
-	rscManager.loadFont("data/font-small-black.bmp", 16, 16, 256, -1);
-	rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 2, 8);
-	rscManager.loadImg("data/title.bmp");
-	rscManager.loadImg("data/credits.bmp");
-	rscManager.loadImg("data/bg.bmp");
-	rscManager.loadImg("data/card.bmp");
-	rscManager.loadSprSht("data/ui1.bmp", 3, 1, 3);
-	rscManager.loadSprSht("data/objects.bmp", 6, 2, 8);
-	rscManager.loadImg("data/truck-slot.bmp");
-	rscManager.loadSprSht("data/ui2.bmp", 1, 1, 1);
-	rscManager.loadSprSht("data/truck.bmp", 3, 1, 3);
-	rscManager.loadSprSht("data/truck_wheels.bmp", 1, 1, 1);
-	rscManager.loadSprSht("data/transition-stripes.bmp", 2, 1, 2);
-	rscManager.loadImg("data/crate.bmp");
-	rscManager.loadFont("data/font-pixel.bmp", 16, 16, 256, 1);
-	rscManager.loadImg("data/heart.bmp");
-	rscManager.loadSprSht("data/particles.bmp", 4, 2, 8);
+    rscManager.loadFont("data/font-big.bmp", 16, 16, 256, -1);          // 0
+	rscManager.loadFont("data/font-small.bmp", 16, 16, 256, -1);        // 1
+	rscManager.loadFont("data/font-small-black.bmp", 16, 16, 256, -1);  // 2
+    rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 2, 8);            // 3
+    rscManager.loadImg("data/title.bmp");                               // 4
+	rscManager.loadImg("data/credits.bmp");                             // 5
+    rscManager.loadImg("data/road.bmp");                                // 6
+    rscManager.loadImg("data/car.bmp");                                 // 7
+    rscManager.loadImg("data/bg.bmp");                                  // 8
+    rscManager.loadSprSht("data/car_smoke.bmp", 3, 1, 3);               // 9
+    rscManager.loadImg("data/PickUp_Feuille.bmp");                      // 10
+    rscManager.loadImg("data/PickUp_House.bmp");                        // 11
+    rscManager.loadImg("data/PickUp_Industrie.bmp");                    // 12
 
 	// Sound system
 	//Sound sound;
 	//sound.addSound("data/sound/intro-rix.mp3", true);
 	
 	// Initing game manager
-	LDGameManager gameManager;
+	ORGameManager gameManager;
 
 	// Building scene
 	Scene* pGameScene = gameManager.getGameScene();
@@ -122,12 +116,11 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		// printf("FPS: %u\n", (uint) (1./deltaTime));
 
-		pGfx->FillWithColor(0x00);
+		pGfx->FillWithColor(0x30);
 
 		gameManager.update();
 		gameManager.draw(fb);
 
-		
 		//if (sys->getInputSys()->IsKeyPressed(KEYB_A)) { }
         
         // DEBUG 3DS

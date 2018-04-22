@@ -6,7 +6,7 @@
 #include "image_button_widget.hpp"
 
 
-class LDMainMenu
+class ORMainMenu
 {
 private:
 	Scene* m_pScene;
@@ -16,8 +16,8 @@ private:
 	ImageButtonWidget* m_pQuitBtn;
 
 public:
-	LDMainMenu(Scene* pScene);
-	~LDMainMenu();
+	ORMainMenu(Scene* pScene);
+	~ORMainMenu();
 
 	void initScene();
 
