@@ -18,6 +18,8 @@ ORCar::ORCar() :
     m_fShakeYOffset = 1;
     
     m_fTimeBeforeNextShake = SHAKE_TIME;
+    
+    getRect()->setSize(m_carSpr.getRect()->getSize().w, m_carSpr.getRect()->getSize().h);
 }
 
 ORCar::~ORCar() {

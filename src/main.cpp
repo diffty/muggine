@@ -88,6 +88,12 @@ void MainApp(System* pSys, Graphics* pGfx) {
     rscManager.loadImg("data/PickUp_Feuille.bmp");                      // 10
     rscManager.loadImg("data/PickUp_House.bmp");                        // 11
     rscManager.loadImg("data/PickUp_Industrie.bmp");                    // 12
+    rscManager.loadImg("data/arbre.bmp");                               // 13
+    rscManager.loadImg("data/usine.bmp");                               // 14
+    rscManager.loadImg("data/immeuble.bmp");                            // 15
+    rscManager.loadImg("data/juno_bulle.bmp");                          // 16
+    rscManager.loadImg("data/mescouilles.bmp");                         // 17
+    rscManager.loadImg("data/tomate.bmp");                              // 18
 
 	// Sound system
 	//Sound sound;
@@ -116,7 +122,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		// printf("FPS: %u\n", (uint) (1./deltaTime));
 
-		pGfx->FillWithColor(0x30);
+		pGfx->FillWithColor(0x00);
 
 		gameManager.update();
 		gameManager.draw(fb);
@@ -138,7 +144,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 		pGfx->WaitForBlank();
 	}
 	
-
 	rscManager.freeAllRsc();
 
 	// Exit services

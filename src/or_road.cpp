@@ -13,7 +13,11 @@
 
 ORRoad::ORRoad() {
     m_roadImg = RscManager::get()->getImgRsc(6);
-    m_fScrollingSpeed = 100.0;
+    m_fScrollSpeed = 100.0;
+}
+
+float ORRoad::getScrollSpeed() {
+    return m_fScrollSpeed;
 }
 
 void ORRoad::update() {
@@ -25,7 +29,7 @@ void ORRoad::update() {
     if (m_fXPos <= 0)
         m_fXPos += roadImgSize.w;
     
-    m_fXPos -= System::get()->getDeltaTime() * m_fScrollingSpeed;
+    m_fXPos -= System::get()->getDeltaTime() * m_fScrollSpeed;
 }
 
 void ORRoad::draw(uint8* fb) {

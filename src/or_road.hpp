@@ -20,13 +20,15 @@ class ORRoad : public IWidget {
 public:
     ORRoad();
     
+    float getScrollSpeed();
+    
     void draw(uint8*);
     void update();
     
 private:
     Image* m_roadImg;
     
-    float m_fScrollingSpeed;
+    float m_fScrollSpeed;
     float m_fXPos;
 };
 

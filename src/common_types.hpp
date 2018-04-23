@@ -61,7 +61,7 @@ private:
 	}
 
 public:
-	Color(unsigned int r, unsigned int g, unsigned int b) {
+	Color(unsigned int r = 0, unsigned int g = 0, unsigned int b = 0) {
 		m_framebuffer3DSFmt = new uint8[3];
 		setColor(r, g, b);
 	}
@@ -137,6 +137,10 @@ public:
 		else
 			return false;
 	}
+    
+    /*bool isRectIntersect(Rectf otherRect) {
+        
+    }*/
 
 	vect2df_t getPos()  { return m_pos; }
 	size2df_t getSize() { return m_size; }

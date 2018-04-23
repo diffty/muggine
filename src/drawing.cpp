@@ -10,6 +10,27 @@
 #endif
 
 
+void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color) {
+#ifdef TARGET_SDL
+    float xSize = (float) (toX - fromX);
+    float ySize = (float) (toY - fromY);
+
+    float lineSize = ((xSize * xSize) + (ySize * ySize)) / 2.0;
+    
+    for (int i = 0; i < lineSize; i++) {
+        int x = fromX + (toX-fromX) * ((float) i / lineSize);
+        int y = fromY + (toY-fromY) * ((float) i / lineSize);
+        
+        *(buffer + (x + (y * SCREEN_WIDTH)) * SCREEN_BPP * sizeof(uint8)) = *color->get3DSFramebufferFormat();
+        
+        memcpy(
+               buffer + (x + (y * SCREEN_WIDTH)) * SCREEN_BPP * sizeof(uint8),
+               color->get3DSFramebufferFormat(),
+               SCREEN_BPP * sizeof(uint8)
+        );
+    }
+#endif
+}
 
 void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 	int x, y;

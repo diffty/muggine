@@ -11,6 +11,7 @@
 #include "mathf.hpp"
 
 
+void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color);
 void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color);
 
 
