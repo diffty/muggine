@@ -16,6 +16,7 @@
 
 #include "linked_list.hpp"
 #include "iwidget.hpp"
+#include "spritesheet.hpp"
 
 
 class ORGameMode;
@@ -40,7 +41,6 @@ public:
     
     float getCityHealth();
     float getCitySize();
-    float getPopulationHappiness();
     
 private:
     ORGameMode* m_pGameMode;

@@ -21,31 +21,45 @@ ORCity::ORCity() {
 void ORCity::generateNewBuilding(EBuildingType eNewBuildingType) {
     int buildingRscId = -1;
     
+    int minStateId = 0, maxStateId = 0;
+    
     switch (eNewBuildingType) {
         case EBuildingType_House:
-            buildingRscId = 15;
+            buildingRscId = 22 + System::get()->getRandInt(0, 2);
+            minStateId = 0;
+            maxStateId = 2;
             break;
             
         case EBuildingType_Building:
-            buildingRscId = 15;
+            buildingRscId = 22 + System::get()->getRandInt(0, 2);
+            minStateId = 0;
+            maxStateId = 2;
             break;
             
         case EBuildingType_Tree:
-            buildingRscId = 13;
+            buildingRscId = 19 + System::get()->getRandInt(0, 2);
+            minStateId = 0;
+            maxStateId = 2;
             break;
             
         case EBuildingType_Factory:
             buildingRscId = 14;
+            minStateId = 0;
+            maxStateId = 0;
             break;
     }
     
-    Image* pBuildingImg = RscManager::get()->getImgRsc(buildingRscId);
+    SpriteSheet* pBuildingSprSht = RscManager::get()->getSprShtRsc(buildingRscId);
     
+    // TODO: Faire le Y random en fonction de la taille du batiment
     vect2df_t vNewBuildingPos;
     vNewBuildingPos.x = 330;
-    vNewBuildingPos.y = 160 - pBuildingImg->getSize().h + System::get()->getRandInt(0, 20);
+    vNewBuildingPos.y = 160 - pBuildingSprSht->getSize().h + System::get()->getRandInt(0, 30);
     
-    Sprite* pNewBuildingSpr = new Sprite(pBuildingImg, vNewBuildingPos);
+    // TODO: Brancher ici la santé de la ville au lieu du random
+    int iFrameId = System::get()->getRandInt(minStateId, maxStateId+1);
+    
+    Sprite* pNewBuildingSpr = new Sprite(pBuildingSprSht, iFrameId, vNewBuildingPos);
     addChildWidget(pNewBuildingSpr);
     addDataToList(&m_llBuildingList, pNewBuildingSpr);
     
@@ -84,18 +98,6 @@ float ORCity::getCityHealth() {
 
 float ORCity::getCitySize() {
     return m_fCitySize;
-}
-
-float ORCity::getPopulationHappiness() {
-    ORGameMode* pGameMode = ORGameMode::get();
-    
-    int iHouse = pGameMode->getHouseValue();
-    int iEcology = pGameMode->getEcologyValue();
-    int iIndustry = pGameMode->getIndustryValue();
-    
-    
-    
-    return 0;
 }
 
 void ORCity::draw(uint8* buffer) {

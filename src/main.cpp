@@ -89,12 +89,19 @@ void MainApp(System* pSys, Graphics* pGfx) {
     rscManager.loadImg("data/PickUp_House.bmp");                        // 11
     rscManager.loadImg("data/PickUp_Industrie.bmp");                    // 12
     rscManager.loadImg("data/arbre.bmp");                               // 13
-    rscManager.loadImg("data/usine.bmp");                               // 14
+    rscManager.loadSprSht("data/usine.bmp", 1, 1, 1);                   // 14
     rscManager.loadImg("data/immeuble.bmp");                            // 15
     rscManager.loadImg("data/juno_bulle.bmp");                          // 16
     rscManager.loadImg("data/mescouilles.bmp");                         // 17
     rscManager.loadImg("data/tomate.bmp");                              // 18
-
+    rscManager.loadSprSht("data/arbre1SprSht.bmp", 3, 1, 3);            // 19
+    rscManager.loadSprSht("data/arbre2SprSht.bmp", 3, 1, 3);            // 20
+    rscManager.loadSprSht("data/centrecommercial.bmp", 1, 1, 1);        // 21
+    rscManager.loadSprSht("data/immeuble1SprSht.bmp", 3, 1, 3);         // 22
+    rscManager.loadSprSht("data/immeuble2SprSht.bmp", 3, 1, 3);         // 23
+    rscManager.loadImg("data/montagnes.bmp");                           // 24
+    rscManager.loadImg("data/nuages.bmp");                              // 25
+    
 	// Sound system
 	//Sound sound;
 	//sound.addSound("data/sound/intro-rix.mp3", true);

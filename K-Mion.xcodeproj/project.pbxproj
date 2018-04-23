@@ -47,6 +47,22 @@
 		953589FA1FDEA40700246359 /* font-pixel.csv in CopyFiles */ = {isa = PBXBuildFile; fileRef = 953589EC1FDE9E9F00246359 /* font-pixel.csv */; };
 		953589FB1FDEA40700246359 /* font-small-black.csv in CopyFiles */ = {isa = PBXBuildFile; fileRef = 953589ED1FDE9E9F00246359 /* font-small-black.csv */; };
 		953589FC1FDEA40700246359 /* font-small.csv in CopyFiles */ = {isa = PBXBuildFile; fileRef = 953589EE1FDE9E9F00246359 /* font-small.csv */; };
+		9535D8D2208DF81C00A0A8EA /* arbre1SprSht.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 9535D8CA208DF81B00A0A8EA /* arbre1SprSht.bmp */; };
+		9535D8D3208DF81C00A0A8EA /* centrecommercial.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 9535D8CB208DF81B00A0A8EA /* centrecommercial.bmp */; };
+		9535D8D4208DF81C00A0A8EA /* arbre2SprSht.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 9535D8CC208DF81B00A0A8EA /* arbre2SprSht.bmp */; };
+		9535D8D5208DF81C00A0A8EA /* montagnes.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 9535D8CD208DF81C00A0A8EA /* montagnes.bmp */; };
+		9535D8D6208DF81C00A0A8EA /* nuages.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 9535D8CE208DF81C00A0A8EA /* nuages.bmp */; };
+		9535D8D7208DF81C00A0A8EA /* immeuble2SprSht.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 9535D8CF208DF81C00A0A8EA /* immeuble2SprSht.bmp */; };
+		9535D8D8208DF81C00A0A8EA /* mayorpopularity.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 9535D8D0208DF81C00A0A8EA /* mayorpopularity.bmp */; };
+		9535D8D9208DF81C00A0A8EA /* immeuble1SprSht.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 9535D8D1208DF81C00A0A8EA /* immeuble1SprSht.bmp */; };
+		9535D8DA208DF8BA00A0A8EA /* arbre1SprSht.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9535D8CA208DF81B00A0A8EA /* arbre1SprSht.bmp */; };
+		9535D8DB208DF8BA00A0A8EA /* arbre2SprSht.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9535D8CC208DF81B00A0A8EA /* arbre2SprSht.bmp */; };
+		9535D8DC208DF8BA00A0A8EA /* centrecommercial.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9535D8CB208DF81B00A0A8EA /* centrecommercial.bmp */; };
+		9535D8DD208DF8BA00A0A8EA /* immeuble2SprSht.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9535D8CF208DF81C00A0A8EA /* immeuble2SprSht.bmp */; };
+		9535D8DE208DF8BA00A0A8EA /* immeuble1SprSht.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9535D8D1208DF81C00A0A8EA /* immeuble1SprSht.bmp */; };
+		9535D8DF208DF8BA00A0A8EA /* mayorpopularity.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9535D8D0208DF81C00A0A8EA /* mayorpopularity.bmp */; };
+		9535D8E0208DF8BA00A0A8EA /* montagnes.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9535D8CD208DF81C00A0A8EA /* montagnes.bmp */; };
+		9535D8E1208DF8BA00A0A8EA /* nuages.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9535D8CE208DF81C00A0A8EA /* nuages.bmp */; };
 		95360F5E1FD6FD9D00F8CBEA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 95360F5D1FD6FD9D00F8CBEA /* Assets.xcassets */; };
 		9536102F1FD6FE8000F8CBEA /* animatedsprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95360FF81FD6FE2800F8CBEA /* animatedsprite.cpp */; };
 		953610311FD6FE8000F8CBEA /* buttonwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9536102A1FD6FE2800F8CBEA /* buttonwidget.cpp */; };
@@ -221,6 +237,14 @@
 				953589FA1FDEA40700246359 /* font-pixel.csv in CopyFiles */,
 				953589FB1FDEA40700246359 /* font-small-black.csv in CopyFiles */,
 				953589FC1FDEA40700246359 /* font-small.csv in CopyFiles */,
+				9535D8DA208DF8BA00A0A8EA /* arbre1SprSht.bmp in CopyFiles */,
+				9535D8DB208DF8BA00A0A8EA /* arbre2SprSht.bmp in CopyFiles */,
+				9535D8DC208DF8BA00A0A8EA /* centrecommercial.bmp in CopyFiles */,
+				9535D8DD208DF8BA00A0A8EA /* immeuble2SprSht.bmp in CopyFiles */,
+				9535D8DE208DF8BA00A0A8EA /* immeuble1SprSht.bmp in CopyFiles */,
+				9535D8DF208DF8BA00A0A8EA /* mayorpopularity.bmp in CopyFiles */,
+				9535D8E0208DF8BA00A0A8EA /* montagnes.bmp in CopyFiles */,
+				9535D8E1208DF8BA00A0A8EA /* nuages.bmp in CopyFiles */,
 				95048BB3208CF24A0027BB4F /* mescouilles.bmp in CopyFiles */,
 				95048BAC208CC5EA0027BB4F /* tomate.bmp in CopyFiles */,
 				95048BAD208CC5EF0027BB4F /* usine.bmp in CopyFiles */,
@@ -305,6 +329,14 @@
 		953589EE1FDE9E9F00246359 /* font-small.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = "font-small.csv"; sourceTree = "<group>"; };
 		953589EF1FDEA00600246359 /* platform_tools.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = platform_tools.cpp; sourceTree = "<group>"; };
 		953589F01FDEA00600246359 /* platform_tools.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = platform_tools.hpp; sourceTree = "<group>"; };
+		9535D8CA208DF81B00A0A8EA /* arbre1SprSht.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = arbre1SprSht.bmp; sourceTree = "<group>"; };
+		9535D8CB208DF81B00A0A8EA /* centrecommercial.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = centrecommercial.bmp; sourceTree = "<group>"; };
+		9535D8CC208DF81B00A0A8EA /* arbre2SprSht.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = arbre2SprSht.bmp; sourceTree = "<group>"; };
+		9535D8CD208DF81C00A0A8EA /* montagnes.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = montagnes.bmp; sourceTree = "<group>"; };
+		9535D8CE208DF81C00A0A8EA /* nuages.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = nuages.bmp; sourceTree = "<group>"; };
+		9535D8CF208DF81C00A0A8EA /* immeuble2SprSht.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = immeuble2SprSht.bmp; sourceTree = "<group>"; };
+		9535D8D0208DF81C00A0A8EA /* mayorpopularity.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = mayorpopularity.bmp; sourceTree = "<group>"; };
+		9535D8D1208DF81C00A0A8EA /* immeuble1SprSht.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = immeuble1SprSht.bmp; sourceTree = "<group>"; };
 		95360F571FD6FD9D00F8CBEA /* K-Mion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "K-Mion.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		95360F5A1FD6FD9D00F8CBEA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		95360F5B1FD6FD9D00F8CBEA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -674,6 +706,14 @@
 		953610931FD7003900F8CBEA /* data */ = {
 			isa = PBXGroup;
 			children = (
+				9535D8CA208DF81B00A0A8EA /* arbre1SprSht.bmp */,
+				9535D8CC208DF81B00A0A8EA /* arbre2SprSht.bmp */,
+				9535D8CB208DF81B00A0A8EA /* centrecommercial.bmp */,
+				9535D8D1208DF81C00A0A8EA /* immeuble1SprSht.bmp */,
+				9535D8CF208DF81C00A0A8EA /* immeuble2SprSht.bmp */,
+				9535D8D0208DF81C00A0A8EA /* mayorpopularity.bmp */,
+				9535D8CD208DF81C00A0A8EA /* montagnes.bmp */,
+				9535D8CE208DF81C00A0A8EA /* nuages.bmp */,
 				95048BB1208CF2450027BB4F /* mescouilles.bmp */,
 				95048B9A208CC5B40027BB4F /* arbre.bmp */,
 				95048B9D208CC5B40027BB4F /* immeuble.bmp */,
@@ -946,15 +986,23 @@
 				95048BA5208CC5B40027BB4F /* immeuble.bmp in Resources */,
 				95048B9E208CC5B40027BB4F /* tomate.bmp in Resources */,
 				95048B82208BCB680027BB4F /* car.bmp in Resources */,
+				9535D8D2208DF81C00A0A8EA /* arbre1SprSht.bmp in Resources */,
 				95048BA1208CC5B40027BB4F /* juno_bulle.bmp in Resources */,
+				9535D8D8208DF81C00A0A8EA /* mayorpopularity.bmp in Resources */,
 				95048BB2208CF2460027BB4F /* mescouilles.bmp in Resources */,
 				95360F5E1FD6FD9D00F8CBEA /* Assets.xcassets in Resources */,
 				95048B85208BE2270027BB4F /* car_smoke.bmp in Resources */,
+				9535D8D4208DF81C00A0A8EA /* arbre2SprSht.bmp in Resources */,
 				95048BA3208CC5B40027BB4F /* PickUp_Feuille.bmp in Resources */,
+				9535D8D3208DF81C00A0A8EA /* centrecommercial.bmp in Resources */,
+				9535D8D9208DF81C00A0A8EA /* immeuble1SprSht.bmp in Resources */,
 				95048BA4208CC5B40027BB4F /* usine.bmp in Resources */,
+				9535D8D5208DF81C00A0A8EA /* montagnes.bmp in Resources */,
 				95048B9F208CC5B40027BB4F /* PickUp_Industrie.bmp in Resources */,
 				95048B7C208B95CE0027BB4F /* road.bmp in Resources */,
 				95048BA0208CC5B40027BB4F /* PickUp_House.bmp in Resources */,
+				9535D8D7208DF81C00A0A8EA /* immeuble2SprSht.bmp in Resources */,
+				9535D8D6208DF81C00A0A8EA /* nuages.bmp in Resources */,
 				95048BA2208CC5B40027BB4F /* arbre.bmp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -138,7 +138,7 @@ void ORGameMode::update() {
         }
         
         m_fTimeBeforeNextBuilding = ((float) System::get()->getRandInt(5, 7)) * minf(50.0, m_cityObj.getCitySize()) / 50.0 * 0.7;
-    }
+    }   
     else {
         m_fTimeBeforeNextBuilding -= System::get()->getDeltaTime();
     }
@@ -203,10 +203,43 @@ void ORGameMode::update() {
         }
     }
     
-    if (pInputSys->IsKeyPressed(KEYB_W)) {
-        m_fPopularity += (int) (fDeltaTime * 100.0);
+#if DEBUG==1
+    if (pInputSys->IsKeyPressed(KEYB_R)) {
+        m_fHouse -= (fDeltaTime * 100.0);
         updateProgressBars();
     }
+    if (pInputSys->IsKeyPressed(KEYB_T)) {
+        m_fHouse += (fDeltaTime * 100.0);
+        updateProgressBars();
+    }
+    if (pInputSys->IsKeyPressed(KEYB_F)) {
+        m_fIndustry -= (fDeltaTime * 100.0);
+        updateProgressBars();
+    }
+    if (pInputSys->IsKeyPressed(KEYB_G)) {
+        m_fIndustry += (fDeltaTime * 100.0);
+        updateProgressBars();
+    }
+    if (pInputSys->IsKeyPressed(KEYB_V)) {
+        m_fEcology -= (fDeltaTime * 100.0);
+        updateProgressBars();
+    }
+    if (pInputSys->IsKeyPressed(KEYB_B)) {
+        m_fEcology += (fDeltaTime * 100.0);
+        updateProgressBars();
+    }
+    if (pInputSys->IsKeyPressed(KEYB_W)) {
+        m_fPopularity -= (fDeltaTime * 100.0);
+        updateProgressBars();
+    }
+    if (pInputSys->IsKeyPressed(KEYB_C)) {
+        m_fPopularity += (fDeltaTime * 100.0);
+        updateProgressBars();
+    }
+    if (pInputSys->IsKeyPressed(KEYB_E)) {
+        m_carObj.showAdvice("MIOW");
+    }
+#endif
     
     updateGameStats();
     
