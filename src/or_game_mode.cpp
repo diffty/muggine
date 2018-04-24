@@ -128,13 +128,13 @@ void ORGameMode::update() {
     vect2df_t vCurrPos = m_carObj.getRect()->getPos();
     
     // Inputs
-    if (pInputSys->IsKeyPressed(KEYB_Q) && vCurrPos.x > 0) {
+    if ((pInputSys->IsKeyPressed(KEYB_Q) || pInputSys->IsKeyPressed(KEYB_A)) && vCurrPos.x > 0) {
         m_carObj.translate(-fDeltaTime * m_fCarSpeed, 0.0, TRANSFORM_REL);
     }
     else if (pInputSys->IsKeyPressed(KEYB_D) && vCurrPos.x < 320 - m_carObj.getRect()->getSize().w) {
         m_carObj.translate(fDeltaTime * m_fCarSpeed, 0.0, TRANSFORM_REL);
     }
-    if (pInputSys->IsKeyPressed(KEYB_Z) && vCurrPos.y > 136) {
+    if ((pInputSys->IsKeyPressed(KEYB_Z) || pInputSys->IsKeyPressed(KEYB_W)) && vCurrPos.y > 136) {
         m_carObj.translate(0.0, -fDeltaTime * m_fCarSpeed, TRANSFORM_REL);
     }
     else if (pInputSys->IsKeyPressed(KEYB_S) && vCurrPos.y < 200 - m_carObj.getRect()->getSize().h) {
