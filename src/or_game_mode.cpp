@@ -21,6 +21,7 @@ ORGameMode::ORGameMode(Scene* pMainScene) {
     m_fEcology = 0;
     m_fPopularity = 0.0;
     m_fPopulation = 0.0;
+    m_fTomatoMalus = 0.0;
 
     initList(&m_llWidgetTrash);
     
@@ -40,7 +41,6 @@ ORGameMode::ORGameMode(Scene* pMainScene) {
     
     m_fTimeBeforeNextBuilding = 0.0;
     m_fTimeBeforeNextStatLoss = TIME_BETWEEN_STAT_LOSS;
-
 }
 
 ORGameMode::~ORGameMode() {
@@ -94,14 +94,19 @@ void ORGameMode::initScene() {
     Sprite* pHouseIcon = new Sprite(rscManager->getImgRsc(11), {4, 9});
     Sprite* pEcologyIcon = new Sprite(rscManager->getImgRsc(10), {213, 9});
     Sprite* pPopularityIcon = new Sprite(rscManager->getImgRsc(17), {8, 198});
-    
     Sprite* pPopularityLabel = new Sprite(rscManager->getImgRsc(29), {73, 229});
+
+    // UI: Population
+    Sprite* pPopulationLabel = new Sprite(rscManager->getImgRsc(33), {7, 31});
+    m_pPopulationCountLabel = new Text("0", rscManager->getFontRsc(27), {7, 39});
     
     m_pMainScene->addComponent(m_pIndustryBar);
     m_pMainScene->addComponent(m_pHouseBar);
     m_pMainScene->addComponent(m_pEcologyBar);
     m_pMainScene->addComponent(m_pPopularityBar);
     m_pMainScene->addComponent(pPopularityLabel);
+    m_pMainScene->addComponent(pPopulationLabel);
+    m_pMainScene->addComponent(m_pPopulationCountLabel);
     
     m_pMainScene->addComponent(pIndustryIcon);
     m_pMainScene->addComponent(pHouseIcon);
@@ -274,23 +279,11 @@ void ORGameMode::updateGameStats() {
     // Population management
     m_fPopGrowth = ((m_fPopularity) / 100.0) * fDeltaTime * POPULATION_GROWTH_FACTOR;
     m_fPopGrowth *= (m_fHouse / 100.0);
-    m_fPopulation = maxf(0.0, m_fPopulation + m_fPopGrowth);
+    setPopulation(maxf(0.0, m_fPopulation + m_fPopGrowth));
     
     float fAllowedFailure = MIN_FAILURE_ALLOWED + (m_fEcology / 100.) * MAX_FAILURE_ALLOWED;
     
     m_fPopularity = (fAllowedFailure - fabs((m_fHouse / 100.0) - (m_fIndustry / 100.))) * 100.;
-    
-    
-    /*// Industry management
-    m_fIndGrowth = minf(0.0, m_fHouse - m_fIndustry) * fDeltaTime * (0.001 * m_fPopulation);
-    m_fIndustry = maxf(0.0, m_fIndustry + m_fIndGrowth);*/
-    
-    /*// Popularity management
-    m_fPopularity += maxf(0.0, m_fHouse - m_fLastFrameHouse);
-    if (m_fLastFrameHouse - m_fHouse > 0.0) {
-        printf("%f\n", m_fLastFrameHouse - m_fHouse);
-    }
-    */
     
     if (m_fTimeBeforeNextStatLoss < 0.) {
         m_fHouse = maxf(0., m_fHouse - HOUSE_LOSS_FACTOR);
@@ -301,6 +294,16 @@ void ORGameMode::updateGameStats() {
     else {
         m_fTimeBeforeNextStatLoss -= System::get()->getDeltaTime();
     }
+    
+    if (m_fTomatoMalus > 0.0) {
+        m_fTomatoMalus -= TOMATO_RECOVER_SPEED * System::get()->getDeltaTime();
+        if (m_fTomatoMalus <= 0.0) {
+            m_fTomatoMalus = 0.0;
+        }
+    }
+    
+    // Apply malus
+    m_fPopularity -= m_fTomatoMalus;
     
     /*
     printf("Population: %f (%f)\n", m_fPopulation, m_fPopGrowth);
@@ -335,7 +338,11 @@ void ORGameMode::onEcologyItemPicked(ORPickupItem* pPickedUpItem) {
 
 void ORGameMode::onTomatoItemPicked(ORPickupItem* pPickedUpItem) {
     m_pickupItemsManager.onItemPicked(pPickedUpItem);
-    m_fPopularity = maxf(m_fPopularity - 3.0, -100.0);
+    
+    if (m_fPopularity - m_fTomatoMalus > -100.0) {
+        m_fTomatoMalus += TOMATO_MALUS;
+    }
+    
     updateProgressBars();
 }
 
@@ -406,6 +413,11 @@ void ORGameMode::setMoney(int iMoney) {
 void ORGameMode::setTimer(float fTimer) {
 	m_fTimer = fTimer;
     updateTimerLabel();
+}
+
+void ORGameMode::setPopulation(float fPopulation) {
+    m_fPopulation = fPopulation;
+    m_pPopulationCountLabel->setText((int) m_fPopulation);
 }
 
 void ORGameMode::updateTimerLabel() {

@@ -24,7 +24,7 @@ ORPickupItemsManager::~ORPickupItemsManager() {
 void ORPickupItemsManager::spawnItem() {
     int maxItemId = 3;
     
-    if (ORGameMode::get()->getPopulationValue() > 100) {
+    if (ORGameMode::get()->getPopulationValue() > TOMATO_POPULATION_AVAILABILITY) {
         maxItemId = 4;
     }
     

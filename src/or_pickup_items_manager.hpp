@@ -18,6 +18,7 @@
 
 #define MIN_SPAWN_TIME 0.15
 #define MAX_SPAWN_TIME 0.9
+#define TOMATO_POPULATION_AVAILABILITY 100
 
 
 class ORPickupItemsManager : public IWidget {

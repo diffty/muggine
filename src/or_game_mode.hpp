@@ -38,9 +38,11 @@
 #define MIN_FAILURE_ALLOWED 0.1
 #define MAX_FAILURE_ALLOWED 0.3
 #define TIME_BETWEEN_STAT_LOSS 3
-#define HOUSE_LOSS_FACTOR 1.
-#define INDUSTRY_LOSS_FACTOR 0.5
+#define HOUSE_LOSS_FACTOR 2.
+#define INDUSTRY_LOSS_FACTOR 1.
 #define ECOLOGY_LOSS_FACTOR 2.
+#define TOMATO_RECOVER_SPEED 2.
+#define TOMATO_MALUS 20.
 
 
 class ORGameMode
@@ -62,6 +64,7 @@ private:
     float m_fEcology = 0;
     float m_fPopularity = 0;
     float m_fPopulation = 0;
+    float m_fTomatoMalus = 0;
     
     float m_fPopGrowth = 0.0;
     float m_fIndGrowth = 0.0;
@@ -93,6 +96,7 @@ private:
     Text* m_pMinutesTimerLabel;
     Text* m_pSecondsTimerLabel;
     Text* m_pSeparatorTimerLabel;
+    Text* m_pPopulationCountLabel;
     
     XScrollingImg* m_scrollingMountainsImg;
     XScrollingImg* m_scrollingCloudsImg;
@@ -145,6 +149,7 @@ public:
 
 	void setMoney(int iMoney);
 	void setTimer(float fTimer);
+    void setPopulation(float fPopulation);
     
     void updateTimerLabel();
     
