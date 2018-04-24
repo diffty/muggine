@@ -19,7 +19,7 @@ public:
 
 	char* getText();
 	void setText(const char* szText);
-	void setText(int iNum);
+	void setText(int iNum, int padding = 0);
 
 	void updateSize();
 
@@ -28,7 +28,7 @@ public:
 	void drawChar(uint8* buffer, float x, float y, char c);
 	void drawStr(uint8* buffer, float x, float y, char* szText);
 
-	static char* intToStr(int iNum);
+	static char* intToStr(int iNum, int padding = 0);
 };
 
 #endif

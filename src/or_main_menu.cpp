@@ -20,7 +20,7 @@ void ORMainMenu::initScene() {
 	vNewSprPos.x = 0;
 	vNewSprPos.y = 0;
 
-	Sprite* pTitleSpr = new Sprite(pRscManager->getImgRsc(4), vNewSprPos);
+	/*Sprite* pTitleSpr = new Sprite(pRscManager->getImgRsc(4), vNewSprPos);
 
 	vNewSprPos.x = 0;
 	vNewSprPos.y = 0;
@@ -35,13 +35,21 @@ void ORMainMenu::initScene() {
 	m_pNewBtn = new ImageButtonWidget(pRscManager->getSprShtRsc(3), vNewSprPos, 1, 0, 0);
 
 	vNewSprPos.y += 20;
-	m_pQuitBtn = new ImageButtonWidget(pRscManager->getSprShtRsc(3), vNewSprPos, 3, 2, 0);
+	m_pQuitBtn = new ImageButtonWidget(pRscManager->getSprShtRsc(3), vNewSprPos, 3, 2, 0);*/
 
-	m_pScene->addComponent(pTitleSpr);
+    Image* pPauseImg = pRscManager->getImgRsc(30);
+    
+    vNewSprPos.x = (SCREEN_WIDTH  / 2) - (pPauseImg->getSize().w / 2);
+    vNewSprPos.y = (SCREEN_HEIGHT / 2) - (pPauseImg->getSize().h / 2);
+    
+    Sprite* pPauseSpr = new Sprite(pPauseImg, vNewSprPos);
+    m_pScene->addComponent(pPauseSpr);
+     
+	/*m_pScene->addComponent(pTitleSpr);
 	m_pScene->addComponent(pCreditsSpr);
 	m_pScene->addComponent(m_pContinueBtn);
 	m_pScene->addComponent(m_pNewBtn);
-	m_pScene->addComponent(m_pQuitBtn);
+	m_pScene->addComponent(m_pQuitBtn);*/
 }
 
 void ORMainMenu::setContinueBtnCallback(void(*pCallback)(void*), void* pCallbackArg) {

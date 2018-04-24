@@ -2,6 +2,8 @@
 #include "or_game_manager.hpp"
 #include "rsc_manager.hpp"
 
+#include <cmath>
+
 
 ORGameMode* ORGameMode::s_pInstance = NULL;
 
@@ -26,7 +28,7 @@ ORGameMode::ORGameMode(Scene* pMainScene) {
     
     updateProgressBars();
 
-	setTimer(11);
+	setTimer(TIME_LIMIT);
 
 	m_bLevelEnded = false;
 
@@ -37,6 +39,8 @@ ORGameMode::ORGameMode(Scene* pMainScene) {
 	m_pParticleSystem->setDrawOrder(6000);
     
     m_fTimeBeforeNextBuilding = 0.0;
+    m_fTimeBeforeNextStatLoss = TIME_BETWEEN_STAT_LOSS;
+
 }
 
 ORGameMode::~ORGameMode() {
@@ -47,12 +51,18 @@ ORGameMode::~ORGameMode() {
 void ORGameMode::initScene() {
 	RscManager* rscManager = RscManager::get();
     
-    m_pBgSpr = new Sprite(RscManager::get()->getImgRsc(8), {0, 0});
+    m_pBgSpr = new Sprite(RscManager::get()->getImgRsc(26), {0, 0});
     
     m_carObj.translate(10, 150);
     m_cityObj.translate(0, 0);
     
+    m_scrollingCloudsImg = new XScrollingImg(RscManager::get()->getImgRsc(25), 2.0);
+    m_scrollingMountainsImg = new XScrollingImg(RscManager::get()->getImgRsc(24), 10.0);
+
     m_pMainScene->addComponent(m_pBgSpr);
+    m_pMainScene->addComponent(m_scrollingCloudsImg);
+    m_pMainScene->addComponent(&m_introAnimation);
+    m_pMainScene->addComponent(m_scrollingMountainsImg);
     m_pMainScene->addComponent(&m_cityObj);
     m_pMainScene->addComponent(&m_roadObj);
     m_pMainScene->addComponent(&m_pickupItemsManager);
@@ -79,21 +89,36 @@ void ORGameMode::initScene() {
     m_pPopularityBar->setCompletedColor(251, 146, 77);
     m_pPopularityBar->setRemainingColor(170, 77, 16);
     
-    // UI ; Progress bars icons
-    Sprite* pIndustryIcon = new Sprite(rscManager->getImgRsc(12), {105, 6});
+    // UI: Progress bars icons
+    Sprite* pIndustryIcon = new Sprite(rscManager->getImgRsc(12), {105, 10});
     Sprite* pHouseIcon = new Sprite(rscManager->getImgRsc(11), {4, 9});
     Sprite* pEcologyIcon = new Sprite(rscManager->getImgRsc(10), {213, 9});
     Sprite* pPopularityIcon = new Sprite(rscManager->getImgRsc(17), {8, 198});
+    
+    Sprite* pPopularityLabel = new Sprite(rscManager->getImgRsc(29), {73, 229});
     
     m_pMainScene->addComponent(m_pIndustryBar);
     m_pMainScene->addComponent(m_pHouseBar);
     m_pMainScene->addComponent(m_pEcologyBar);
     m_pMainScene->addComponent(m_pPopularityBar);
+    m_pMainScene->addComponent(pPopularityLabel);
     
     m_pMainScene->addComponent(pIndustryIcon);
     m_pMainScene->addComponent(pHouseIcon);
     m_pMainScene->addComponent(pEcologyIcon);
     m_pMainScene->addComponent(pPopularityIcon);
+    
+    // UI: Timer
+    vect2df_t fTimerPosition = {269, 218};
+    m_pElectionTimerLabel = new Sprite(RscManager::get()->getImgRsc(28), {270, 211});
+    m_pMinutesTimerLabel = new Text("00", RscManager::get()->getFontRsc(27), {fTimerPosition.x, fTimerPosition.y});
+    m_pSeparatorTimerLabel = new Text(":", RscManager::get()->getFontRsc(27), {fTimerPosition.x + 21, fTimerPosition.y});
+    m_pSecondsTimerLabel = new Text("00", RscManager::get()->getFontRsc(27), {fTimerPosition.x + 25, fTimerPosition.y});
+    
+    m_pMainScene->addComponent(m_pMinutesTimerLabel);
+    m_pMainScene->addComponent(m_pSeparatorTimerLabel);
+    m_pMainScene->addComponent(m_pSecondsTimerLabel);
+    m_pMainScene->addComponent(m_pElectionTimerLabel);
 }
 
 void ORGameMode::update() {
@@ -117,27 +142,42 @@ void ORGameMode::update() {
     }
     
     if (m_fTimeBeforeNextBuilding < 0.0) {
-        switch ((EBuildingType) System::get()->getRandInt(0, 4)) {
-            case EBuildingType_Factory:
-                if (m_fIndustry > 1.0) {
-                    m_cityObj.generateNewBuilding(EBuildingType_Factory);
-                }
-                break;
+        int totalIndices = m_fHouse + m_fIndustry + m_fEcology;
+        
+        EBuildingType eNewBuildingType;
+        
+        if (totalIndices > 0) {
+            int pickedCategory = System::get()->getRandInt(0, totalIndices);
+
+            if (pickedCategory <= m_fHouse)
+                eNewBuildingType = EBuildingType_House;
+            else if (pickedCategory <= m_fIndustry + m_fHouse)
+                eNewBuildingType = EBuildingType_Factory;
+            else if (pickedCategory <= m_fIndustry + m_fHouse + m_fEcology)
+                eNewBuildingType = EBuildingType_Tree;
+
+            switch (eNewBuildingType) {
+                case EBuildingType_Factory:
+                    if (m_fIndustry > 1.0) {
+                        m_cityObj.generateNewBuilding(EBuildingType_Factory);
+                    }
+                    break;
+                    
+                case EBuildingType_House:
+                    if (m_fPopulation > 1.0) {
+                        m_cityObj.generateNewBuilding(EBuildingType_House);
+                    }
+                    break;
                 
-            case EBuildingType_House:
-                if (m_fPopulation > 1.0) {
-                    m_cityObj.generateNewBuilding(EBuildingType_House);
-                }
-                break;
-            
-            case EBuildingType_Tree:
-                if (m_fEcology >= 1.0) {
-                    m_cityObj.generateNewBuilding(EBuildingType_Tree);
-                }
-                break;
+                case EBuildingType_Tree:
+                    if (m_fEcology >= 1.0) {
+                        m_cityObj.generateNewBuilding(EBuildingType_Tree);
+                    }
+                    break;
+            }
         }
         
-        m_fTimeBeforeNextBuilding = ((float) System::get()->getRandInt(5, 7)) * minf(50.0, m_cityObj.getCitySize()) / 50.0 * 0.7;
+        m_fTimeBeforeNextBuilding = ((float) System::get()->getRandInt(5, 7)) - minf(CITY_SIZE_SPAWN_LIMIT, m_cityObj.getCitySize()) / CITY_SIZE_SPAWN_LIMIT * RESPAWN_FREQ_COEF;
     }   
     else {
         m_fTimeBeforeNextBuilding -= System::get()->getDeltaTime();
@@ -148,23 +188,8 @@ void ORGameMode::update() {
     m_fLastFrameHouse = m_fHouse;
 
     // Collision detection (lol dez')
-    Rectf* vCarRect = m_carObj.getRect();
-    
-    vect2df_t vCarTopLeft;
-    vCarTopLeft.x = vCarRect->getPos().x;
-    vCarTopLeft.y = vCarRect->getPos().y;
-    
-    vect2df_t vCarTopRight;
-    vCarTopRight.x = vCarRect->getPos().x + vCarRect->getSize().w;
-    vCarTopRight.y = vCarRect->getPos().y;
-    
-    vect2df_t vCarBottomLeft;
-    vCarBottomLeft.x = vCarRect->getPos().x;
-    vCarBottomLeft.y = vCarRect->getPos().y + vCarRect->getSize().h;
-    
-    vect2df_t vCarBottomRight;
-    vCarBottomRight.x = vCarRect->getPos().x + vCarRect->getSize().w;
-    vCarBottomRight.y = vCarRect->getPos().y + vCarRect->getSize().h;
+    Rectf* carCollisionRect = m_carObj.getCollisionRect();
+    quad2df_t carCollisionRectQuad = carCollisionRect->getQuad2d();
     
     LLNode* pCurrNode = m_pickupItemsManager.getItemsList()->pHead;
 
@@ -172,32 +197,17 @@ void ORGameMode::update() {
         ORPickupItem* pCurrItem = (ORPickupItem*) pCurrNode->pData;
         pCurrNode = pCurrNode->pNext;
         
-        Rectf* vItemRect = pCurrItem->getRect();
+        Rectf* itemCollisionRect = pCurrItem->getRect();
+        quad2df_t itemCollisionRectQuad = itemCollisionRect->getQuad2d();
         
-        vect2df_t vItemTopLeft;
-        vItemTopLeft.x = vItemRect->getPos().x;
-        vItemTopLeft.y = vItemRect->getPos().y;
-        
-        vect2df_t vItemTopRight;
-        vItemTopRight.x = vItemRect->getPos().x + vItemRect->getSize().w;
-        vItemTopRight.y = vItemRect->getPos().y;
-        
-        vect2df_t vItemBottomLeft;
-        vItemBottomLeft.x = vItemRect->getPos().x;
-        vItemBottomLeft.y = vItemRect->getPos().y + vItemRect->getSize().h;
-        
-        vect2df_t vItemBottomRight;
-        vItemBottomRight.x = vItemRect->getPos().x + vItemRect->getSize().w;
-        vItemBottomRight.y = vItemRect->getPos().y + vItemRect->getSize().h;
-        
-        if (   pCurrItem->getRect()->isPointInRect(vCarTopRight.x, vCarTopRight.y)
-            || pCurrItem->getRect()->isPointInRect(vCarBottomRight.x, vCarBottomRight.y)
-            || pCurrItem->getRect()->isPointInRect(vCarTopLeft.x, vCarTopLeft.y)
-            || pCurrItem->getRect()->isPointInRect(vCarBottomLeft.x, vCarBottomLeft.y)
-            || m_carObj.getRect()->isPointInRect(vItemTopRight.x, vItemTopRight.y)
-            || m_carObj.getRect()->isPointInRect(vItemBottomRight.x, vItemBottomRight.y)
-            || m_carObj.getRect()->isPointInRect(vItemTopLeft.x, vItemTopLeft.y)
-            || m_carObj.getRect()->isPointInRect(vItemBottomLeft.x, vItemBottomLeft.y)) {
+        if (   itemCollisionRect->isPointInRect(carCollisionRectQuad.tr.x, carCollisionRectQuad.tr.y)
+            || itemCollisionRect->isPointInRect(carCollisionRectQuad.br.x, carCollisionRectQuad.br.y)
+            || itemCollisionRect->isPointInRect(carCollisionRectQuad.tl.x, carCollisionRectQuad.tl.y)
+            || itemCollisionRect->isPointInRect(carCollisionRectQuad.bl.x, carCollisionRectQuad.bl.y)
+            || carCollisionRect->isPointInRect(itemCollisionRectQuad.tr.x, itemCollisionRectQuad.tr.y)
+            || carCollisionRect->isPointInRect(itemCollisionRectQuad.br.x, itemCollisionRectQuad.br.y)
+            || carCollisionRect->isPointInRect(itemCollisionRectQuad.tl.x, itemCollisionRectQuad.tl.y)
+            || carCollisionRect->isPointInRect(itemCollisionRectQuad.bl.x, itemCollisionRectQuad.bl.y)) {
             
             pCurrItem->onPickup();
         }
@@ -244,19 +254,53 @@ void ORGameMode::update() {
     updateGameStats();
     
     destroyWidgetsInTrash();
+    
+    if (m_fTimer < 0.0) {
+        onTimerEnd();
+    }
+    else {
+        m_fTimer -= System::get()->getDeltaTime();
+        updateTimerLabel();
+    }
+}
+
+void ORGameMode::debugDraw(uint8* buffer) {
+    
 }
 
 void ORGameMode::updateGameStats() {
     float fDeltaTime = System::get()->getDeltaTime();
     
     // Population management
-    m_fPopGrowth = ((m_fPopularity) / 100.0) * fDeltaTime * 5.0;
+    m_fPopGrowth = ((m_fPopularity) / 100.0) * fDeltaTime * POPULATION_GROWTH_FACTOR;
     m_fPopGrowth *= (m_fHouse / 100.0);
     m_fPopulation = maxf(0.0, m_fPopulation + m_fPopGrowth);
     
-    // Industry management
+    float fAllowedFailure = MIN_FAILURE_ALLOWED + (m_fEcology / 100.) * MAX_FAILURE_ALLOWED;
+    
+    m_fPopularity = (fAllowedFailure - fabs((m_fHouse / 100.0) - (m_fIndustry / 100.))) * 100.;
+    
+    
+    /*// Industry management
     m_fIndGrowth = minf(0.0, m_fHouse - m_fIndustry) * fDeltaTime * (0.001 * m_fPopulation);
-    m_fIndustry = maxf(0.0, m_fIndustry + m_fIndGrowth);
+    m_fIndustry = maxf(0.0, m_fIndustry + m_fIndGrowth);*/
+    
+    /*// Popularity management
+    m_fPopularity += maxf(0.0, m_fHouse - m_fLastFrameHouse);
+    if (m_fLastFrameHouse - m_fHouse > 0.0) {
+        printf("%f\n", m_fLastFrameHouse - m_fHouse);
+    }
+    */
+    
+    if (m_fTimeBeforeNextStatLoss < 0.) {
+        m_fHouse = maxf(0., m_fHouse - HOUSE_LOSS_FACTOR);
+        m_fIndustry = maxf(0., m_fIndustry - INDUSTRY_LOSS_FACTOR);
+        m_fEcology = maxf(0., m_fEcology - ECOLOGY_LOSS_FACTOR);
+        m_fTimeBeforeNextStatLoss = TIME_BETWEEN_STAT_LOSS;
+    }
+    else {
+        m_fTimeBeforeNextStatLoss -= System::get()->getDeltaTime();
+    }
     
     printf("Population: %f (%f)\n", m_fPopulation, m_fPopGrowth);
     printf("Popularity: %f\n", m_fPopularity);
@@ -265,12 +309,6 @@ void ORGameMode::updateGameStats() {
     printf("Ecology: %f\n", m_fEcology);
     printf("City Size: %f\n", m_cityObj.getCitySize());
     printf("----\n");
-    
-    // Popularity management
-    m_fPopularity += maxf(0.0, m_fHouse - m_fLastFrameHouse);
-    if (m_fLastFrameHouse - m_fHouse > 0.0) {
-        printf("%f\n", m_fLastFrameHouse - m_fHouse);
-    }
     
     updateProgressBars();
 }
@@ -297,6 +335,10 @@ void ORGameMode::onTomatoItemPicked(ORPickupItem* pPickedUpItem) {
     m_pickupItemsManager.onItemPicked(pPickedUpItem);
     m_fPopularity = maxf(m_fPopularity - 3.0, -100.0);
     updateProgressBars();
+}
+
+void ORGameMode::onTimerEnd() {
+    ORGameManager::get()->onEndLevel();
 }
 
 void ORGameMode::updateProgressBars() {
@@ -361,6 +403,17 @@ void ORGameMode::setMoney(int iMoney) {
 
 void ORGameMode::setTimer(float fTimer) {
 	m_fTimer = fTimer;
+    updateTimerLabel();
+}
+
+void ORGameMode::updateTimerLabel() {
+    int iCurrTime = (int) m_fTimer;
+    
+    int iMinutes = iCurrTime / 60;
+    int iSeconds = iCurrTime % 60;
+    
+    m_pMinutesTimerLabel->setText(iMinutes, 2);
+    m_pSecondsTimerLabel->setText(iSeconds, 2);
 }
 
 void ORGameMode::destroyWidget(IWidget* pWidget) {

@@ -124,8 +124,13 @@ double System::getDeltaTime() {
 }
 
 int System::getRandInt(int iMin, int iMax) {
-	srand((uint)((System::get()->getTime() - (long)System::get()->getTime()) * 1000000000));
-	return iMin + rand() % (iMax - iMin);
+    srand((uint)((System::get()->getTime() - (long)System::get()->getTime()) * 1000000000));
+    return iMin + rand() % (iMax - iMin);
+}
+
+float System::getRandFloat(float fMin, float fMax) {
+    srand((uint)((System::get()->getTime() - (long)System::get()->getTime()) * 1000000000));
+    return fMin + (((float) rand()) / RAND_MAX) * (fMax - fMin);
 }
 
 void System::initLoop() {

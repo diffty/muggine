@@ -16,6 +16,10 @@
 #include "linked_list.hpp"
 
 
+#define MIN_SPAWN_TIME 0.15
+#define MAX_SPAWN_TIME 0.9
+
+
 class ORPickupItemsManager : public IWidget {
 public:
     ORPickupItemsManager();

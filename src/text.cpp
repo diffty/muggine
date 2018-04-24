@@ -44,8 +44,8 @@ void Text::setText(const char* szText) {
 	updateSize();
 }
 
-void Text::setText(int iNum) {
-	char* newText = intToStr(iNum);
+void Text::setText(int iNum, int padding) {
+	char* newText = intToStr(iNum, padding);
 	setText(newText);
 	delete newText;
 }
@@ -110,15 +110,24 @@ void Text::drawStr(uint8* buffer, float x, float y, char* text) {
 	}
 }
 
-// Grosse source de memory leaks AVEREE cette merde
-char* Text::intToStr(int iNum) {
+// Grosse source de memory leaks AVEREE cette merde. Ne pas oublier de delete après usage
+char* Text::intToStr(int iNum, int padding) {
 	unsigned int i, j;
 	char tmp;
 	char* newStr = new char[16];
 
 	if (iNum == 0) {
-		newStr[0] = '0';
-		newStr[1] = '\0';
+        if (padding > 0) {
+            int k;
+            for (k = 0; k < padding; k++) {
+                newStr[k] = 48;
+            }
+            newStr[k] = '\0';
+        }
+        else {
+            newStr[0] = '0';
+            newStr[1] = '\0';
+        }
 		return newStr;
 	}
 
@@ -128,13 +137,23 @@ char* Text::intToStr(int iNum) {
 		iNum /= 10;
 	}
 
-	newStr[i] = '\0';
-
+	//newStr[i] = '\0';
+    
+    int k;
+    
+    int iOverNumber = max(0, padding - i);
+    for (k = 0; k < iOverNumber; k++) {
+        newStr[k+1] = newStr[k];
+        newStr[k] = 48;
+    }
+    
 	for (j = 0; j < i*0.5; j++) {
-		tmp = newStr[i - 1 - j];
-		newStr[i - 1 - j] = newStr[j];
-		newStr[j] = tmp;
+		tmp = newStr[k + i - 1 - j];
+		newStr[k + i - 1 - j] = newStr[j];
+		newStr[k + j] = tmp;
 	}
-
+    
+    newStr[iOverNumber + i] = '\0';
+    
 	return newStr;
 }

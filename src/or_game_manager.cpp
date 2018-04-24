@@ -16,9 +16,9 @@ ORGameManager::ORGameManager() {
 	m_pSys = System::get();
 	m_pInputSys = System::get()->getInputSys();
 
-	m_pMainMenu->setNewBtnCallback(ORGameManager::newGameMenuBtnCallback, this);
+	/*m_pMainMenu->setNewBtnCallback(ORGameManager::newGameMenuBtnCallback, this);
 	m_pMainMenu->setQuitBtnCallback(ORGameManager::quitGameMenuBtnCallback, this);
-	m_pMainMenu->setContinueBtnCallback(ORGameManager::continueGameMenuBtnCallback, this);
+	m_pMainMenu->setContinueBtnCallback(ORGameManager::continueGameMenuBtnCallback, this);*/
 
 	m_bMenuKeyWasPressedLastLoop = false;
 
@@ -83,6 +83,11 @@ void ORGameManager::onStartLevel() {
 	changeState(E_APP_STATE_INGAME, false);
 }
 
+void ORGameManager::onEndLevel() {
+    m_pGameOverScreen = new ORGameOverScreen();
+    changeState(E_APP_STATE_LEVEL_END, false);
+}
+
 void ORGameManager::onEndTransition(ETransitionAnimType eTransType) {
 	switch (eTransType) {
 	case TRANSITION_IN:
@@ -120,7 +125,7 @@ void ORGameManager::quitGame() {
 
 void ORGameManager::invokeMenu() {
 	m_eCurrState = E_APP_STATE_INGAME_MENU;
-	m_pMainMenu->showContinueBtn(true);
+	//m_pMainMenu->showContinueBtn(true);
 }
 
 void ORGameManager::hideMenu() {
@@ -188,10 +193,6 @@ void ORGameManager::update() {
 		m_bMenuKeyWasPressedLastLoop = false;
 	}
 
-	/*if (m_pSys->getInputSys()->IsKeyPressed(KEYB_R) || m_pSys->getInputSys()->IsJoyBtnPressed(JOY_BTN_START)) {
-		newGame();
-	}*/
-
 	switch (m_eCurrState) {
 		case E_APP_STATE_LOGO:
 			break;
@@ -222,6 +223,10 @@ void ORGameManager::update() {
 			m_pLevelFailScreen->update();
             onMainMenu();
 			break;
+            
+        case E_APP_STATE_LEVEL_END:
+            m_pGameOverScreen->update();
+            break;
         
         case E_APP_STATE_NULL:
             break;
@@ -235,6 +240,7 @@ void ORGameManager::draw(uint8* fb) {
 
 	case E_APP_STATE_INGAME:
 		m_gameScene.draw(fb);
+        m_pGameMode->debugDraw(fb);
 		break;
 
 	case E_APP_STATE_INGAME_MENU:
@@ -259,6 +265,11 @@ void ORGameManager::draw(uint8* fb) {
 		//m_gameScene.draw(fb);
 		m_pLevelFailScreen->draw(fb);
 		break;
+            
+    case E_APP_STATE_LEVEL_END:
+        m_gameScene.draw(fb);
+        m_pGameOverScreen->draw(fb);
+        break;
     
     case E_APP_STATE_NULL:
         break;

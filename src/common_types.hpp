@@ -44,6 +44,20 @@ typedef struct color_t {
 	unsigned int b;
 } color_t;
 
+typedef struct quad2d_t {
+    vect2d_t tl;
+    vect2d_t tr;
+    vect2d_t bl;
+    vect2d_t br;
+} quad2d_t;
+
+typedef struct quad2df_t {
+    vect2df_t tl;
+    vect2df_t tr;
+    vect2df_t bl;
+    vect2df_t br;
+} quad2df_t;
+
 typedef unsigned char byte;
 typedef unsigned short word;
 typedef unsigned int uint;
@@ -92,13 +106,15 @@ class Rect {
 private:
 	vect2d_t m_pos;
 	size2d_t m_size;
+    quad2d_t m_quad2d;
 
 public:
-	Rect(int x, int y, int w, int h) {
+	Rect(int x = 0, int y = 0, int w = 0, int h = 0) {
 		m_pos.x = x;
 		m_pos.y = y;
 		m_size.w = w;
 		m_size.h = h;
+        updateQuad2d();
 	}
 
 	bool isPointInRect(int x, int y) {
@@ -110,8 +126,22 @@ public:
 
 	vect2d_t getPos() { return m_pos; }
 	size2d_t getSize() { return m_size; }
-	void setPos(int x, int y) { m_pos.x = x; m_pos.y = y; }
-	void setSize(int w, int h) { m_size.w = w; m_size.h = h; }
+    quad2d_t getQuad2d() { return m_quad2d; }
+	void setPos(int x, int y) { m_pos.x = x; m_pos.y = y; updateQuad2d(); }
+	void setSize(int w, int h) { m_size.w = w; m_size.h = h; updateQuad2d(); }
+    
+    void updateQuad2d() {
+        m_quad2d.tl = m_pos;
+        
+        m_quad2d.tr.x = m_pos.x + m_size.w;
+        m_quad2d.tr.y = m_pos.y;
+        
+        m_quad2d.bl.x = m_pos.x;
+        m_quad2d.bl.y = m_pos.y + m_size.h;
+        
+        m_quad2d.br.x = m_pos.x + m_size.w;
+        m_quad2d.br.y = m_pos.y + m_size.h;
+    }
 };
 
 
@@ -119,13 +149,15 @@ class Rectf {
 private:
 	vect2df_t m_pos;
 	size2df_t m_size;
+    quad2df_t m_quad2d;
 
 public:
-	Rectf(float x, float y, float w, float h) {
+	Rectf(float x = 0.0, float y = 0.0, float w = 0.0, float h = 0.0) {
 		m_pos.x = x;
 		m_pos.y = y;
 		m_size.w = w;
 		m_size.h = h;
+        updateQuad2d();
 	}
 
 	bool isPointInRect(float x, float y) {
@@ -137,15 +169,13 @@ public:
 		else
 			return false;
 	}
-    
-    /*bool isRectIntersect(Rectf otherRect) {
-        
-    }*/
 
 	vect2df_t getPos()  { return m_pos; }
 	size2df_t getSize() { return m_size; }
-	void setPos(float x, float y) { m_pos.x = x; m_pos.y = y; }
-	void setSize(float w, float h) { m_size.w = w; m_size.h = h; }
+    quad2df_t getQuad2d() { return m_quad2d; }
+    
+    void setPos(float x, float y) { m_pos.x = x; m_pos.y = y; updateQuad2d(); }
+	void setSize(float w, float h) { m_size.w = w; m_size.h = h; updateQuad2d(); }
 
 	vect2d_t getPosi() {
 		vect2d_t newPos;
@@ -153,7 +183,19 @@ public:
 		newPos.y = m_pos.y;
 		return newPos;
 	}
-
+    
+    void updateQuad2d() {
+        m_quad2d.tl = m_pos;
+        
+        m_quad2d.tr.x = m_pos.x + m_size.w;
+        m_quad2d.tr.y = m_pos.y;
+        
+        m_quad2d.bl.x = m_pos.x;
+        m_quad2d.bl.y = m_pos.y + m_size.h;
+        
+        m_quad2d.br.x = m_pos.x + m_size.w;
+        m_quad2d.br.y = m_pos.y + m_size.h;
+    }
 };
 
 

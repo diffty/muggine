@@ -1,0 +1,75 @@
+{ "frames": {
+   "title 0.bmp": {
+    "frame": { "x": 0, "y": 0, "w": 137, "h": 67 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 137, "h": 67 },
+    "sourceSize": { "w": 137, "h": 67 },
+    "duration": 100
+   },
+   "title 1.bmp": {
+    "frame": { "x": 137, "y": 0, "w": 137, "h": 67 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 137, "h": 67 },
+    "sourceSize": { "w": 137, "h": 67 },
+    "duration": 100
+   },
+   "title 2.bmp": {
+    "frame": { "x": 274, "y": 0, "w": 137, "h": 67 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 137, "h": 67 },
+    "sourceSize": { "w": 137, "h": 67 },
+    "duration": 100
+   },
+   "title 3.bmp": {
+    "frame": { "x": 411, "y": 0, "w": 137, "h": 67 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 137, "h": 67 },
+    "sourceSize": { "w": 137, "h": 67 },
+    "duration": 100
+   },
+   "title 4.bmp": {
+    "frame": { "x": 0, "y": 67, "w": 137, "h": 67 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 137, "h": 67 },
+    "sourceSize": { "w": 137, "h": 67 },
+    "duration": 100
+   },
+   "title 5.bmp": {
+    "frame": { "x": 137, "y": 67, "w": 137, "h": 67 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 137, "h": 67 },
+    "sourceSize": { "w": 137, "h": 67 },
+    "duration": 100
+   },
+   "title 6.bmp": {
+    "frame": { "x": 274, "y": 67, "w": 137, "h": 67 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 137, "h": 67 },
+    "sourceSize": { "w": 137, "h": 67 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.3",
+  "image": "/Users/diffty/Documents/Projets/Gamedev/2017_07_LD40/data/title.bmp",
+  "format": "I8",
+  "size": { "w": 548, "h": 134 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 0", "opacity": 255, "blendMode": "normal" },
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

@@ -39,10 +39,23 @@ ORCar::ORCar() :
     m_fTimeBeforeNextShake = SHAKE_TIME;
     
     getRect()->setSize(m_carSpr.getRect()->getSize().w, m_carSpr.getRect()->getSize().h);
+    
+    updateCollisionRect();
 }
 
 ORCar::~ORCar() {
     
+}
+
+void ORCar::updateCollisionRect() {
+    Rectf* vCarRect = getRect();
+
+    m_collisionRect.setPos(vCarRect->getPos().x, vCarRect->getPos().y + 17);
+    m_collisionRect.setSize(vCarRect->getSize().w, vCarRect->getSize().h - 17 - 4);
+}
+
+Rectf* ORCar::getCollisionRect() {
+    return &m_collisionRect;
 }
 
 void ORCar::update() {
@@ -83,6 +96,22 @@ void ORCar::update() {
 void ORCar::draw(uint8* buffer) {
     m_particleSystem.draw(buffer);
     drawChildren(buffer);
+    
+    /*
+    Color debugLineColor(255, 255, 255);
+    
+    quad2df_t collisionQuad = getCollisionRect()->getQuad2d();
+    
+    drawLine(buffer, collisionQuad.tl.x, collisionQuad.tl.y, collisionQuad.tr.x, collisionQuad.tr.y, &debugLineColor);
+    drawLine(buffer, collisionQuad.tr.x, collisionQuad.tr.y, collisionQuad.br.x, collisionQuad.br.y, &debugLineColor);
+    drawLine(buffer, collisionQuad.br.x, collisionQuad.br.y, collisionQuad.bl.x, collisionQuad.bl.y, &debugLineColor);
+    drawLine(buffer, collisionQuad.bl.x, collisionQuad.bl.y, collisionQuad.tl.x, collisionQuad.tl.y, &debugLineColor);
+    */
+}
+
+void ORCar::translate(float x, float y, ETransformMode transformMode) {
+    IWidget::translate(x, y, transformMode);
+    updateCollisionRect();
 }
 
 void ORCar::showAdvice(char* szText) {

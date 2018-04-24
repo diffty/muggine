@@ -20,6 +20,10 @@ float ORRoad::getScrollSpeed() {
     return m_fScrollSpeed;
 }
 
+void ORRoad::setScrollSpeed(float fScrollSpeed) {
+    m_fScrollSpeed = fScrollSpeed;
+}
+
 void ORRoad::update() {
     size2df_t roadImgSize = m_roadImg->getSize();
 

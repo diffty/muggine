@@ -25,8 +25,13 @@ public:
     ORCar();
     ~ORCar();
     
+    void updateCollisionRect();
+    Rectf* getCollisionRect();
+    
     void update();
     void draw(uint8*);
+    
+    void translate(float x, float y, ETransformMode transformMode = TRANSFORM_REL);
     
     void showAdvice(char* szText);
     void hideAdvice();
@@ -35,6 +40,8 @@ private:
     Sprite m_carSpr;
     Sprite m_junoHead;
     TextBubble m_junoAdviceBubble;
+    
+    Rectf m_collisionRect;
     
     ParticleSystem m_particleSystem;
     

@@ -39,7 +39,8 @@ public:
 	Input* getInputSys();
 	double getTime();
 	double getDeltaTime();
-	int getRandInt(int iMin, int iMax);
+    int getRandInt(int iMin, int iMax);
+    float getRandFloat(float fMin, float fMax);
 
 #ifdef TARGET_SDL
 	SDL_Window* getWindow();

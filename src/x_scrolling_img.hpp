@@ -1,13 +1,13 @@
 //
-//  or_road.hpp
+//  x_scrolling_img.hpp
 //  K-Mion
 //
 //  Created by DiFFtY on 21/04/2018.
 //  Copyright © 2018 RIX. All rights reserved.
 //
 
-#ifndef or_road_hpp
-#define or_road_hpp
+#ifndef x_scrolling_img_hpp
+#define x_scrolling_img_hpp
 
 #include <stdio.h>
 #include "iwidget.hpp"
@@ -16,18 +16,17 @@
 #include "system.hpp"
 
 
-class ORRoad : public IWidget {
+class XScrollingImg : public IWidget {
 public:
-    ORRoad();
+    XScrollingImg(Image* img, float fScrollSpeed);
     
     float getScrollSpeed();
-    void setScrollSpeed(float fScrollSpeed);
     
     void draw(uint8*);
     void update();
     
 private:
-    Image* m_roadImg;
+    Image* m_img;
     
     float m_fScrollSpeed;
     float m_fXPos;

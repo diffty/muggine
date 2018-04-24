@@ -10,13 +10,11 @@
 #include "or_game_mode.hpp"
 
 
-#define MIN_SPAWN_TIME 0.5
-#define MAX_SPAWN_TIME 3
-
 ORPickupItemsManager::ORPickupItemsManager() {
     initList(&m_llPickupList);
     
-    m_fTimeBeforeNextItemSpawn = System::get()->getRandInt(MIN_SPAWN_TIME, MAX_SPAWN_TIME);
+    m_fTimeBeforeNextItemSpawn = System::get()->getRandFloat(MIN_SPAWN_TIME, MAX_SPAWN_TIME);
+    printf("%f\n", m_fTimeBeforeNextItemSpawn);
 }
 
 ORPickupItemsManager::~ORPickupItemsManager() {
@@ -32,7 +30,7 @@ void ORPickupItemsManager::spawnItem() {
     
     int iItemTypeId = System::get()->getRandInt(0, maxItemId);
     
-    ORPickupItem* pNewPickupObj;
+    ORPickupItem* pNewPickupObj = NULL;
     
     switch(iItemTypeId) {
         case 0:
@@ -52,10 +50,12 @@ void ORPickupItemsManager::spawnItem() {
             break;
     }
     
-    pNewPickupObj->translate(325, 150 + System::get()->getRandInt(0, 3) * 16);
-    addChildWidget(pNewPickupObj);
-    
-    addDataToList(&m_llPickupList, pNewPickupObj);
+    if (pNewPickupObj != NULL) {
+        pNewPickupObj->translate(325, 150 + System::get()->getRandInt(0, 3) * 16);
+        addChildWidget(pNewPickupObj);
+        
+        addDataToList(&m_llPickupList, pNewPickupObj);
+    }
 }
 
 LinkedList* ORPickupItemsManager::getItemsList() {
@@ -85,7 +85,7 @@ void ORPickupItemsManager::update() {
     
     if (m_fTimeBeforeNextItemSpawn < 0.0) {
         spawnItem();
-        m_fTimeBeforeNextItemSpawn = System::get()->getRandInt(MIN_SPAWN_TIME, MAX_SPAWN_TIME);
+        m_fTimeBeforeNextItemSpawn = System::get()->getRandFloat(MIN_SPAWN_TIME, MAX_SPAWN_TIME);
     }
     else {
         m_fTimeBeforeNextItemSpawn -= System::get()->getDeltaTime();

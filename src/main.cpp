@@ -79,7 +79,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	rscManager.loadFont("data/font-small.bmp", 16, 16, 256, -1);        // 1
 	rscManager.loadFont("data/font-small-black.bmp", 16, 16, 256, -1);  // 2
     rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 2, 8);            // 3
-    rscManager.loadImg("data/title.bmp");                               // 4
+    rscManager.loadSprSht("data/title.bmp", 4, 2, 7);                   // 4
 	rscManager.loadImg("data/credits.bmp");                             // 5
     rscManager.loadImg("data/road.bmp");                                // 6
     rscManager.loadImg("data/car.bmp");                                 // 7
@@ -101,6 +101,14 @@ void MainApp(System* pSys, Graphics* pGfx) {
     rscManager.loadSprSht("data/immeuble2SprSht.bmp", 3, 1, 3);         // 23
     rscManager.loadImg("data/montagnes.bmp");                           // 24
     rscManager.loadImg("data/nuages.bmp");                              // 25
+    rscManager.loadImg("data/fond.bmp");                                // 26
+    rscManager.loadFont("data/font-thin-number.bmp", 16, 16, 256, 2);   // 27
+    rscManager.loadImg("data/election_text.bmp");                       // 28
+    rscManager.loadImg("data/mayorpopularity.bmp");                     // 29
+    rscManager.loadImg("data/pause.bmp");                               // 30
+    rscManager.loadImg("data/win.bmp");                                 // 31
+    rscManager.loadImg("data/lose.bmp");                                // 32
+    
     
 	// Sound system
 	//Sound sound;
@@ -129,7 +137,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		// printf("FPS: %u\n", (uint) (1./deltaTime));
 
-		pGfx->FillWithColor(0x00);
+		//pGfx->FillWithColor(0x00);
 
 		gameManager.update();
 		gameManager.draw(fb);

@@ -11,6 +11,7 @@
 #include "or_level_fail_screen.hpp"
 #include "or_level_success_screen.hpp"
 #include "or_transition_screen.hpp"
+#include "or_gameover_screen.hpp"
 
 
 enum E_APP_STATE {
@@ -19,6 +20,7 @@ enum E_APP_STATE {
 	E_APP_STATE_LEVEL_BEGIN,
 	E_APP_STATE_LEVEL_SUCCESS,
 	E_APP_STATE_LEVEL_FAIL,
+    E_APP_STATE_LEVEL_END,
 	E_APP_STATE_INGAME,
 	E_APP_STATE_INGAME_MENU,
 	E_APP_STATE_NULL
@@ -55,6 +57,7 @@ private:
 	ORLevelFailScreen* m_pLevelFailScreen;
 	ORLevelSuccessScreen* m_pLevelSuccessScreen;
 	ORTransitionScreen* m_pTransitionScreen;
+    ORGameOverScreen* m_pGameOverScreen;
 
 	static ORGameManager* s_pInstance;
 
@@ -67,6 +70,7 @@ public:
 	void onLevelSuccess();
 	void onLevelFail();
 	void onStartLevel();
+    void onEndLevel();
 	void onEndTransition(ETransitionAnimType eTransType);
 
 	void changeState(E_APP_STATE eNewState, bool bWithTransition = false);

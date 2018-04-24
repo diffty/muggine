@@ -43,7 +43,11 @@ void ORCity::generateNewBuilding(EBuildingType eNewBuildingType) {
             break;
             
         case EBuildingType_Factory:
-            buildingRscId = 14;
+            if (System::get()->getRandInt(0, 2) == 0)
+                buildingRscId = 14;
+            else
+                buildingRscId = 21;
+            
             minStateId = 0;
             maxStateId = 0;
             break;
@@ -56,14 +60,13 @@ void ORCity::generateNewBuilding(EBuildingType eNewBuildingType) {
     vNewBuildingPos.x = 330;
     vNewBuildingPos.y = 160 - pBuildingSprSht->getSize().h + System::get()->getRandInt(0, 30);
     
-    // TODO: Brancher ici la santé de la ville au lieu du random
-    int iFrameId = System::get()->getRandInt(minStateId, maxStateId+1);
-    
+    //int iFrameId = (int) ((1.0 - getCityHealth()) * (((float) maxStateId + 1) - 0.01));
+    //WARNING: ce truc pourrait péter à la gueule à un moment
+    int iFrameId = (int) floor((1.0 - getCityHealth()) * (maxStateId + 0.99));
+    printf("%f, %i\n", getCityHealth(), iFrameId);
     Sprite* pNewBuildingSpr = new Sprite(pBuildingSprSht, iFrameId, vNewBuildingPos);
     addChildWidget(pNewBuildingSpr);
     addDataToList(&m_llBuildingList, pNewBuildingSpr);
-    
-    m_fCitySize += 1.0;
 }
 
 void ORCity::update() {
@@ -87,13 +90,31 @@ void ORCity::update() {
         }
     }
     
+    if (m_fCitySize < ORGameMode::get()->getPopulationValue()) {
+        m_fCitySize = ORGameMode::get()->getPopulationValue();
+        m_fTimeBeforeCitySizeDecrease = TIME_BEFORE_CITY_SIZE_DECREASE;
+    }
+    else {
+        if (m_fTimeBeforeCitySizeDecrease < 0.0) {
+            m_fCitySize = maxf(0.0, m_fCitySize - System::get()->getDeltaTime() * 2.0);
+        }
+        else {
+            m_fTimeBeforeCitySizeDecrease -= System::get()->getDeltaTime();
+        }
+    }
+    
     getCityHealth();
     
     updateChildren();
 }
 
 float ORCity::getCityHealth() {
-    return ORGameMode::get()->getPopulationValue() / (m_fCitySize * 0.5);
+    if (m_fCitySize == 0) {
+        return 1.;
+    }
+    else {
+        return ORGameMode::get()->getPopulationValue() / (m_fCitySize);
+    }
 }
 
 float ORCity::getCitySize() {

@@ -11,6 +11,9 @@
 
 #define CITY_START_HEALTH 100.0
 #define SPAWN_START_AMOUNT 0.0
+#define CITY_SIZE_DECREASE_COEF 0.001
+#define TIME_BEFORE_CITY_SIZE_DECREASE 3
+
 
 #include <stdio.h>
 
@@ -51,6 +54,7 @@ private:
     float m_fCitySize = 0;
     int m_iCityLevel = 1;
     float m_fSpawnAmount = SPAWN_START_AMOUNT;
+    float m_fTimeBeforeCitySizeDecrease = TIME_BEFORE_CITY_SIZE_DECREASE;
 };
 
 
