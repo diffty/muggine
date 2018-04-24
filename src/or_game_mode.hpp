@@ -29,7 +29,7 @@
 #include "or_intro_animation.hpp"
 
 
-#define TIME_LIMIT 10
+#define TIME_LIMIT 300
 #define CITY_SIZE_SPAWN_LIMIT 300.0
 #define RESPAWN_TIME_MIN 5
 #define RESPAWN_TIME_MAX 7
