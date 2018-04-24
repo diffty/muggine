@@ -214,7 +214,7 @@ void ORGameMode::update() {
     }
     
 #if DEBUG==1
-    if (pInputSys->IsKeyPressed(KEYB_R)) {
+    /*if (pInputSys->IsKeyPressed(KEYB_R)) {
         m_fHouse -= (fDeltaTime * 100.0);
         updateProgressBars();
     }
@@ -248,7 +248,7 @@ void ORGameMode::update() {
     }
     if (pInputSys->IsKeyPressed(KEYB_E)) {
         m_carObj.showAdvice("MIOW");
-    }
+    }*/
 #endif
     
     updateGameStats();
@@ -302,6 +302,7 @@ void ORGameMode::updateGameStats() {
         m_fTimeBeforeNextStatLoss -= System::get()->getDeltaTime();
     }
     
+    /*
     printf("Population: %f (%f)\n", m_fPopulation, m_fPopGrowth);
     printf("Popularity: %f\n", m_fPopularity);
     printf("House: %f\n", m_fHouse);
@@ -309,6 +310,7 @@ void ORGameMode::updateGameStats() {
     printf("Ecology: %f\n", m_fEcology);
     printf("City Size: %f\n", m_cityObj.getCitySize());
     printf("----\n");
+     */
     
     updateProgressBars();
 }
