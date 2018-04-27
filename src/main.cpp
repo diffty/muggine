@@ -9,6 +9,10 @@
 #include <SDL2/SDL.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 #include "linked_list.hpp"
 #include "common_types.hpp"
 #include "scene.hpp"
@@ -165,7 +169,11 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	pGfx->Exit();
 }
 
+#ifdef __EMSCRIPTEN__
+extern "C" int main(int argc, char** argv) {
+#else
 int main(int argc, char **argv)
+#endif
 {
 	System* pSys = System::get();
 	Graphics gfx(pSys);
