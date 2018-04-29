@@ -1,25 +1,45 @@
 #include "sprite.hpp"
 
 
-Sprite::Sprite(Image* pImg, vect2df_t vPos)
-	: IWidget(vPos.x, vPos.y)
+Sprite::Sprite(Image* pImg, vect2df_t vPos) :
+	IWidget(vPos.x, vPos.y)
 {
-	m_pImg = pImg;
-	m_pSprSht = NULL;
-
-	size2df_t imgSize = m_pImg->getSize();
-	m_rect.setSize(imgSize.w, imgSize.h);
+	init(pImg, vPos.x, vPos.y);
 }
 
-Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos)
-	: IWidget(vPos.x, vPos.y)
+Sprite::Sprite(Image* pImg, float fXPos, float fYPos) :
+	IWidget(fXPos, fYPos)
 {
-	m_pImg = NULL;
-	m_pSprSht = pSprSht;
-	m_uFrameNb = uFrameNb;
+	init(pImg, fXPos, fYPos);
+}
 
-	size2d_t imgSize = m_pSprSht->getFrameSize();
-	m_rect.setSize(imgSize.w, imgSize.h);
+Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos) :
+	IWidget(vPos.x, vPos.y)
+{
+	init(pSprSht, uFrameNb, vPos.x, vPos.y);
+}
+
+Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos) :
+	IWidget(fXPos, fYPos) 
+{
+	init(pSprSht, uFrameNb, fXPos, fYPos);
+}
+
+void Sprite::init(Image* pImg, float fXPos, float fYPos) {
+    m_pImg = pImg;
+    m_pSprSht = NULL;
+    
+    size2df_t imgSize = m_pImg->getSize();
+    m_rect.setSize(imgSize.w, imgSize.h);
+}
+
+void Sprite::init(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos) {
+    m_pImg = NULL;
+    m_pSprSht = pSprSht;
+    m_uFrameNb = uFrameNb;
+    
+    size2d_t imgSize = m_pSprSht->getFrameSize();
+    m_rect.setSize(imgSize.w, imgSize.h);
 }
 
 uint Sprite::getFrame() {

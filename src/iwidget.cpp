@@ -20,6 +20,19 @@ IWidget::~IWidget() {
 	garbageCollect();
 };
 
+void IWidget::init() {
+    m_pRootWidget = NULL;
+    m_pParentWidget = NULL;
+    
+    m_bStopOnFirstInput = true;
+    m_bIsActive = true;
+    
+    m_iDrawOrder = 0;
+    
+    initList(&m_llChildrenWidgets);
+    initList(&m_llWidgetNodesToDelete);
+}
+
 void IWidget::drawChildren(uint8* buffer) {
 	LLNode* pCurrNode = m_llChildrenWidgets.pHead;
 

@@ -8,12 +8,35 @@
 
 // Platform-specific type defines
 #ifdef TARGET_3DS
+
 typedef u8 uint8;
 typedef u32 uint32;
+
 #else
-#include <cstdint>
+
+#	ifndef TARGET_SDL
+
+typedef unsigned char uint8_t;
+
+#       if ULONG_MAX == 0xffffffff
+	typedef long int32_t;
+	typedef unsigned long uint32_t;
+
+#       elif UINT_MAX == 0xffffffff
+	typedef int int32_t;
+	typedef unsigned int uint32_t;
+
+#       endif
+
+#	else
+
+#include "SDL2/SDL.h"
+
+#	endif
+
 typedef uint8_t uint8;
 typedef uint32_t uint32;
+
 #endif
 
 
@@ -34,8 +57,8 @@ typedef struct size2d_t {
 } size2d_t;
 
 typedef struct size2df_t {
-	long w;
-	long h;
+	float w;
+	float h;
 } size2df_t;
 
 typedef struct color_t {
@@ -179,8 +202,8 @@ public:
 
 	vect2d_t getPosi() {
 		vect2d_t newPos;
-		newPos.x = m_pos.x;
-		newPos.y = m_pos.y;
+		newPos.x = (long) m_pos.x;
+		newPos.y = (long) m_pos.y;
 		return newPos;
 	}
     

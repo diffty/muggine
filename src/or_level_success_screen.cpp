@@ -6,6 +6,7 @@
 
 ORLevelSuccessScreen::ORLevelSuccessScreen(int iLevelNum) {
 	m_bDoMustDisappear = false;
+	m_iIsMouseBtnState = 0;
 }
 
 

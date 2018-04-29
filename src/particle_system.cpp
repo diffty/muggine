@@ -13,7 +13,11 @@ ParticleSystem::~ParticleSystem() {
 }
 
 void ParticleSystem::emitParticle(SpriteSheet* pSprSht, vect2df_t vStartPos, vect2df_t vStartVel, int iStartFrame, int iEndFrame, uint uFPS) {
-	Particle* pNewParticle = new Particle(pSprSht, vStartPos, vStartVel, iStartFrame, iEndFrame, uFPS, this);
+	ParticleSystem::emitParticle(pSprSht, vStartPos.x, vStartPos.y, vStartVel.x, vStartVel.y, iStartFrame, iEndFrame, uFPS);
+}
+
+void ParticleSystem::emitParticle(SpriteSheet* pSprSht, float fStartVectX, float fStartVectY, float fStartVelX, float fStartVelY, int iStartFrame, int iEndFrame, uint uFPS) {
+	Particle* pNewParticle = new Particle(pSprSht, fStartVectX, fStartVectY, fStartVelX, fStartVelY, iStartFrame, iEndFrame, uFPS, this);
 	addDataToList(&m_llParticles, pNewParticle);
 }
 
@@ -25,7 +29,7 @@ void ParticleSystem::update() {
 		pCurrParticle->update();
 		pCurrNode = pCurrNode->pNext;
 	}
-
+    
 	destroyParticlesInTrash();
 	IWidget::update();
 }

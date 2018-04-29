@@ -13,6 +13,9 @@ ImageButtonWidget::ImageButtonWidget(SpriteSheet *pSprSht, vect2df_t vPos, int i
 
 	m_pOnPressCallback = pCallback;
 	m_pOnPressCallbackArg = pCallbackArg;
+
+	m_pOnReleaseCallback = NULL;
+	m_pOnReleaseCallbackArg = NULL;
 }
 
 void ImageButtonWidget::setOnPressCallback(void(*pCallback)(void*), void* pCallbackArg) {

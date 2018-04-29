@@ -10,11 +10,11 @@ class FSMEvent {
 private:
 	char* m_sName;
 	FSMNode* m_pConnectedNode;
-	bool (*m_pTestCallback)(void*) = NULL;
-	void* m_pTestCallbackArg = NULL;
+	bool (*m_pTestCallback)(void*);
+	void* m_pTestCallbackArg;
 
 public:
-	FSMEvent(char* sName, FSMNode* pConnectedNode, bool (*pTestCallback)(void*), void* pTestCallbackArg);
+	FSMEvent(char* sName, FSMNode* pConnectedNode, bool (*pTestCallback)(void*) = NULL, void* pTestCallbackArg = NULL);
 	~FSMEvent();
 
 	bool testCondition();

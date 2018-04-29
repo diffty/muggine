@@ -11,8 +11,8 @@ private:
 
 	char* m_szFilename;
 
-	int m_iNbFields = 0;
-	int m_iNbDataRows = 0;
+	int m_iNbFields;
+	int m_iNbDataRows;
 
 public:
 	CSVReader(char* szFilename);

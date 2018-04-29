@@ -10,8 +10,8 @@ class Font :
 {
 private:
 	CSVReader* m_pCharSizesCsv;
-	int* m_pCharSizesTable = NULL;
-	int m_iSizeOffset = 0;
+	int* m_pCharSizesTable;
+	int m_iSizeOffset;
 
 public:
 	Font(char* szFileName, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset);

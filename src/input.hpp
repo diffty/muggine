@@ -59,6 +59,13 @@ struct InputEvent {
 
 
 class Input {
+private:
+    LinkedList currEventsList;
+	LinkedList currInputList;
+	LinkedList currMouseList;
+
+	vect2d_t vCurrMousePos;
+
 public:
 	Input();
 	void ScanInput();
@@ -79,13 +86,6 @@ public:
 #endif
 	void ProcessEvent(InputEvent* event);
 	void FlushInputEvents();
-
-private:
-    LinkedList currEventsList;
-	LinkedList currInputList;
-	LinkedList currMouseList;
-
-	vect2d_t vCurrMousePos;
 };
 
 #endif

@@ -66,7 +66,8 @@ void Image::loadFromFile(char* fileName) {
 
     long rowPadding = 0;
     
-    if (m_size.w % 4 != 0) rowPadding = 4 - m_size.w % 4;
+    if ((int) m_size.w % 4 != 0)
+		rowPadding = 4 - (int) m_size.w % 4;
 
 	printf("Size : %ld\n", *dataSize);
 	printf("Start offset : %d\n", *startOffset);
@@ -117,16 +118,16 @@ void Image::loadFromFile(char* fileName) {
 
 #if TARGET_3DS
 	m_nbZoneByLine = new long[m_size.w];
-	for (int i = 0; i < m_size.w; i++)
+	for (i = 0; i < m_size.w; i++)
 		m_nbZoneByLine[i] = 0;
 #else
     m_nbZoneByLine = new long[m_size.h];
-    for (int i = 0; i < m_size.h; i++)
+    for (i = 0; i < m_size.h; i++)
         m_nbZoneByLine[i] = 0;
 #endif
 
 	while (seekPtr < (nbPixelsWPadding + (*startOffset))) {
-		nBytesToRead = min((int) (nbPixelsWPadding - (seekPtr - (long) (*startOffset))), bufferSize);
+		nBytesToRead = minInt((int) (nbPixelsWPadding - (seekPtr - (long) (*startOffset))), bufferSize);
         
 		fseek(fp, seekPtr, SEEK_SET);
 		fread(fileBuf, 1, nBytesToRead, fp);
@@ -141,7 +142,7 @@ void Image::loadFromFile(char* fileName) {
         for (int i = 0; i < nBytesToRead; i++) {
 #endif
             
-            if (currPixNb % m_size.w == 0 && currPixNb > 0) {
+            if ((int) currPixNb % (int) m_size.w == 0 && currPixNb > 0) {
                 i += rowPadding;
             }
 
@@ -172,9 +173,9 @@ void Image::loadFromFile(char* fileName) {
 			}
 			else {
 #if TARGET_3DS
-				if ((inOpaque && (currByte == 0 || (currPixNb + 1) % m_size.h == 0)) || (!inOpaque && currByte != 0)) {
+				if ((inOpaque && (currByte == 0 || ((int) currPixNb + 1) % (int) m_size.h == 0)) || (!inOpaque && currByte != 0)) {
 #else
-                if ((inOpaque && (currByte == 0 || (currPixNb + 1) % m_size.w == 0)) || (!inOpaque && currByte != 0)) {
+                if ((inOpaque && (currByte == 0 || ((int) currPixNb + 1) % (int) m_size.w == 0)) || (!inOpaque && currByte != 0)) {
 #endif
 					LLNode* lnOpaqueInfo = new LLNode;
 					lnOpaqueInfo->pData = new long;
@@ -188,20 +189,20 @@ void Image::loadFromFile(char* fileName) {
 						}
 
 #if TARGET_3DS
-						m_nbZoneByLine[currPixNb / m_size.h]++;
+						m_nbZoneByLine[currPixNb / (int) m_size.h]++;
 #else
-                        m_nbZoneByLine[currPixNb / m_size.w]++;
+                        m_nbZoneByLine[currPixNb / (int) m_size.w]++;
 #endif
 					}
 					else {
 						*((long*) lnOpaqueInfo->pData) = currPixNb;
 
 #if TARGET_3DS
-                        if ((currPixNb + 1) % m_size.h == 0) {
+                        if (((int) currPixNb + 1) % (int) m_size.h == 0) {
                             doEndNow = true;
                         }
 #else
-                        if ((currPixNb + 1) % m_size.w == 0) {
+                        if (((int) currPixNb + 1) % (int) m_size.w == 0) {
                             doEndNow = true;
                         }
 #endif
@@ -247,9 +248,9 @@ void Image::loadFromFile(char* fileName) {
 		*((long*)lnOpaqueInfo->pData) = currPixNb - 1;
 
 #if TARGET_3DS
-		m_nbZoneByLine[currPixNb / m_size.h]++;
+		m_nbZoneByLine[currPixNb / (int) m_size.h]++;
 #else
-        m_nbZoneByLine[currPixNb / m_size.w]++;
+        m_nbZoneByLine[currPixNb / (int) m_size.w]++;
 #endif
 
 		addNodeToList(&lOpaqueInfo, lnOpaqueInfo);
@@ -268,9 +269,9 @@ void Image::loadFromFile(char* fileName) {
 #endif
 
 #if TARGET_3DS
-	for (int i = 0; i < m_size.w; i++) {
+	for (i = 0; i < m_size.w; i++) {
 #else
-    for (int i = 0; i < m_size.h; i++) {
+    for (i = 0; i < m_size.h; i++) {
 #endif
 		m_maskIdByLine[i] = new long[m_nbZoneByLine[i]];
 	}
@@ -366,10 +367,10 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
         srcH = m_size.h;
     }
     
-	overflowLeft = max(0, -dstX);
-	overflowRight = max(0, (dstX + srcW) - SCREEN_WIDTH);
-	overflowTop = max(0, -dstY);
-	overflowBottom = max(0, (dstY + srcH) - SCREEN_HEIGHT);
+	overflowLeft = maxInt(0, -dstX);
+	overflowRight = maxInt(0, (dstX + srcW) - SCREEN_WIDTH);
+	overflowTop = maxInt(0, -dstY);
+	overflowBottom = maxInt(0, (dstY + srcH) - SCREEN_HEIGHT);
 
 	// printf("%d, %d, %d, %d\n", overflowLeft, overflowRight, overflowBottom, overflowTop);
 
@@ -444,7 +445,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
                 imgBufIdx = (unsigned int) m_mask[maskIdx];
                 zoneSize  = (int)          m_mask[maskIdx + 1];
                 
-                int posOnImgX = imgBufIdx % m_size.w;
+                int posOnImgX = (int) imgBufIdx % (int) m_size.w;
                 int posOnImgY = (srcH - 1) - (imgBufIdx / m_size.w);
                 
                 // Skipping out of bounds zones
@@ -453,22 +454,22 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
                 }
                 
                 // Custom clipping
-                int newPosOnImgX = min(max(posOnImgX, srcX), srcX + srcW);
+                int newPosOnImgX = minInt(maxInt(posOnImgX, srcX), srcX + srcW);
                 int newPosOnImgXDelta = (newPosOnImgX - posOnImgX);
                 
-                int newZoneSize = min((posOnImgX + zoneSize), srcX + srcW) - posOnImgX - newPosOnImgXDelta;
+                int newZoneSize = minInt((posOnImgX + zoneSize), srcX + srcW) - posOnImgX - newPosOnImgXDelta;
                 int newImgBufIdx = imgBufIdx + newPosOnImgXDelta;
                 
                 // Buffer edge clipping
-                int transpZoneX = max(-dstX - (newPosOnImgX - srcX), 0);
+                int transpZoneX = maxInt(-dstX - (newPosOnImgX - srcX), 0);
                 
                 if (dstX < 0) {
                     newPosOnImgX += transpZoneX;
-                    newZoneSize = max(0, newZoneSize - transpZoneX);
+                    newZoneSize = maxInt(0, newZoneSize - transpZoneX);
                     newImgBufIdx += transpZoneX;
                 }
                 else if (dstX + (newPosOnImgX - srcX) + newZoneSize > SCREEN_WIDTH-1) {
-                    newZoneSize = max(0, newZoneSize - (dstX + (newPosOnImgX - srcX) + newZoneSize - SCREEN_WIDTH));
+                    newZoneSize = maxInt(0, newZoneSize - (dstX + (newPosOnImgX - srcX) + newZoneSize - SCREEN_WIDTH));
                 }
                 
                 // Building final coordinates
@@ -492,8 +493,8 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 		}
 #elif TARGET_SDL
 		for (int i = overflowTop; i < srcH - overflowBottom; i++) {
-			memcpy(buffer + (max(0, dstX) * SCREEN_BPP) + ((max(0, dstY) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
-				m_pImgData + ((m_size.h - (i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((overflowLeft + srcX) * SCREEN_BPP),
+			memcpy(buffer + (maxInt(0, dstX) * SCREEN_BPP) + ((maxInt(0, dstY) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
+				m_pImgData + (int) ((m_size.h - (i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((overflowLeft + srcX) * SCREEN_BPP),
 				(srcW - overflowLeft - overflowRight) * SCREEN_BPP);
 		}
 #endif

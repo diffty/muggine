@@ -17,9 +17,15 @@ private:
 
 public:
 	Particle(SpriteSheet* pSprSht, vect2df_t vStartPos, vect2df_t vStartVel, int iStartFrame, int iEndFrame, uint uFPS, ParticleSystem* pParentSystem);
+	Particle(SpriteSheet* pSprSht, float fStartVectX, float fStartVectY, float fStartVelX, float fStartVelY, int iStartFrame, int iEndFrame, uint uFPS, ParticleSystem* pParentSystem);
 	~Particle();
+    
+    void init(SpriteSheet* pSprSht, float fStartVectX, float fStartVectY, float fStartVelX, float fStartVelY, int iStartFrame, int iEndFrame, uint uFPS, ParticleSystem* pParentSystem);
 
 	void update();
+    
+    void onParticleAnimEnd();
+    static void onParticleAnimEndCallback(void* pArg);
 };
 
 

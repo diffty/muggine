@@ -11,7 +11,7 @@
 
 
 // ORPickupItem
-ORPickupItem::ORPickupItem(Image* pItemImg) : Sprite(pItemImg, {0, 0}) {}
+ORPickupItem::ORPickupItem(Image* pItemImg) : Sprite(pItemImg, 0, 0) {}
 void ORPickupItem::update() {}
 
 

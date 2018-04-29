@@ -29,10 +29,10 @@ private:
 
 	ButtonMode m_mode;
 
-	int (*m_pCallback)() = NULL;
+	int (*m_pCallback)();
 
 public:
-	ButtonWidget(int x, int y, int w, int h, int initalState, int (*pCallback)(void));
+	ButtonWidget(int x, int y, int w, int h, int initalState, int (*pCallback)(void) = NULL);
 
 	bool receiveTouchInput(vect2d_t touchPt);
 	void onPress();

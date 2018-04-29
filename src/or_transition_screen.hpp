@@ -13,8 +13,9 @@ enum ETransitionAnimType {
 class ORTransitionScreen
 {
 private:
-	float m_fAnimCoef = 0;
-	bool m_fAnimActive = false;
+	float m_fAnimCoef;
+	bool m_fAnimActive;
+
 	ETransitionAnimType m_eAnimType;
 
 	SpriteSheet* m_pStripesSprSht;

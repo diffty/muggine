@@ -18,7 +18,10 @@ private:
 
 public:
 	ProgressBar(vect2df_t vPos, size2df_t sSize, float fMinValue = 0., float fMaxValue = 1., float fCurValue = 0.);
+	ProgressBar(float fXPos, float fYPos, float fWSize, float fHSize, float fMinValue = 0., float fMaxValue = 1., float fCurValue = 0.);
 	~ProgressBar();
+    
+    void init(float fXPos, float fYPos, float fWSize, float fHSize, float fMinValue, float fMaxValue, float fCurValue);
 
 	void setValue(float fValue);
 	void setMinValue(float fMinValue);

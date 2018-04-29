@@ -16,48 +16,41 @@ enum ETransformMode {
 class IWidget : public IDrawable {
 protected:
 	Rectf m_rect;
-    bool m_bIsActive = true;
-	bool m_bStopOnFirstInput = true;
-	IWidget* m_pRootWidget = NULL;
-	IWidget* m_pParentWidget = NULL;
+    bool m_bIsActive;
+	bool m_bStopOnFirstInput;
+	IWidget* m_pRootWidget;
+	IWidget* m_pParentWidget;
 	LinkedList m_llChildrenWidgets;
 	LinkedList m_llWidgetNodesToDelete;
-	int m_iDrawOrder = 0;
+	int m_iDrawOrder;
 
 
 public:
 	IWidget(float x, float y, float w, float h)
 		: IDrawable(),
 		m_rect(x, y, w, h) {
-
-		initList(&m_llChildrenWidgets);
-        initList(&m_llWidgetNodesToDelete);
-
-		m_bStopOnFirstInput = true;
+		
+        init();
 	};
 
 	IWidget(float x, float y)
 		: IDrawable(),
 		m_rect(x, y, 0., 0.) {
-	
-		initList(&m_llChildrenWidgets);
-        initList(&m_llWidgetNodesToDelete);
-
-		m_bStopOnFirstInput = true;
+            
+        init();
 
 	};
 
 	IWidget()
 		: IDrawable(),
 		m_rect(0., 0., 0., 0.) {
-	
-		initList(&m_llChildrenWidgets);
-        initList(&m_llWidgetNodesToDelete);
-
-		m_bStopOnFirstInput = true;
+            
+        init();
 	};
 
 	virtual ~IWidget();
+    
+    void init();
 
 	Rectf* getRect() { return &m_rect; };
 

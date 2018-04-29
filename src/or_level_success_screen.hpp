@@ -9,9 +9,8 @@
 class ORLevelSuccessScreen
 {
 private:
-	bool m_bDoMustDisappear = false;
-
-	int m_iIsMouseBtnState = 0;
+	bool m_bDoMustDisappear;
+	int m_iIsMouseBtnState;
 
 public:
 	ORLevelSuccessScreen(int iLevelNum);

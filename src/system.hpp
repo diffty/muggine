@@ -27,6 +27,25 @@
 
 
 class System {
+private:
+	static System* m_pInstance;
+
+	bool m_bIsMainLoopRunning;
+	Input m_inputSys;
+
+#ifdef TARGET_SDL
+	SDL_Window* m_window;
+	SDL_Event m_event;
+#endif
+
+	double m_prevLoopTime;
+	double m_startLoopTime;
+	double m_deltaTime;
+
+#ifdef TARGET_WIN
+	LARGE_INTEGER m_tickFrequency;
+#endif
+
 public:
 	System();
 	~System();
@@ -50,26 +69,6 @@ public:
 	void initLoop();
 	void quitLoop();
 	void exit();
-
-
-private:
-	static System* m_pInstance;
-
-	bool m_bIsMainLoopRunning;
-	Input m_inputSys;
-
-#ifdef TARGET_SDL
-	SDL_Window* m_window;
-	SDL_Event m_event;
-#endif
-
-	double m_prevLoopTime;
-	double m_startLoopTime;
-	double m_deltaTime;
-
-#ifdef TARGET_WIN
-	LARGE_INTEGER m_tickFrequency;
-#endif
 };
 
 

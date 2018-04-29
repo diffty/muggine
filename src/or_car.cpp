@@ -12,8 +12,8 @@
 
 
 ORCar::ORCar() :
-    m_carSpr(RscManager::get()->getImgRsc(7), {0, 0}),
-    m_junoHead(RscManager::get()->getImgRsc(16), {0, 0}),
+    m_carSpr(RscManager::get()->getImgRsc(7), 0, 0),
+    m_junoHead(RscManager::get()->getImgRsc(16), 0, 0),
     m_junoAdviceBubble("MIAW", RscManager::get()->getFontRsc(2), 0, 0, 50, 10)
 {
     addChildWidget(&m_carSpr);
@@ -35,12 +35,17 @@ ORCar::ORCar() :
                                  );
     
     m_fShakeYOffset = 1;
-    
-    m_fTimeBeforeNextShake = SHAKE_TIME;
+    m_fTimeBeforeAdviceDismiss = 0.0;
+    m_fTimeBeforeNextShake = (float) SHAKE_TIME;
     
     getRect()->setSize(m_carSpr.getRect()->getSize().w, m_carSpr.getRect()->getSize().h);
     
     updateCollisionRect();
+    
+    m_fTimeBetweenSmokeParticles = TIME_BETWEEN_PARTICLES_NORMAL;
+    m_fTimeBeforeNextSmokeParticle = m_fTimeBetweenSmokeParticles;
+    
+    m_eState = ECARSTATE_NORMAL;
 }
 
 ORCar::~ORCar() {
@@ -50,8 +55,8 @@ ORCar::~ORCar() {
 void ORCar::updateCollisionRect() {
     Rectf* vCarRect = getRect();
 
-    m_collisionRect.setPos(vCarRect->getPos().x, vCarRect->getPos().y + 17);
-    m_collisionRect.setSize(vCarRect->getSize().w, vCarRect->getSize().h - 17 - 4);
+    m_collisionRect.setPos(vCarRect->getPos().x+7, vCarRect->getPos().y + 18);
+    m_collisionRect.setSize(vCarRect->getSize().w-13, vCarRect->getSize().h - 17 - 10);
 }
 
 Rectf* ORCar::getCollisionRect() {
@@ -61,27 +66,10 @@ Rectf* ORCar::getCollisionRect() {
 void ORCar::update() {
     updateChildren();
     
-    vect2df_t vSmokePos;
-    vSmokePos.x = getRect()->getPos().x;
-    vSmokePos.y = getRect()->getPos().y + 15;
-    
-    m_particleSystem
-        .emitParticle(
-                      RscManager::get()->getSprShtRsc(9),
-                      vSmokePos,
-                      {
-                          (float) System::get()->getRandInt(-20, -5),
-                          (float) System::get()->getRandInt(-10, 10),
-                      },
-                      0,
-                      2,
-                      2
-    );
-    
     m_fTimeBeforeNextShake -= System::get()->getDeltaTime();
     if (m_fTimeBeforeNextShake < 0.0) {
         translate(0.0, m_fShakeYOffset, TRANSFORM_REL);
-        m_fTimeBeforeNextShake = SHAKE_TIME;
+        m_fTimeBeforeNextShake = (float) SHAKE_TIME;
         m_fShakeYOffset = - m_fShakeYOffset;
     }
     
@@ -90,13 +78,44 @@ void ORCar::update() {
         hideAdvice();
     }
     
-    m_particleSystem.update();
+    m_fTimeBeforeNextSmokeParticle -= System::get()->getDeltaTime();
+    if (m_fTimeBeforeNextSmokeParticle < 0.0) {
+        m_smokeParticleSystem
+        .emitParticle(
+                      RscManager::get()->getSprShtRsc(9),
+                      getRect()->getPos().x,
+                      getRect()->getPos().y + 15,
+                      (float) System::get()->getRandInt(-20, -5),
+                      (float) System::get()->getRandInt(-10, 10),
+                      0,
+                      2,
+                      2
+                      );
+
+        switch (m_eState) {
+            case ECARSTATE_NORMAL:
+                m_fTimeBeforeNextSmokeParticle = TIME_BETWEEN_PARTICLES_NORMAL;
+                break;
+                
+            case ECARSTATE_ACCELERATE:
+                m_fTimeBeforeNextSmokeParticle = TIME_BETWEEN_PARTICLES_ACCELERATE;
+                break;
+                
+            case ECARSTATE_BREAK:
+                m_fTimeBeforeNextSmokeParticle = TIME_BETWEEN_PARTICLES_BREAK;
+                break;
+        }
+    }
+    
+    m_smokeParticleSystem.update();
+    m_trailParticleSystem.update();
 }
 
 void ORCar::draw(uint8* buffer) {
-    m_particleSystem.draw(buffer);
+    m_smokeParticleSystem.draw(buffer);
     drawChildren(buffer);
-    
+    m_trailParticleSystem.draw(buffer);
+
     /*
     Color debugLineColor(255, 255, 255);
     
@@ -109,8 +128,33 @@ void ORCar::draw(uint8* buffer) {
     */
 }
 
+void ORCar::onNormal() {
+    m_eState = ECARSTATE_NORMAL;
+}
+
+void ORCar::onAccelerating() {
+    /*m_trailParticleSystem
+    .emitParticle(
+                  RscManager::get()->getSprShtRsc(34),
+                  getRect()->getPos().x + 2,
+                  getRect()->getPos().y + 21,
+                  -1,
+                  0,
+                  0,
+                  0,
+                  1
+                  );*/
+    
+    m_eState = ECARSTATE_ACCELERATE;
+}
+
+void ORCar::onBreaking() {
+    m_eState = ECARSTATE_BREAK;
+}
+
 void ORCar::translate(float x, float y, ETransformMode transformMode) {
     IWidget::translate(x, y, transformMode);
+    
     updateCollisionRect();
 }
 
@@ -125,4 +169,8 @@ void ORCar::showAdvice(char* szText) {
 void ORCar::hideAdvice() {
     m_junoAdviceBubble.setActive(false);
     m_junoHead.setActive(false);
+}
+
+ECarState ORCar::getState() {
+    return m_eState;
 }

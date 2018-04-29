@@ -22,6 +22,8 @@ DraggableSprite::~DraggableSprite() {
 void DraggableSprite::init(bool bIsDraggable) {
 	m_bIsGrabbed = false;
 	m_bIsDraggable = bIsDraggable;
+	m_bIsHoverable = false;
+	m_bIsHovered = false;
 }
 
 void DraggableSprite::update() {

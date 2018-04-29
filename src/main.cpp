@@ -113,6 +113,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
     rscManager.loadImg("data/win.bmp");                                 // 31
     rscManager.loadImg("data/lose.bmp");                                // 32
     rscManager.loadImg("data/population_text.bmp");                     // 33
+    rscManager.loadSprSht("data/trail-particle.bmp", 1, 1, 1);          // 34
     
 	// Sound system
 	//Sound sound;

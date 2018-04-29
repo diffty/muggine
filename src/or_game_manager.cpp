@@ -7,6 +7,12 @@ ORGameManager* ORGameManager::s_pInstance = NULL;
 ORGameManager::ORGameManager() {
 	ORGameManager::s_pInstance = this;
 
+    m_pLevelBeginScreen = NULL;
+    m_pLevelFailScreen = NULL;
+    m_pLevelSuccessScreen = NULL;
+    m_pTransitionScreen = NULL;
+    m_pGameOverScreen = NULL;
+
 	// Instantiate game mode
 	m_pGameMode = NULL;
 	
@@ -22,9 +28,12 @@ ORGameManager::ORGameManager() {
 
 	m_bMenuKeyWasPressedLastLoop = false;
 
-	m_pLevelBeginScreen = NULL;
-	m_pLevelFailScreen = NULL;
-	m_pLevelSuccessScreen = NULL;
+	m_fScreenAlpha = 1;
+	m_fScreenFadeDuration = 0;
+	m_fScreenFadeCurrTime = 0;
+	m_bDoScreenFade = false;
+
+	m_ePostTransitionState = E_APP_STATE_NULL;
 
 	// onMainMenu(); // DEBUG: decommenter ca
     

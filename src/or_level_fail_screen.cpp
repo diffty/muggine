@@ -4,6 +4,8 @@
 
 
 ORLevelFailScreen::ORLevelFailScreen() {
+	m_fTimeBeforeEnd = 3;
+
 	vect2df_t vTextPos;
 	vTextPos.x = 130;
 	vTextPos.y = 80;

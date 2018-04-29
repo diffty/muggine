@@ -66,6 +66,8 @@ void addAfterNodeInList(LinkedList* pList, LLNode* pNodeToAdd, LLNode* pPrevNode
 
 	pNodeToAdd->pNext = pPrevNodeInList->pNext;
 	pPrevNodeInList->pNext = pNodeToAdd;
+    
+    pList->size++;
 }
 
 void addDataToList(LinkedList* pList, void* pDataToAdd) {
@@ -82,8 +84,8 @@ LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode) {
 
     if (pNode == pList->pHead) {
         pList->pHead = pNode->pNext;
+        pList->size--;
 		if (pNode == pList->pTail) {
-			pList->size--;
 			pList->pTail = NULL;
 		}
         return pNode;

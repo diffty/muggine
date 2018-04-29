@@ -27,11 +27,11 @@ private:
 
 	ButtonMode m_mode;
 
-	void (*m_pOnPressCallback)(void*) = NULL;
-	void *m_pOnPressCallbackArg = NULL;
+	void (*m_pOnPressCallback)(void*);
+	void *m_pOnPressCallbackArg;
 
-	void (*m_pOnReleaseCallback)(void*) = NULL;
-	void *m_pOnReleaseCallbackArg = NULL;
+	void (*m_pOnReleaseCallback)(void*);
+	void *m_pOnReleaseCallbackArg;
 
 public:
 	ImageButtonWidget(SpriteSheet *pSprSht, vect2df_t vPos, int iPressedFrameId, int iReleasedFrameId, int initalState, void(*pCallback)(void*) = NULL, void* pCallbackArg = NULL);

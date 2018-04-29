@@ -17,6 +17,12 @@
 
 
 class XScrollingImg : public IWidget {
+private:
+    Image* m_img;
+    
+    float m_fScrollSpeed;
+    float m_fXPos;
+
 public:
     XScrollingImg(Image* img, float fScrollSpeed);
     
@@ -24,12 +30,7 @@ public:
     
     void draw(uint8*);
     void update();
-    
-private:
-    Image* m_img;
-    
-    float m_fScrollSpeed;
-    float m_fXPos;
+   
 };
 
 

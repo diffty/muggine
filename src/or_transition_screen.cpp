@@ -5,6 +5,8 @@
 
 
 ORTransitionScreen::ORTransitionScreen() {
+	m_fAnimCoef = 0;
+	m_fAnimActive = false;
 	m_pStripesSprSht = RscManager::get()->getSprShtRsc(14);
 }
 

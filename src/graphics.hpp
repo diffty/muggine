@@ -14,17 +14,6 @@
 
 
 class Graphics {
-public:
-	Graphics(System* sys);
-	void Init();
-	void FillWithColor(uint8 colorHex);
-	void SetDoubleBuffering(bool isActive);
-	uint8* GetFramebuffer();
-	void FlushBuffer();
-	void SwapBuffer();
-	void WaitForBlank();
-	void Exit();
-
 private:
 #ifdef TARGET_SDL
 	uint8* m_frameBuffer;
@@ -36,6 +25,16 @@ private:
 #endif
 	System* m_sys;
 
+public:
+	Graphics(System* sys);
+	void Init();
+	void FillWithColor(uint8 colorHex);
+	void SetDoubleBuffering(bool isActive);
+	uint8* GetFramebuffer();
+	void FlushBuffer();
+	void SwapBuffer();
+	void WaitForBlank();
+	void Exit();
 };
 
 

@@ -16,6 +16,50 @@ ORCity::ORCity() {
     m_fSpawnAmount = SPAWN_START_AMOUNT;
     m_fCitySize = 0.0;
     m_iCityLevel = 1;
+    m_fTimeBeforeCitySizeDecrease = TIME_BEFORE_CITY_SIZE_DECREASE;
+}
+
+void ORCity::update() {
+    float fDeltaTime = System::get()->getDeltaTime();
+    
+    LLNode* pCurrNode = m_llBuildingList.pHead;
+    LLNode* pPrevNode;
+    
+    while (pCurrNode != NULL) {
+        Sprite* pCurrSpr = (Sprite*) pCurrNode->pData;
+        pCurrSpr->translate(fDeltaTime * -15, 0, TRANSFORM_REL);
+        
+        pPrevNode = pCurrNode;
+        pCurrNode = pCurrNode->pNext;
+
+        if (pCurrSpr->getRect()->getPos().x < -100) {
+            removeChildWidget(pCurrSpr);
+            removeNodeFromList(&m_llBuildingList, pPrevNode);
+            delete pPrevNode;
+            delete pCurrSpr;
+        }
+    }
+    
+    if (m_fCitySize < ORGameMode::get()->getPopulationValue()) {
+        m_fCitySize = ORGameMode::get()->getPopulationValue();
+        m_fTimeBeforeCitySizeDecrease = TIME_BEFORE_CITY_SIZE_DECREASE;
+    }
+    else {
+        if (m_fTimeBeforeCitySizeDecrease < 0.0) {
+            m_fCitySize = maxf(0.0, m_fCitySize - System::get()->getDeltaTime() * 2.0);
+        }
+        else {
+            m_fTimeBeforeCitySizeDecrease -= System::get()->getDeltaTime();
+        }
+    }
+    
+    getCityHealth();
+    
+    updateChildren();
+}
+
+void ORCity::draw(uint8* buffer) {
+    drawChildren(buffer);
 }
 
 void ORCity::generateNewBuilding(EBuildingType eNewBuildingType) {
@@ -69,45 +113,6 @@ void ORCity::generateNewBuilding(EBuildingType eNewBuildingType) {
     addDataToList(&m_llBuildingList, pNewBuildingSpr);
 }
 
-void ORCity::update() {
-    float fDeltaTime = System::get()->getDeltaTime();
-    
-    LLNode* pCurrNode = m_llBuildingList.pHead;
-    LLNode* pPrevNode;
-    
-    while (pCurrNode != NULL) {
-        Sprite* pCurrSpr = (Sprite*) pCurrNode->pData;
-        pCurrSpr->translate(fDeltaTime * -15, 0, TRANSFORM_REL);
-        
-        pPrevNode = pCurrNode;
-        pCurrNode = pCurrNode->pNext;
-
-        if (pCurrSpr->getRect()->getPos().x < -100) {
-            removeChildWidget(pCurrSpr);
-            removeNodeFromList(&m_llBuildingList, pPrevNode);
-            delete pPrevNode;
-            delete pCurrSpr;
-        }
-    }
-    
-    if (m_fCitySize < ORGameMode::get()->getPopulationValue()) {
-        m_fCitySize = ORGameMode::get()->getPopulationValue();
-        m_fTimeBeforeCitySizeDecrease = TIME_BEFORE_CITY_SIZE_DECREASE;
-    }
-    else {
-        if (m_fTimeBeforeCitySizeDecrease < 0.0) {
-            m_fCitySize = maxf(0.0, m_fCitySize - System::get()->getDeltaTime() * 2.0);
-        }
-        else {
-            m_fTimeBeforeCitySizeDecrease -= System::get()->getDeltaTime();
-        }
-    }
-    
-    getCityHealth();
-    
-    updateChildren();
-}
-
 float ORCity::getCityHealth() {
     if (m_fCitySize == 0) {
         return 1.;
@@ -119,8 +124,4 @@ float ORCity::getCityHealth() {
 
 float ORCity::getCitySize() {
     return m_fCitySize;
-}
-
-void ORCity::draw(uint8* buffer) {
-    drawChildren(buffer);
 }

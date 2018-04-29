@@ -3,7 +3,6 @@
 
 
 Font::Font(char* szFileName, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset) : SpriteSheet(szFileName, iGridWidth, iGridHeight, uLength) {
-
 	m_iSizeOffset = iSizeOffset;
         
     size_t strLen = strlen(szFileName);

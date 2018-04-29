@@ -6,18 +6,15 @@
 Particle::Particle(SpriteSheet* pSprSht, vect2df_t vStartPos, vect2df_t vStartVel, int iStartFrame, int iEndFrame, uint uFPS, ParticleSystem* pParentSystem) :
 	AnimatedSprite(pSprSht, vStartPos)
 {
-	m_vStartPos = vStartPos;
-	m_vStartVel = vStartVel;
-	m_iStartFrame = iStartFrame;
-	m_iEndFrame = iEndFrame;
-	m_pParticleSys = pParentSystem;
+	init(pSprSht, vStartPos.x, vStartPos.y, vStartVel.x, vStartVel.y, iStartFrame, iEndFrame, uFPS, pParentSystem);
+}
 
-	setFrame(m_iStartFrame);
-
-	getRect()->setPos(m_vStartPos.x, m_vStartPos.y);
-
-	addState("", iStartFrame, iEndFrame, uFPS, false);
-	changeState(0);
+	
+	
+Particle::Particle(SpriteSheet* pSprSht, float fStartVectX, float fStartVectY, float fStartVelX, float fStartVelY, int iStartFrame, int iEndFrame, uint uFPS, ParticleSystem* pParentSystem) :
+	AnimatedSprite(pSprSht, fStartVectX, fStartVectY)
+{
+	init(pSprSht, fStartVectX, fStartVectY, fStartVelX, fStartVelY, iStartFrame, iEndFrame, uFPS, pParentSystem);
 }
 
 
@@ -25,19 +22,42 @@ Particle::~Particle() {
 
 }
 
-void Particle::update() {
-	AnimatedSprite::update();
+void Particle::init(SpriteSheet* pSprSht, float fStartVectX, float fStartVectY, float fStartVelX, float fStartVelY, int iStartFrame, int iEndFrame, uint uFPS, ParticleSystem* pParentSystem) {
+    
+    m_vStartPos.x = fStartVectX;
+    m_vStartPos.y = fStartVectY;
+    m_vStartVel.x = fStartVelX;
+    m_vStartVel.y = fStartVelY;
+    m_iStartFrame = iStartFrame;
+    m_iEndFrame = iEndFrame;
+    m_pParticleSys = pParentSystem;
+    
+    setFrame(m_iStartFrame);
+    
+    getRect()->setPos(m_vStartPos.x, m_vStartPos.y);
+    
+    addState("", iStartFrame, iEndFrame, uFPS, false, Particle::onParticleAnimEndCallback, (void*) this);
+    changeState(0);
+}
 
-	double dDeltaTime = System::get()->getDeltaTime();
+void Particle::update() {
+    float fDeltaTime = System::get()->getDeltaTime();
+    
+    AnimatedSprite::update();
 
 	vect2df_t vCurrPos = getRect()->getPos();
 
 	getRect()->setPos(
-		vCurrPos.x + m_vStartVel.x * dDeltaTime,
-		vCurrPos.y + m_vStartVel.y * dDeltaTime
+		vCurrPos.x + m_vStartVel.x * fDeltaTime,
+		vCurrPos.y + m_vStartVel.y * fDeltaTime
 	);
+}
 
-	if (getFrame() == m_iEndFrame) {
-		m_pParticleSys->onParticleDie(this);
-	}
+void Particle::onParticleAnimEnd() {
+    m_pParticleSys->onParticleDie(this);
+}
+
+void Particle::onParticleAnimEndCallback(void* pArg) {
+    Particle* pParticle = (Particle*) pArg;
+    pParticle->onParticleAnimEnd();
 }

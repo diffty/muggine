@@ -15,13 +15,26 @@ ORGameMode::ORGameMode(Scene* pMainScene) {
 	m_pMainScene = pMainScene;
 
 	m_bWinTimerActivated = false;
+	m_bWaitForEnd = false;
+	m_bLevelEnded = false;
     
-    m_fHouse = 0;
-    m_fIndustry = 0;
-    m_fEcology = 0;
+    m_fHouse = 0.0;
+    m_fIndustry = 0.0;
+    m_fEcology = 0.0;
     m_fPopularity = 0.0;
     m_fPopulation = 0.0;
     m_fTomatoMalus = 0.0;
+
+	m_fCarSpeed = CAR_SPEED;
+
+	// TO DELETE
+	m_fPopGrowth = 0.0;
+    m_fIndGrowth = 0.0;
+    
+    m_fLastFrameIndustry = 0.0;
+    m_fLastFrameHouse = 0.0;
+    m_fLastFramePopulation = 0.0;
+    // END TO DELETE
 
     initList(&m_llWidgetTrash);
     
@@ -51,7 +64,11 @@ ORGameMode::~ORGameMode() {
 void ORGameMode::initScene() {
 	RscManager* rscManager = RscManager::get();
     
-    m_pBgSpr = new Sprite(RscManager::get()->getImgRsc(26), {0, 0});
+	vect2df_t bgSprPos;
+	bgSprPos.x = 0;
+	bgSprPos.y = 0;
+
+    m_pBgSpr = new Sprite(RscManager::get()->getImgRsc(26), bgSprPos);
     
     m_carObj.translate(10, 150);
     m_cityObj.translate(0, 0);
@@ -69,36 +86,36 @@ void ORGameMode::initScene() {
     m_pMainScene->addComponent(&m_carObj);
     
     // UI: Progress bars
-    m_pHouseBar = new ProgressBar({8, 6}, {96, 9});
+    m_pHouseBar = new ProgressBar(8, 6, 96, 9);
     m_pHouseBar->setBorderColor(255, 255, 255);
     m_pHouseBar->setCompletedColor(73, 190, 247);
     m_pHouseBar->setRemainingColor(32, 85, 109);
 
-    m_pIndustryBar = new ProgressBar({112, 6}, {96, 9});
+    m_pIndustryBar = new ProgressBar(112, 6, 96, 9);
     m_pIndustryBar->setBorderColor(255, 255, 255);
     m_pIndustryBar->setCompletedColor(255, 85, 198);
     m_pIndustryBar->setRemainingColor(174, 40, 130);
     
-    m_pEcologyBar = new ProgressBar({215, 6}, {96, 9});
+    m_pEcologyBar = new ProgressBar(215, 6, 96, 9);
     m_pEcologyBar->setBorderColor(255, 255, 255);
     m_pEcologyBar->setCompletedColor(57, 243, 57);
     m_pEcologyBar->setRemainingColor(28, 125, 28);
     
-    m_pPopularityBar = new ProgressBar({51, 214}, {213, 12}, -1.0, 1.0, 0.0);
+    m_pPopularityBar = new ProgressBar(51, 214, 213, 12, -1.0, 1.0, 0.0);
     m_pPopularityBar->setBorderColor(255, 255, 255);
     m_pPopularityBar->setCompletedColor(251, 146, 77);
     m_pPopularityBar->setRemainingColor(170, 77, 16);
     
     // UI: Progress bars icons
-    Sprite* pIndustryIcon = new Sprite(rscManager->getImgRsc(12), {105, 10});
-    Sprite* pHouseIcon = new Sprite(rscManager->getImgRsc(11), {4, 9});
-    Sprite* pEcologyIcon = new Sprite(rscManager->getImgRsc(10), {213, 9});
-    Sprite* pPopularityIcon = new Sprite(rscManager->getImgRsc(17), {8, 198});
-    Sprite* pPopularityLabel = new Sprite(rscManager->getImgRsc(29), {73, 229});
+    Sprite* pIndustryIcon = new Sprite(rscManager->getImgRsc(12), 105, 10);
+    Sprite* pHouseIcon = new Sprite(rscManager->getImgRsc(11), 4, 9);
+    Sprite* pEcologyIcon = new Sprite(rscManager->getImgRsc(10), 213, 9);
+    Sprite* pPopularityIcon = new Sprite(rscManager->getImgRsc(17), 8, 198);
+    Sprite* pPopularityLabel = new Sprite(rscManager->getImgRsc(29), 73, 229);
 
     // UI: Population
-    Sprite* pPopulationLabel = new Sprite(rscManager->getImgRsc(33), {7, 31});
-    m_pPopulationCountLabel = new Text("0", rscManager->getFontRsc(27), {7, 39});
+    Sprite* pPopulationLabel = new Sprite(rscManager->getImgRsc(33), 7, 31);
+    m_pPopulationCountLabel = new Text("0", rscManager->getFontRsc(27), 7, 39);
     
     m_pMainScene->addComponent(m_pIndustryBar);
     m_pMainScene->addComponent(m_pHouseBar);
@@ -115,10 +132,10 @@ void ORGameMode::initScene() {
     
     // UI: Timer
     vect2df_t fTimerPosition = {269, 218};
-    m_pElectionTimerLabel = new Sprite(RscManager::get()->getImgRsc(28), {270, 211});
-    m_pMinutesTimerLabel = new Text("00", RscManager::get()->getFontRsc(27), {fTimerPosition.x, fTimerPosition.y});
-    m_pSeparatorTimerLabel = new Text(":", RscManager::get()->getFontRsc(27), {fTimerPosition.x + 21, fTimerPosition.y});
-    m_pSecondsTimerLabel = new Text("00", RscManager::get()->getFontRsc(27), {fTimerPosition.x + 25, fTimerPosition.y});
+    m_pElectionTimerLabel = new Sprite(RscManager::get()->getImgRsc(28), 270, 211);
+    m_pMinutesTimerLabel = new Text("00", RscManager::get()->getFontRsc(27), fTimerPosition.x, fTimerPosition.y);
+    m_pSeparatorTimerLabel = new Text(":", RscManager::get()->getFontRsc(27), fTimerPosition.x + 21, fTimerPosition.y);
+    m_pSecondsTimerLabel = new Text("00", RscManager::get()->getFontRsc(27), fTimerPosition.x + 25, fTimerPosition.y);
     
     m_pMainScene->addComponent(m_pMinutesTimerLabel);
     m_pMainScene->addComponent(m_pSeparatorTimerLabel);
@@ -135,10 +152,22 @@ void ORGameMode::update() {
     // Inputs
     if ((pInputSys->IsKeyPressed(KEYB_Q) || pInputSys->IsKeyPressed(KEYB_A)) && vCurrPos.x > 0) {
         m_carObj.translate(-fDeltaTime * m_fCarSpeed, 0.0, TRANSFORM_REL);
+        m_roadObj.setScrollSpeed(SCROLL_SPEED_BREAK);
+        m_carObj.onBreaking();
+        m_bCarWasMoving = true;
     }
     else if (pInputSys->IsKeyPressed(KEYB_D) && vCurrPos.x < 320 - m_carObj.getRect()->getSize().w) {
         m_carObj.translate(fDeltaTime * m_fCarSpeed, 0.0, TRANSFORM_REL);
+        m_roadObj.setScrollSpeed(SCROLL_SPEED_ACCELERATION);
+        m_carObj.onAccelerating();
+        m_bCarWasMoving = true;
     }
+    else if (m_bCarWasMoving) {
+        m_roadObj.setScrollSpeed(SCROLL_SPEED_NORMAL);
+        m_carObj.onNormal();
+        m_bCarWasMoving = false;
+    }
+    
     if ((pInputSys->IsKeyPressed(KEYB_Z) || pInputSys->IsKeyPressed(KEYB_W)) && vCurrPos.y > 136) {
         m_carObj.translate(0.0, -fDeltaTime * m_fCarSpeed, TRANSFORM_REL);
     }
@@ -219,41 +248,41 @@ void ORGameMode::update() {
     }
     
 #if DEBUG==1
-    /*if (pInputSys->IsKeyPressed(KEYB_R)) {
-        m_fHouse -= (fDeltaTime * 100.0);
+    if (pInputSys->IsKeyPressed(KEYB_R)) {
+        m_fHouse = maxf(0.0, m_fHouse - (fDeltaTime * 100.0));
         updateProgressBars();
     }
     if (pInputSys->IsKeyPressed(KEYB_T)) {
-        m_fHouse += (fDeltaTime * 100.0);
+        m_fHouse = minf(100., m_fHouse + (fDeltaTime * 100.0));
         updateProgressBars();
     }
     if (pInputSys->IsKeyPressed(KEYB_F)) {
-        m_fIndustry -= (fDeltaTime * 100.0);
+        m_fIndustry = maxf(0., m_fIndustry - (fDeltaTime * 100.0));
         updateProgressBars();
     }
     if (pInputSys->IsKeyPressed(KEYB_G)) {
-        m_fIndustry += (fDeltaTime * 100.0);
+        m_fIndustry = minf(100., m_fIndustry + (fDeltaTime * 100.0));
         updateProgressBars();
     }
     if (pInputSys->IsKeyPressed(KEYB_V)) {
-        m_fEcology -= (fDeltaTime * 100.0);
+        m_fEcology = maxf(0., m_fEcology - (fDeltaTime * 100.0));
         updateProgressBars();
     }
     if (pInputSys->IsKeyPressed(KEYB_B)) {
-        m_fEcology += (fDeltaTime * 100.0);
+        m_fEcology = minf(100., m_fEcology + (fDeltaTime * 100.0));
         updateProgressBars();
     }
     if (pInputSys->IsKeyPressed(KEYB_W)) {
-        m_fPopularity -= (fDeltaTime * 100.0);
+        m_fPopulation -= (fDeltaTime * 10.0);
         updateProgressBars();
     }
     if (pInputSys->IsKeyPressed(KEYB_C)) {
-        m_fPopularity += (fDeltaTime * 100.0);
+        m_fPopulation += (fDeltaTime * 10.0);
         updateProgressBars();
     }
     if (pInputSys->IsKeyPressed(KEYB_E)) {
         m_carObj.showAdvice("MIOW");
-    }*/
+    }
 #endif
     
     updateGameStats();
@@ -282,8 +311,16 @@ void ORGameMode::updateGameStats() {
     setPopulation(maxf(0.0, m_fPopulation + m_fPopGrowth));
     
     float fAllowedFailure = MIN_FAILURE_ALLOWED + (m_fEcology / 100.) * MAX_FAILURE_ALLOWED;
+    float fFailFactor = 1. - fabs((m_fHouse / 100.0) - (m_fIndustry / 100.));
+    float fSmallTownBonus = (1. - (minf(m_fPopulation, 10.) / 10.)) * 10.;
+    float fLowPopulationFactor = (1. * (minf(m_fPopulation / 100., 1.0)));
     
-    m_fPopularity = (fAllowedFailure - fabs((m_fHouse / 100.0) - (m_fIndustry / 100.))) * 100.;
+    //printf("%f\n", fSmallTownBonus);
+    
+    printf("Allowed failure: %f\n", fAllowedFailure);
+    printf("Fail factor: %f\n", fFailFactor);
+    
+    m_fPopularity = minf(1., (fAllowedFailure + fFailFactor)) * 200. - 100.;
     
     if (m_fTimeBeforeNextStatLoss < 0.) {
         m_fHouse = maxf(0., m_fHouse - HOUSE_LOSS_FACTOR);
@@ -396,18 +433,6 @@ float ORGameMode::getPopulationGrowth() {
 
 float ORGameMode::getIndustryGrowth() {
     return m_fIndGrowth;
-}
-
-void ORGameMode::increaseMoney(int iMoneyBonus) {
-	setMoney(m_iMoney + iMoneyBonus);
-}
-
-void ORGameMode::decreaseMoney(int iMoneyMalus) {
-	setMoney(m_iMoney - iMoneyMalus);
-}
-
-void ORGameMode::setMoney(int iMoney) {
-	m_iMoney = iMoney;
 }
 
 void ORGameMode::setTimer(float fTimer) {

@@ -12,15 +12,19 @@
 
 
 ORIntroAnimation::ORIntroAnimation() {
-    m_pTitleSpr = new Sprite(RscManager::get()->getSprShtRsc(4), 0, {100, ANIM_FROM_Y});
+    m_pTitleSpr = new Sprite(RscManager::get()->getSprShtRsc(4), 0, 100, ANIM_FROM_Y);
     m_iState = 0;
+
+    m_fBeforeAnimTimer = 0.0;
+    m_fAnimTitleUpTimer = 0.0;
+    m_fAnimTitleStayTimer = 0.0;
+    m_fAnimTitleFadeTimer = 0.0;
+
     addChildWidget(m_pTitleSpr);
 }
 
 void ORIntroAnimation::update() {
     if (m_bIsActive) {
-        printf("%i\n", m_iState);
-        
         float* pCurrentTimer = NULL;
         
         switch (m_iState) {

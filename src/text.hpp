@@ -14,8 +14,13 @@ private:
 
 public:
 	Text(const char* szText, Font* pFont, vect2df_t vPos);
+	Text(const char* szText, Font* pFont, float fXPos, float fYPos);
 	Text(int iNum, Font* pFont, vect2df_t vPos);
+	Text(int iNum, Font* pFont, float fXPos, float fYPos);
 	~Text();
+    
+    void init(const char* szText, Font* pFont, float fXPos, float fYPos);
+    void init(int iNum, Font* pFont, float fXPos, float fYPos);
 
 	char* getText();
 	void setText(const char* szText);

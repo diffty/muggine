@@ -12,7 +12,7 @@ protected:
 	uint m_uNbCellX;
 	uint m_uNbCellY;
 
-	int m_iGridOffsetX = 0;
+	int m_iGridOffsetX;
 
 public:
 	GridWidgetLayout(vect2df_t vPos, size2df_t sSize, uint uNbCellX, uint uNbCellY);

@@ -10,25 +10,37 @@
 
 
 AnimatedSprite::AnimatedSprite(SpriteSheet* pSprSht, vect2df_t vPos, float fPlaySpeed) :
-    Sprite(pSprSht, 0, vPos)
+    Sprite(pSprSht, 0, vPos.x, vPos.y)
 {
-    initList(&m_llAnimStates);
-    m_fPlaySpeed = fPlaySpeed;
-    
-    if (m_llAnimStates.size > 0) {
-        m_pCurrAnimState = (AnimationState*) m_llAnimStates.pHead->pData;
-		setFrame(m_pCurrAnimState->uFrameStart);
-    }
-    else {
-		setFrame(0);
-    }
+	init(pSprSht, 0, vPos.x, vPos.y);
+}
+
+AnimatedSprite::AnimatedSprite(SpriteSheet* pSprSht, float fXPos, float fYPos, float fPlaySpeed) :
+	Sprite(pSprSht, 0, fXPos, fYPos)
+{
+    init(pSprSht, 0, fXPos, fYPos);
 }
 
 AnimatedSprite::~AnimatedSprite() {
 	destroyAllStates();
 }
 
-void AnimatedSprite::addState(const char* szName, uint uFrameStart, uint uFrameEnd, uint uFPS, bool bLooped) {
+void AnimatedSprite::init(SpriteSheet* pSprSht, float fXPos, float fYPos, float fPlaySpeed) {
+    initList(&m_llAnimStates);
+    m_fPlaySpeed = fPlaySpeed;
+    
+    m_fCurrFrameTime = 0.;
+    
+    if (m_llAnimStates.size > 0) {
+        m_pCurrAnimState = (AnimationState*) m_llAnimStates.pHead->pData;
+        setFrame(m_pCurrAnimState->uFrameStart);
+    }
+    else {
+        setFrame(0);
+    }
+}
+
+void AnimatedSprite::addState(const char* szName, uint uFrameStart, uint uFrameEnd, uint uFPS, bool bLooped, void (*pOnAnimEndCallback)(void*), void* pOnAnimEndCallbackArg) {
     AnimationState newAnimState;
     
     newAnimState.szName = szName;
@@ -36,6 +48,8 @@ void AnimatedSprite::addState(const char* szName, uint uFrameStart, uint uFrameE
     newAnimState.uFrameStart = uFrameStart;
     newAnimState.uFrameEnd = uFrameEnd;
     newAnimState.uFPS = uFPS;
+    newAnimState.pOnAnimEndCallback = pOnAnimEndCallback;
+    newAnimState.pOnAnimEndCallbackArg = pOnAnimEndCallbackArg;
     
     addState(newAnimState);
 }
@@ -59,6 +73,10 @@ void AnimatedSprite::changeState(uint uStateId) {
     }
 }
 
+AnimationState* AnimatedSprite::getState() {
+    return m_pCurrAnimState;
+}
+
 void AnimatedSprite::draw(uint8* buffer) {
     Sprite::draw(buffer);
 }
@@ -75,7 +93,16 @@ void AnimatedSprite::update() {
 			iCurrFrame++;
             
             if (iCurrFrame > m_pCurrAnimState->uFrameEnd) {
-				iCurrFrame = m_pCurrAnimState->uFrameStart;
+                if (m_pCurrAnimState->bLooped) {
+                    iCurrFrame = m_pCurrAnimState->uFrameStart;
+                }
+                else {
+                    iCurrFrame = m_pCurrAnimState->uFrameEnd;
+                }
+                
+                if (m_pCurrAnimState->pOnAnimEndCallback != NULL) {
+                    (*m_pCurrAnimState->pOnAnimEndCallback)(m_pCurrAnimState->pOnAnimEndCallbackArg);
+                }
             }
 
 			setFrame(iCurrFrame);

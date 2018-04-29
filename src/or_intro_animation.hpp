@@ -32,11 +32,11 @@ public:
     
 private:
     Sprite* m_pTitleSpr;
-    int m_iState = 0;
-    float m_fBeforeAnimTimer = 0.;
-    float m_fAnimTitleUpTimer = 0.;
-    float m_fAnimTitleStayTimer = 0.;
-    float m_fAnimTitleFadeTimer = 0.;
+    int m_iState;
+    float m_fBeforeAnimTimer;
+    float m_fAnimTitleUpTimer;
+    float m_fAnimTitleStayTimer;
+    float m_fAnimTitleFadeTimer;
 };
 
 

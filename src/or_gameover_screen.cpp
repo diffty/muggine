@@ -6,10 +6,10 @@
 
 ORGameOverScreen::ORGameOverScreen() {
     if (ORGameMode::get()->getPopularityValue() >= 0.) {
-        m_pEndImgSpr = new Sprite(RscManager::get()->getImgRsc(31), {0, 0});
+        m_pEndImgSpr = new Sprite(RscManager::get()->getImgRsc(31), 0, 0);
     }
     else {
-        m_pEndImgSpr = new Sprite(RscManager::get()->getImgRsc(32), {0, 0});
+        m_pEndImgSpr = new Sprite(RscManager::get()->getImgRsc(32), 0, 0);
     }
     
     m_pEndImgSpr->translate(

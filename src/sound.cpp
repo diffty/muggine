@@ -11,6 +11,8 @@ Sound::Sound()
 	FMOD_RESULT result;
 	unsigned int version;
 
+	m_pChannel = 0;
+
 	result = FMOD::System_Create(&m_pSystem);
 	result = m_pSystem->getVersion(&version);
 

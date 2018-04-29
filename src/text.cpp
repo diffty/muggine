@@ -5,27 +5,47 @@
 Text::Text(const char* szText, Font* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
-	m_pFont = pFont;
-	m_szText = new char[1];
-	m_szText[0] = '\0';
+	init(szText, pFont, vPos.x, vPos.y);
+}
 
-	setText(szText);
+Text::Text(const char* szText, Font* pFont, float fXPos, float fYPos)
+	: IWidget(fXPos, fYPos, 1, 1) {
+
+	init(szText, pFont, fXPos, fYPos);
 }
 
 Text::Text(int iNum, Font* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
-	m_pFont = pFont;
-    m_szText = new char[1];
-    m_szText[0] = '\0';
+	init(iNum, pFont, vPos.x, vPos.y);
+}
 
-	char* newText = intToStr(iNum);
-	setText(newText);
-	delete newText;
+Text::Text(int iNum, Font* pFont, float fXPos, float fYPos)
+	: IWidget(fXPos, fYPos, 1, 1) {
+
+	init(iNum, pFont, fXPos, fYPos);
 }
 
 Text::~Text() {
 	delete m_szText;
+}
+
+void Text::init(const char* szText, Font* pFont, float fXPos, float fYPos) {
+    m_pFont = pFont;
+    m_szText = new char[1];
+    m_szText[0] = '\0';
+    
+    setText(szText);
+}
+
+void Text::init(int iNum, Font* pFont, float fXPos, float fYPos) {
+    m_pFont = pFont;
+    m_szText = new char[1];
+    m_szText[0] = '\0';
+    
+    char* newText = intToStr(iNum);
+    setText(newText);
+    delete newText;
 }
 
 char* Text::getText() {
@@ -141,7 +161,7 @@ char* Text::intToStr(int iNum, int padding) {
     
     int k;
     
-    int iOverNumber = max(0, padding - i);
+    int iOverNumber = maxInt(0, padding - i);
     for (k = 0; k < iOverNumber; k++) {
         newStr[k+1] = newStr[k];
         newStr[k] = 48;

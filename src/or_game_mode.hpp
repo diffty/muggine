@@ -29,20 +29,21 @@
 #include "or_intro_animation.hpp"
 
 
-#define TIME_LIMIT 300
-#define CITY_SIZE_SPAWN_LIMIT 300.0
-#define RESPAWN_TIME_MIN 5
-#define RESPAWN_TIME_MAX 7
-#define RESPAWN_FREQ_COEF 4.5
-#define POPULATION_GROWTH_FACTOR 20.0
-#define MIN_FAILURE_ALLOWED 0.1
-#define MAX_FAILURE_ALLOWED 0.3
-#define TIME_BETWEEN_STAT_LOSS 3
-#define HOUSE_LOSS_FACTOR 2.
-#define INDUSTRY_LOSS_FACTOR 1.
-#define ECOLOGY_LOSS_FACTOR 2.
-#define TOMATO_RECOVER_SPEED 2.
-#define TOMATO_MALUS 20.
+#define TIME_LIMIT					300
+#define CITY_SIZE_SPAWN_LIMIT		300.0
+#define RESPAWN_TIME_MIN			5
+#define RESPAWN_TIME_MAX			7
+#define RESPAWN_FREQ_COEF			4.5
+#define POPULATION_GROWTH_FACTOR	20.0
+#define MIN_FAILURE_ALLOWED			0.0
+#define MAX_FAILURE_ALLOWED			0.3
+#define TIME_BETWEEN_STAT_LOSS		3
+#define HOUSE_LOSS_FACTOR			2.
+#define INDUSTRY_LOSS_FACTOR		1.
+#define ECOLOGY_LOSS_FACTOR			2.
+#define TOMATO_RECOVER_SPEED		2.
+#define TOMATO_MALUS				20.
+#define CAR_SPEED					50.0
 
 
 class ORGameMode
@@ -53,39 +54,36 @@ private:
 	Scene* m_pMainScene;
 
 	float m_fWinTimer;
-    float m_fCarSpeed = 50.0;
+    float m_fCarSpeed;
 
-	bool m_bWinTimerActivated = false;
+	bool m_bWinTimerActivated;
 	
-	int m_iMoney = 0;
+    float m_fHouse;
+    float m_fIndustry;
+    float m_fEcology;
+    float m_fPopularity;
+    float m_fPopulation;
+    float m_fTomatoMalus;
     
-    float m_fHouse = 0;
-    float m_fIndustry = 0;
-    float m_fEcology = 0;
-    float m_fPopularity = 0;
-    float m_fPopulation = 0;
-    float m_fTomatoMalus = 0;
+	// TO DELETE
+    float m_fPopGrowth;
+    float m_fIndGrowth;
     
-    float m_fPopGrowth = 0.0;
-    float m_fIndGrowth = 0.0;
-    
-    // TO DELETE
-    float m_fLastFrameIndustry = 0.0;
-    float m_fLastFrameHouse = 0.0;
-    float m_fLastFramePopulation = 0.0;
+    float m_fLastFrameIndustry;
+    float m_fLastFrameHouse;
+    float m_fLastFramePopulation;
     // END TO DELETE
 
     float m_fTimeBeforeNextBuilding;
     float m_fTimeBeforeNextStatLoss;
     
-	float m_fTimer = TIME_LIMIT;
-	bool m_bWaitForEnd = false;
+	float m_fTimer;
+	bool m_bWaitForEnd;
+	bool m_bLevelEnded;
+    bool m_bCarWasMoving;
 
 	LinkedList m_llWidgetTrash;
-    LinkedList m_llPickupList;
 
-	bool m_bLevelEnded = false;
-    
     Sprite* m_pBgSpr;
     
     ORRoad m_roadObj;
@@ -144,10 +142,6 @@ public:
     float getPopulationGrowth();
     float getIndustryGrowth();
 
-	void increaseMoney(int iMoneyBonus);
-	void decreaseMoney(int iMoneyMalus);
-
-	void setMoney(int iMoney);
 	void setTimer(float fTimer);
     void setPopulation(float fPopulation);
     

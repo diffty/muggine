@@ -7,6 +7,8 @@ GridWidgetLayout::GridWidgetLayout(vect2df_t vPos, size2df_t sSize, uint uNbCell
 
 	m_uNbCellX = uNbCellX;
 	m_uNbCellY = uNbCellY;
+
+	m_iGridOffsetX = 0.;
 }
 
 GridWidgetLayout::~GridWidgetLayout() {
@@ -69,11 +71,11 @@ vect2df_t GridWidgetLayout::getPosInGrid(IWidget* pWidget, uint uGridPos) {
 	long lGridCellH = (m_rect.getSize().h / m_uNbCellY);
 
 	size2df_t sCurrWidgetSize = pWidget->getRect()->getSize();
-
-	return {
-		m_rect.getPos().x + lGridCellW * iPosXOnGrid + lGridCellW / 2 - sCurrWidgetSize.w / 2 + m_iGridOffsetX * iPosYOnGrid,
-		m_rect.getPos().y + lGridCellH * iPosYOnGrid + lGridCellH / 2 - sCurrWidgetSize.h / 2
-	};
+	vect2df_t vPos;
+	vPos.x = m_rect.getPos().x + lGridCellW * iPosXOnGrid + lGridCellW / 2 - sCurrWidgetSize.w / 2 + m_iGridOffsetX * iPosYOnGrid;
+	vPos.y = m_rect.getPos().y + lGridCellH * iPosYOnGrid + lGridCellH / 2 - sCurrWidgetSize.h / 2;
+	
+	return vPos;
 }
 
 vect2df_t GridWidgetLayout::getNextPosInGrid(IWidget* pWidget) {

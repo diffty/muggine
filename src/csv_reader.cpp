@@ -6,6 +6,7 @@ CSVReader::CSVReader(char* szFilename) {
 	initList(&m_llData);
 
 	m_iNbFields = 0;
+	m_iNbDataRows = 0;
     
     size_t iCharLen = strlen(szFilename);
     m_szFilename = new char[iCharLen+1];

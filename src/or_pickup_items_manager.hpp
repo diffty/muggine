@@ -22,6 +22,11 @@
 
 
 class ORPickupItemsManager : public IWidget {
+private:
+    LinkedList m_llPickupList;
+    
+    float m_fTimeBeforeNextItemSpawn;
+
 public:
     ORPickupItemsManager();
     ~ORPickupItemsManager();
@@ -33,11 +38,6 @@ public:
 
     void update();
     void draw(uint8* buffer);
-
-private:
-    LinkedList m_llPickupList;
-    
-    float m_fTimeBeforeNextItemSpawn;
 };
 
 

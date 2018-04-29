@@ -12,7 +12,7 @@ private:
 	Text* m_pLevelTextLabel;
 	Text* m_pLevelNumTextLabel;
 
-	float m_fTimeBeforeEnd = 3;
+	float m_fTimeBeforeEnd;
 
 public:
 	ORLevelFailScreen();

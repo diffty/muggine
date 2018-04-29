@@ -9,7 +9,7 @@ class Sound
 {
 private:
 	FMOD::System* m_pSystem;
-	FMOD::Channel* m_pChannel = 0;
+	FMOD::Channel* m_pChannel;
 
 	LinkedList m_llSoundList;
 

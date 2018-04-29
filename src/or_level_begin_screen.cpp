@@ -4,6 +4,8 @@
 
 
 ORLevelBeginScreen::ORLevelBeginScreen(int iLevelNum) {
+	m_fTimeBeforeEnd = 3;
+
 	vect2df_t vTextPos;
 	vTextPos.x = 135;
 	vTextPos.y = 80;

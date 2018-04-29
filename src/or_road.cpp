@@ -13,7 +13,7 @@
 
 ORRoad::ORRoad() {
     m_roadImg = RscManager::get()->getImgRsc(6);
-    m_fScrollSpeed = 100.0;
+    m_fScrollSpeed = SCROLL_SPEED_NORMAL;
 }
 
 float ORRoad::getScrollSpeed() {

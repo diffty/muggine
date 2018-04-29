@@ -33,7 +33,16 @@ enum EBuildingType {
 };
 
 
-class ORCity : public IWidget {
+class ORCity : public IWidget {    
+private:
+    LinkedList m_llBuildingList;
+    
+    float m_fCityHealth;
+    float m_fCitySize;
+    int m_iCityLevel;
+    float m_fSpawnAmount;
+    float m_fTimeBeforeCitySizeDecrease;
+
 public:
     ORCity();
     
@@ -44,17 +53,6 @@ public:
     
     float getCityHealth();
     float getCitySize();
-    
-private:
-    ORGameMode* m_pGameMode;
-    
-    LinkedList m_llBuildingList;
-    
-    float m_fCityHealth = CITY_START_HEALTH;
-    float m_fCitySize = 0;
-    int m_iCityLevel = 1;
-    float m_fSpawnAmount = SPAWN_START_AMOUNT;
-    float m_fTimeBeforeCitySizeDecrease = TIME_BEFORE_CITY_SIZE_DECREASE;
 };
 
 

@@ -1,18 +1,27 @@
 #include "progress_bar.hpp"
 
 
-
 ProgressBar::ProgressBar(vect2df_t vPos, size2df_t sSize, float fMinValue, float fMaxValue, float fCurValue) :
 	IWidget(vPos.x, vPos.y, sSize.w, sSize.h)
 {
-	m_fMinValue = fMinValue;
-	m_fMaxValue = fMaxValue;
-	m_fCurValue = fCurValue;
+	init(vPos.x, vPos.y, sSize.w, sSize.h, fMinValue, fMaxValue, fCurValue);
 }
 
+ProgressBar::ProgressBar(float fXPos, float fYPos, float fWSize, float fHSize, float fMinValue, float fMaxValue, float fCurValue) :
+	IWidget(fXPos, fYPos, fWSize, fHSize)
+{	
+	init(fXPos, fYPos, fWSize, fHSize, fMinValue, fMaxValue, fCurValue);
+}
 
 ProgressBar::~ProgressBar() {
     
+}
+
+void ProgressBar::init(float fXPos, float fYPos, float fWSize, float fHSize, float fMinValue, float fMaxValue, float fCurValue)  {
+    
+    m_fMinValue = fMinValue;
+    m_fMaxValue = fMaxValue;
+    m_fCurValue = fCurValue;
 }
 
 void ProgressBar::setValue(float fCurValue) {

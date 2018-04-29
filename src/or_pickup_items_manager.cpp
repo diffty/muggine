@@ -14,7 +14,6 @@ ORPickupItemsManager::ORPickupItemsManager() {
     initList(&m_llPickupList);
     
     m_fTimeBeforeNextItemSpawn = System::get()->getRandFloat(MIN_SPAWN_TIME, MAX_SPAWN_TIME);
-    printf("%f\n", m_fTimeBeforeNextItemSpawn);
 }
 
 ORPickupItemsManager::~ORPickupItemsManager() {

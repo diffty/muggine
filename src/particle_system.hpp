@@ -17,6 +17,7 @@ public:
 	~ParticleSystem();
 
 	void emitParticle(SpriteSheet* pSprSht, vect2df_t vStartVect, vect2df_t vStartVel, int startFrame, int endFrame, uint uFPS);
+	void emitParticle(SpriteSheet* pSprSht, float fStartVectX, float fStartVectY, float fStartVelX, float fStartVelY, int startFrame, int endFrame, uint uFPS);
 
 	void update();
 	void draw(uint8* pBuffer);

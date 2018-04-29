@@ -37,21 +37,21 @@ class ORGameManager
 private:
 	System* m_pSys;
 	Input* m_pInputSys;
-	ORGameMode* m_pGameMode = NULL;
+	ORGameMode* m_pGameMode;
 	ORMainMenu* m_pMainMenu;
 	Scene m_gameScene;
 	Scene m_menuScene;
 	E_APP_STATE m_eCurrState;
-	E_APP_STATE m_ePostTransitionState = E_APP_STATE_NULL;
+	E_APP_STATE m_ePostTransitionState;
 
 	// Fade shit
-	float m_fScreenAlpha = 1;
-	float m_fScreenFadeDuration = 0;
-	float m_fScreenFadeCurrTime = 0;
-	bool m_bDoScreenFade = false;
+	float m_fScreenAlpha;
+	float m_fScreenFadeDuration;
+	float m_fScreenFadeCurrTime;
+	bool m_bDoScreenFade;
 	E_FADE_MODE m_eFadeMode;
 
-	bool m_bMenuKeyWasPressedLastLoop = false;
+	bool m_bMenuKeyWasPressedLastLoop;
 
 	ORLevelBeginScreen* m_pLevelBeginScreen;
 	ORLevelFailScreen* m_pLevelFailScreen;

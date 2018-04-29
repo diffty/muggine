@@ -58,11 +58,11 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 	}
 
 #elif TARGET_SDL
-	fromX = min(max(min(fromX, toX), 0), SCREEN_WIDTH-1);
-	toX = min(max(max(fromX, toX), 0), SCREEN_WIDTH-1);
+	fromX = minInt(maxInt(minInt(fromX, toX), 0), SCREEN_WIDTH-1);
+	toX = minInt(maxInt(maxInt(fromX, toX), 0), SCREEN_WIDTH-1);
 
-	fromY = min(max(fromY, 0), SCREEN_HEIGHT-1);
-	toY = min(max(toY, 0), SCREEN_HEIGHT-1);
+	fromY = minInt(maxInt(fromY, 0), SCREEN_HEIGHT-1);
+	toY = minInt(maxInt(toY, 0), SCREEN_HEIGHT-1);
 
 	int boxWidth = fabs((float)(toX - fromX));
 
