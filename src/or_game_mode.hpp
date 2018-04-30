@@ -44,6 +44,7 @@
 #define TOMATO_RECOVER_SPEED		2.
 #define TOMATO_MALUS				20.
 #define CAR_SPEED					50.0
+#define POPULARITY_CHANGE_SPEED     3.0
 
 
 class ORGameMode
@@ -62,6 +63,7 @@ private:
     float m_fIndustry;
     float m_fEcology;
     float m_fPopularity;
+    float m_fPopularityGoal;
     float m_fPopulation;
     float m_fTomatoMalus;
     

@@ -22,6 +22,7 @@ ORGameMode::ORGameMode(Scene* pMainScene) {
     m_fIndustry = 0.0;
     m_fEcology = 0.0;
     m_fPopularity = 0.0;
+    m_fPopularityGoal = 0.0;
     m_fPopulation = 0.0;
     m_fTomatoMalus = 0.0;
 
@@ -311,16 +312,16 @@ void ORGameMode::updateGameStats() {
     setPopulation(maxf(0.0, m_fPopulation + m_fPopGrowth));
     
     float fAllowedFailure = MIN_FAILURE_ALLOWED + (m_fEcology / 100.) * MAX_FAILURE_ALLOWED;
-    float fFailFactor = 1. - fabs((m_fHouse / 100.0) - (m_fIndustry / 100.));
-    float fSmallTownBonus = (1. - (minf(m_fPopulation, 10.) / 10.)) * 10.;
+    float fFailFactor = 1. - minf(fabs((m_fHouse / 100.0) - (m_fIndustry / 100.)) * 4.0, 1.0);
     float fLowPopulationFactor = (1. * (minf(m_fPopulation / 100., 1.0)));
     
-    //printf("%f\n", fSmallTownBonus);
+    //m_fPopularity = minf(1., (fAllowedFailure + fFailFactor)) * 200. - 100.;
     
-    printf("Allowed failure: %f\n", fAllowedFailure);
-    printf("Fail factor: %f\n", fFailFactor);
+    // Low population bonus gifted with early housing development
+    m_fPopularityGoal = 100 * ((1. - fLowPopulationFactor) * (m_fHouse / 100.));
     
-    m_fPopularity = minf(1., (fAllowedFailure + fFailFactor)) * 200. - 100.;
+    // Classic popularity computation
+    m_fPopularityGoal += minf(1., fAllowedFailure + fFailFactor) * (200. * fLowPopulationFactor) - (100. * fLowPopulationFactor);
     
     if (m_fTimeBeforeNextStatLoss < 0.) {
         m_fHouse = maxf(0., m_fHouse - HOUSE_LOSS_FACTOR);
@@ -340,7 +341,15 @@ void ORGameMode::updateGameStats() {
     }
     
     // Apply malus
-    m_fPopularity -= m_fTomatoMalus;
+    m_fPopularityGoal -= m_fTomatoMalus;
+    
+    float fPopularityGoalDelta = m_fPopularityGoal - m_fPopularity;
+    float fPopularityGoalDeltaSign = (fPopularityGoalDelta != 0) ? (fabs(fPopularityGoalDelta) / fPopularityGoalDelta) : 0;
+    
+    printf("%f\n", fPopularityGoalDeltaSign);
+    
+    m_fPopularity += fPopularityGoalDeltaSign * System::get()->getDeltaTime() * POPULARITY_CHANGE_SPEED;
+    
     
     /*
     printf("Population: %f (%f)\n", m_fPopulation, m_fPopGrowth);
@@ -376,7 +385,7 @@ void ORGameMode::onEcologyItemPicked(ORPickupItem* pPickedUpItem) {
 void ORGameMode::onTomatoItemPicked(ORPickupItem* pPickedUpItem) {
     m_pickupItemsManager.onItemPicked(pPickedUpItem);
     
-    if (m_fPopularity - m_fTomatoMalus > -100.0) {
+    if (m_fPopularityGoal - m_fTomatoMalus > -100.0) {
         m_fTomatoMalus += TOMATO_MALUS;
     }
     
