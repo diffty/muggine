@@ -346,8 +346,6 @@ void ORGameMode::updateGameStats() {
     float fPopularityGoalDelta = m_fPopularityGoal - m_fPopularity;
     float fPopularityGoalDeltaSign = (fPopularityGoalDelta != 0) ? (fabs(fPopularityGoalDelta) / fPopularityGoalDelta) : 0;
     
-    printf("%f\n", fPopularityGoalDeltaSign);
-    
     m_fPopularity += fPopularityGoalDeltaSign * System::get()->getDeltaTime() * POPULARITY_CHANGE_SPEED;
     
     
