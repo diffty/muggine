@@ -98,5 +98,14 @@ void ProgressBar::draw(uint8* fb) {
                  vCurPos.x + sCurSize.w - 2,
                  vCurPos.y + 1 + sCurSize.h - 2,
                  &m_borderColor);
+        
+        
+        float fZeroBarPos = (-m_fMinValue + 0.) / (m_fMaxValue - m_fMinValue) * (sCurSize.w-1);
+        drawLine(fb,
+                 vCurPos.x + fZeroBarPos,
+                 vCurPos.y + 1,
+                 vCurPos.x + fZeroBarPos,
+                 vCurPos.y + 1 + sCurSize.h - 2,
+                 &m_borderColor);
 	}
 }
