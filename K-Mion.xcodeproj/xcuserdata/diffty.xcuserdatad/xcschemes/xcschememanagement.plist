@@ -14,14 +14,14 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>HyperDriftMayor.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>95360F561FD6FD9D00F8CBEA</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>958299FC1FDB6B9E00D8D0A6</key>
 		<dict>
 			<key>primary</key>
