@@ -26,9 +26,8 @@
 #include "fsm.hpp"
 #include "font.hpp"
 #include "text.hpp"
-#include "or_game_manager.hpp"
-#include "or_game_mode.hpp"
-#include "or_main_menu.hpp"
+
+#include "jnl_app_manager.hpp"
 
 #include <time.h>
 
@@ -82,49 +81,12 @@ void MainApp(System* pSys, Graphics* pGfx) {
     rscManager.loadFont("data/font-big.bmp", 16, 16, 256, -1);          // 0
 	rscManager.loadFont("data/font-small.bmp", 16, 16, 256, -1);        // 1
 	rscManager.loadFont("data/font-small-black.bmp", 16, 16, 256, -1);  // 2
-    rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 2, 8);            // 3
-    rscManager.loadSprSht("data/title.bmp", 4, 2, 7);                   // 4
-	rscManager.loadImg("data/credits.bmp");                             // 5
-    rscManager.loadImg("data/road.bmp");                                // 6
-    rscManager.loadImg("data/car.bmp");                                 // 7
-    rscManager.loadImg("data/bg.bmp");                                  // 8
-    rscManager.loadSprSht("data/car_smoke.bmp", 3, 1, 3);               // 9
-    rscManager.loadImg("data/PickUp_Feuille.bmp");                      // 10
-    rscManager.loadImg("data/PickUp_House.bmp");                        // 11
-    rscManager.loadImg("data/PickUp_Industrie.bmp");                    // 12
-    rscManager.loadImg("data/arbre.bmp");                               // 13
-    rscManager.loadSprSht("data/usine.bmp", 1, 1, 1);                   // 14
-    rscManager.loadImg("data/immeuble.bmp");                            // 15
-    rscManager.loadImg("data/juno_bulle.bmp");                          // 16
-    rscManager.loadImg("data/mescouilles.bmp");                         // 17
-    rscManager.loadImg("data/tomate.bmp");                              // 18
-    rscManager.loadSprSht("data/arbre1SprSht.bmp", 3, 1, 3);            // 19
-    rscManager.loadSprSht("data/arbre2SprSht.bmp", 3, 1, 3);            // 20
-    rscManager.loadSprSht("data/centrecommercial.bmp", 1, 1, 1);        // 21
-    rscManager.loadSprSht("data/immeuble1SprSht.bmp", 3, 1, 3);         // 22
-    rscManager.loadSprSht("data/immeuble2SprSht.bmp", 3, 1, 3);         // 23
-    rscManager.loadImg("data/montagnes.bmp");                           // 24
-    rscManager.loadImg("data/nuages.bmp");                              // 25
-    rscManager.loadImg("data/fond.bmp");                                // 26
-    rscManager.loadFont("data/font-thin-number.bmp", 16, 16, 256, 2);   // 27
-    rscManager.loadImg("data/election_text.bmp");                       // 28
-    rscManager.loadImg("data/mayorpopularity.bmp");                     // 29
-    rscManager.loadImg("data/pause.bmp");                               // 30
-    rscManager.loadImg("data/win.bmp");                                 // 31
-    rscManager.loadImg("data/lose.bmp");                                // 32
-    rscManager.loadImg("data/population_text.bmp");                     // 33
-    rscManager.loadSprSht("data/trail-particle.bmp", 1, 1, 1);          // 34
     
-	// Sound system
-	//Sound sound;
-	//sound.addSound("data/sound/intro-rix.mp3", true);
-	
 	// Initing game manager
-	ORGameManager gameManager;
+	JournalAppManager appManager;
 
 	// Building scene
-	Scene* pGameScene = gameManager.getGameScene();
-	Scene* pMenuScene = gameManager.getMenuScene();
+	Scene* pGameScene = appManager.getScene();
 
 	pGfx->SetDoubleBuffering(false);
 
@@ -140,21 +102,14 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	{
 		double deltaTime = pSys->getDeltaTime();
 
-		// printf("FPS: %u\n", (uint) (1./deltaTime));
-
-		//pGfx->FillWithColor(0x00);
-
-		gameManager.update();
-		gameManager.draw(fb);
-
-		//if (sys->getInputSys()->IsKeyPressed(KEYB_A)) { }
+		appManager.update();
+		appManager.draw(fb);
         
-        // DEBUG 3DS
-        if (pSys->getInputSys()->IsJoyBtnPressed(JOY_BTN_1)) {
-            gameManager.onNewLevel();
+        MouseEvent* mouseEvt = pSys->getInputSys()->GetButtonPressEvent(MOUSE_BTN_LEFT);
+        
+        if (mouseEvt) {
+            appManager.receiveTouchInput(mouseEvt->position);
         }
-        
-		//sound.update();
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
