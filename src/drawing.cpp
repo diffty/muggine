@@ -1,17 +1,9 @@
 #include "drawing.hpp"
-
-#define SCREEN_WIDTH	320
-#define SCREEN_HEIGHT	240
-
-#ifdef TARGET_3DS
-#define SCREEN_BPP		3
-#elif TARGET_SDL2
-#define SCREEN_BPP		4
-#endif
+#include "constants.hpp"
 
 
 void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color) {
-#ifdef TARGET_SDL2
+#if TARGET_SDL2
     float xSize = (float) (toX - fromX);
     float ySize = (float) (toY - fromY);
 
@@ -35,7 +27,7 @@ void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* colo
 void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 	int x, y;
 
-#ifdef TARGET_3DS
+#if TARGET_3DS
 	int boxHeight = std::abs(toY - fromY);
 
 	uint8* oneColorCol = new uint8[SCREEN_BPP * boxHeight];

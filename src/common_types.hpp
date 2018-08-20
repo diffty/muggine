@@ -32,6 +32,7 @@ typedef unsigned char uint8_t;
 
 #ifdef TARGET_SDL
 #include <SDL/SDL.h>
+#define SDL_Keysym SDL_keysym
 
 #else
 #include <SDL2/SDL.h>

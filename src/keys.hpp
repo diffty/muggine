@@ -164,7 +164,13 @@ enum EJoy {
 #if TARGET_SDL || TARGET_SDL2
 static EKey keyConvTab[256];
 void initKeyConvArray();
+
+#if TARGET_SDL
+EKey convertSDLToMuggineKey(SDL_keysym keyCode);
+
+#elif TARGET_SDL2
 EKey convertSDLToMuggineKey(SDL_Keycode keyCode);
+#endif
 
 #elif TARGET_3DS
 static uint8 reverseJoyBtnConvTab[256];

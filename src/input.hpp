@@ -7,7 +7,6 @@
 
 #elif TARGET_SDL
 #include <SDL/SDL.h>
-#define SDL_Keysym SDL_keysym
 
 #elif TARGET_SDL2
 #include <SDL2/SDL.h>
