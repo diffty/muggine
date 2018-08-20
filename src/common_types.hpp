@@ -14,31 +14,31 @@ typedef u32 uint32;
 
 #else
 
-#	ifndef TARGET_SDL && TARGET_SDL2
+#if !defined(TARGET_SDL) && !defined(TARGET_SDL2)
 
 typedef unsigned char uint8_t;
 
-#       if ULONG_MAX == 0xffffffff
+#if ULONG_MAX == 0xffffffff
 	typedef long int32_t;
 	typedef unsigned long uint32_t;
 
-#       elif UINT_MAX == 0xffffffff
+#elif UINT_MAX == 0xffffffff
 	typedef int int32_t;
 	typedef unsigned int uint32_t;
 
-#       endif
+#endif
 
-#	else
+#else
 
-#		ifdef TARGET_SDL
+#ifdef TARGET_SDL
 #include <SDL/SDL.h>
 
-#		else
+#else
 #include <SDL2/SDL.h>
 
-#		endif
+#endif
 
-#	endif
+#endif
 
 typedef uint8_t uint8;
 typedef uint32_t uint32;

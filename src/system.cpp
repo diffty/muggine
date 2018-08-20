@@ -5,7 +5,7 @@ System* System::m_pInstance = NULL;
 
 
 System::System() {
-#ifdef TARGET_WIN
+#if TARGET_WIN
 	LARGE_INTEGER t;
 	QueryPerformanceFrequency(&m_tickFrequency);
 #endif
@@ -13,7 +13,7 @@ System::System() {
 	m_bIsMainLoopRunning = true;
 	initLoop();
 
-#ifdef TARGET_SDL2
+#if TARGET_SDL2
 	m_window = NULL;
 #endif
 }
@@ -73,18 +73,18 @@ void System::initWindow() {
 #endif
 }
 
-#ifdef TARGET_SDL || TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
 SDL_Window* System::getWindow() {
 	return m_window;
 }
 
-SDL_Window* System::getWindowSurface() {
+SDL_Surface* System::getWindowSurface() {
 	return m_pWindowSurface;
 }
 #endif
 
 void System::initConsole() {
-#ifdef TARGET_3DS
+#if TARGET_3DS
 	
 	consoleInit(GFX_TOP, NULL);
 	
@@ -99,7 +99,7 @@ void System::initConsole() {
 }
 
 double System::getTime() {
-#ifdef TARGET_WIN
+#if TARGET_WIN
 	LARGE_INTEGER currTick;
 	LARGE_INTEGER t;
 
@@ -168,7 +168,7 @@ bool System::mainLoop() {
 	m_deltaTime = m_startLoopTime - m_prevLoopTime;
 	m_prevLoopTime = m_startLoopTime;
 
-#ifdef TARGET_3DS
+#if TARGET_3DS
 	hidScanInput();
 	return aptMainLoop();
 

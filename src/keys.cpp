@@ -2,7 +2,7 @@
 
 
 
-#ifdef TARGET_SDL2
+#if TARGET_SDL2
 void initKeyConvArray() {
     keyConvTab[SDLK_UNKNOWN] = KEYB_UNKNOWN;
 

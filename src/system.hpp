@@ -33,11 +33,11 @@ private:
 	bool m_bIsMainLoopRunning;
 	Input m_inputSys;
 
-#ifdef TARGET_SDL2
+#if TARGET_SDL2
 	SDL_Window* m_window;
 #endif
 
-#ifdef TARGET_SDL || TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
 	SDL_Event m_event;
 	SDL_Surface* m_pWindowSurface;
 #endif
@@ -46,7 +46,7 @@ private:
 	double m_startLoopTime;
 	double m_deltaTime;
 
-#ifdef TARGET_WIN
+#if TARGET_WIN
 	LARGE_INTEGER m_tickFrequency;
 #endif
 
@@ -65,11 +65,11 @@ public:
     int getRandInt(int iMin, int iMax);
     float getRandFloat(float fMin, float fMax);
 
-#ifdef TARGET_SDL2
+#if TARGET_SDL2
 	SDL_Window* getWindow();
 #endif
 
-#ifdef TARGET_SDL || TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
 	SDL_Surface* getWindowSurface();
 #endif
 

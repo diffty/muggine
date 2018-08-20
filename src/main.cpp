@@ -34,11 +34,11 @@
 
 #include <time.h>
 
-#ifdef TARGET_WIN
+#if TARGET_WIN
 #include <windows.h>
 #endif
 
-#ifdef TARGET_OSX
+#if TARGET_OSX
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
 	System* pSys = System::get();
 	Graphics gfx(pSys);
 
-#ifdef TARGET_SDL || TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
 	pSys->initWindow();
 #endif
 

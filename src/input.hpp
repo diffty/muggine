@@ -84,7 +84,7 @@ public:
 	bool GetTouch(vect2d_t* touch);
 	vect2d_t getCurrInputPos();
 
-#ifdef TARGET_SDL || TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
 	void RegisterKeyEvent(uint32 eventType, SDL_Keysym key);
 	void RegisterMouseEvent(uint32 eventType, vect2d_t mousePos, uint8 mouseBtn);
 #endif
