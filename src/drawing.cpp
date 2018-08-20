@@ -5,13 +5,13 @@
 
 #ifdef TARGET_3DS
 #define SCREEN_BPP		3
-#elif TARGET_SDL
+#elif TARGET_SDL2
 #define SCREEN_BPP		4
 #endif
 
 
 void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color) {
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL2
     float xSize = (float) (toX - fromX);
     float ySize = (float) (toY - fromY);
 
@@ -57,7 +57,7 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 		);
 	}
 
-#elif TARGET_SDL
+#elif TARGET_SDL || TARGET_SDL2
 	fromX = minInt(maxInt(minInt(fromX, toX), 0), SCREEN_WIDTH-1);
 	toX = minInt(maxInt(maxInt(fromX, toX), 0), SCREEN_WIDTH-1);
 

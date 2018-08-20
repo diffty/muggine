@@ -6,6 +6,8 @@
 #ifdef TARGET_3DS
 #include <3ds.h>
 #elif TARGET_SDL
+#include <SDL/SDL.h>
+#elif TARGET_SDL2
 #include <SDL2/SDL.h>
 #endif
 
@@ -165,9 +167,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	}
 	
 	rscManager.freeAllRsc();
-
-	// Exit services
-	pGfx->Exit();
 }
 
 #ifdef __EMSCRIPTEN__
@@ -179,7 +178,7 @@ int main(int argc, char **argv)
 	System* pSys = System::get();
 	Graphics gfx(pSys);
 
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL || TARGET_SDL2
 	pSys->initWindow();
 #endif
 
@@ -188,6 +187,10 @@ int main(int argc, char **argv)
     // printf("lol");
 
 	MainApp(pSys, &gfx);
+
+	// Exit services
+	gfx.Exit();
+	pSys->exit();
 
 	delete pSys;
 

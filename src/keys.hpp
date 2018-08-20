@@ -13,6 +13,10 @@
 
 #ifdef TARGET_SDL
 
+#include <SDL/SDL.h>
+
+#elif TARGET_SDL2
+
 #include <SDL2/SDL.h>
 
 #elif TARGET_3DS
@@ -157,7 +161,7 @@ enum EJoy {
     JOY_DPAD_DOWN
 };
 
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL || TARGET_SDL2
 static EKey keyConvTab[256];
 void initKeyConvArray();
 EKey convertSDLToMuggineKey(SDL_Keycode keyCode);

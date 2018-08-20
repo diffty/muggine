@@ -17,7 +17,7 @@
 
 #ifdef TARGET_3DS
 #define SCREEN_BPP		3
-#elif TARGET_SDL
+#elif TARGET_SDL || TARGET_SDL2
 #define SCREEN_BPP		4
 #endif
 

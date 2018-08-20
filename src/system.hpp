@@ -5,7 +5,7 @@
 #include <3ds.h>
 #endif
 
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL2
 #include <cstdio>
 #include <SDL2/SDL.h>
 #endif
@@ -33,9 +33,13 @@ private:
 	bool m_bIsMainLoopRunning;
 	Input m_inputSys;
 
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL2
 	SDL_Window* m_window;
+#endif
+
+#ifdef TARGET_SDL || TARGET_SDL2
 	SDL_Event m_event;
+	SDL_Surface* m_pWindowSurface;
 #endif
 
 	double m_prevLoopTime;
@@ -61,8 +65,12 @@ public:
     int getRandInt(int iMin, int iMax);
     float getRandFloat(float fMin, float fMax);
 
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL2
 	SDL_Window* getWindow();
+#endif
+
+#ifdef TARGET_SDL || TARGET_SDL2
+	SDL_Surface* getWindowSurface();
 #endif
 
 	bool mainLoop();

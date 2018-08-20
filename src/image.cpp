@@ -230,7 +230,7 @@ void Image::loadFromFile(char* fileName) {
             m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
-#if TARGET_SDL
+#if TARGET_SDL2
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 3] = 0;
 #endif
 			currPixNb++;
@@ -491,7 +491,7 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 				m_pImgData + ((i + srcX) * m_size.h * SCREEN_BPP),
 				(srcH - overflowTop - overflowBottom) * SCREEN_BPP);
 		}
-#elif TARGET_SDL
+#elif TARGET_SDL2
 		for (int i = overflowTop; i < srcH - overflowBottom; i++) {
 			memcpy(buffer + (maxInt(0, dstX) * SCREEN_BPP) + ((maxInt(0, dstY) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
 				m_pImgData + (int) ((m_size.h - (i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((overflowLeft + srcX) * SCREEN_BPP),

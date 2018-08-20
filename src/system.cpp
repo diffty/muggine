@@ -13,7 +13,7 @@ System::System() {
 	m_bIsMainLoopRunning = true;
 	initLoop();
 
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL2
 	m_window = NULL;
 #endif
 }
@@ -32,7 +32,25 @@ System* System::get() {
 
 
 void System::initWindow() {
-#ifdef TARGET_SDL
+#if TARGET_SDL
+
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
+		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+	}
+	else {
+		m_pWindowSurface = SDL_SetVideoMode(
+			SCREEN_WIDTH * SCREEN_SCALE,
+			SCREEN_HEIGHT * SCREEN_SCALE,
+			32,
+			SDL_SWSURFACE
+		);
+
+		if (m_pWindowSurface == NULL) {
+			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+		}
+	}
+
+#elif TARGET_SDL2
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -48,14 +66,20 @@ void System::initWindow() {
 		if (m_window == NULL) {
 			printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 		}
+
+		m_pWindowSurface = SDL_GetWindowSurface(m_window);
 	}
 
-	#endif
+#endif
 }
 
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL || TARGET_SDL2
 SDL_Window* System::getWindow() {
 	return m_window;
+}
+
+SDL_Window* System::getWindowSurface() {
+	return m_pWindowSurface;
 }
 #endif
 
@@ -64,7 +88,7 @@ void System::initConsole() {
 	
 	consoleInit(GFX_TOP, NULL);
 	
-#elif TARGET_SDL
+#elif TARGET_SDL || TARGET_SDL2
 
 	/*AllocConsole();
 	freopen("CONIN$", "r", stdin);
@@ -103,7 +127,7 @@ double System::getTime() {
     
     return ((double) timeStruct.tv_nsec / 1000000000) + timeStruct.tv_sec;
 
-#elif TARGET_SDL
+#elif TARGET_SDL || TARGET_SDL2
 	return SDL_GetTicks();
 
 #elif TARGET_3DS
@@ -148,7 +172,7 @@ bool System::mainLoop() {
 	hidScanInput();
 	return aptMainLoop();
 
-#elif TARGET_SDL
+#elif TARGET_SDL2
 	while (SDL_PollEvent(&m_event) != 0) {
 		if (m_event.type == SDL_QUIT) {
 			m_bIsMainLoopRunning = false;
@@ -183,9 +207,16 @@ void System::quitLoop() {
 }
 
 void System::exit() {
-#ifdef TARGET_SDL
+
+#if TARGET_SDL
+
+	SDL_Quit();
+
+#elif TARGET_SDL2
+
 	SDL_DestroyWindow(m_window);
 	SDL_Quit();
+
 #endif
 }
 

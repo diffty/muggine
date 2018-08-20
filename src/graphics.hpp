@@ -3,7 +3,7 @@
 
 #ifdef TARGET_3DS
 #include <3ds.h>
-#elif TARGET_SDL
+#elif TARGET_SDL2
 #include <SDL2/SDL.h>
 #endif
 
@@ -15,7 +15,7 @@
 
 class Graphics {
 private:
-#ifdef TARGET_SDL
+#ifdef TARGET_SDL2
 	uint8* m_frameBuffer;
 	SDL_Surface* m_pSDLScreenSurface;
 	SDL_Surface* m_pSDLDrawSurface;

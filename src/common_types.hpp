@@ -14,7 +14,7 @@ typedef u32 uint32;
 
 #else
 
-#	ifndef TARGET_SDL
+#	ifndef TARGET_SDL && TARGET_SDL2
 
 typedef unsigned char uint8_t;
 
@@ -30,7 +30,13 @@ typedef unsigned char uint8_t;
 
 #	else
 
-#include "SDL2/SDL.h"
+#		ifdef TARGET_SDL
+#include <SDL/SDL.h>
+
+#		else
+#include <SDL2/SDL.h>
+
+#		endif
 
 #	endif
 

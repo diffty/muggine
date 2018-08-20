@@ -6,7 +6,7 @@
 #define SCREEN_BPP		3
 #define SCREEN_SCALE	1
 
-#elif TARGET_SDL
+#elif TARGET_SDL2
 
 #define SCREEN_BPP		4
 #define SCREEN_SCALE	3
