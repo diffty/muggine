@@ -14,7 +14,7 @@ typedef u32 uint32;
 
 #else
 
-#if !defined(TARGET_SDL) && !defined(TARGET_SDL2)
+#if !TARGET_SDL && !TARGET_SDL2
 
 typedef unsigned char uint8_t;
 
@@ -30,7 +30,8 @@ typedef unsigned char uint8_t;
 
 #else
 
-#ifdef TARGET_SDL
+#if TARGET_SDL
+
 #include <SDL/SDL.h>
 #define SDL_Keysym SDL_keysym
 

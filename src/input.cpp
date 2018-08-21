@@ -2,7 +2,7 @@
 
 
 Input::Input() {
-#ifdef TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
     initKeyConvArray();
 #elif TARGET_3DS
 	initReverseJoyBtnConvArray();
@@ -127,10 +127,10 @@ void displayKeys(LinkedList* list) {
 	printf("\n");
 }
 
-#ifdef TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
 void Input::RegisterKeyEvent(uint32 eventType, SDL_Keysym key) {
     KeyEvent* keyEvt = new KeyEvent;
-    keyEvt->key = convertSDLToMuggineKey(key.sym);
+    keyEvt->key = convertSDLToMuggineKey(key);
 
 	//InputEvent* evt = new InputEvent;
 	//evt->type = IN_KEYB;

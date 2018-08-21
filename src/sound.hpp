@@ -1,15 +1,20 @@
 #ifndef SOUND_HPP
 #define SOUND_HPP
 
+#if WITH_FMOD
 #include <FMOD/fmod.hpp>
+#endif
+
 #include "linked_list.hpp"
 
 
 class Sound
 {
 private:
+#if WITH_FMOD
 	FMOD::System* m_pSystem;
 	FMOD::Channel* m_pChannel;
+#endif
 
 	LinkedList m_llSoundList;
 

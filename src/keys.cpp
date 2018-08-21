@@ -77,12 +77,12 @@ void initKeyConvArray() {
 	keyConvTab[SDLK_z] = KEYB_Z;
 }
 
-EKey convertSDLToMuggineKey(SDL_keysym keyCode) {
-	if (keyCode > 255) {
+EKey convertSDLToMuggineKey(SDL_Keysym keyCode) {
+	if (keyCode.sym > 255) {
 		printf("Unknown keycode.\n");
 		return KEYB_UNKNOWN;
 	}
-	return keyConvTab[keyCode];
+	return keyConvTab[keyCode.sym];
 }
 
 #elif TARGET_SDL2
@@ -161,8 +161,8 @@ void initKeyConvArray() {
     keyConvTab[SDLK_z] = KEYB_Z;
 }
 
-EKey convertSDLToMuggineKey(SDL_Keycode keyCode) {
-    if (keyCode > 255) {
+EKey convertSDLToMuggineKey(SDL_Keysym keyCode) {
+    if (keyCode.sym > 255) {
         printf("Unknown keycode.\n");
         return KEYB_UNKNOWN;
     }

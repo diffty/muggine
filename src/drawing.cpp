@@ -3,7 +3,7 @@
 
 
 void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color) {
-#if TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
     float xSize = (float) (toX - fromX);
     float ySize = (float) (toY - fromY);
 
@@ -77,4 +77,17 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 #endif
 
 	delete[] oneColorCol;
+}
+
+void rescaleBuffer(uint8* srcBuf, int srcW, int srcH, int srcBpp, uint8* dstBuf, int dstW, int dstH, int dstBpp) {
+	int srcBufSize = srcW * srcH;
+	int dstBufSize = dstW * dstH;
+	int scaleRatio = dstBufSize / srcBufSize;
+
+	for (int i = srcBufSize - 1; i >= 0; i--) {
+		uint8* dstBufPtr = (dstBuf + (uint8) (i * srcBpp * scaleRatio));
+		uint8* srcBufPtr = (srcBuf + (uint8) (i * srcBpp));
+		// uint8 currVal = *(dstBufPtr + i);
+		memcpy(dstBufPtr, srcBufPtr, srcBpp);
+	}
 }

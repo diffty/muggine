@@ -73,11 +73,13 @@ void System::initWindow() {
 #endif
 }
 
-#if TARGET_SDL || TARGET_SDL2
+#if TARGET_SDL2
 SDL_Window* System::getWindow() {
 	return m_window;
 }
+#endif
 
+#if TARGET_SDL || TARGET_SDL2
 SDL_Surface* System::getWindowSurface() {
 	return m_pWindowSurface;
 }
@@ -172,7 +174,7 @@ bool System::mainLoop() {
 	hidScanInput();
 	return aptMainLoop();
 
-#elif TARGET_SDL2
+#elif TARGET_SDL || TARGET_SDL2
 	while (SDL_PollEvent(&m_event) != 0) {
 		if (m_event.type == SDL_QUIT) {
 			m_bIsMainLoopRunning = false;
