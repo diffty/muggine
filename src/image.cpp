@@ -230,7 +230,7 @@ void Image::loadFromFile(char* fileName) {
             m_pImgData[(imgDataPtr * SCREEN_BPP)]     = m_aPalette[(int)currByte].b;
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 1] = m_aPalette[(int)currByte].g;
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 2] = m_aPalette[(int)currByte].r;
-#if TARGET_SDL2
+#if TARGET_SDL || TARGET_SDL2
 			m_pImgData[(imgDataPtr * SCREEN_BPP) + 3] = 0;
 #endif
 			currPixNb++;
@@ -382,12 +382,13 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 #if TARGET_3DS
 		for (int x = srcX; x < srcX + srcW; x++) {
 			int reversedX = (m_size.w - 1) - (m_size.w - 1 - srcX) + (x % srcW);
-            reversedX = x;
-
-			if (dstX + ((srcW-1) - (x % srcW)) < 0 || dstX + ((srcW-1) - (x % srcW)) > SCREEN_WIDTH-1) {
+            //reversedX = x;
+            
+            int testVal = dstX + (x - srcX); // dstX + ((srcW-1) - (x % srcW))
+			if (testVal < 0 || testVal > SCREEN_WIDTH-1) {
 				continue;
 			}
-
+            
 			for (int j = 0; j < m_nbZoneByLine[reversedX]; j++) {
 				int maskIdx = m_maskIdByLine[reversedX][j];
 
@@ -410,7 +411,8 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 				int newImgBufIdx = imgBufIdx + newPosOnImgYDelta;
 
 				// Buffer edge clipping
-				int transpZoneY = maxInt(-dstY - (newPosOnImgY - srcY), 0);
+				//int transpZoneY = maxInt(-dstY - (newPosOnImgY - srcY), 0);
+                int transpZoneY = maxInt((SCREEN_HEIGHT - 1 - dstY) - (newPosOnImgY - srcY), 0);
 
 				if (dstY < 0) {
 					newPosOnImgY += transpZoneY;
@@ -422,10 +424,11 @@ void Image::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW
 				}
 
 				// Building final coordinates
-				int posOnBufferY = (newPosOnImgY + dstY - srcY);
-				int posOnBufferX = (((srcW - 1 + srcX) - reversedX) + dstX);
+				int posOnBufferY = (newPosOnImgY + (SCREEN_HEIGHT - dstY - srcH) - srcY);
+                int posOnBufferX = testVal;
+				//int posOnBufferX = (((srcW - 1 + srcX) - (srcW - reversedX)) + dstX);
 
-				// Blittin'
+                // Blittin'
 				memcpy(buffer + (posOnBufferY * SCREEN_BPP) + (posOnBufferX * SCREEN_HEIGHT * SCREEN_BPP),
 					m_pImgData + newImgBufIdx * SCREEN_BPP,
 					newZoneSize * SCREEN_BPP);
