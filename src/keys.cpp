@@ -166,7 +166,7 @@ EKey convertSDLToMuggineKey(SDL_Keysym keyCode) {
         printf("Unknown keycode.\n");
         return KEYB_UNKNOWN;
     }
-	return keyConvTab[keyCode];
+	return keyConvTab[keyCode.sym];
 }
 
 #elif TARGET_3DS
