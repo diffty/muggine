@@ -1,5 +1,6 @@
 #include "drawing.hpp"
 #include "constants.hpp"
+#include "mathf.hpp"
 
 
 void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color) {
@@ -32,8 +33,8 @@ void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color) {
 
 	uint8* oneColorCol = new uint8[SCREEN_BPP * boxHeight];
 
-	fromY = min(fromY, toY);
-	toY = max(fromY, toY);
+	fromY = minInt(fromY, toY);
+	toY = maxInt(fromY, toY);
 
 	for (y = 0; y < boxHeight; y++) {
 		memmove(oneColorCol + (y * SCREEN_BPP * sizeof(uint8)),
