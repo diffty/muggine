@@ -115,7 +115,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
     rscManager.loadImg("data/win.bmp");                                 // 31
     rscManager.loadImg("data/lose.bmp");                                // 32
     rscManager.loadImg("data/population_text.bmp");                     // 33
-    //rscManager.loadSprSht("data/trail-particle.bmp", 1, 1, 1);          // 34
     
 	// Sound system
 	//Sound sound;
@@ -144,20 +143,14 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		// printf("FPS: %u\n", (uint) (1./deltaTime));
 
-		//pGfx->FillWithColor(0x00);
-
 		gameManager.update();
 		gameManager.draw(fb);
 
-		//if (sys->getInputSys()->IsKeyPressed(KEYB_A)) { }
-        
         // DEBUG 3DS
         if (pSys->getInputSys()->IsJoyBtnPressed(JOY_BTN_1)) {
             gameManager.onNewLevel();
         }
         
-		//sound.update();
-
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
 		pGfx->SwapBuffer();
