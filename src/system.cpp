@@ -133,7 +133,7 @@ double System::getTime() {
 	return SDL_GetTicks();
 
 #elif TARGET_3DS
-    return (uint32) osGetTime();
+    return ((double) osGetTime() / 1000.);
 
 #elif TARGET_DOS
 	double currentTime;
