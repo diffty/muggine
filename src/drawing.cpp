@@ -4,7 +4,23 @@
 
 
 void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color) {
-#if TARGET_SDL || TARGET_SDL2
+#if TARGET_3DS
+    float xSize = (float) (toX - fromX);
+    float ySize = (float) (toY - fromY);
+    
+    float lineSize = ((xSize * xSize) + (ySize * ySize)) / 2.0;
+    
+    for (int i = 0; i < lineSize; i++) {
+        int x = fromX + (toX-fromX) * ((float) i / lineSize);
+        int y = fromY + (toY-fromY) * ((float) i / lineSize);
+        
+        memcpy(
+               buffer + (x * (SCREEN_HEIGHT) + (SCREEN_HEIGHT - 1 - y)) * SCREEN_BPP * sizeof(uint8),
+               color->get3DSFramebufferFormat(),
+               SCREEN_BPP * sizeof(uint8)
+               );
+    }
+#elif TARGET_SDL || TARGET_SDL2
     float xSize = (float) (toX - fromX);
     float ySize = (float) (toY - fromY);
 
@@ -14,7 +30,7 @@ void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* colo
         int x = fromX + (toX-fromX) * ((float) i / lineSize);
         int y = fromY + (toY-fromY) * ((float) i / lineSize);
         
-        *(buffer + (x + (y * SCREEN_WIDTH)) * SCREEN_BPP * sizeof(uint8)) = *color->get3DSFramebufferFormat();
+        //*(buffer + (x + (y * SCREEN_WIDTH)) * SCREEN_BPP * sizeof(uint8)) = *color->get3DSFramebufferFormat();
         
         memcpy(
                buffer + (x + (y * SCREEN_WIDTH)) * SCREEN_BPP * sizeof(uint8),
