@@ -17,8 +17,10 @@ ORCar::ORCar() :
     m_junoAdviceBubble("MIAW", RscManager::get()->getFontRsc(2), 0, 0, 50, 10)
 {
     addChildWidget(&m_carSpr);
-    addChildWidget(&m_junoHead);
-    addChildWidget(&m_junoAdviceBubble);
+    
+    // Unused and buggy on 3DS
+    /*addChildWidget(&m_junoHead);
+    addChildWidget(&m_junoAdviceBubble);*/
 
     m_junoHead.translate(
                            m_rect.getPos().x - m_junoHead.getRect()->getSize().w + 12,
