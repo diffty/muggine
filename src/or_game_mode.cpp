@@ -47,11 +47,11 @@ ORGameMode::ORGameMode(Scene* pMainScene) {
 
 	m_bLevelEnded = false;
 
-	m_pParticleSystem = new ParticleSystem;
+	/*m_pParticleSystem = new ParticleSystem;
 
 	m_pParticleSystem->getRect()->setPos(150, 100);
 	m_pParticleSystem->setParentWidget(pMainScene);
-	m_pParticleSystem->setDrawOrder(6000);
+	m_pParticleSystem->setDrawOrder(6000);*/
     
     m_fTimeBeforeNextBuilding = 0.0;
     m_fTimeBeforeNextStatLoss = TIME_BETWEEN_STAT_LOSS;
@@ -151,13 +151,13 @@ void ORGameMode::update() {
     vect2df_t vCurrPos = m_carObj.getRect()->getPos();
     
     // Inputs
-    if ((pInputSys->IsKeyPressed(KEYB_Q) || pInputSys->IsKeyPressed(KEYB_A)) && vCurrPos.x > 0) {
+    if ((pInputSys->IsKeyPressed(KEYB_Q) || pInputSys->IsKeyPressed(KEYB_A) || pInputSys->IsJoyBtnPressed(JOY_LEFT)) && vCurrPos.x > 0) {
         m_carObj.translate(-fDeltaTime * m_fCarSpeed, 0.0, TRANSFORM_REL);
         m_roadObj.setScrollSpeed(SCROLL_SPEED_BREAK);
         m_carObj.onBreaking();
         m_bCarWasMoving = true;
     }
-    else if (pInputSys->IsKeyPressed(KEYB_D) && vCurrPos.x < 320 - m_carObj.getRect()->getSize().w) {
+    else if ((pInputSys->IsKeyPressed(KEYB_D) || pInputSys->IsJoyBtnPressed(JOY_RIGHT)) && vCurrPos.x < 320 - m_carObj.getRect()->getSize().w) {
         m_carObj.translate(fDeltaTime * m_fCarSpeed, 0.0, TRANSFORM_REL);
         m_roadObj.setScrollSpeed(SCROLL_SPEED_ACCELERATION);
         m_carObj.onAccelerating();
@@ -168,11 +168,10 @@ void ORGameMode::update() {
         m_carObj.onNormal();
         m_bCarWasMoving = false;
     }
-    
-    if ((pInputSys->IsKeyPressed(KEYB_Z) || pInputSys->IsKeyPressed(KEYB_W)) && vCurrPos.y > 136) {
+    if ((pInputSys->IsKeyPressed(KEYB_Z) || pInputSys->IsKeyPressed(KEYB_W) || pInputSys->IsJoyBtnPressed(JOY_UP)) && vCurrPos.y > 136) {
         m_carObj.translate(0.0, -fDeltaTime * m_fCarSpeed, TRANSFORM_REL);
     }
-    else if (pInputSys->IsKeyPressed(KEYB_S) && vCurrPos.y < 200 - m_carObj.getRect()->getSize().h) {
+    else if ((pInputSys->IsKeyPressed(KEYB_S) || pInputSys->IsJoyBtnPressed(JOY_DOWN)) && vCurrPos.y < 200 - m_carObj.getRect()->getSize().h) {
         m_carObj.translate(0.0, fDeltaTime * m_fCarSpeed, TRANSFORM_REL);
     }
     
