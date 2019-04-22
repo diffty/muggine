@@ -28,9 +28,9 @@
 #include "fsm.hpp"
 #include "font.hpp"
 #include "text.hpp"
-#include "or_game_manager.hpp"
-#include "or_game_mode.hpp"
-#include "or_main_menu.hpp"
+#include "game_manager.hpp"
+#include "game_mode.hpp"
+#include "xx_main_menu.hpp"
 
 #include <time.h>
 
@@ -81,40 +81,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
     
 	RscManager rscManager;
 
-    rscManager.loadFont("data/font-big.bmp", 16, 16, 256, -1);          // 0
-	rscManager.loadFont("data/font-small.bmp", 16, 16, 256, -1);        // 1
-	rscManager.loadFont("data/font-small-black.bmp", 16, 16, 256, -1);  // 2
-    rscManager.loadSprSht("data/main_menu_ui.bmp", 6, 2, 8);            // 3
-    rscManager.loadSprSht("data/title.bmp", 4, 2, 7);                   // 4
-	rscManager.loadImg("data/credits.bmp");                             // 5
-    rscManager.loadImg("data/road.bmp");                                // 6
-    rscManager.loadImg("data/car.bmp");                                 // 7
-    rscManager.loadImg("data/bg.bmp");                                  // 8
-    rscManager.loadSprSht("data/car_smoke.bmp", 3, 1, 3);               // 9
-    rscManager.loadImg("data/PickUp_Feuille.bmp");                      // 10
-    rscManager.loadImg("data/PickUp_House.bmp");                        // 11
-    rscManager.loadImg("data/PickUp_Industrie.bmp");                    // 12
-    rscManager.loadImg("data/arbre.bmp");                               // 13
-    rscManager.loadSprSht("data/usine.bmp", 1, 1, 1);                   // 14
-    rscManager.loadImg("data/immeuble.bmp");                            // 15
-    rscManager.loadImg("data/juno_bulle.bmp");                          // 16
-    rscManager.loadImg("data/mescouilles.bmp");                         // 17
-    rscManager.loadImg("data/tomate.bmp");                              // 18
-    rscManager.loadSprSht("data/arbre1SprSht.bmp", 3, 1, 3);            // 19
-    rscManager.loadSprSht("data/arbre2SprSht.bmp", 3, 1, 3);            // 20
-    rscManager.loadSprSht("data/centrecommercial.bmp", 1, 1, 1);        // 21
-    rscManager.loadSprSht("data/immeuble1SprSht.bmp", 3, 1, 3);         // 22
-    rscManager.loadSprSht("data/immeuble2SprSht.bmp", 3, 1, 3);         // 23
-    rscManager.loadImg("data/montagnes.bmp");                           // 24
-    rscManager.loadImg("data/nuages.bmp");                              // 25
-    rscManager.loadImg("data/fond.bmp");                                // 26
-    rscManager.loadFont("data/font-thin-number.bmp", 16, 16, 256, 2);   // 27
-    rscManager.loadImg("data/election_text.bmp");                       // 28
-    rscManager.loadImg("data/mayorpopularity.bmp");                     // 29
-    rscManager.loadImg("data/pause.bmp");                               // 30
-    rscManager.loadImg("data/win.bmp");                                 // 31
-    rscManager.loadImg("data/lose.bmp");                                // 32
-    rscManager.loadImg("data/population_text.bmp");                     // 33
 #if DSTEST
     rscManager.loadSprSht("data/simon.bmp", 1, 1, 1);                   // 0
     rscManager.loadSprSht("data/animtest3.bmp", 2, 2, 4);               // 1
@@ -126,7 +92,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	//sound.addSound("data/sound/intro-rix.mp3", true);
 	
 	// Initing game manager
-	ORGameManager gameManager;
+	GameManager gameManager;
 
 	// Building scene
 	Scene* pGameScene = gameManager.getGameScene();
@@ -222,7 +188,7 @@ int main(int argc, char **argv)
 #endif
 
 	gfx.Init();
-    //pSys->initConsole();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
+    pSys->initConsole();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
     // printf("lol");
 
 	MainApp(pSys, &gfx);
