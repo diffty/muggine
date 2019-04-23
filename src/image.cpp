@@ -1,6 +1,6 @@
 #include "image.hpp"
 
-
+ 
 Image::Image(char* fileName) {
 	loadFromFile(fileName);
 }

@@ -80,6 +80,8 @@ void MainApp(System* pSys, Graphics* pGfx) {
 #endif
     
 	RscManager rscManager;
+    
+    rscManager.loadImg("simon", "data/simon.bmp");
 
 #if DSTEST
     rscManager.loadSprSht("data/simon.bmp", 1, 1, 1);                   // 0
@@ -103,6 +105,13 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	uint8* fb = pGfx->GetFramebuffer();
 
 	pSys->initLoop();
+    
+    Image* pImg = rscManager.getImgRsc("simon");
+    
+    Sprite* spr = new Sprite(pImg, {0, 10});
+
+    pGameScene->addComponent(spr);
+    
     
     // DEBUG 3DS
 #if DSTEST

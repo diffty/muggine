@@ -1,6 +1,5 @@
 #include "rsc_manager.hpp"
 
-
 RscManager* RscManager::s_pInstance = NULL;
 
 
@@ -13,14 +12,23 @@ RscManager::~RscManager() {
 	freeAllRsc();
 }
 
-bool RscManager::loadImg(const char* szImgPath) {
+bool RscManager::loadImg(const char* szRscName, const char* szImgPath) {
     char* szConformedPath = platformConformPath(szImgPath);
     Image* newImage = new Image(szConformedPath);
     delete szConformedPath;
 
 	if (newImage) {
 		LLNode* newRscNode = new LLNode;
-		newRscNode->pData = (void *) newImage;
+        
+        Rsc* newRscData = new Rsc;
+        
+        newRscData->szName = new char[strlen(szRscName)+1];
+        strcpy(newRscData->szName, szRscName);
+        newRscData->szPath = new char[strlen(szImgPath)+1];
+        strcpy(newRscData->szPath, szImgPath);
+        newRscData->pData = (void *) newImage;
+        
+		newRscNode->pData = (void *) newRscData;
 
 		addNodeToList(&m_rscList, newRscNode);
 
@@ -31,14 +39,23 @@ bool RscManager::loadImg(const char* szImgPath) {
 	}
 }
 
-bool RscManager::loadSprSht(const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength) {
+bool RscManager::loadSprSht(const char* szRscName, const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength) {
     char* szConformedPath = platformConformPath(szImgPath);
 	SpriteSheet* pNewSprSht = new SpriteSheet(szConformedPath, iGridWidth, iGridHeight, uLength);
     delete szConformedPath;
     
 	if (pNewSprSht) {
 		LLNode* newRscNode = new LLNode;
-		newRscNode->pData = (void *)pNewSprSht;
+        
+        Rsc* newRscData = new Rsc;
+        newRscData->szName =  new char[strlen(szRscName)+1];;
+        strcpy((char*) szRscName, newRscData->szName);
+        newRscData->szPath = new char[strlen(szImgPath)+1];
+        strcpy((char*) szImgPath, newRscData->szPath);
+        newRscData->pData = (void *) pNewSprSht;
+        
+        newRscNode->pData = (void *) newRscData;
+
 
 		addNodeToList(&m_rscList, newRscNode);
 
@@ -49,14 +66,20 @@ bool RscManager::loadSprSht(const char* szImgPath, int iGridWidth, int iGridHeig
 	}
 }
 
-bool RscManager::loadFont(const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset) {
+bool RscManager::loadFont(const char* szRscName, const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset) {
     char* szConformedPath = platformConformPath(szImgPath);
 	Font* pNewFont = new Font(szConformedPath, iGridWidth, iGridHeight, uLength, iSizeOffset);
     delete szConformedPath;
     
 	if (pNewFont) {
 		LLNode* newRscNode = new LLNode;
-		newRscNode->pData = (void *)pNewFont;
+
+        Rsc* newRscData = new Rsc;
+        newRscData->szName =  new char[strlen(szRscName)+1];;
+        strcpy((char*) szRscName, newRscData->szName);
+        newRscData->szPath = new char[strlen(szImgPath)+1];
+        strcpy((char*) szImgPath, newRscData->szPath);
+        newRscData->pData = (void *) pNewFont;
 
 		addNodeToList(&m_rscList, newRscNode);
 
@@ -81,26 +104,35 @@ void RscManager::unloadRsc(uint rscId) {
 	}
 }
 
-// TODO: changer le type d'id en un truc plus large
-// TODO: faire une recherche par nom
-Image* RscManager::getImgRsc(uint rscId) {
-	LLNode* rscNode = getRscNode(rscId);
+Image* RscManager::getImgRsc(char* szRscName) {
+    LLNode* rscNode = getRscNode(szRscName);
+    
+    if (rscNode) {
+        return (Image*) ((Rsc*) rscNode->pData)->pData;
+    }
+    else {
+        return NULL;
+    }
+}
 
-	if (rscNode) {
-		return (Image*)rscNode->pData;
-	}
-	else {
-		return NULL;
-	}
+Image* RscManager::getImgRsc(uint rscId) {
+    LLNode* rscNode = getRscNode(rscId);
+    
+    if (rscNode) {
+        return (Image*) ((Rsc*) rscNode->pData)->pData;
+    }
+    else {
+        return NULL;
+    }
 }
 
 // TODO: faire un truc qui fait que tu vas pas
-// TODO: piocher à l'aveugle dans les ressources
+// TODO: piocher a l'aveugle dans les ressources
 SpriteSheet* RscManager::getSprShtRsc(uint rscId) {
 	LLNode* rscNode = getRscNode(rscId);
 
 	if (rscNode) {
-		return (SpriteSheet*)rscNode->pData;
+		return (SpriteSheet*) ((Rsc*) rscNode->pData)->pData;
 	}
 	else {
 		return NULL;
@@ -111,11 +143,26 @@ Font* RscManager::getFontRsc(uint rscId) {
 	LLNode* rscNode = getRscNode(rscId);
 
 	if (rscNode) {
-		return (Font*)rscNode->pData;
+		return (Font*) ((Rsc*) rscNode->pData)->pData;
 	}
 	else {
 		return NULL;
 	}
+}
+
+LLNode* RscManager::getRscNode(const char* szRscName) {
+    LLNode* currNode = m_rscList.pHead;
+    
+    while (currNode != NULL) {
+        Rsc* pRscNode = (Rsc*) currNode->pData;
+        if (pRscNode) {
+            if (strcmp(pRscNode->szName, szRscName) == 0) {
+                return currNode;
+            }
+        }
+        currNode = currNode->pNext;
+    }
+    return NULL;
 }
 
 LLNode* RscManager::getRscNode(uint rscId) {
@@ -141,7 +188,10 @@ void RscManager::freeAllRsc() {
     
     while (currNode != NULL) {
         nextNode = currNode->pNext;
-        delete ((Image *) currNode->pData);
+        Rsc* pRscNode = (Rsc*) currNode->pData;
+        
+        delete ((Image *) pRscNode->pData);
+        delete pRscNode;
         delete currNode;
         currNode = nextNode;
     }

@@ -1,6 +1,9 @@
 #ifndef RSC_MANAGER_HPP
 #define RSC_MANAGER_HPP
 
+#include <stdio.h>
+#include <cstring>
+
 #include "common_types.hpp"
 #include "linked_list.hpp"
 #include "image.hpp"
@@ -8,6 +11,13 @@
 #include "font.hpp"
 #include "platform_tools.hpp"
 
+
+
+typedef struct Rsc {
+    char* szName;
+    char* szPath;
+    void* pData;
+} Rsc;
 
 class RscManager {
 private:
@@ -19,13 +29,15 @@ public:
 	RscManager();
     ~RscManager();
 
-	bool loadImg(const char* szImgPath);
-	bool loadSprSht(const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength);
-	bool loadFont(const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset);
+	bool loadImg(const char* szRscName, const char* szImgPath);
+	bool loadSprSht(const char* szRscName, const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength);
+	bool loadFont(const char* szRscName, const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset);
 	void unloadRsc(uint rscId);
 	void freeAllRsc();
+    LLNode* getRscNode(const char* szRscName);
 	LLNode* getRscNode(uint rscId);
-	Image* getImgRsc(uint rscId);
+    Image* getImgRsc(char* szRscName);
+    Image* getImgRsc(uint rscId);
 	SpriteSheet* getSprShtRsc(uint rscId);
 	Font* getFontRsc(uint rscId);
 	uint getRscCount();
