@@ -31,6 +31,7 @@
 #include "game_manager.hpp"
 #include "game_mode.hpp"
 #include "xx_main_menu.hpp"
+#include "jsonreader.hpp"
 
 #include <time.h>
 
@@ -78,6 +79,8 @@ void MainApp(System* pSys, Graphics* pGfx) {
 #ifdef TARGET_3DS
 	Result rc = romfsInit();
 #endif
+
+	JSONReader json("D:/test.json");
     
 	RscManager rscManager;
     
