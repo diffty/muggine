@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "95360F561FD6FD9D00F8CBEA"
-               BuildableName = "BlankMuggineProject.app"
-               BlueprintName = "BlankMuggineProject"
-               ReferencedContainer = "container:BlankMuggineProject.xcodeproj">
+               BuildableName = "DeMuGGinE.app"
+               BlueprintName = "DeMuGGinE"
+               ReferencedContainer = "container:DeMuGGinE.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,9 +34,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "95360F561FD6FD9D00F8CBEA"
-            BuildableName = "BlankMuggineProject.app"
-            BlueprintName = "BlankMuggineProject"
-            ReferencedContainer = "container:BlankMuggineProject.xcodeproj">
+            BuildableName = "DeMuGGinE.app"
+            BlueprintName = "DeMuGGinE"
+            ReferencedContainer = "container:DeMuGGinE.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -58,9 +58,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "95360F561FD6FD9D00F8CBEA"
-            BuildableName = "BlankMuggineProject.app"
-            BlueprintName = "BlankMuggineProject"
-            ReferencedContainer = "container:BlankMuggineProject.xcodeproj">
+            BuildableName = "DeMuGGinE.app"
+            BlueprintName = "DeMuGGinE"
+            ReferencedContainer = "container:DeMuGGinE.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -77,9 +77,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "95360F561FD6FD9D00F8CBEA"
-            BuildableName = "BlankMuggineProject.app"
-            BlueprintName = "BlankMuggineProject"
-            ReferencedContainer = "container:BlankMuggineProject.xcodeproj">
+            BuildableName = "DeMuGGinE.app"
+            BlueprintName = "DeMuGGinE"
+            ReferencedContainer = "container:DeMuGGinE.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

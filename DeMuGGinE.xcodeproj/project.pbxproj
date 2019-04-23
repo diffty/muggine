@@ -235,7 +235,7 @@
 		9535D8FC208EB90B00A0A8EA /* lose.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = lose.bmp; sourceTree = "<group>"; };
 		9535D8FD208EB90B00A0A8EA /* win.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = win.bmp; sourceTree = "<group>"; };
 		9535D904208F562D00A0A8EA /* population_text.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = population_text.bmp; sourceTree = "<group>"; };
-		95360F571FD6FD9D00F8CBEA /* BlankMuggineProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlankMuggineProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		95360F571FD6FD9D00F8CBEA /* DeMuGGinE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeMuGGinE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95360F5A1FD6FD9D00F8CBEA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		95360F5B1FD6FD9D00F8CBEA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		95360F5D1FD6FD9D00F8CBEA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -470,7 +470,7 @@
 		95360F581FD6FD9D00F8CBEA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				95360F571FD6FD9D00F8CBEA /* BlankMuggineProject.app */,
+				95360F571FD6FD9D00F8CBEA /* DeMuGGinE.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -797,9 +797,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		95360F561FD6FD9D00F8CBEA /* BlankMuggineProject */ = {
+		95360F561FD6FD9D00F8CBEA /* DeMuGGinE */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 95360F681FD6FD9D00F8CBEA /* Build configuration list for PBXNativeTarget "BlankMuggineProject" */;
+			buildConfigurationList = 95360F681FD6FD9D00F8CBEA /* Build configuration list for PBXNativeTarget "DeMuGGinE" */;
 			buildPhases = (
 				95360F531FD6FD9D00F8CBEA /* Sources */,
 				95360F541FD6FD9D00F8CBEA /* Frameworks */,
@@ -810,9 +810,9 @@
 			);
 			dependencies = (
 			);
-			name = BlankMuggineProject;
+			name = DeMuGGinE;
 			productName = "K-Mion";
-			productReference = 95360F571FD6FD9D00F8CBEA /* BlankMuggineProject.app */;
+			productReference = 95360F571FD6FD9D00F8CBEA /* DeMuGGinE.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -830,7 +830,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 95360F521FD6FD9D00F8CBEA /* Build configuration list for PBXProject "BlankMuggineProject" */;
+			buildConfigurationList = 95360F521FD6FD9D00F8CBEA /* Build configuration list for PBXProject "DeMuGGinE" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -842,7 +842,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				95360F561FD6FD9D00F8CBEA /* BlankMuggineProject */,
+				95360F561FD6FD9D00F8CBEA /* DeMuGGinE */,
 			);
 		};
 /* End PBXProject section */
@@ -1069,7 +1069,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_BUNDLE_IDENTIFIER = RIX.BlankMuggineProject;
+				PRODUCT_BUNDLE_IDENTIFIER = RIX.DeMuGGinE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -1095,7 +1095,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				PRODUCT_BUNDLE_IDENTIFIER = RIX.BlankMuggineProject;
+				PRODUCT_BUNDLE_IDENTIFIER = RIX.DeMuGGinE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -1104,7 +1104,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		95360F521FD6FD9D00F8CBEA /* Build configuration list for PBXProject "BlankMuggineProject" */ = {
+		95360F521FD6FD9D00F8CBEA /* Build configuration list for PBXProject "DeMuGGinE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				95360F661FD6FD9D00F8CBEA /* Debug */,
@@ -1113,7 +1113,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		95360F681FD6FD9D00F8CBEA /* Build configuration list for PBXNativeTarget "BlankMuggineProject" */ = {
+		95360F681FD6FD9D00F8CBEA /* Build configuration list for PBXNativeTarget "DeMuGGinE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				95360F691FD6FD9D00F8CBEA /* Debug */,
