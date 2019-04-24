@@ -114,8 +114,14 @@ void MainApp(System* pSys, Graphics* pGfx) {
     Sprite* spr = new Sprite(pImg, {0, 10});
 
     pGameScene->addComponent(spr);
-    
-    
+	
+	std::map<std::string, JSONNode*>::iterator it = json.pm_mContentDict->begin();
+	
+	while (it != json.pm_mContentDict->end()) {
+		std::cout << it->first << std::endl;
+		it++;
+	}
+
     // DEBUG 3DS
 #if DSTEST
     Scene pGameScene;

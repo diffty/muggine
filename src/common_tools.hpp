@@ -6,6 +6,6 @@
 
 
 int intFromStr(const char* szStr);
-
+void spliceString(const char* szSrcString, int iStartPos, int iEndPos, char* szDstString);
 
 #endif

@@ -28,5 +28,6 @@ LLNode* removeNodeFromList(LinkedList* pList, LLNode* pNode);
 LLNode* searchForNodeInList(LinkedList* pList, void* pDataToSearch);
 int countNodesInList(LinkedList* pList);
 LLNode* getNodeInList(LinkedList* pList, uint nodeNum);
+LLNode* popNodeFromList(LinkedList* pList);
 
 #endif

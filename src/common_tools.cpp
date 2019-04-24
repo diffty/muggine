@@ -19,3 +19,12 @@ int intFromStr(const char* szStr) {
 
 	return iRes;
 }
+
+
+void spliceString(const char* szSrcString, int iStartPos, int iEndPos, char* szDstString) {
+	for (int i = iStartPos; i <= iEndPos; i++) {
+		szDstString[i - iStartPos] = szSrcString[i];
+	}
+
+	szDstString[iEndPos - iStartPos + 1] = '\0';
+}
