@@ -80,7 +80,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Result rc = romfsInit();
 #endif
 
-	JSONReader json("D:/test.json");
+	JSONReader json("D:/test2.json");
     
 	RscManager rscManager;
     
@@ -113,14 +113,9 @@ void MainApp(System* pSys, Graphics* pGfx) {
     
     Sprite* spr = new Sprite(pImg, {0, 10});
 
-    pGameScene->addComponent(spr);
+    //pGameScene->addComponent(spr);
 	
-	std::map<std::string, JSONNode*>::iterator it = json.pm_mContentDict->begin();
-	
-	while (it != json.pm_mContentDict->end()) {
-		std::cout << it->first << std::endl;
-		it++;
-	}
+	json.m_pRootDict->print();
 
     // DEBUG 3DS
 #if DSTEST

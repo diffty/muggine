@@ -20,72 +20,81 @@ JSONReader::JSONReader(const char* path)
 	int fileSize = ftell(fp);
 	rewind(fp);
 
-	JSONNode* pCurrJSONNode = NULL;
+	JSONDictItem* pCurrJSONItem = NULL;
 
-	std::map<std::string, JSONNode*>* pmCurrContent = NULL;
+	JSONDict* pCurrDict = NULL;
 	
 	for (int i = 0; i < fileSize; i++) {
 		char c;
 
+		fseek(fp, i, SEEK_SET);
 		fread(&c, 1, 1, fp);
 
-		if (pCurrJSONNode != NULL && pCurrJSONNode->iStartValuePos != -1) {
-			if ((c == ',' || c == '}') && pCurrJSONNode->iEndValuePos == -1) {
-				pCurrJSONNode->iEndValuePos = i - 1;
-				if (c == '}') {
-					pCurrJSONNode->iEndBlockPos = i - 1;
+		if ((c == ',' || c == '}')) {
+			pCurrJSONItem->iEndValuePos = i - 1;
+
+			if (c == '}') {
+				pCurrJSONItem->iEndBlockPos = i - 1;
+
+				if (pCurrJSONItem->isValid()) {
+					this->fillNode(pCurrJSONItem, fp);
+					this->parseNode(pCurrJSONItem);
+
+					pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
 				}
 
-				this->fillNode(pCurrJSONNode, fp);
-				this->parseNode(pCurrJSONNode);
+				pCurrJSONItem = pCurrDict->m_pParentItem;
 
-				(*pmCurrContent)[std::string(pCurrJSONNode->szKey)] = pCurrJSONNode;
+				if (pCurrJSONItem) {
+					pCurrJSONItem->pValue = (void*)pCurrDict;
+					pCurrJSONItem->eType = EContentType_DICT;
+				}
 
-				pCurrJSONNode = createNode("", NULL);
-				pCurrJSONNode->iStartBlockPos = i + 2;
-				pCurrJSONNode->iStartKeyPos = i + 2;
+				pCurrDict = pCurrDict->m_pParentDict;
+			}
+			else {
+				this->fillNode(pCurrJSONItem, fp);
+				this->parseNode(pCurrJSONItem);
+				pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
+
+				pCurrJSONItem = createItem("", NULL);
+				pCurrJSONItem->iStartBlockPos = i + 1;
+				pCurrJSONItem->iStartKeyPos = i + 1;
 			}
 		}
 
 		if (c == '{') {
-			pCurrJSONNode = createNode("", NULL);
-			pCurrJSONNode->iStartBlockPos = i + 1;
-			pCurrJSONNode->iStartKeyPos = i + 1;
-			addDataToList(&llNodeStack, pCurrJSONNode);
-			addDataToList(&llMapStack, pmCurrContent);
-			pmCurrContent = new std::map<std::string, JSONNode*>;
-			pCurrJSONNode->pValue = (void*)pmCurrContent;
-		}
-		else if (c == '}') {
-			pCurrJSONNode->iEndBlockPos = i - 1;
-			pCurrJSONNode->iEndValuePos = i - 1;
+			JSONDict* pNewDict = new JSONDict();
 
-			LLNode* pJSONLLNode = popNodeFromList(&llNodeStack);
-			LLNode* pMapLLNode = popNodeFromList(&llMapStack);
+			if (m_pRootDict == NULL) {
+				m_pRootDict = pNewDict;
+			}
+			else {
+				pNewDict->m_pParentDict = pCurrDict;
+				pNewDict->m_pParentItem = pCurrJSONItem;
+			}
 
-			removeNodeFromList(&llNodeStack, pJSONLLNode);
-			removeNodeFromList(&llMapStack, pMapLLNode);
+			pCurrDict = pNewDict;
 
-			pCurrJSONNode = (JSONNode*)pJSONLLNode->pData;
-			pmCurrContent = (std::map<std::string, JSONNode*>*) pMapLLNode->pData;
+			pCurrJSONItem = createItem("", NULL);
+			pCurrJSONItem->iStartBlockPos = i + 1;
+			pCurrJSONItem->iStartKeyPos = i + 1;
 		}
 		else if (c == ':') {
-			pCurrJSONNode->iStartValuePos = i + 1;
-			pCurrJSONNode->iEndKeyPos = i - 1;
+			pCurrJSONItem->iStartValuePos = i + 1;
+			pCurrJSONItem->iEndKeyPos = i - 1;
 		}
 	}
 
-	if (pCurrJSONNode->iStartValuePos == -1) {
-		delete pCurrJSONNode;
+	if (pCurrJSONItem && pCurrJSONItem->iStartValuePos == -1) {
+		delete pCurrJSONItem;
 	}
 
 	fclose(fp);
-
-	pm_mContentDict = pmCurrContent;
 }
 
-void JSONReader::fillNode(JSONNode* pCurrJSONNode, FILE* fp) {
-	int iKeySize = pCurrJSONNode->iEndKeyPos - pCurrJSONNode->iStartKeyPos + 1;
+void JSONReader::fillNode(JSONDictItem* pCurrJSONNode, FILE* fp) {
+	int iKeySize = pCurrJSONNode->iEndKeyPos - pCurrJSONNode->iStartKeyPos;
 	int iValueSize = pCurrJSONNode->iEndValuePos - pCurrJSONNode->iStartValuePos + 1;
 
 	pCurrJSONNode->szKey = new char[iKeySize + 1];
@@ -94,14 +103,14 @@ void JSONReader::fillNode(JSONNode* pCurrJSONNode, FILE* fp) {
 	fseek(fp, pCurrJSONNode->iStartKeyPos, SEEK_SET);
 	fread(pCurrJSONNode->szKey, 1, iKeySize, fp);
 
-	fseek(fp, pCurrJSONNode->iStartValuePos + 1, SEEK_SET);
+	fseek(fp, pCurrJSONNode->iStartValuePos, SEEK_SET);
 	fread(pCurrJSONNode->szValue, 1, iValueSize, fp);
 
 	pCurrJSONNode->szKey[iKeySize] = '\0';
 	pCurrJSONNode->szValue[iValueSize] = '\0';
 }
 
-void JSONReader::parseNode(JSONNode* pJsonNode) {
+void JSONReader::parseNode(JSONDictItem* pJsonNode) {
 	char* resultKey = NULL;
 	char* resultValue = NULL;
 
@@ -116,24 +125,26 @@ void JSONReader::parseNode(JSONNode* pJsonNode) {
 		spliceString(resultKey, 1, iKeySize - 2, pJsonNode->szKey);
 	}
 	else {
-		exit(1);
+		printf("<!!> Something bad happened in parseNode: key must be a string.\n");
+		printf("\tCurrent thing parsed : %s\n", pJsonNode->szKey);
+		//exit(1);
 	}
 
-	int iValueSize = strlen(resultValue) - 1;
+	int iValueSize = strlen(resultValue);
 	
-	if (resultValue[0] == '"' && resultKey[iValueSize - 1] == '"') {
+	if (resultValue[0] == '"' && resultValue[iValueSize - 1] == '"') {
 		char* strValueContent = new char[iValueSize - 2];
 		spliceString(resultValue, 1, iValueSize - 2, strValueContent);
 		pJsonNode->pValue = (void*) strValueContent;
 		pJsonNode->eType = EContentType_STR;
 	}
-	else if (resultValue[0] == '{' && resultKey[iValueSize - 1] == '}') {
+	else if (resultValue[0] == '{' && resultValue[iValueSize - 1] == '}') {
 		pJsonNode->eType = EContentType_DICT;
 	}
-	else if (resultValue[0] == '[' && resultKey[iValueSize - 1] == ']') {
+	else if (resultValue[0] == '[' && resultValue[iValueSize - 1] == ']') {
 		pJsonNode->eType = EContentType_LIST;
 	}
-	else {
+	else if (pJsonNode->eType == EContentType_UNDEFINED) {
 		int* intValueContent = new int;
 		*intValueContent = intFromStr(resultValue);
 		pJsonNode->pValue = (void*)intValueContent;
@@ -151,7 +162,7 @@ void JSONReader::trunctStr(char* str, char** result) {
 	int iStrLen = strlen(str);
 	int reversedi;
 
-	for (int i = 0; i < iStrLen / 2; i++) {
+	for (int i = 0; i < (iStrLen / 2)+1; i++) {
 		reversedi = iStrLen - i - 1;
 
 		if (str[i] != ' '
@@ -190,8 +201,8 @@ void JSONReader::trunctStr(char* str, char** result) {
 	(*result)[iParsedSize] = '\0';
 }
 
-JSONNode* JSONReader::createNode(const char* szKey, void* pValue) {
-	JSONNode* newJSONNode = new JSONNode();
+JSONDictItem* JSONReader::createItem(const char* szKey, void* pValue) {
+	JSONDictItem* newJSONNode = new JSONDictItem();
 
 	newJSONNode->szKey = new char[strlen(szKey) + 1];
 	strcpy(newJSONNode->szKey, szKey);
