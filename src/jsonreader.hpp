@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <map>
 #include <string>
+#include <vector>
 
 #include "linked_list.hpp"
 #include "common_tools.hpp"
@@ -15,7 +16,7 @@ class JSONDict;
 class JSONDictItem;
 
 typedef std::map<std::string, JSONDictItem*> json_dict_map;
-
+typedef std::vector<JSONDictItem*> json_list;
 
 enum EContentType {
 	EContentType_UNDEFINED,
@@ -48,10 +49,10 @@ public:
 	JSONDict* m_pParent = NULL;
 
 	bool isValid() {
-		return iStartValuePos != -1
-			&& iEndValuePos != -1
-			&& iStartKeyPos != -1
-			&& iEndKeyPos != -1;
+		return iEndValuePos != -1
+			//&& iStartValuePos != -1
+			//&& iEndKeyPos != -1
+			&& iStartKeyPos != -1;
 	}
 };
 
@@ -109,6 +110,7 @@ public:
 	JSONDict* m_pParentDict = NULL;
 	JSONDictItem* m_pParentItem = NULL;
 	json_dict_map m_pContentDict;
+	json_list     m_pContentList;
 };
 
 
