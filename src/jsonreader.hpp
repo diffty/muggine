@@ -1,4 +1,6 @@
-#pragma once
+#ifndef JSON_READER_HPP
+#define JSON_READER_HPP
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -91,6 +93,13 @@ public:
 				pJsonDict->print(level+1);
 				break;
 			}
+			case EContentType_LIST:
+			{
+				LinkedList* pLinkedList = (LinkedList*)pItemValue->pValue;
+				printf("%s: \n", szKey.c_str());
+				//pJsonDict->print(level + 1);
+				break;
+			}
 			}
 
 			it++;
@@ -116,3 +125,6 @@ public:
 
 	JSONDict* m_pRootDict = NULL;
 };
+
+
+#endif

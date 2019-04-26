@@ -23,6 +23,8 @@ JSONReader::JSONReader(const char* path)
 	JSONDictItem* pCurrJSONItem = NULL;
 
 	JSONDict* pCurrDict = NULL;
+
+	bool bInQuotes = false;
 	
 	for (int i = 0; i < fileSize; i++) {
 		char c;
@@ -30,7 +32,7 @@ JSONReader::JSONReader(const char* path)
 		fseek(fp, i, SEEK_SET);
 		fread(&c, 1, 1, fp);
 
-		if ((c == ',' || c == '}')) {
+		if ((c == ',' || c == '}' || c == ']')) {
 			pCurrJSONItem->iEndValuePos = i - 1;
 
 			if (c == '}') {
@@ -47,7 +49,12 @@ JSONReader::JSONReader(const char* path)
 
 				if (pCurrJSONItem) {
 					pCurrJSONItem->pValue = (void*)pCurrDict;
-					pCurrJSONItem->eType = EContentType_DICT;
+					if (c == ']') {
+						pCurrJSONItem->eType = EContentType_LIST;
+					}
+					else {
+						pCurrJSONItem->eType = EContentType_DICT;
+					}
 				}
 
 				pCurrDict = pCurrDict->m_pParentDict;
@@ -63,26 +70,32 @@ JSONReader::JSONReader(const char* path)
 			}
 		}
 
-		if (c == '{') {
-			JSONDict* pNewDict = new JSONDict();
+		if (!bInQuotes) {
+			if (c == '{') {
+				JSONDict* pNewDict = new JSONDict();
 
-			if (m_pRootDict == NULL) {
-				m_pRootDict = pNewDict;
+				if (m_pRootDict == NULL) {
+					m_pRootDict = pNewDict;
+				}
+				else {
+					pNewDict->m_pParentDict = pCurrDict;
+					pNewDict->m_pParentItem = pCurrJSONItem;
+				}
+
+				pCurrDict = pNewDict;
+
+				pCurrJSONItem = createItem("", NULL);
+				pCurrJSONItem->iStartBlockPos = i + 1;
+				pCurrJSONItem->iStartKeyPos = i + 1;
 			}
-			else {
-				pNewDict->m_pParentDict = pCurrDict;
-				pNewDict->m_pParentItem = pCurrJSONItem;
+			else if (c == ':') {
+				pCurrJSONItem->iStartValuePos = i + 1;
+				pCurrJSONItem->iEndKeyPos = i - 1;
 			}
-
-			pCurrDict = pNewDict;
-
-			pCurrJSONItem = createItem("", NULL);
-			pCurrJSONItem->iStartBlockPos = i + 1;
-			pCurrJSONItem->iStartKeyPos = i + 1;
 		}
-		else if (c == ':') {
-			pCurrJSONItem->iStartValuePos = i + 1;
-			pCurrJSONItem->iEndKeyPos = i - 1;
+
+		if (c == '"') {
+			bInQuotes = !bInQuotes;
 		}
 	}
 

@@ -113,7 +113,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
     
     Sprite* spr = new Sprite(pImg, {0, 10});
 
-    //pGameScene->addComponent(spr);
+    pGameScene->addComponent(spr);
 	
 	json.m_pRootDict->print();
 
