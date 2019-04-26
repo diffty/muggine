@@ -11,7 +11,7 @@ JSONReader::JSONReader(const char* path)
 	initList(&llMapStack);
 
 	FILE* fp;
-	if ((fp = fopen(path, "r")) == NULL) {
+	if ((fp = fopen(path, "rb")) == NULL) {
 		printf("Can't read JSON file %s. Aborting.\n", path);
 		exit(1);
 	}
@@ -94,7 +94,7 @@ JSONReader::JSONReader(const char* path)
 }
 
 void JSONReader::fillNode(JSONDictItem* pCurrJSONNode, FILE* fp) {
-	int iKeySize = pCurrJSONNode->iEndKeyPos - pCurrJSONNode->iStartKeyPos;
+	int iKeySize = pCurrJSONNode->iEndKeyPos - pCurrJSONNode->iStartKeyPos + 1;
 	int iValueSize = pCurrJSONNode->iEndValuePos - pCurrJSONNode->iStartValuePos + 1;
 
 	pCurrJSONNode->szKey = new char[iKeySize + 1];
@@ -162,10 +162,10 @@ void JSONReader::trunctStr(char* str, char** result) {
 	int iStrLen = strlen(str);
 	int reversedi;
 
-	for (int i = 0; i < (iStrLen / 2)+1; i++) {
+	for (int i = 0; i < iStrLen; i++) {
 		reversedi = iStrLen - i - 1;
 
-		if (str[i] != ' '
+		if (   str[i] != ' '
 			&& str[i] != '\n'
 			&& str[i] != '\r'
 			&& str[i] != '\t'
@@ -177,7 +177,7 @@ void JSONReader::trunctStr(char* str, char** result) {
 			}
 		}
 
-		if (str[reversedi] != ' '
+		if (   str[reversedi] != ' '
 			&& str[reversedi] != '\n'
 			&& str[reversedi] != '\r'
 			&& str[reversedi] != '\t'
