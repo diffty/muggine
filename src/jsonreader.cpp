@@ -25,6 +25,8 @@ JSONReader::JSONReader(const char* path)
 	JSONDict* pCurrDict = NULL;
 
 	bool bInQuotes = false;
+    bool bItemJustLoaded = false;
+    
 	EContentType eInContent = EContentType_UNDEFINED;
 	
 	for (int i = 0; i < fileSize; i++) {
@@ -38,24 +40,34 @@ JSONReader::JSONReader(const char* path)
 			pCurrJSONItem->iEndBlockPos = i - 1;
 
 			if (c == '}' || c == ']') {
-				if (pCurrJSONItem->isValid()) {
-					this->fillNode(pCurrJSONItem, fp);
-					this->parseNode(pCurrJSONItem);
+                if (pCurrJSONItem->iStartBlockPos < pCurrJSONItem->iEndBlockPos) {
+                    if (pCurrJSONItem->isValid()) {
+                        this->fillNode(pCurrJSONItem, fp);
+                        this->parseNode(pCurrJSONItem);
+                        
+                        if (pCurrDict->m_eNodeType == EContentType_DICT) {
+                            pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
+                        }
+                        else if (pCurrDict->m_eNodeType == EContentType_LIST) {
+                            pCurrDict->m_pContentList.push_back(pCurrJSONItem);
+                        }
+                    }
+                    
+                    //pCurrJSONItem->eType = eInContent;
 
-					if (eInContent == EContentType_DICT) {
-						pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
-					}
-					else if (eInContent == EContentType_LIST) {
-						pCurrDict->m_pContentList.push_back(pCurrJSONItem);
-					}
-				}
+                    pCurrJSONItem = pCurrDict->m_pParentItem;
 
-				pCurrJSONItem = pCurrDict->m_pParentItem;
-
-				if (pCurrJSONItem) {
-					pCurrJSONItem->pValue = (void*)pCurrDict;
-					pCurrJSONItem->eType = eInContent;
-				}
+                    if (pCurrJSONItem) {
+                        pCurrJSONItem->pValue = (void*)pCurrDict;
+                    }
+                }
+                else {
+                    pCurrJSONItem = pCurrDict->m_pParentItem;
+                    
+                    if (pCurrJSONItem) {
+                        pCurrJSONItem->pValue = (void*)pCurrDict;
+                    }
+                }
 
 				pCurrDict = pCurrDict->m_pParentDict;
 			}
@@ -63,14 +75,12 @@ JSONReader::JSONReader(const char* path)
 				this->fillNode(pCurrJSONItem, fp);
 				this->parseNode(pCurrJSONItem);
 
-				//pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
-
-				if (eInContent == EContentType_DICT) {
-					pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
-				}
-				else if (eInContent == EContentType_LIST) {
-					pCurrDict->m_pContentList.push_back(pCurrJSONItem);
-				}
+                if (pCurrDict->m_eNodeType == EContentType_DICT) {
+                    pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
+                }
+                else if (pCurrDict->m_eNodeType == EContentType_LIST) {
+                    pCurrDict->m_pContentList.push_back(pCurrJSONItem);
+                }
 
 				pCurrJSONItem = createItem("", NULL);
 				pCurrJSONItem->iStartBlockPos = i + 1;
@@ -85,22 +95,25 @@ JSONReader::JSONReader(const char* path)
 				if (m_pRootDict == NULL) {
 					m_pRootDict = pNewDict;
 				}
-				else {
-					pNewDict->m_pParentDict = pCurrDict;
-					pNewDict->m_pParentItem = pCurrJSONItem;
-				}
 
+                pNewDict->m_pParentDict = pCurrDict;
+                pNewDict->m_pParentItem = pCurrJSONItem;
+                
 				pCurrDict = pNewDict;
 
 				pCurrJSONItem = createItem("", NULL);
 				pCurrJSONItem->iStartBlockPos = i + 1;
 				pCurrJSONItem->iStartKeyPos = i + 1;
+                
+                if (m_pRootItem == NULL) {
+                    m_pRootItem = pCurrJSONItem;
+                }
 
 				if (c == '{') {
-					eInContent = EContentType_DICT;
+					pCurrDict->m_eNodeType = EContentType_DICT;
 				}
 				else if (c == '[') {
-					eInContent = EContentType_LIST;
+					pCurrDict->m_eNodeType = EContentType_LIST;
 				}
 			}
 			else if (c == ':') {

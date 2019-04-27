@@ -15,7 +15,7 @@
 class JSONDict;
 class JSONDictItem;
 
-typedef std::map<std::string, JSONDictItem*> json_dict_map;
+typedef std::map<std::string, JSONDictItem*> json_dict;
 typedef std::vector<JSONDictItem*> json_list;
 
 enum EContentType {
@@ -50,8 +50,6 @@ public:
 
 	bool isValid() {
 		return iEndValuePos != -1
-			//&& iStartValuePos != -1
-			//&& iEndKeyPos != -1
 			&& iStartKeyPos != -1;
 	}
 };
@@ -62,55 +60,84 @@ public:
 	JSONDict() {};
 	~JSONDict() {};
 
-	void print(int level=0) {
-		json_dict_map::iterator it = this->m_pContentDict.begin();
-
-		while (it != this->m_pContentDict.end()) {
-			std::string szKey = it->first;
-
-			JSONDictItem* pItemValue = it->second;
-
-			for (int i = 0; i < level; i++) printf("  ");
-
-			switch (pItemValue->eType) {
-			case EContentType_INT:
-			{
-				int* iValue = (int*) pItemValue->pValue;
-				printf("%s: %i\n", szKey.c_str(), *iValue);
-				break;
-			}
-
-			case EContentType_STR:
-			{
-				char* szValue = (char*) pItemValue->pValue;
-				printf("%s: %s\n", szKey.c_str(), szValue);
-				break;
-			}
-
-			case EContentType_DICT:
-			{
-				JSONDict* pJsonDict = (JSONDict*)pItemValue->pValue;
-				printf("%s: \n", szKey.c_str());
-				pJsonDict->print(level+1);
-				break;
-			}
-			case EContentType_LIST:
-			{
-				LinkedList* pLinkedList = (LinkedList*)pItemValue->pValue;
-				printf("%s: \n", szKey.c_str());
-				//pJsonDict->print(level + 1);
-				break;
-			}
-			}
-
-			it++;
-		}
+    void print() {
+        print_dict(this);
+    }
+    
+	void print_value(JSONDictItem* pCurrItemValue, int level=0) {
+        switch (pCurrItemValue->eType) {
+            case EContentType_INT:
+            {
+                int* iValue = (int*) pCurrItemValue->pValue;
+                printf("%i\n", *iValue);
+                break;
+            }
+                
+            case EContentType_STR:
+            {
+                char* szValue = (char*) pCurrItemValue->pValue;
+                printf("%s\n", szValue);
+                break;
+            }
+                
+            case EContentType_DICT:
+            {
+                JSONDict* pJsonDict = (JSONDict*)pCurrItemValue->pValue;
+                this->print_dict(pJsonDict);
+                break;
+            }
+            case EContentType_LIST:
+            {
+                JSONDict* pJsonDict = (JSONDict*)pCurrItemValue->pValue;
+                this->print_dict(pJsonDict);
+                break;
+            }
+        }
 	}
-
+    
+    void print_dict(JSONDict* pJsonDict, int level=0) {
+        switch (pJsonDict->m_eNodeType) {
+            case EContentType_DICT:
+            {
+                json_dict::iterator it = pJsonDict->m_pContentDict.begin();
+                
+                while (it != pJsonDict->m_pContentDict.end()) {
+                    std::string szKey = it->first;
+                    
+                    JSONDictItem* pItemValue = it->second;
+                    
+                    JSONDict* pJsonDict = (JSONDict*)pItemValue->pValue;
+                    for (int i = 0; i < level; i++) printf("  ");
+                    
+                    printf("%s: ", szKey.c_str());
+                    
+                    this->print_value(pItemValue, level+1);
+                    
+                    it++;
+                }
+                break;
+            }
+            case EContentType_LIST:
+            {
+                json_list::iterator it = pJsonDict->m_pContentList.begin();
+                while (it != pJsonDict->m_pContentList.end()) {
+                    JSONDictItem* pItemValue = *it;
+                    
+                    for (int i = 0; i < level; i++) printf("  ");
+                    this->print_value(pItemValue, level+1);
+                    
+                    it++;
+                }
+                break;
+            }
+        }
+    }
+    
 	JSONDict* m_pParentDict = NULL;
 	JSONDictItem* m_pParentItem = NULL;
-	json_dict_map m_pContentDict;
-	json_list     m_pContentList;
+	json_dict m_pContentDict;
+	json_list m_pContentList;
+    EContentType m_eNodeType = EContentType_UNDEFINED;
 };
 
 
@@ -126,6 +153,7 @@ public:
 	void fillNode(JSONDictItem* pJsonNode, FILE* fp);
 
 	JSONDict* m_pRootDict = NULL;
+    JSONDictItem* m_pRootItem = NULL;
 };
 
 

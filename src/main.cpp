@@ -80,7 +80,8 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Result rc = romfsInit();
 #endif
 
-	JSONReader json("D:/test2.json");
+	JSONReader json("data/test.json");
+    json.m_pRootDict->print();
     
 	RscManager rscManager;
     
@@ -115,8 +116,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
     pGameScene->addComponent(spr);
 	
-	json.m_pRootDict->print();
-
     // DEBUG 3DS
 #if DSTEST
     Scene pGameScene;
