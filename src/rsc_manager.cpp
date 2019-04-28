@@ -12,6 +12,44 @@ RscManager::~RscManager() {
 	freeAllRsc();
 }
 
+void RscManager::loadFromJSON(const char* szRscJsonPath) {
+	JSONReader json(szRscJsonPath);
+
+	JSONItem* pStaticSpriteList = json.get<JSONItem*>("static_sprites");
+
+	for (int i = 0; i < pStaticSpriteList->m_contentList.size(); i++) {
+		JSONItem* assetInfoDict = pStaticSpriteList->get<JSONItem*>(i);
+		char* szAssetName  = assetInfoDict->get<char*>("name");
+		char* szPath       = assetInfoDict->get<char*>("path");
+		loadImg(szAssetName, szPath);
+	}
+
+	JSONItem* pAnimatedSpriteList = json.get<JSONItem*>("animated_sprites");
+
+	for (int i = 0; i < pAnimatedSpriteList->m_contentList.size(); i++) {
+		JSONItem* assetInfoDict = pAnimatedSpriteList->get<JSONItem*>(i);
+		char* szAssetName = assetInfoDict->get<char*>("name");
+		char* szPath      = assetInfoDict->get<char*>("path");
+		int* piGridWidth  = assetInfoDict->get<int*>("gridWidth");
+		int* piGridHeight = assetInfoDict->get<int*>("gridHeight");
+		int* piNbItems    = assetInfoDict->get<int*>("nbItems");
+		loadSprSht(szAssetName, szPath, *piGridWidth, *piGridHeight, *piNbItems);
+	}
+
+	JSONItem* pFontList = json.get<JSONItem*>("fonts");
+
+	for (int i = 0; i < pFontList->m_contentList.size(); i++) {
+		JSONItem* assetInfoDict = pFontList->get<JSONItem*>(i);
+		char* szAssetName = assetInfoDict->get<char*>("name");
+		char* szPath      = assetInfoDict->get<char*>("path");
+		int* piGridWidth  = assetInfoDict->get<int*>("gridWidth");
+		int* piGridHeight = assetInfoDict->get<int*>("gridHeight");
+		int* piNbItems    = assetInfoDict->get<int*>("nbItems");
+		int* piSizeOffset = assetInfoDict->get<int*>("sizeOffset");
+		loadFont(szAssetName, szPath, *piGridWidth, *piGridHeight, *piNbItems, *piSizeOffset);
+	}
+}
+
 bool RscManager::loadImg(const char* szRscName, const char* szImgPath) {
     char* szConformedPath = platformConformPath(szImgPath);
     Image* newImage = new Image(szConformedPath);
@@ -81,6 +119,8 @@ bool RscManager::loadFont(const char* szRscName, const char* szImgPath, int iGri
         strcpy((char*) szImgPath, newRscData->szPath);
         newRscData->pData = (void *) pNewFont;
 
+		newRscNode->pData = (void *)newRscData;
+
 		addNodeToList(&m_rscList, newRscNode);
 
 		return true;
@@ -104,7 +144,7 @@ void RscManager::unloadRsc(uint rscId) {
 	}
 }
 
-Image* RscManager::getImgRsc(char* szRscName) {
+Image* RscManager::getImgRsc(const char* szRscName) {
     LLNode* rscNode = getRscNode(szRscName);
     
     if (rscNode) {
@@ -122,17 +162,37 @@ Image* RscManager::getImgRsc(uint rscId) {
         return (Image*) ((Rsc*) rscNode->pData)->pData;
     }
     else {
-        return NULL;
+		return NULL;
     }
 }
 
-// TODO: faire un truc qui fait que tu vas pas
-// TODO: piocher a l'aveugle dans les ressources
+SpriteSheet* RscManager::getSprShtRsc(const char* szRscName) {
+	LLNode* rscNode = getRscNode(szRscName);
+
+	if (rscNode) {
+		return (SpriteSheet*)((Rsc*)rscNode->pData)->pData;
+	}
+	else {
+		return NULL;
+	}
+}
+
 SpriteSheet* RscManager::getSprShtRsc(uint rscId) {
 	LLNode* rscNode = getRscNode(rscId);
 
 	if (rscNode) {
-		return (SpriteSheet*) ((Rsc*) rscNode->pData)->pData;
+		return (SpriteSheet*)((Rsc*)rscNode->pData)->pData;
+	}
+	else {
+		return NULL;
+	}
+}
+
+Font* RscManager::getFontRsc(const char* szRscName) {
+	LLNode* rscNode = getRscNode(szRscName);
+
+	if (rscNode) {
+		return (Font*)((Rsc*)rscNode->pData)->pData;
 	}
 	else {
 		return NULL;
@@ -162,12 +222,14 @@ LLNode* RscManager::getRscNode(const char* szRscName) {
         }
         currNode = currNode->pNext;
     }
+
+	printf("<!> Can't find resource named %s in loaded resources.\n", szRscName);
     return NULL;
 }
 
 LLNode* RscManager::getRscNode(uint rscId) {
 	if (rscId >= m_rscList.size) {
-		printf("<!> Invalid resource id: %d\n", rscId);
+		printf("<!> Can't find resource #%i in loaded resources.\n", rscId);
 		return NULL;
 	}
 

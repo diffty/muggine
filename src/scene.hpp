@@ -18,7 +18,7 @@ private:
 	LinkedList m_llHoverAwareWidgets;
 
 public:
-	Scene();
+	Scene(char* szName = NULL);
     ~Scene();
 	
 	void addComponent(IWidget* w);

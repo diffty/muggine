@@ -10,7 +10,7 @@ XXLevelFailScreen::XXLevelFailScreen() {
 	vTextPos.x = 130;
 	vTextPos.y = 80;
 
-	m_pLevelTextLabel = new Text("LEVEL FAILED", RscManager::get()->getFontRsc(0), vTextPos);
+	m_pLevelTextLabel = new Text("LEVEL FAILED", RscManager::get()->getFontRsc("small-font"), vTextPos);
 }
 
 

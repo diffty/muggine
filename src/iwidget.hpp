@@ -23,34 +23,34 @@ protected:
 	LinkedList m_llChildrenWidgets;
 	LinkedList m_llWidgetNodesToDelete;
 	int m_iDrawOrder;
+	char* m_szName = NULL;
 
 
 public:
-	IWidget(float x, float y, float w, float h)
+	IWidget(float x, float y, float w, float h, char* szName=NULL)
 		: IDrawable(),
 		m_rect(x, y, w, h) {
 		
-        init();
+        init(szName);
 	};
 
-	IWidget(float x, float y)
+	IWidget(float x, float y, char* szName = NULL)
 		: IDrawable(),
 		m_rect(x, y, 0., 0.) {
             
-        init();
-
+        init(szName);
 	};
 
-	IWidget()
+	IWidget(char* szName = NULL)
 		: IDrawable(),
 		m_rect(0., 0., 0., 0.) {
             
-        init();
+        init(szName);
 	};
 
 	virtual ~IWidget();
     
-    void init();
+    void init(char* szName = NULL);
 
 	Rectf* getRect() { return &m_rect; };
 
@@ -70,6 +70,9 @@ public:
     
 	void setActive(bool bIsActive);
 	bool isActive();
+
+	void setName(char* szNewName);
+	char* getName();
 
 	void addChildWidget(IWidget* pWidget);
 	void removeChildWidget(IWidget* pWidget);

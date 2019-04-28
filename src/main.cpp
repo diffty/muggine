@@ -32,6 +32,7 @@
 #include "game_mode.hpp"
 #include "xx_main_menu.hpp"
 #include "jsonreader.hpp"
+#include "scenemanager.hpp"
 
 #include <time.h>
 
@@ -80,19 +81,9 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Result rc = romfsInit();
 #endif
 
-	JSONReader json("data/test.json");
-    json.m_pRootDict->print();
-    
 	RscManager rscManager;
+	rscManager.loadFromJSON("data/resources.json");
     
-    rscManager.loadImg("simon", "data/simon.bmp");
-
-#if DSTEST
-    rscManager.loadSprSht("data/simon.bmp", 1, 1, 1);                   // 0
-    rscManager.loadSprSht("data/animtest3.bmp", 2, 2, 4);               // 1
-    rscManager.loadImg("data/fond.bmp");                                // 2
-#endif
-
 	// Sound system
 	//Sound sound;
 	//sound.addSound("data/sound/intro-rix.mp3", true);
@@ -105,75 +96,34 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Scene* pMenuScene = gameManager.getMenuScene();
 
 	pGfx->SetDoubleBuffering(false);
-
 	uint8* fb = pGfx->GetFramebuffer();
-
 	pSys->initLoop();
-    
-    Image* pImg = rscManager.getImgRsc("simon");
-    
-    Sprite* spr = new Sprite(pImg, {0, 10});
-
-    pGameScene->addComponent(spr);
-	
-    // DEBUG 3DS
-#if DSTEST
-    Scene pGameScene;
-    AnimatedSprite* testSpr = new AnimatedSprite(rscManager.getSprShtRsc(1), 20, 20);
-    //Sprite testSpr(rscManager.getSprShtRsc(0), {20, 20});
-    
-    // pGameScene.addComponent(testSpr);
-    
-    SpriteSheet* sprSht = rscManager.getSprShtRsc(1);
-    Image* pImg = rscManager.getImgRsc(2);
-#endif
     
     int frameId = 0;
     int x = 0, y = 0;
-    
+
+	//Sprite simonSpr = Sprite(rscManager.getImgRsc("simon"), {12, 50});
+	//pGameScene->addComponent(&simonSpr);
+
+	SceneManager sceneManager;
+	sceneManager.loadFromJSON("data/scene01.json");
+
+	Scene* pCurrScene = sceneManager.getScene("Scene01");
+
     // Main loop
 	while (pSys->mainLoop())
 	{
 		double deltaTime = pSys->getDeltaTime();
         
         pGfx->FillWithColor(0x00);
-        
-        if (pSys->getInputSys()->IsJoyBtnPressed(JOY_BTN_START)) break;
-        
+
 		// printf("FPS: %u\n", (uint) (1./deltaTime));
         
-		gameManager.update();
-		gameManager.draw(fb);
-        
-#if DSTEST
-        // DEBUG 3DS
-        if (pSys->getInputSys()->IsJoyBtnPressed(JOY_DPAD_LEFT)) {
-            testSpr->translate(-1, 0);
-            x--;
-        }
-        else if (pSys->getInputSys()->IsJoyBtnPressed(JOY_DPAD_RIGHT)) {
-            testSpr->translate(1, 0);
-            x++;
-        }
-        if (pSys->getInputSys()->IsJoyBtnPressed(JOY_DPAD_UP)) {
-            testSpr->translate(0, -1);
-            y--;
-        }
-        else if (pSys->getInputSys()->IsJoyBtnPressed(JOY_DPAD_DOWN)) {
-            testSpr->translate(0, 1);
-            y++;
-        }
-        
-        if (pSys->getInputSys()->IsJoyBtnPressed(JOY_BTN_1)) {
-            frameId = (frameId + 1) % 4;
-        }
-        
-        pImg->draw(fb, 10, 10, 10, 10, 300, 220, false, false);
-        sprSht->draw(fb, frameId, x, y, false, true);
-        
-        pGameScene.update();
-        pGameScene.draw(fb);
-#endif
+		//gameManager.update();
+		//gameManager.draw(fb);
+
+		pCurrScene->update();
+		pCurrScene->draw(fb);
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
@@ -201,7 +151,6 @@ int main(int argc, char **argv)
 
 	gfx.Init();
     pSys->initConsole();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
-    // printf("lol");
 
 	MainApp(pSys, &gfx);
 

@@ -18,9 +18,11 @@ IWidget::~IWidget() {
 	clearList(&m_llChildrenWidgets);
 
 	garbageCollect();
+
+	delete m_szName;
 };
 
-void IWidget::init() {
+void IWidget::init(char* szName) {
     m_pRootWidget = NULL;
     m_pParentWidget = NULL;
     
@@ -28,6 +30,8 @@ void IWidget::init() {
     m_bIsActive = true;
     
     m_iDrawOrder = 0;
+
+	setName(szName);
     
     initList(&m_llChildrenWidgets);
     initList(&m_llWidgetNodesToDelete);
@@ -114,6 +118,26 @@ void IWidget::setActive(bool bIsActive) {
 
 bool IWidget::isActive() {
 	return m_bIsActive;
+}
+
+void IWidget::setName(char* szNewName) {
+	delete m_szName;
+	m_szName = NULL;
+
+	if (szNewName != NULL) {
+		int iNameStrLen = strlen(szNewName);
+		m_szName = new char[iNameStrLen +1];
+		strcpy(m_szName, szNewName);
+		m_szName[iNameStrLen] = '\0';
+	}
+	else {
+		m_szName = new char[1];
+		m_szName[0] = '\0';
+	}
+}
+
+char* IWidget::getName() {
+	return m_szName;
 }
 
 void IWidget::setRootWidget(IWidget* pRootWidget) {

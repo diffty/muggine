@@ -1,7 +1,9 @@
 #include "scene.hpp"
 
 
-Scene::Scene() {
+Scene::Scene(char* szName) :
+	IWidget(szName) {
+
 	initList(&m_llHoverAwareWidgets);
 	m_pRootWidget = this;
 }
@@ -22,7 +24,13 @@ void Scene::removeComponent(IWidget* pWidget) {
 }
 
 IWidget* Scene::getNComponent(int n) {
-	return (IWidget*) getNodeInList(&m_llChildrenWidgets, (uint) n);
+	LLNode* pComponentNode = getNodeInList(&m_llChildrenWidgets, (uint)n);
+	if (pComponentNode != NULL) {
+		return (IWidget*) pComponentNode->pData;
+	}
+	else {
+		return NULL;
+	}
 }
 
 IWidget* Scene::getFirstComponent() {

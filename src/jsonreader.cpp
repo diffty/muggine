@@ -20,9 +20,9 @@ JSONReader::JSONReader(const char* path)
 	int fileSize = ftell(fp);
 	rewind(fp);
 
-	JSONDictItem* pCurrJSONItem = NULL;
+	JSONItemKeyValue* pCurrJSONItem = NULL;
 
-	JSONDict* pCurrDict = NULL;
+	JSONItem* pCurrDict = NULL;
 
 	bool bInQuotes = false;
     bool bItemJustLoaded = false;
@@ -43,54 +43,46 @@ JSONReader::JSONReader(const char* path)
                 if (pCurrJSONItem->iStartBlockPos < pCurrJSONItem->iEndBlockPos) {
                     if (pCurrJSONItem->isValid()) {
                         this->fillNode(pCurrJSONItem, fp);
-                        this->parseNode(pCurrJSONItem);
-                        
-                        if (pCurrDict->m_eNodeType == EContentType_DICT) {
-                            pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
-                        }
-                        else if (pCurrDict->m_eNodeType == EContentType_LIST) {
-                            pCurrDict->m_pContentList.push_back(pCurrJSONItem);
-                        }
-                    }
-                    
-                    //pCurrJSONItem->eType = eInContent;
-
-                    pCurrJSONItem = pCurrDict->m_pParentItem;
-
-                    if (pCurrJSONItem) {
-                        pCurrJSONItem->pValue = (void*)pCurrDict;
+						if (this->parseNode(pCurrJSONItem)) {
+							if (pCurrDict->m_eNodeType == EContentType_DICT) {
+								pCurrDict->m_contentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
+							}
+							else if (pCurrDict->m_eNodeType == EContentType_LIST) {
+								pCurrDict->m_contentList.push_back(pCurrJSONItem);
+							}
+						}
                     }
                 }
-                else {
-                    pCurrJSONItem = pCurrDict->m_pParentItem;
-                    
-                    if (pCurrJSONItem) {
-                        pCurrJSONItem->pValue = (void*)pCurrDict;
-                    }
-                }
+
+				pCurrJSONItem = pCurrDict->m_pParentItem;
+
+				if (pCurrJSONItem) {
+					pCurrJSONItem->pValue = (void*)pCurrDict;
+				}
 
 				pCurrDict = pCurrDict->m_pParentDict;
 			}
 			else {
 				this->fillNode(pCurrJSONItem, fp);
-				this->parseNode(pCurrJSONItem);
-
-                if (pCurrDict->m_eNodeType == EContentType_DICT) {
-                    pCurrDict->m_pContentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
-                }
-                else if (pCurrDict->m_eNodeType == EContentType_LIST) {
-                    pCurrDict->m_pContentList.push_back(pCurrJSONItem);
-                }
+				if (this->parseNode(pCurrJSONItem)) {
+					if (pCurrDict->m_eNodeType == EContentType_DICT) {
+						pCurrDict->m_contentDict[std::string(pCurrJSONItem->szKey)] = pCurrJSONItem;
+					}
+					else if (pCurrDict->m_eNodeType == EContentType_LIST) {
+						pCurrDict->m_contentList.push_back(pCurrJSONItem);
+					}
+				}
 
 				pCurrJSONItem = createItem("", NULL);
 				pCurrJSONItem->iStartBlockPos = i + 1;
 				pCurrJSONItem->iStartKeyPos = i + 1;
+				pCurrJSONItem->m_pParent = pCurrDict;
 			}
 		}
 
 		if (!bInQuotes) {
 			if (c == '{' || c == '[') {
-				JSONDict* pNewDict = new JSONDict();
+				JSONItem* pNewDict = new JSONItem();
 
 				if (m_pRootDict == NULL) {
 					m_pRootDict = pNewDict;
@@ -104,6 +96,7 @@ JSONReader::JSONReader(const char* path)
 				pCurrJSONItem = createItem("", NULL);
 				pCurrJSONItem->iStartBlockPos = i + 1;
 				pCurrJSONItem->iStartKeyPos = i + 1;
+				pCurrJSONItem->m_pParent = pCurrDict;
                 
                 if (m_pRootItem == NULL) {
                     m_pRootItem = pCurrJSONItem;
@@ -134,7 +127,7 @@ JSONReader::JSONReader(const char* path)
 	fclose(fp);
 }
 
-void JSONReader::fillNode(JSONDictItem* pCurrJSONNode, FILE* fp) {
+void JSONReader::fillNode(JSONItemKeyValue* pCurrJSONNode, FILE* fp) {
 	// It's a list!
 	if (pCurrJSONNode->iStartKeyPos != -1
 		&& pCurrJSONNode->iStartValuePos == -1
@@ -162,28 +155,34 @@ void JSONReader::fillNode(JSONDictItem* pCurrJSONNode, FILE* fp) {
 	pCurrJSONNode->szValue[iValueSize] = '\0';
 }
 
-void JSONReader::parseNode(JSONDictItem* pJsonNode) {
+bool JSONReader::parseNode(JSONItemKeyValue* pJsonNode) {
 	char* resultKey = NULL;
 	char* resultValue = NULL;
 
-	if (pJsonNode->eType == EContentType_DICT) {
-		this->trunctStr(pJsonNode->szKey, &resultKey);
-		int iKeySize = strlen(resultKey);
-
-		if (resultKey[0] == '"' && resultKey[iKeySize - 1] == '"') {
-			delete pJsonNode->szKey;
-			pJsonNode->szKey = new char[iKeySize - 2];
-			spliceString(resultKey, 1, iKeySize - 2, pJsonNode->szKey);
-			delete resultKey;
+	if (pJsonNode->m_pParent->m_eNodeType == EContentType_DICT) {
+		if (!this->trunctStr(pJsonNode->szKey, &resultKey)) {
+			pJsonNode->szKey = NULL;
 		}
 		else {
-			printf("<!!> Something bad happened in parseNode: key must be a string.\n");
-			printf("\tCurrent thing parsed : %s\n", pJsonNode->szKey);
-			//exit(1);
+			int iKeySize = strlen(resultKey);
+
+			if (resultKey[0] == '"' && resultKey[iKeySize - 1] == '"') {
+				delete pJsonNode->szKey;
+				pJsonNode->szKey = new char[iKeySize - 2];
+				spliceString(resultKey, 1, iKeySize - 2, pJsonNode->szKey);
+				delete resultKey;
+			}
+			else {
+				printf("<!!> Something bad happened in parseNode: key must be a string.\n");
+				printf("Current thing parsed : %s\n", pJsonNode->szKey);
+			}
 		}
 	}
 
-	this->trunctStr(pJsonNode->szValue, &resultValue);
+	if (!this->trunctStr(pJsonNode->szValue, &resultValue)) {
+		pJsonNode->szValue = NULL;
+		return false;
+	}
 
 	int iValueSize = strlen(resultValue);
 	
@@ -200,16 +199,20 @@ void JSONReader::parseNode(JSONDictItem* pJsonNode) {
 		pJsonNode->eType = EContentType_LIST;
 	}
 	else if (pJsonNode->eType == EContentType_UNDEFINED) {
-		int* intValueContent = new int;
-		*intValueContent = intFromStr(resultValue);
-		pJsonNode->pValue = (void*)intValueContent;
-		pJsonNode->eType = EContentType_INT;
+		if (strlen(resultValue) > 0) {
+			int* intValueContent = new int;
+			*intValueContent = atoi(resultValue);
+			pJsonNode->pValue = (void*)intValueContent;
+			pJsonNode->eType = EContentType_INT;
+		}
 	}
 
 	delete resultValue;
+
+	return pJsonNode->eType != EContentType_UNDEFINED;
 }
 
-void JSONReader::trunctStr(char* str, char** result) {
+bool JSONReader::trunctStr(char* str, char** result) {
 	int keyStartIdx = -1;
 	int keyEndIdx = -1;
 
@@ -244,19 +247,25 @@ void JSONReader::trunctStr(char* str, char** result) {
 		}
 	}
 
-	int iParsedSize = keyEndIdx - keyStartIdx + 1;
+	if (keyEndIdx != -1 && keyStartIdx != -1) {
+		int iParsedSize = keyEndIdx - keyStartIdx + 1;
 
-	if (*result != NULL) {
-		delete *result;
+		if (*result != NULL) {
+			delete *result;
+		}
+		*result = new char[iParsedSize + 1];
+
+		memcpy(*result, str + keyStartIdx, iParsedSize);
+		(*result)[iParsedSize] = '\0';
+		return true;
 	}
-	*result = new char[iParsedSize + 1];
-
-	memcpy(*result, str + keyStartIdx, iParsedSize);
-	(*result)[iParsedSize] = '\0';
+	else {
+		return false;
+	}
 }
 
-JSONDictItem* JSONReader::createItem(const char* szKey, void* pValue) {
-	JSONDictItem* newJSONNode = new JSONDictItem();
+JSONItemKeyValue* JSONReader::createItem(const char* szKey, void* pValue) {
+	JSONItemKeyValue* newJSONNode = new JSONItemKeyValue();
 
 	newJSONNode->szKey = new char[strlen(szKey) + 1];
 	strcpy(newJSONNode->szKey, szKey);

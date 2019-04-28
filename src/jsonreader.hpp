@@ -12,11 +12,12 @@
 #include "common_tools.hpp"
 
 
-class JSONDict;
-class JSONDictItem;
+class JSONItem;
+class JSONItemKeyValue;
 
-typedef std::map<std::string, JSONDictItem*> json_dict;
-typedef std::vector<JSONDictItem*> json_list;
+typedef std::map<std::string, JSONItemKeyValue*> json_dict_t;
+typedef std::vector<JSONItemKeyValue*> json_list_t;
+
 
 enum EContentType {
 	EContentType_UNDEFINED,
@@ -24,14 +25,14 @@ enum EContentType {
 	EContentType_STR,
 	EContentType_DICT,
 	EContentType_LIST,
+	EContentType_EMPTY,
 };
 
 
-
-class JSONDictItem {
+class JSONItemKeyValue {
 public:
-	JSONDictItem() {};
-	~JSONDictItem() {};
+	JSONItemKeyValue() {};
+	~JSONItemKeyValue() {};
 
 	char* szKey;
 	char* szValue;
@@ -46,7 +47,7 @@ public:
 	int iStartValuePos = -1;
 	int iEndValuePos = -1;
 
-	JSONDict* m_pParent = NULL;
+	JSONItem* m_pParent = NULL;
 
 	bool isValid() {
 		return iEndValuePos != -1
@@ -55,16 +56,43 @@ public:
 };
 
 
-class JSONDict {
+class JSONItem {
 public:
-	JSONDict() {};
-	~JSONDict() {};
+	JSONItem() {};
+	~JSONItem() {};
 
-    void print() {
+	JSONItem* m_pParentDict = NULL;
+	JSONItemKeyValue* m_pParentItem = NULL;
+	EContentType m_eNodeType = EContentType_UNDEFINED;
+	json_dict_t m_contentDict;
+	json_list_t m_contentList;
+
+	template <typename T>
+	T get(char* szKeyName) {
+		if (m_contentDict.count(szKeyName) > 0 ) {
+			return (T) m_contentDict[szKeyName]->pValue;
+		}
+		else {
+			return NULL;
+		}
+
+	}
+	
+	template <typename T>
+	T get(int iItemNum) {
+		if (m_contentList.size() > iItemNum) {
+			return (T)m_contentList[iItemNum]->pValue;
+		}
+		else {
+			return NULL;
+		}
+	}
+
+	void print() {
         print_dict(this);
     }
     
-	void print_value(JSONDictItem* pCurrItemValue, int level=0) {
+	void print_value(JSONItemKeyValue* pCurrItemValue, int level=0) {
         switch (pCurrItemValue->eType) {
             case EContentType_INT:
             {
@@ -82,36 +110,36 @@ public:
                 
             case EContentType_DICT:
             {
-                JSONDict* pJsonDict = (JSONDict*)pCurrItemValue->pValue;
-                this->print_dict(pJsonDict);
+                JSONItem* pJsonDict = (JSONItem*)pCurrItemValue->pValue;
+                this->print_dict(pJsonDict, level + 1);
                 break;
             }
             case EContentType_LIST:
             {
-                JSONDict* pJsonDict = (JSONDict*)pCurrItemValue->pValue;
-                this->print_dict(pJsonDict);
+                JSONItem* pJsonDict = (JSONItem*)pCurrItemValue->pValue;
+                this->print_dict(pJsonDict, level + 1);
                 break;
             }
         }
 	}
     
-    void print_dict(JSONDict* pJsonDict, int level=0) {
+    void print_dict(JSONItem* pJsonDict, int level=0) {
         switch (pJsonDict->m_eNodeType) {
             case EContentType_DICT:
             {
-                json_dict::iterator it = pJsonDict->m_pContentDict.begin();
+                json_dict_t::iterator it = pJsonDict->m_contentDict.begin();
                 
-                while (it != pJsonDict->m_pContentDict.end()) {
+                while (it != pJsonDict->m_contentDict.end()) {
                     std::string szKey = it->first;
                     
-                    JSONDictItem* pItemValue = it->second;
+                    JSONItemKeyValue* pItemValue = it->second;
                     
-                    JSONDict* pJsonDict = (JSONDict*)pItemValue->pValue;
+                    JSONItem* pJsonDict = (JSONItem*)pItemValue->pValue;
                     for (int i = 0; i < level; i++) printf("  ");
                     
                     printf("%s: ", szKey.c_str());
                     
-                    this->print_value(pItemValue, level+1);
+                    this->print_value(pItemValue, level + 1);
                     
                     it++;
                 }
@@ -119,12 +147,12 @@ public:
             }
             case EContentType_LIST:
             {
-                json_list::iterator it = pJsonDict->m_pContentList.begin();
-                while (it != pJsonDict->m_pContentList.end()) {
-                    JSONDictItem* pItemValue = *it;
+                json_list_t::iterator it = pJsonDict->m_contentList.begin();
+                while (it != pJsonDict->m_contentList.end()) {
+                    JSONItemKeyValue* pItemValue = *it;
                     
                     for (int i = 0; i < level; i++) printf("  ");
-                    this->print_value(pItemValue, level+1);
+                    this->print_value(pItemValue, level + 1);
                     
                     it++;
                 }
@@ -132,12 +160,6 @@ public:
             }
         }
     }
-    
-	JSONDict* m_pParentDict = NULL;
-	JSONDictItem* m_pParentItem = NULL;
-	json_dict m_pContentDict;
-	json_list m_pContentList;
-    EContentType m_eNodeType = EContentType_UNDEFINED;
 };
 
 
@@ -147,13 +169,18 @@ public:
 	JSONReader(const char* path);
 	~JSONReader();
 
-	JSONDictItem* createItem(const char* szKey, void* pValue);
-	void parseNode(JSONDictItem*);
-	void trunctStr(char* str, char** result);
-	void fillNode(JSONDictItem* pJsonNode, FILE* fp);
+	JSONItemKeyValue* createItem(const char* szKey, void* pValue);
+	bool parseNode(JSONItemKeyValue*);
+	void fillNode(JSONItemKeyValue* pJsonNode, FILE* fp);
+	bool trunctStr(char* str, char** result);
 
-	JSONDict* m_pRootDict = NULL;
-    JSONDictItem* m_pRootItem = NULL;
+	template <typename T>
+	T get(char* szKeyName) {
+		return m_pRootDict->get<T>(szKeyName);
+	}
+
+	JSONItem* m_pRootDict = NULL;
+    JSONItemKeyValue* m_pRootItem = NULL;
 };
 
 

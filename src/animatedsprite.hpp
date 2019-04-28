@@ -37,8 +37,8 @@ private:
     float m_fCurrFrameTime;
     
 public:
-    AnimatedSprite(SpriteSheet* pSprSht, vect2df_t vPos, float fPlaySpeed = 1.);
-	AnimatedSprite(SpriteSheet* pSprSht, float fXPos, float fYPos, float fPlaySpeed = 1.);
+    AnimatedSprite(SpriteSheet* pSprSht, vect2df_t vPos, float fPlaySpeed = 1., char* szName = NULL);
+	AnimatedSprite(SpriteSheet* pSprSht, float fXPos, float fYPos, float fPlaySpeed = 1., char* szName = NULL);
     ~AnimatedSprite();
     
     void init(SpriteSheet* pSprSht, float fXPos, float fYPos, float fPlaySpeed = 1.);

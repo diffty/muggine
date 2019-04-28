@@ -14,10 +14,10 @@ protected:
 	uint m_uFrameNb;
 
 public:
-	Sprite(Image* pImg, vect2df_t vPos);
-	Sprite(Image* pImg, float fXPos, float fYPos);
-	Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos);
-	Sprite(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos);
+	Sprite(Image* pImg, vect2df_t vPos, char* szName = NULL);
+	Sprite(Image* pImg, float fXPos, float fYPos, char* szName = NULL);
+	Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, char* szName = NULL);
+	Sprite(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos, char* szName = NULL);
     
     void init(Image* pImg, float fXPos, float fYPos);
     void init(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos);

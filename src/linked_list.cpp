@@ -143,7 +143,7 @@ int countNodesInList(LinkedList* pList) {
 
 LLNode* getNodeInList(LinkedList* pList, uint nodeNum) {
     if (nodeNum >= pList->size) {
-        //printf("<!> Out of list node number : %d\n", nodeNum);
+        printf("<!> Out of list node number : %d\n", nodeNum);
         return NULL;
     }
     

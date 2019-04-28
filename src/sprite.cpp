@@ -1,26 +1,26 @@
 #include "sprite.hpp"
 
 
-Sprite::Sprite(Image* pImg, vect2df_t vPos) :
-	IWidget(vPos.x, vPos.y)
+Sprite::Sprite(Image* pImg, vect2df_t vPos, char* szName) :
+	IWidget(vPos.x, vPos.y, szName)
 {
 	init(pImg, vPos.x, vPos.y);
 }
 
-Sprite::Sprite(Image* pImg, float fXPos, float fYPos) :
-	IWidget(fXPos, fYPos)
+Sprite::Sprite(Image* pImg, float fXPos, float fYPos, char* szName) :
+	IWidget(fXPos, fYPos, szName)
 {
 	init(pImg, fXPos, fYPos);
 }
 
-Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos) :
-	IWidget(vPos.x, vPos.y)
+Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, char* szName) :
+	IWidget(vPos.x, vPos.y, szName)
 {
 	init(pSprSht, uFrameNb, vPos.x, vPos.y);
 }
 
-Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos) :
-	IWidget(fXPos, fYPos) 
+Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos, char* szName) :
+	IWidget(fXPos, fYPos, szName)
 {
 	init(pSprSht, uFrameNb, fXPos, fYPos);
 }

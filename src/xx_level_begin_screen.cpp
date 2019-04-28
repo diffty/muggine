@@ -10,10 +10,10 @@ XXLevelBeginScreen::XXLevelBeginScreen(int iLevelNum) {
 	vTextPos.x = 135;
 	vTextPos.y = 80;
 
-	m_pLevelTextLabel = new Text("LEVEL", RscManager::get()->getFontRsc(0), vTextPos);
+	m_pLevelTextLabel = new Text("LEVEL", RscManager::get()->getFontRsc("small-font"), vTextPos);
 
 	vTextPos.x += 40;
-	m_pLevelNumTextLabel = new Text(iLevelNum, RscManager::get()->getFontRsc(0), vTextPos);
+	m_pLevelNumTextLabel = new Text(iLevelNum, RscManager::get()->getFontRsc("small-font"), vTextPos);
 }
 
 

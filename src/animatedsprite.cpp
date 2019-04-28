@@ -9,14 +9,14 @@
 #include "animatedsprite.hpp"
 
 
-AnimatedSprite::AnimatedSprite(SpriteSheet* pSprSht, vect2df_t vPos, float fPlaySpeed) :
-    Sprite(pSprSht, 0, vPos.x, vPos.y)
+AnimatedSprite::AnimatedSprite(SpriteSheet* pSprSht, vect2df_t vPos, float fPlaySpeed, char* szName) :
+    Sprite(pSprSht, 0, vPos.x, vPos.y, szName)
 {
 	init(pSprSht, 0, vPos.x, vPos.y);
 }
 
-AnimatedSprite::AnimatedSprite(SpriteSheet* pSprSht, float fXPos, float fYPos, float fPlaySpeed) :
-	Sprite(pSprSht, 0, fXPos, fYPos)
+AnimatedSprite::AnimatedSprite(SpriteSheet* pSprSht, float fXPos, float fYPos, float fPlaySpeed, char* szName) :
+	Sprite(pSprSht, 0, fXPos, fYPos, szName)
 {
     init(pSprSht, 0, fXPos, fYPos);
 }
