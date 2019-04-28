@@ -1,0 +1,60 @@
+{
+	"name": "Scene01",
+	"objects": [
+		{
+			"asset": "simon",
+			"name": "Simon01",
+			"type": "sprite",
+
+		},
+		{
+			"asset": "simon",
+			"name": "Simon02",
+			"type": "sprite",
+			"position": {
+				"x": 100,
+				"y": 100,
+			}
+
+		},
+		{
+			"asset": "win",
+			"name": "win",
+			"type": "sprite",
+			"position": {
+				"x": 100,
+				"y": 30,
+			}
+		}
+	],
+	"animations":
+	[
+		{
+			"time": 1,
+			"asset": "Simon01",
+			"position": {
+				"x": 10,
+				"y": 10,
+			},
+			"type": "step",
+		},
+		{
+			"time": 6,
+			"asset": "Simon01",
+			"position": {
+				"x": 50,
+				"y": 10,
+			},
+			"type": "linear",
+		},
+		{
+			"time": 8,
+			"asset": "Simon01",
+			"position": {
+				"x": 10,
+				"y": 50,
+			},
+			"type": "linear",
+		}
+	]
+}

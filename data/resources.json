@@ -1,0 +1,38 @@
+{
+	"static_sprites": [
+		{
+			"name": "simon",
+			"path": "data/simon.bmp",
+		},
+		{
+			"name": "win",
+			"path": "data/win.bmp",
+		}
+	],
+	"animated_sprites": [
+		{
+			"name": "animtest3",
+			"path": "data/animtest3.bmp",
+			"gridWidth": 2,
+			"gridHeight": 2,
+			"nbItems": 4
+		},
+		{
+			"name": "objects",
+			"path": "data/objects.bmp",
+			"gridWidth": 6,
+			"gridHeight": 2,
+			"nbItems": 9,
+		},
+	],
+	"fonts": [
+		{
+			"name": "font-small",
+			"path": "data/font-small.bmp",
+			"gridWidth": 16,
+			"gridHeight": 16,
+			"nbItems": 256,
+			"sizeOffset": -1,
+		},
+	]
+}
