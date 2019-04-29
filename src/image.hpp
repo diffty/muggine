@@ -6,20 +6,13 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
+
+#include "constants.hpp"
 #include "common_types.hpp"
 #include "mathf.hpp"
 #include "linked_list.hpp"
 
 #define FREAD_BUFFER_SIZE   1000
-
-#define SCREEN_WIDTH 320
-#define SCREEN_HEIGHT 240
-
-#ifdef TARGET_3DS
-#define SCREEN_BPP		3
-#elif TARGET_SDL || TARGET_SDL2
-#define SCREEN_BPP		4
-#endif
 
 
 
