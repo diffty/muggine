@@ -165,6 +165,18 @@
     <ClInclude Include="src\jsonreader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\scenemanager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animationevent.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\animationtimeline.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\double_linked_list.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\sound.cpp">
@@ -306,6 +318,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\jsonreader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animationevent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animationtimeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\double_linked_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

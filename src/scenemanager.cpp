@@ -10,12 +10,14 @@ SceneManager::~SceneManager() {
 }
 
 Scene* SceneManager::loadFromJSON(const char* szPath) {
+	SceneDescription* pSceneDescription = new SceneDescription;
+
 	JSONReader json(szPath);
 
 	char* szSceneName = json.get<char*>("name");
 
 	Scene* pNewScene = new Scene(szSceneName);
-	addDataToList(&m_llSceneCollection, pNewScene);
+	addDataToList(&m_llSceneCollection, pSceneDescription);
 
 	// Loading objects in scene
 	JSONItem* pObjectsListNode = json.get<JSONItem*>("objects");
@@ -35,12 +37,15 @@ Scene* SceneManager::loadFromJSON(const char* szPath) {
 		}
 	}
 	
+	AnimationTimeline* pAnimationTimeline = new AnimationTimeline();
+
 	// Loading animations
+	// TODO: Sort them by chronological order
 	JSONItem* pAnimationListNode = json.get<JSONItem*>("animations");
 	for (int i = 0; i < pAnimationListNode->m_contentList.size(); i++) {
 		JSONItem* pAnimInfo = (JSONItem*) pAnimationListNode->m_contentList[i]->pValue;
 		int* iTime = pAnimInfo->get<int*>("time");
-		int* iPosition = pAnimInfo->get<int*>("position");
+		JSONItem* pPosition = pAnimInfo->get<JSONItem*>("position");
 		char* szAsset = pAnimInfo->get<char*>("asset");
 		char* szType = pAnimInfo->get<char*>("type");
 
@@ -65,11 +70,25 @@ Scene* SceneManager::loadFromJSON(const char* szPath) {
 				}
 			}
 		}
+		
+		vect2df_t vPosition;
+		if (pPosition) {
+			int* x = pPosition->get<int*>("x");
+			int* y = pPosition->get<int*>("y");
+			if (x != NULL && y != NULL) {
+				vPosition.x = *x;
+				vPosition.y = *y;
+			}
+		}
 
 		if (pWidget) {
-			AnimationEvent* pNewAnimEvent = new AnimationEvent(*iTime, pWidget, eType);
+			AnimationEvent* pNewAnimEvent = new AnimationEvent(*iTime, pWidget, vPosition, eType);
+			pAnimationTimeline->addEvent(pNewAnimEvent);
 		}
 	}
+
+	pSceneDescription->pScene = pNewScene;
+	pSceneDescription->pAnimTimeline = pAnimationTimeline;
 
 	return pNewScene;
 }
@@ -89,15 +108,15 @@ IWidget* SceneManager::loadObject(Scene* pScene, char* szAsset, char* szName, ch
 	return pNewObject;
 }
 
-Scene* SceneManager::getScene(char* szName) {
-
+SceneDescription* SceneManager::getScene(char* szName) {
 	LLNode* pCurrNode = m_llSceneCollection.pHead;
 	while (pCurrNode != NULL) {
-		Scene* pScene = (Scene*) pCurrNode->pData;
-		if (strcmp(pScene->getName(), szName) == 0) {
-			return pScene;
+		SceneDescription* pSceneDesc = (SceneDescription*) pCurrNode->pData;
+		if (strcmp(pSceneDesc->pScene->getName(), szName) == 0) {
+			return pSceneDesc;
 		}
 		pCurrNode = pCurrNode->pNext;
 	}
 	return NULL;
 }
+

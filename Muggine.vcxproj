@@ -12,11 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\animatedsprite.hpp" />
+    <ClInclude Include="src\animationevent.hpp" />
+    <ClInclude Include="src\animationtimeline.hpp" />
     <ClInclude Include="src\buttonwidget.hpp" />
     <ClInclude Include="src\common_tools.hpp" />
     <ClInclude Include="src\common_types.hpp" />
     <ClInclude Include="src\constants.hpp" />
     <ClInclude Include="src\csv_reader.hpp" />
+    <ClInclude Include="src\double_linked_list.hpp" />
     <ClInclude Include="src\draggable_sprite.hpp" />
     <ClInclude Include="src\drawing.hpp" />
     <ClInclude Include="src\font.hpp" />
@@ -47,6 +50,7 @@
     <ClInclude Include="src\rsc_manager.hpp" />
     <ClInclude Include="src\samplergridwidget.hpp" />
     <ClInclude Include="src\scene.hpp" />
+    <ClInclude Include="src\scenemanager.hpp" />
     <ClInclude Include="src\sound.hpp" />
     <ClInclude Include="src\sprite.hpp" />
     <ClInclude Include="src\spritesheet.hpp" />
@@ -64,9 +68,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\animatedsprite.cpp" />
+    <ClCompile Include="src\animationevent.cpp" />
+    <ClCompile Include="src\animationtimeline.cpp" />
     <ClCompile Include="src\buttonwidget.cpp" />
     <ClCompile Include="src\common_tools.cpp" />
     <ClCompile Include="src\csv_reader.cpp" />
+    <ClCompile Include="src\double_linked_list.cpp" />
     <ClCompile Include="src\draggable_sprite.cpp" />
     <ClCompile Include="src\drawing.cpp" />
     <ClCompile Include="src\font.cpp" />
@@ -96,6 +103,7 @@
     <ClCompile Include="src\rsc_manager.cpp" />
     <ClCompile Include="src\samplergridwidget.cpp" />
     <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\scenemanager.cpp" />
     <ClCompile Include="src\sound.cpp" />
     <ClCompile Include="src\sprite.cpp" />
     <ClCompile Include="src\spritesheet.cpp" />

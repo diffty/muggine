@@ -8,6 +8,13 @@
 #include "animatedsprite.hpp"
 #include "scene.hpp"
 #include "animationevent.hpp"
+#include "animationtimeline.hpp"
+
+
+typedef struct SceneDescription {
+	Scene* pScene;
+	AnimationTimeline* pAnimTimeline;
+} SceneDescription;
 
 
 class SceneManager {
@@ -18,7 +25,7 @@ public:
 	Scene* loadFromJSON(const char* szPath);
 	IWidget* loadObject(Scene* pScene, char* szAsset, char* szName, char* szType);
 
-	Scene* getScene(char* szName);
+	SceneDescription* getScene(char* szName);
 
 private:
 	LinkedList m_llSceneCollection;

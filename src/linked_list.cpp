@@ -36,7 +36,7 @@ void appendList(LinkedList* pllSrcList, LinkedList* pllDstList) {
 	}
 }
 
-void addNodeToList(LinkedList* pList, LLNode*  pNodeToAdd, bool bAddToHead) {
+void addNodeToList(LinkedList* pList, LLNode* pNodeToAdd, bool bAddToHead) {
 	if (pList->pHead == NULL) {
 		pList->pHead = pNodeToAdd;
 		pList->pTail = pNodeToAdd;
