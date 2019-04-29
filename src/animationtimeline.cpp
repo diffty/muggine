@@ -56,11 +56,7 @@ DLLNode* AnimationTimeline::getDLLNodeBeforeTime(float fTime, DLLNode* pStartDLL
 	if (pCurrEvent->getTime() > fTime) {
 		bGoForward = false;
 
-		if (pPrevNode != NULL) {
-			pCurrNode = pPrevNode;
-			pPrevNode = pPrevNode->pPrev;
-		}
-		else {
+		if (pPrevNode == NULL) {
 			return NULL;
 		}
 	}
@@ -124,23 +120,35 @@ AnimationEvent* AnimationTimeline::getEventAfterCurrent() {
 		return NULL;
 }
 
+float AnimationTimeline::getTime() {
+	return m_fCurrTime;
+}
+
+bool AnimationTimeline::isPlaying() {
+	return m_bIsPlaying;
+}
+
 void AnimationTimeline::setTime(float fNewTime) {
 	m_fCurrTime = fNewTime;
 	m_pCurrAnimDLLNode = getDLLNodeBeforeTime(fNewTime, m_pCurrAnimDLLNode);
 	if (m_pCurrAnimDLLNode) {
 		m_pCurrAnimEvent = (AnimationEvent*)m_pCurrAnimDLLNode->pData;
+		printf("%f, %p, %f\n", m_fCurrTime, m_pCurrAnimEvent, m_pCurrAnimEvent->getTime());
+		updateEventWidget(m_pCurrAnimDLLNode);
 	}
 	else {
 		m_pCurrAnimEvent = NULL;
 	}
 }
 
+void AnimationTimeline::setIsPlaying(bool bNewIsPlaying) {
+	m_bIsPlaying = bNewIsPlaying;
+}
+
 void AnimationTimeline::update() {
 	float fDeltaTime = System::get()->getDeltaTime();
-	setTime(m_fCurrTime + fDeltaTime * m_fPlaySpeed);
-	if (m_pCurrAnimEvent != NULL) {
-		//printf("%f, %p, %f\n", m_fCurrTime, m_pCurrAnimEvent, m_pCurrAnimEvent->getTime());
-		updateEventWidget(m_pCurrAnimDLLNode);
+	if (m_bIsPlaying) {
+		setTime(m_fCurrTime + fDeltaTime * m_fPlaySpeed);
 	}
 }
 

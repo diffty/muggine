@@ -18,13 +18,17 @@ public:
 	AnimationEvent* getEventBeforeTime(float fTime);
 	AnimationEvent* getEventBeforeCurrent();
 	AnimationEvent* getEventAfterCurrent();
+	float getTime();
+	bool isPlaying();
 	void setTime(float fTime);
+	void setIsPlaying(bool bNewIsPlaying);
 	void update();
 	void updateEventWidget(DLLNode* pAnimEventDLLNode);
 
 private:
 	float m_fCurrTime = 0.0;
 	float m_fPlaySpeed = 1.0;
+	bool m_bIsPlaying = false;
 
 	DLLNode* m_pCurrAnimDLLNode = NULL;
 	AnimationEvent* m_pCurrAnimEvent = NULL;
