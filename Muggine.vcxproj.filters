@@ -177,6 +177,9 @@
     <ClInclude Include="src\double_linked_list.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\animation_timeline_widget.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\sound.cpp">
@@ -330,6 +333,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\double_linked_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation_timeline_widget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

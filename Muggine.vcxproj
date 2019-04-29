@@ -14,6 +14,7 @@
     <ClInclude Include="src\animatedsprite.hpp" />
     <ClInclude Include="src\animationevent.hpp" />
     <ClInclude Include="src\animationtimeline.hpp" />
+    <ClInclude Include="src\animation_timeline_widget.hpp" />
     <ClInclude Include="src\buttonwidget.hpp" />
     <ClInclude Include="src\common_tools.hpp" />
     <ClInclude Include="src\common_types.hpp" />
@@ -70,6 +71,7 @@
     <ClCompile Include="src\animatedsprite.cpp" />
     <ClCompile Include="src\animationevent.cpp" />
     <ClCompile Include="src\animationtimeline.cpp" />
+    <ClCompile Include="src\animation_timeline_widget.cpp" />
     <ClCompile Include="src\buttonwidget.cpp" />
     <ClCompile Include="src\common_tools.cpp" />
     <ClCompile Include="src\csv_reader.cpp" />
@@ -122,7 +124,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5840E06F-3971-4115-BB98-80E73875456B}</ProjectGuid>
     <RootNamespace>Muggine</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
