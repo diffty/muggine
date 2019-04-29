@@ -39,7 +39,7 @@
 			"type": "step",
 		},
 		{
-			"time": 6,
+			"time": 3,
 			"asset": "Simon01",
 			"position": {
 				"x": 50,
@@ -48,7 +48,43 @@
 			"type": "linear",
 		},
 		{
-			"time": 8,
+			"time": 4,
+			"asset": "Simon01",
+			"position": {
+				"x": 10,
+				"y": 50,
+			},
+			"type": "linear",
+		},
+		{
+			"time": 5,
+			"asset": "Simon01",
+			"position": {
+				"x": 100,
+				"y": 100,
+			},
+			"type": "linear",
+		},
+		{
+			"time": 6,
+			"asset": "Simon01",
+			"position": {
+				"x": 150,
+				"y": 50,
+			},
+			"type": "linear",
+		},
+		{
+			"time": 7,
+			"asset": "Simon01",
+			"position": {
+				"x": 10,
+				"y": 10,
+			},
+			"type": "linear",
+		},
+		{
+			"time": 7,
 			"asset": "Simon01",
 			"position": {
 				"x": 10,
