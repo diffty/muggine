@@ -108,7 +108,9 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	SceneManager sceneManager;
 	sceneManager.loadFromJSON("data/scene01.json");
 
-	Scene* pCurrScene = sceneManager.getScene("Scene01");
+	SceneDescription* pCurrSceneDesc = sceneManager.getScene("Scene01");
+	Scene* pCurrScene = pCurrSceneDesc->pScene;
+	AnimationTimeline* pCurrAnimTimeline = pCurrSceneDesc->pAnimTimeline;
 
     // Main loop
 	while (pSys->mainLoop())
@@ -124,6 +126,8 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		pCurrScene->update();
 		pCurrScene->draw(fb);
+
+		pCurrAnimTimeline->update();
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
