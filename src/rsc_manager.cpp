@@ -87,9 +87,9 @@ bool RscManager::loadSprSht(const char* szRscName, const char* szImgPath, int iG
         
         Rsc* newRscData = new Rsc;
         newRscData->szName =  new char[strlen(szRscName)+1];;
-        strcpy((char*) szRscName, newRscData->szName);
-        newRscData->szPath = new char[strlen(szImgPath)+1];
-        strcpy((char*) szImgPath, newRscData->szPath);
+		strcpy(newRscData->szName, (char*)szRscName);
+		newRscData->szPath = new char[strlen(szImgPath) + 1];
+		strcpy(newRscData->szPath, (char*)szImgPath);
         newRscData->pData = (void *) pNewSprSht;
         
         newRscNode->pData = (void *) newRscData;
@@ -114,9 +114,9 @@ bool RscManager::loadFont(const char* szRscName, const char* szImgPath, int iGri
 
         Rsc* newRscData = new Rsc;
         newRscData->szName =  new char[strlen(szRscName)+1];;
-        strcpy((char*) szRscName, newRscData->szName);
+        strcpy(newRscData->szName, (char*)szRscName);
         newRscData->szPath = new char[strlen(szImgPath)+1];
-        strcpy((char*) szImgPath, newRscData->szPath);
+        strcpy(newRscData->szPath, (char*)szImgPath);
         newRscData->pData = (void *) pNewFont;
 
 		newRscNode->pData = (void *)newRscData;
