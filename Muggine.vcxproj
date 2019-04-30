@@ -60,6 +60,7 @@
     <ClInclude Include="src\text_bubble.hpp" />
     <ClInclude Include="src\tiny_progress_bar.hpp" />
     <ClInclude Include="src\transition_screen.hpp" />
+    <ClInclude Include="src\outliner_widget.hpp" />
     <ClInclude Include="src\xx_gameover_screen.hpp" />
     <ClInclude Include="src\xx_level_begin_screen.hpp" />
     <ClInclude Include="src\xx_level_fail_screen.hpp" />
@@ -114,6 +115,7 @@
     <ClCompile Include="src\text_bubble.cpp" />
     <ClCompile Include="src\tiny_progress_bar.cpp" />
     <ClCompile Include="src\transition_screen.cpp" />
+    <ClCompile Include="src\outliner_widget.cpp" />
     <ClCompile Include="src\xx_gameover_screen.cpp" />
     <ClCompile Include="src\xx_level_begin_screen.cpp" />
     <ClCompile Include="src\xx_level_fail_screen.cpp" />
