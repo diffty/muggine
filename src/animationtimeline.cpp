@@ -133,7 +133,6 @@ void AnimationTimeline::setTime(float fNewTime) {
 	m_pCurrAnimDLLNode = getDLLNodeBeforeTime(fNewTime, m_pCurrAnimDLLNode);
 	if (m_pCurrAnimDLLNode) {
 		m_pCurrAnimEvent = (AnimationEvent*)m_pCurrAnimDLLNode->pData;
-		printf("%f, %p, %f\n", m_fCurrTime, m_pCurrAnimEvent, m_pCurrAnimEvent->getTime());
 		updateEventWidget(m_pCurrAnimDLLNode);
 	}
 	else {
