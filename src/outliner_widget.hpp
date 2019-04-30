@@ -13,15 +13,36 @@
 #include "text.hpp"
 
 
-class OutlinerWidget : public IWidget {
+class WidgetRow : public IWidget {
+public:
+	WidgetRow(int x, int y, int w, int h, IWidget* pWidget, WidgetRow* pParentRowWidget);
+	~WidgetRow();
+
+	bool receiveTouchInput(vect2d_t touchPt);
+	void onPress();
+	void onRelease();
+
+	void update();
+	void draw(uint8* pBuffer);
+
 private:
-	Scene* m_pRootScene = NULL;
+	IWidget* m_pWidget = NULL;
+	WidgetRow* m_pParentRowWidget = NULL;
+
 	bool m_bPressedThisLoop = false;
 	bool m_bIsPressed = false;
-	
 
+	Text* m_pTextWidget;
+};
+
+
+
+class OutlinerWidget : public IWidget {
 public:
 	OutlinerWidget(int x, int y, int w, int h, Scene* pRootScene);
+	~OutlinerWidget();
+
+	void populate();
 
 	bool receiveTouchInput(vect2d_t touchPt);
 	void onPress();
@@ -29,6 +50,13 @@ public:
 
 	void update();
 	void draw(uint8* buffer);
+
+	void addRow(IWidget* pWidget);
+
+private:
+	Scene* m_pRootScene = NULL;
+	bool m_bPressedThisLoop = false;
+	bool m_bIsPressed = false;
 };
 
 
