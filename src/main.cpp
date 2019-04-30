@@ -34,6 +34,7 @@
 #include "jsonreader.hpp"
 #include "scenemanager.hpp"
 #include "animation_timeline_widget.hpp"
+#include "outliner_widget.hpp"
 
 #include <time.h>
 
@@ -111,6 +112,9 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 	Input* pInputSys = pSys->getInputSys();
 
+	OutlinerWidget outlinerWidget(0, 0, 100, 100, pCurrScene);
+	pCurrScene->addComponent(&outlinerWidget);
+
     // Main loop
 	while (pSys->mainLoop())
 	{
@@ -137,7 +141,9 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		MouseEvent* mouseEvt = pInputSys->GetButtonPressEvent(MOUSE_BTN_LEFT);
 		if (mouseEvt) {
-			animTimelineWidget.receiveTouchInput(pInputSys->getCurrInputPos());
+			vect2d_t vCurrMousePos = pInputSys->getCurrInputPos();
+			animTimelineWidget.receiveTouchInput(vCurrMousePos);
+			outlinerWidget.receiveTouchInput(vCurrMousePos);
 		}
 
 		pCurrScene->update();
