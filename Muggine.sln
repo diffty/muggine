@@ -1,22 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Muggine", "Muggine.vcxproj", "{5840E06F-3971-4115-BB98-80E73875456B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
+		Release_Crinkler|Win32 = Release_Crinkler|Win32
+		Release_Static|Win32 = Release_Static|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5840E06F-3971-4115-BB98-80E73875456B}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5840E06F-3971-4115-BB98-80E73875456B}.Debug|Win32.Build.0 = Debug|Win32
+		{5840E06F-3971-4115-BB98-80E73875456B}.Release_Crinkler|Win32.ActiveCfg = Release_Crinkler|Win32
+		{5840E06F-3971-4115-BB98-80E73875456B}.Release_Crinkler|Win32.Build.0 = Release_Crinkler|Win32
+		{5840E06F-3971-4115-BB98-80E73875456B}.Release_Static|Win32.ActiveCfg = Release_Static|Win32
+		{5840E06F-3971-4115-BB98-80E73875456B}.Release_Static|Win32.Build.0 = Release_Static|Win32
 		{5840E06F-3971-4115-BB98-80E73875456B}.Release|Win32.ActiveCfg = Release|Win32
 		{5840E06F-3971-4115-BB98-80E73875456B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C3592B11-1B8B-44A6-888E-070FADDF83C6}
 	EndGlobalSection
 EndGlobal
