@@ -33,6 +33,7 @@
 #include "xx_main_menu.hpp"
 #include "jsonreader.hpp"
 #include "scenemanager.hpp"
+#include "animation_timeline_widget.hpp"
 
 #include <time.h>
 
@@ -84,10 +85,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	RscManager rscManager;
 	rscManager.loadFromJSON("data/resources.json");
     
-	// Sound system
-	//Sound sound;
-	//sound.addSound("data/sound/intro-rix.mp3", true);
-	
 	// Initing game manager
 	GameManager gameManager;
 
@@ -102,15 +99,17 @@ void MainApp(System* pSys, Graphics* pGfx) {
     int frameId = 0;
     int x = 0, y = 0;
 
-	//Sprite simonSpr = Sprite(rscManager.getImgRsc("simon"), {12, 50});
-	//pGameScene->addComponent(&simonSpr);
-
 	SceneManager sceneManager;
 	sceneManager.loadFromJSON("data/scene01.json");
 
 	SceneDescription* pCurrSceneDesc = sceneManager.getScene("Scene01");
 	Scene* pCurrScene = pCurrSceneDesc->pScene;
 	AnimationTimeline* pCurrAnimTimeline = pCurrSceneDesc->pAnimTimeline;
+
+	AnimationTimelineWidget animTimelineWidget(10, 200, 300, 10, pCurrAnimTimeline, 0.0, 10.0);
+	pCurrScene->addComponent(&animTimelineWidget);
+
+	Input* pInputSys = pSys->getInputSys();
 
     // Main loop
 	while (pSys->mainLoop())
@@ -123,6 +122,23 @@ void MainApp(System* pSys, Graphics* pGfx) {
         
 		//gameManager.update();
 		//gameManager.draw(fb);
+
+		if (pInputSys->IsKeyPressed(KEYB_Q)) {
+			pCurrAnimTimeline->setTime(pCurrAnimTimeline->getTime() - deltaTime);
+		}
+
+		if (pInputSys->IsKeyPressed(KEYB_D)) {
+			pCurrAnimTimeline->setTime(pCurrAnimTimeline->getTime() + deltaTime);
+		}
+
+		if (pInputSys->IsKeyPressed(KEYB_SPACE)) {
+			pCurrAnimTimeline->setIsPlaying(!pCurrAnimTimeline->isPlaying());
+		}
+
+		MouseEvent* mouseEvt = pInputSys->GetButtonPressEvent(MOUSE_BTN_LEFT);
+		if (mouseEvt) {
+			animTimelineWidget.receiveTouchInput(pInputSys->getCurrInputPos());
+		}
 
 		pCurrScene->update();
 		pCurrScene->draw(fb);
