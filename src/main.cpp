@@ -15,26 +15,27 @@
 #include <emscripten.h>
 #endif
 
-#include "linked_list.hpp"
-#include "common_types.hpp"
-#include "scene.hpp"
-#include "system.hpp"
-#include "graphics.hpp"
-//#include "sound.hpp"
-#include "input.hpp"
-#include "rsc_manager.hpp"
-#include "sprite.hpp"
-#include "spritesheet.hpp"
-#include "fsm.hpp"
-#include "font.hpp"
-#include "text.hpp"
-#include "game_manager.hpp"
-#include "game_mode.hpp"
-#include "xx_main_menu.hpp"
-#include "jsonreader.hpp"
-#include "scenemanager.hpp"
-#include "animation_timeline_widget.hpp"
-#include "outliner_widget.hpp"
+#include "utils/linked_list.hpp"
+#include "core/common_types.hpp"
+#include "graphics/scene.hpp"
+#include "core/system.hpp"
+#include "core/graphics.hpp"
+//#include "core/sound.hpp"
+#include "core/input.hpp"
+#include "manager/rsc_manager.hpp"
+#include "graphics/sprite.hpp"
+#include "graphics/spritesheet.hpp"
+#include "ia/fsm.hpp"
+#include "graphics/font.hpp"
+#include "ui/widget/text.hpp"
+#include "manager/game_manager.hpp"
+#include "game/game_mode.hpp"
+#include "game/xx_main_menu.hpp"
+#include "utils/jsonreader.hpp"
+#include "manager/scenemanager.hpp"
+#include "ui/widget/animation_timeline_widget.hpp"
+#include "ui/widget/outliner_widget.hpp"
+#include "ui/floating_window.hpp"
 
 #include <time.h>
 
@@ -92,6 +93,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	// Building scene
 	Scene* pGameScene = gameManager.getGameScene();
 	Scene* pMenuScene = gameManager.getMenuScene();
+	Scene uiScene;
 
 	pGfx->SetDoubleBuffering(false);
 	uint8* fb = pGfx->GetFramebuffer();
@@ -107,13 +109,17 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Scene* pCurrScene = pCurrSceneDesc->pScene;
 	AnimationTimeline* pCurrAnimTimeline = pCurrSceneDesc->pAnimTimeline;
 
-	AnimationTimelineWidget animTimelineWidget(10, 200, 300, 10, pCurrAnimTimeline, 0.0, 10.0);
-	pCurrScene->addComponent(&animTimelineWidget);
+	AnimationTimelineWidget* animTimelineWidget = new AnimationTimelineWidget(0, 0, 300, 10, pCurrAnimTimeline, 0.0, 10.0);
 
 	Input* pInputSys = pSys->getInputSys();
 
-	OutlinerWidget outlinerWidget(0, 0, 100, 100, pCurrScene);
-	pCurrScene->addComponent(&outlinerWidget);
+	OutlinerWidget* outlinerWidget = new OutlinerWidget(0, 0, 70, 100, pCurrScene);
+
+	FloatingWindow outlinerWindow(30, 100, 70, 100, outlinerWidget);
+	outlinerWindow.setParentWidget(&uiScene);
+
+	FloatingWindow timelineWindow(20, 200, 290, 20, animTimelineWidget);
+	timelineWindow.setParentWidget(&uiScene);
 
     // Main loop
 	while (pSys->mainLoop())
@@ -142,14 +148,16 @@ void MainApp(System* pSys, Graphics* pGfx) {
 		MouseEvent* mouseEvt = pInputSys->GetButtonPressEvent(MOUSE_BTN_LEFT);
 		if (mouseEvt) {
 			vect2d_t vCurrMousePos = pInputSys->getCurrInputPos();
-			animTimelineWidget.receiveTouchInput(vCurrMousePos);
-			outlinerWidget.receiveTouchInput(vCurrMousePos);
+			//animTimelineWidget->receiveTouchInput(vCurrMousePos);
+			//outlinerWidget->receiveTouchInput(vCurrMousePos);
+			uiScene.receiveTouchInput(vCurrMousePos);
 		}
 
 		pCurrScene->update();
 		pCurrScene->draw(fb);
 
-		pCurrAnimTimeline->update();
+		uiScene.update();
+		uiScene.draw(fb);
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();

@@ -15,333 +15,343 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\common_tools.hpp">
+    <None Include="src\AppDelegate.m" />
+    <None Include="src\Info.plist" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\core\idrawable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\common_types.hpp">
+    <ClInclude Include="src\core\iobject.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\constants.hpp">
+    <ClInclude Include="src\core\iwidget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\csv_reader.hpp">
+    <ClInclude Include="src\core\sound.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\draggable_sprite.hpp">
+    <ClInclude Include="src\core\platform_tools.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\drawing.hpp">
+    <ClInclude Include="src\core\common_types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\font.hpp">
+    <ClInclude Include="src\core\common_tools.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\fsm.hpp">
+    <ClInclude Include="src\core\graphics.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\fsm_event.hpp">
+    <ClInclude Include="src\core\system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\fsm_node.hpp">
+    <ClInclude Include="src\core\input.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics.hpp">
+    <ClInclude Include="src\core\keys.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\grid_widget_layout.hpp">
+    <ClInclude Include="src\core\constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\idrawable.hpp">
+    <ClInclude Include="src\game\xx_level_fail_screen.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\image.hpp">
+    <ClInclude Include="src\game\xx_level_success_screen.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\image_button_widget.hpp">
+    <ClInclude Include="src\game\xx_main_menu.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\input.hpp">
+    <ClInclude Include="src\game\xx_gameover_screen.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\iobject.hpp">
+    <ClInclude Include="src\game\xx_level_begin_screen.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\iwidget.hpp">
+    <ClInclude Include="src\game\game_mode.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\keys.hpp">
+    <ClInclude Include="src\graphics\image.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\linked_list.hpp">
+    <ClInclude Include="src\graphics\animatedsprite.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\math_tools.hpp">
+    <ClInclude Include="src\graphics\draggable_sprite.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\mathf.hpp">
+    <ClInclude Include="src\graphics\font.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\paginated_widget_layout.hpp">
+    <ClInclude Include="src\graphics\sprite.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\parallax_background.hpp">
+    <ClInclude Include="src\graphics\spritesheet.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\particle.hpp">
+    <ClInclude Include="src\graphics\scene.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\particle_system.hpp">
+    <ClInclude Include="src\graphics\particle.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\platform_tools.hpp">
+    <ClInclude Include="src\graphics\particle_system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\progress_bar.hpp">
+    <ClInclude Include="src\graphics\drawing.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\rsc_manager.hpp">
+    <ClInclude Include="src\graphics\parallax_background.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\samplergridwidget.hpp">
+    <ClInclude Include="src\graphics\x_scrolling_img.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\scene.hpp">
+    <ClInclude Include="src\graphics\text_bubble.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sound.hpp">
+    <ClInclude Include="src\graphics\transition_screen.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\sprite.hpp">
+    <ClInclude Include="src\ia\fsm.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\spritesheet.hpp">
+    <ClInclude Include="src\ia\fsm_event.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\system.hpp">
+    <ClInclude Include="src\ia\fsm_node.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\text.hpp">
+    <ClInclude Include="src\manager\rsc_manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\text_bubble.hpp">
+    <ClInclude Include="src\manager\scenemanager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\tiny_progress_bar.hpp">
+    <ClInclude Include="src\manager\game_manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\x_scrolling_img.hpp">
+    <ClInclude Include="src\ui\layout\paginated_widget_layout.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\animatedsprite.hpp">
+    <ClInclude Include="src\ui\layout\grid_widget_layout.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\buttonwidget.hpp">
+    <ClInclude Include="src\ui\widget\progress_bar.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\xx_gameover_screen.hpp">
+    <ClInclude Include="src\ui\widget\text.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\xx_level_begin_screen.hpp">
+    <ClInclude Include="src\ui\widget\outliner_widget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\xx_level_fail_screen.hpp">
+    <ClInclude Include="src\ui\widget\image_button_widget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\xx_level_success_screen.hpp">
+    <ClInclude Include="src\ui\widget\buttonwidget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\xx_main_menu.hpp">
+    <ClInclude Include="src\ui\widget\animation_timeline_widget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game_manager.hpp">
+    <ClInclude Include="src\ui\widget\tiny_progress_bar.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game_mode.hpp">
+    <ClInclude Include="src\utils\linked_list.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\transition_screen.hpp">
+    <ClInclude Include="src\utils\double_linked_list.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\jsonreader.hpp">
+    <ClInclude Include="src\utils\jsonreader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\scenemanager.hpp">
+    <ClInclude Include="src\utils\math_tools.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\animationevent.hpp">
+    <ClInclude Include="src\utils\mathf.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\animationtimeline.hpp">
+    <ClInclude Include="src\utils\csv_reader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\double_linked_list.hpp">
+    <ClInclude Include="src\AppDelegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\animation_timeline_widget.hpp">
+    <ClInclude Include="src\animation\animationevent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\outliner_widget.hpp">
+    <ClInclude Include="src\animation\animationtimeline.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\floating_window.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\titlebar.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\sound.cpp">
+    <ClCompile Include="src\core\iwidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\sprite.cpp">
+    <ClCompile Include="src\core\sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\spritesheet.cpp">
+    <ClCompile Include="src\core\platform_tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\system.cpp">
+    <ClCompile Include="src\core\common_tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\text.cpp">
+    <ClCompile Include="src\core\graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\text_bubble.cpp">
+    <ClCompile Include="src\core\system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\tiny_progress_bar.cpp">
+    <ClCompile Include="src\core\input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\x_scrolling_img.cpp">
+    <ClCompile Include="src\core\keys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\animatedsprite.cpp">
+    <ClCompile Include="src\game\xx_level_fail_screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\buttonwidget.cpp">
+    <ClCompile Include="src\game\xx_level_success_screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\common_tools.cpp">
+    <ClCompile Include="src\game\xx_main_menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\csv_reader.cpp">
+    <ClCompile Include="src\game\xx_gameover_screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\draggable_sprite.cpp">
+    <ClCompile Include="src\game\xx_level_begin_screen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\drawing.cpp">
+    <ClCompile Include="src\game\game_mode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\font.cpp">
+    <ClCompile Include="src\graphics\animatedsprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fsm.cpp">
+    <ClCompile Include="src\graphics\image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fsm_event.cpp">
+    <ClCompile Include="src\graphics\draggable_sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\fsm_node.cpp">
+    <ClCompile Include="src\graphics\font.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics.cpp">
+    <ClCompile Include="src\graphics\sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\grid_widget_layout.cpp">
+    <ClCompile Include="src\graphics\spritesheet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\image.cpp">
+    <ClCompile Include="src\graphics\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\image_button_widget.cpp">
+    <ClCompile Include="src\graphics\particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\input.cpp">
+    <ClCompile Include="src\graphics\particle_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\iobject.cpp">
+    <ClCompile Include="src\graphics\drawing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\iwidget.cpp">
+    <ClCompile Include="src\graphics\parallax_background.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\keys.cpp">
+    <ClCompile Include="src\graphics\x_scrolling_img.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\linked_list.cpp">
+    <ClCompile Include="src\graphics\text_bubble.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\transition_screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ia\fsm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ia\fsm_event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ia\fsm_node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manager\scenemanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manager\game_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manager\rsc_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\layout\paginated_widget_layout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\layout\grid_widget_layout.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widget\progress_bar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widget\text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widget\outliner_widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widget\image_button_widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widget\buttonwidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widget\animation_timeline_widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\widget\tiny_progress_bar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\linked_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\double_linked_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\mathf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\jsonreader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\csv_reader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\animationevent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\animation\animationtimeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\mathf.cpp">
+    <ClCompile Include="src\ui\floating_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\paginated_widget_layout.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\parallax_background.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\particle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\particle_system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\platform_tools.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\progress_bar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rsc_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\samplergridwidget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\xx_gameover_screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\xx_level_begin_screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\xx_level_fail_screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\xx_level_success_screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\xx_main_menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\game_mode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\transition_screen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\jsonreader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scenemanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animationevent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animationtimeline.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\double_linked_list.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\animation_timeline_widget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\outliner_widget.cpp">
+    <ClCompile Include="src\ui\titlebar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
