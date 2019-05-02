@@ -9,22 +9,29 @@
 			"path": "data/win.bmp",
 		}
 	],
-	"animated_sprites": [
-		{
-			"name": "animtest3",
-			"path": "data/animtest3.bmp",
-			"gridWidth": 2,
-			"gridHeight": 2,
-			"nbItems": 4
-		},
-		{
-			"name": "objects",
-			"path": "data/objects.bmp",
-			"gridWidth": 6,
-			"gridHeight": 2,
-			"nbItems": 9,
-		},
-	],
+  "animated_sprites": [
+    {
+      "name": "animtest3",
+      "path": "data/animtest3.bmp",
+      "gridWidth": 2,
+      "gridHeight": 2,
+      "nbItems": 4
+    },
+    {
+      "name": "objects",
+      "path": "data/objects.bmp",
+      "gridWidth": 6,
+      "gridHeight": 2,
+      "nbItems": 9
+    },
+    {
+      "name": "ui",
+      "path": "data/ui.bmp",
+      "gridWidth": 2,
+      "gridHeight": 1,
+      "nbItems": 2
+    }
+  ],
 	"fonts": [
 		{
 			"name": "font-small",
