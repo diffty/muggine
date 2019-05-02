@@ -1,3 +1,7 @@
+#define STB_TRUETYPE_IMPLEMENTATION
+#include "libs/stb_truetype.h"
+
+
 #include <stdio.h>
 #include <cstdlib>
 #include <cstring>
@@ -36,6 +40,7 @@
 #include "ui/widget/animation_timeline_widget.hpp"
 #include "ui/widget/outliner_widget.hpp"
 #include "ui/floating_window.hpp"
+
 
 #include <time.h>
 
@@ -84,6 +89,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Result rc = romfsInit();
 #endif
 
+
 	RscManager rscManager;
 	rscManager.loadFromJSON("data/resources.json");
     
@@ -121,6 +127,35 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	FloatingWindow timelineWindow(20, 200, 290, 20, animTimelineWidget);
 	timelineWindow.setParentWidget(&uiScene);
 
+	// stb font test
+	stbtt_fontinfo font;
+	unsigned char *bitmap;
+	int w, h, i, j, c = 'a', s = 16;
+
+	FILE* fp = fopen("c:/windows/fonts/arialbd.ttf", "rb");
+
+	fseek(fp, 0, SEEK_END);
+	int iFileSize = ftell(fp);
+	rewind(fp);
+
+	unsigned char* ttf_buffer = new unsigned char[iFileSize];
+
+	fread(ttf_buffer, 1, iFileSize, fp);
+
+	fclose(fp);
+
+	// stb test drawing 
+	stbtt_InitFont(&font, (const unsigned char*) ttf_buffer, stbtt_GetFontOffsetForIndex(ttf_buffer, 0));
+	bitmap = stbtt_GetCodepointBitmap(&font, 0, stbtt_ScaleForPixelHeight(&font, s), c, &w, &h, 0, 0);
+
+	uint8* screenBitmap = new uint8[w*h*SCREEN_BPP];
+	
+	for (int i = 0; i < w*h; i++) {
+		memset(screenBitmap + i * SCREEN_BPP, bitmap[i], SCREEN_BPP);
+	}
+
+	delete ttf_buffer;
+
     // Main loop
 	while (pSys->mainLoop())
 	{
@@ -148,8 +183,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 		MouseEvent* mouseEvt = pInputSys->GetButtonPressEvent(MOUSE_BTN_LEFT);
 		if (mouseEvt) {
 			vect2d_t vCurrMousePos = pInputSys->getCurrInputPos();
-			//animTimelineWidget->receiveTouchInput(vCurrMousePos);
-			//outlinerWidget->receiveTouchInput(vCurrMousePos);
 			uiScene.receiveTouchInput(vCurrMousePos);
 		}
 
@@ -158,6 +191,12 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		uiScene.update();
 		uiScene.draw(fb);
+
+		// stb truetype test draw
+		for (int i = 0; i < h; i++) {
+			unsigned int ptrIdx = i * w;
+			memcpy(fb + (SCREEN_WIDTH * i) * SCREEN_BPP, screenBitmap + i * w * SCREEN_BPP, w * SCREEN_BPP);
+		}
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
@@ -169,6 +208,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	
 	rscManager.freeAllRsc();
 }
+
 
 #ifdef __EMSCRIPTEN__
 extern "C" int main(int argc, char** argv) {
@@ -185,7 +225,7 @@ int main(int argc, char **argv)
 
 	gfx.Init();
     pSys->initConsole();  // toujours initialiser la console après l'init de Gfx, surtout pour la 3DS.
-
+	
 	MainApp(pSys, &gfx);
 
 	// Exit services
