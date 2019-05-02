@@ -2,7 +2,7 @@
 
 
 
-TextBubble::TextBubble(char* szText, Font* pFont, float x, float y, float w, float h) :
+TextBubble::TextBubble(char* szText, FontBitmap* pFont, float x, float y, float w, float h) :
 	IWidget(x, y, w, h),
 	m_cBorderColor(0, 0, 0),
 	m_cFillColor(255, 255, 255) {

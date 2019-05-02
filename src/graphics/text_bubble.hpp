@@ -3,7 +3,7 @@
 
 #include "../core/iwidget.hpp"
 #include "../ui/widget/text.hpp"
-#include "font.hpp"
+#include "font_bmp.hpp"
 #include "drawing.hpp"
 
 
@@ -16,7 +16,7 @@ private:
 	Color m_cFillColor;
 
 public:
-	TextBubble(char* szText, Font* pFont, float x, float y, float w, float h);
+	TextBubble(char* szText, FontBitmap* pFont, float x, float y, float w, float h);
 	~TextBubble();
 
 	char* getText();

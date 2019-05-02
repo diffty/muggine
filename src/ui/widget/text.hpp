@@ -2,25 +2,25 @@
 #define TEXT_HPP
 
 #include "../../core/iwidget.hpp"
-#include "../../graphics/font.hpp"
+#include "../../graphics/font_bmp.hpp"
 
 
 class Text :
 	public IWidget
 {
 private:
-	Font* m_pFont;
+	FontBitmap* m_pFont;
 	char* m_szText;
 
 public:
-	Text(const char* szText, Font* pFont, vect2df_t vPos);
-	Text(const char* szText, Font* pFont, float fXPos, float fYPos);
-	Text(int iNum, Font* pFont, vect2df_t vPos);
-	Text(int iNum, Font* pFont, float fXPos, float fYPos);
+	Text(const char* szText, FontBitmap* pFont, vect2df_t vPos);
+	Text(const char* szText, FontBitmap* pFont, float fXPos, float fYPos);
+	Text(int iNum, FontBitmap* pFont, vect2df_t vPos);
+	Text(int iNum, FontBitmap* pFont, float fXPos, float fYPos);
 	~Text();
     
-    void init(const char* szText, Font* pFont, float fXPos, float fYPos);
-    void init(int iNum, Font* pFont, float fXPos, float fYPos);
+    void init(const char* szText, FontBitmap* pFont, float fXPos, float fYPos);
+    void init(int iNum, FontBitmap* pFont, float fXPos, float fYPos);
 
 	char* getText();
 	void setText(const char* szText);

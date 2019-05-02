@@ -1,7 +1,3 @@
-#define STB_TRUETYPE_IMPLEMENTATION
-#include "libs/stb_truetype.h"
-
-
 #include <stdio.h>
 #include <cstdlib>
 #include <cstring>
@@ -30,7 +26,6 @@
 #include "graphics/sprite.hpp"
 #include "graphics/spritesheet.hpp"
 #include "ia/fsm.hpp"
-#include "graphics/font.hpp"
 #include "ui/widget/text.hpp"
 #include "manager/game_manager.hpp"
 #include "game/game_mode.hpp"
@@ -40,6 +35,8 @@
 #include "ui/widget/animation_timeline_widget.hpp"
 #include "ui/widget/outliner_widget.hpp"
 #include "ui/floating_window.hpp"
+#include "graphics/font_bmp.hpp"
+#include "graphics/font_ttf.hpp"
 
 
 #include <time.h>
@@ -127,34 +124,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	FloatingWindow timelineWindow(20, 200, 290, 20, animTimelineWidget);
 	timelineWindow.setParentWidget(&uiScene);
 
-	// stb font test
-	stbtt_fontinfo font;
-	unsigned char *bitmap;
-	int w, h, i, j, c = 'a', s = 16;
-
-	FILE* fp = fopen("c:/windows/fonts/arialbd.ttf", "rb");
-
-	fseek(fp, 0, SEEK_END);
-	int iFileSize = ftell(fp);
-	rewind(fp);
-
-	unsigned char* ttf_buffer = new unsigned char[iFileSize];
-
-	fread(ttf_buffer, 1, iFileSize, fp);
-
-	fclose(fp);
-
-	// stb test drawing 
-	stbtt_InitFont(&font, (const unsigned char*) ttf_buffer, stbtt_GetFontOffsetForIndex(ttf_buffer, 0));
-	bitmap = stbtt_GetCodepointBitmap(&font, 0, stbtt_ScaleForPixelHeight(&font, s), c, &w, &h, 0, 0);
-
-	uint8* screenBitmap = new uint8[w*h*SCREEN_BPP];
-	
-	for (int i = 0; i < w*h; i++) {
-		memset(screenBitmap + i * SCREEN_BPP, bitmap[i], SCREEN_BPP);
-	}
-
-	delete ttf_buffer;
+	FontTTF font("c:/windows/fonts/arialbd.ttf");
 
     // Main loop
 	while (pSys->mainLoop())
@@ -191,12 +161,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		uiScene.update();
 		uiScene.draw(fb);
-
-		// stb truetype test draw
-		for (int i = 0; i < h; i++) {
-			unsigned int ptrIdx = i * w;
-			memcpy(fb + (SCREEN_WIDTH * i) * SCREEN_BPP, screenBitmap + i * w * SCREEN_BPP, w * SCREEN_BPP);
-		}
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();

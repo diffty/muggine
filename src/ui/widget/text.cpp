@@ -2,25 +2,25 @@
 
 
 
-Text::Text(const char* szText, Font* pFont, vect2df_t vPos)
+Text::Text(const char* szText, FontBitmap* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
 	init(szText, pFont, vPos.x, vPos.y);
 }
 
-Text::Text(const char* szText, Font* pFont, float fXPos, float fYPos)
+Text::Text(const char* szText, FontBitmap* pFont, float fXPos, float fYPos)
 	: IWidget(fXPos, fYPos, 1, 1) {
 
 	init(szText, pFont, fXPos, fYPos);
 }
 
-Text::Text(int iNum, Font* pFont, vect2df_t vPos)
+Text::Text(int iNum, FontBitmap* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
 	init(iNum, pFont, vPos.x, vPos.y);
 }
 
-Text::Text(int iNum, Font* pFont, float fXPos, float fYPos)
+Text::Text(int iNum, FontBitmap* pFont, float fXPos, float fYPos)
 	: IWidget(fXPos, fYPos, 1, 1) {
 
 	init(iNum, pFont, fXPos, fYPos);
@@ -30,7 +30,7 @@ Text::~Text() {
 	delete m_szText;
 }
 
-void Text::init(const char* szText, Font* pFont, float fXPos, float fYPos) {
+void Text::init(const char* szText, FontBitmap* pFont, float fXPos, float fYPos) {
     m_pFont = pFont;
     m_szText = new char[1];
     m_szText[0] = '\0';
@@ -38,7 +38,7 @@ void Text::init(const char* szText, Font* pFont, float fXPos, float fYPos) {
     setText(szText);
 }
 
-void Text::init(int iNum, Font* pFont, float fXPos, float fYPos) {
+void Text::init(int iNum, FontBitmap* pFont, float fXPos, float fYPos) {
     m_pFont = pFont;
     m_szText = new char[1];
     m_szText[0] = '\0';

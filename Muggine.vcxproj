@@ -23,6 +23,7 @@
     <None Include="src\Info.plist" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\graphics\font_ttf.hpp" />
     <ClInclude Include="src\ui\floating_window.hpp" />
     <ClInclude Include="src\animation\animationevent.hpp" />
     <ClInclude Include="src\animation\animationtimeline.hpp" />
@@ -48,7 +49,7 @@
     <ClInclude Include="src\graphics\animatedsprite.hpp" />
     <ClInclude Include="src\graphics\draggable_sprite.hpp" />
     <ClInclude Include="src\graphics\drawing.hpp" />
-    <ClInclude Include="src\graphics\font.hpp" />
+    <ClInclude Include="src\graphics\font_bmp.hpp" />
     <ClInclude Include="src\graphics\image.hpp" />
     <ClInclude Include="src\graphics\parallax_background.hpp" />
     <ClInclude Include="src\graphics\particle.hpp" />
@@ -83,6 +84,7 @@
     <ClInclude Include="src\utils\math_tools.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\font_ttf.cpp" />
     <ClCompile Include="src\ui\floating_window.cpp" />
     <ClCompile Include="src\animation\animationevent.cpp" />
     <ClCompile Include="src\animation\animationtimeline.cpp" />
@@ -103,7 +105,7 @@
     <ClCompile Include="src\graphics\animatedsprite.cpp" />
     <ClCompile Include="src\graphics\draggable_sprite.cpp" />
     <ClCompile Include="src\graphics\drawing.cpp" />
-    <ClCompile Include="src\graphics\font.cpp" />
+    <ClCompile Include="src\graphics\font_bmp.cpp" />
     <ClCompile Include="src\graphics\image.cpp" />
     <ClCompile Include="src\graphics\parallax_background.cpp" />
     <ClCompile Include="src\graphics\particle.cpp" />
@@ -219,7 +221,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;fmod_vc.lib;version.lib;imm32.lib;winmm.lib;SetupAPI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2test.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>

@@ -107,7 +107,7 @@ bool RscManager::loadSprSht(const char* szRscName, const char* szImgPath, int iG
 
 bool RscManager::loadFont(const char* szRscName, const char* szImgPath, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset) {
     char* szConformedPath = platformConformPath(szImgPath);
-	Font* pNewFont = new Font(szConformedPath, iGridWidth, iGridHeight, uLength, iSizeOffset);
+	FontBitmap* pNewFont = new FontBitmap(szConformedPath, iGridWidth, iGridHeight, uLength, iSizeOffset);
     delete szConformedPath;
     
 	if (pNewFont) {
@@ -189,22 +189,22 @@ SpriteSheet* RscManager::getSprShtRsc(uint rscId) {
 	}
 }
 
-Font* RscManager::getFontRsc(const char* szRscName) {
+FontBitmap* RscManager::getFontRsc(const char* szRscName) {
 	LLNode* rscNode = getRscNode(szRscName);
 
 	if (rscNode) {
-		return (Font*)((Rsc*)rscNode->pData)->pData;
+		return (FontBitmap*)((Rsc*)rscNode->pData)->pData;
 	}
 	else {
 		return NULL;
 	}
 }
 
-Font* RscManager::getFontRsc(uint rscId) {
+FontBitmap* RscManager::getFontRsc(uint rscId) {
 	LLNode* rscNode = getRscNode(rscId);
 
 	if (rscNode) {
-		return (Font*) ((Rsc*) rscNode->pData)->pData;
+		return (FontBitmap*) ((Rsc*) rscNode->pData)->pData;
 	}
 	else {
 		return NULL;

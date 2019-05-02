@@ -8,7 +8,7 @@
 #include "../utils/linked_list.hpp"
 #include "../graphics/image.hpp"
 #include "../graphics/spritesheet.hpp"
-#include "../graphics/font.hpp"
+#include "../graphics/font_bmp.hpp"
 #include "../core/platform_tools.hpp"
 #include "../utils/jsonreader.hpp"
 
@@ -43,8 +43,8 @@ public:
     Image* getImgRsc(uint rscId);
 	SpriteSheet* getSprShtRsc(const char* szRscName);
 	SpriteSheet* getSprShtRsc(uint rscId);
-	Font* getFontRsc(const char* szRscName);
-	Font* getFontRsc(uint rscId);
+	FontBitmap* getFontRsc(const char* szRscName);
+	FontBitmap* getFontRsc(uint rscId);
 	uint getRscCount();
     
 	static RscManager* get();
