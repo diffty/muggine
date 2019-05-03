@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\font_ttf.hpp" />
+    <ClInclude Include="src\libs\stb_truetype.h" />
     <ClInclude Include="src\ui\floating_window.hpp" />
     <ClInclude Include="src\animation\animationevent.hpp" />
     <ClInclude Include="src\animation\animationtimeline.hpp" />

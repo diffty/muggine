@@ -3,7 +3,6 @@
 
 #include <cstdio>
 
-#define STB_TRUETYPE_IMPLEMENTATION
 #include "../libs/stb_truetype.h"
 
 #include "../core/common_types.hpp"

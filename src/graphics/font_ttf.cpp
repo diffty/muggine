@@ -1,6 +1,7 @@
 #include "font_ttf.hpp"
 
 
+
 FontTTF::FontTTF(char* szFileName) {
 	FILE* fp = fopen(szFileName, "rb");  // "c:/windows/fonts/arialbd.ttf"
 	
@@ -12,13 +13,15 @@ FontTTF::FontTTF(char* szFileName) {
 	// Reading file
 	unsigned char* ttf_buffer = new unsigned char[iFileSize];
 	fread(ttf_buffer, 1, iFileSize, fp);
-	fclose(fp);
 	
 	// Loading font from buffer
-	stbtt_InitFont(&m_font, (const unsigned char*)ttf_buffer, stbtt_GetFontOffsetForIndex(ttf_buffer, 0));
+	if (!stbtt_InitFont(&m_font, ttf_buffer, stbtt_GetFontOffsetForIndex(ttf_buffer, 0))) {
+		printf("Error loading font\n");
+	}
+
+	fclose(fp);
 
 	delete ttf_buffer;
-
 }
 
 FontTTF::~FontTTF() {

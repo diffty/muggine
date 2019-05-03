@@ -15,6 +15,8 @@
 #include <emscripten.h>
 #endif
 
+#define STB_TRUETYPE_IMPLEMENTATION
+
 #include "utils/linked_list.hpp"
 #include "core/common_types.hpp"
 #include "graphics/scene.hpp"
@@ -161,6 +163,8 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 		uiScene.update();
 		uiScene.draw(fb);
+
+		font.draw(fb, 'a', 10, 10, 16);
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
