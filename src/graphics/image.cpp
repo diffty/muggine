@@ -11,7 +11,6 @@ Image::~Image() {
     delete m_nbZoneByLine;
 }
 
-
 void Image::loadFromFile(char* fileName) {
 	FILE* fp;
 	int nBytesToRead;

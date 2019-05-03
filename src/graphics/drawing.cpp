@@ -1,7 +1,7 @@
 #include "drawing.hpp"
 
 #include "../core/constants.hpp"
-#include "../utils/mathf.hpp"
+#include "../utils/math_tools.hpp"
 
 
 void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color) {

@@ -3,24 +3,27 @@
 
 #include <cstdio>
 
-#include "../libs/stb_truetype.h"
+#include "ifont.hpp"
 
+#include "../libs/stb_truetype.h"
 #include "../core/common_types.hpp"
 #include "../core/constants.hpp"
 
 
-class FontTTF
+class FontTTF : public IFont
 {
-private:
-	stbtt_fontinfo m_font;
-
 public:
 	FontTTF(char* szFileName);
 	~FontTTF();
 
-	void draw(uint8* fb, char c, int x, int y, int size);
+	void draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color);
 
-	int getSizeForChar(char c);
+	int getWidthForChar(char c, int hSize = -1);
+	int getCharHeight();
+
+private:
+	stbtt_fontinfo m_font;
+	unsigned char* m_pFontFileBuffer;
 };
 
 #endif

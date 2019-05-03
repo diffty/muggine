@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\font_ttf.hpp" />
+    <ClInclude Include="src\graphics\ifont.hpp" />
     <ClInclude Include="src\libs\stb_truetype.h" />
     <ClInclude Include="src\ui\floating_window.hpp" />
     <ClInclude Include="src\animation\animationevent.hpp" />
@@ -81,7 +82,6 @@
     <ClInclude Include="src\utils\double_linked_list.hpp" />
     <ClInclude Include="src\utils\jsonreader.hpp" />
     <ClInclude Include="src\utils\linked_list.hpp" />
-    <ClInclude Include="src\utils\mathf.hpp" />
     <ClInclude Include="src\utils\math_tools.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +138,7 @@
     <ClCompile Include="src\utils\double_linked_list.cpp" />
     <ClCompile Include="src\utils\jsonreader.cpp" />
     <ClCompile Include="src\utils\linked_list.cpp" />
-    <ClCompile Include="src\utils\mathf.cpp" />
+    <ClCompile Include="src\utils\math_tools.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5840E06F-3971-4115-BB98-80E73875456B}</ProjectGuid>

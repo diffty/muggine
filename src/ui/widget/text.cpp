@@ -2,13 +2,13 @@
 
 
 
-Text::Text(const char* szText, FontBitmap* pFont, vect2df_t vPos)
+Text::Text(const char* szText, IFont* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
 	init(szText, pFont, vPos.x, vPos.y);
 }
 
-Text::Text(const char* szText, FontBitmap* pFont, float fXPos, float fYPos)
+Text::Text(const char* szText, IFont* pFont, float fXPos, float fYPos)
 	: IWidget(fXPos, fYPos, 1, 1) {
 
 	init(szText, pFont, fXPos, fYPos);
@@ -30,7 +30,7 @@ Text::~Text() {
 	delete m_szText;
 }
 
-void Text::init(const char* szText, FontBitmap* pFont, float fXPos, float fYPos) {
+void Text::init(const char* szText, IFont* pFont, float fXPos, float fYPos) {
     m_pFont = pFont;
     m_szText = new char[1];
     m_szText[0] = '\0';
@@ -70,24 +70,29 @@ void Text::setText(int iNum, int padding) {
 	delete newText;
 }
 
+
+int Text::getCharHeight() {
+	return m_pFont->getCharHeight();
+}
+
 void Text::updateSize() {
 	int i = 0;
 	int sizeW = 0;
 	int currSizeW = 0;
-	long sizeH = m_pFont->getFrameSize().h;
+	long sizeH = getCharHeight();
 
 	char c;
 
 	while ((c = m_szText[i]) != '\0') {
 		if (c == '\n') {
-			sizeH += m_pFont->getFrameSize().h;
+			sizeH += sizeH;
 
 			if (sizeW < currSizeW) sizeW = currSizeW;
 
 			currSizeW = 0;
 		}
 		else {
-			currSizeW += m_pFont->getSizeForChar(c);
+			currSizeW += m_pFont->getWidthForChar(c, 16);
 		}
 
 		i++;
@@ -106,7 +111,11 @@ void Text::draw(uint8* buffer) {
 }
 
 void Text::drawChar(uint8* buffer, float x, float y, char c) {
-	m_pFont->draw(buffer, c - 32, x, y, false, true);
+	Color* testcolor = new Color(255, 255, 0);
+
+	m_pFont->draw(buffer, c, x, y, 16, testcolor);
+
+	delete testcolor;
 }
 
 void Text::drawStr(uint8* buffer, float x, float y, char* text) {
@@ -119,11 +128,11 @@ void Text::drawStr(uint8* buffer, float x, float y, char* text) {
 	while ((c = m_szText[i]) != '\0') {
 		if (c == '\n') {
 			iDrawCurW = 0;
-			iDrawCurH += m_pFont->getFrameSize().h;
+			iDrawCurH += m_pFont->getCharHeight();
 		}
 		else {
 			drawChar(buffer, x + iDrawCurW, y + iDrawCurH, c);
-			iDrawCurW += m_pFont->getSizeForChar(c);
+			iDrawCurW += m_pFont->getWidthForChar(c, 16);
 		}
 
 		i++;

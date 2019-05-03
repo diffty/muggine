@@ -128,6 +128,10 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 	FontTTF font("c:/windows/fonts/arialbd.ttf");
 
+	Text testText("Caca test", &font, 50, 50);
+
+	testText.setParentWidget(pCurrScene);
+
     // Main loop
 	while (pSys->mainLoop())
 	{
@@ -164,7 +168,9 @@ void MainApp(System* pSys, Graphics* pGfx) {
 		uiScene.update();
 		uiScene.draw(fb);
 
-		font.draw(fb, 'a', 10, 10, 16);
+		Color* c = new Color(75, 75, 255);
+		//font.draw(fb, 'a', 20, 20, 16, c);
+		delete c;
 
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();

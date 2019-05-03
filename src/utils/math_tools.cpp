@@ -1,21 +1,5 @@
-#include "mathf.hpp"
+#include "math_tools.hpp"
 
-
-int minInt(int a, int b) {
-	return (a < b) ? a : b;
-}
-
-int maxInt(int a, int b) {
-	return (a >= b) ? a : b;
-}
-
-float minf(float a, float b) {
-	return (a < b) ? a : b;
-}
-
-float maxf(float a, float b) {
-	return (a >= b) ? a : b;
-}
 
 vect2df_t getNormalizedVect(vect2df_t vVect) {
 	vect2df_t vNormalizedVect;
@@ -34,6 +18,26 @@ vect2df_t getNormalizedVect(vect2df_t vVect) {
 	}
 
 	return vNormalizedVect;
+}
+
+float lerpf(float a, float b, float coef) {
+	return a + (b - a) * coef;
+}
+
+int minInt(int a, int b) {
+	return (a < b) ? a : b;
+}
+
+int maxInt(int a, int b) {
+	return (a >= b) ? a : b;
+}
+
+float minf(float a, float b) {
+	return (a < b) ? a : b;
+}
+
+float maxf(float a, float b) {
+	return (a >= b) ? a : b;
 }
 
 vect2df_t vectfSub(vect2df_t v1, vect2df_t v2) {
