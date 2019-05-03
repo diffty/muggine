@@ -30,8 +30,8 @@ FontTTF::~FontTTF() {
 }
 
 void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color) {
-	int w, h;
-	uint8* pGlyphBitmap = stbtt_GetCodepointBitmap(&m_font, 0, stbtt_ScaleForPixelHeight(&m_font, hSize), c, &w, &h, 0, 0);
+	int w, h, xoff, yoff;
+	uint8* pGlyphBitmap = stbtt_GetCodepointBitmap(&m_font, 0, stbtt_ScaleForPixelHeight(&m_font, hSize), c, &w, &h, &xoff, &yoff);
 	
 	/* uint8* screenBitmap = new uint8[w*h*SCREEN_BPP];
 	for (int i = 0; i < w*h; i++) {
@@ -45,7 +45,7 @@ void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color
 
 	for (int i = 0; i < w*h; i++) {
 		float glyphPixelValue = float(*(pGlyphBitmap + i)) / 255.0;
-		unsigned int screenIdx = ((x + i % w) + ((y + i / w) * SCREEN_WIDTH));
+		unsigned int screenIdx = ((x + xoff + i % w) + ((y + yoff + i / w) * SCREEN_WIDTH));
 		uint8 currR = *(pBuffer + screenIdx * SCREEN_BPP);
 		uint8 currG = *(pBuffer + screenIdx * SCREEN_BPP + 1);
 		uint8 currB = *(pBuffer + screenIdx * SCREEN_BPP + 2);
