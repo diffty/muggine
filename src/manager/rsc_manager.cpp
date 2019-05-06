@@ -68,6 +68,7 @@ bool RscManager::loadImg(const char* szRscName, const char* szImgPath) {
         newRscData->pData = (void *) newImage;
         
 		newRscNode->pData = (void *) newRscData;
+		newRscData->eRscType = ERscType_IMAGE;
 
 		addNodeToList(&m_rscList, newRscNode);
 
@@ -94,7 +95,7 @@ bool RscManager::loadSprSht(const char* szRscName, const char* szImgPath, int iG
         newRscData->pData = (void *) pNewSprSht;
         
         newRscNode->pData = (void *) newRscData;
-
+		newRscData->eRscType = ERscType_SPRITESHEET;
 
 		addNodeToList(&m_rscList, newRscNode);
 
@@ -119,6 +120,7 @@ bool RscManager::loadFont(const char* szRscName, const char* szImgPath, int iGri
         newRscData->szPath = new char[strlen(szImgPath)+1];
         strcpy(newRscData->szPath, (char*)szImgPath);
         newRscData->pData = (void *) pNewFont;
+		newRscData->eRscType = ERscType_FONT;
 
 		newRscNode->pData = (void *)newRscData;
 
@@ -253,7 +255,11 @@ void RscManager::freeAllRsc() {
         nextNode = currNode->pNext;
         Rsc* pRscNode = (Rsc*) currNode->pData;
         
-        delete ((Image *) pRscNode->pData);
+		if (pRscNode->eRscType == ERscType_FONT)
+			delete ((IFont*) pRscNode->pData);
+		else 
+			delete ((Image *)pRscNode->pData);
+
         delete pRscNode;
         delete currNode;
         currNode = nextNode;

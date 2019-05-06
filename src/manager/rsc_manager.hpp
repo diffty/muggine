@@ -14,10 +14,17 @@
 
 
 
+enum ERscType {
+	ERscType_IMAGE,
+	ERscType_SPRITESHEET,
+	ERscType_FONT,
+};
+
 typedef struct Rsc {
     char* szName;
     char* szPath;
     void* pData;
+	ERscType eRscType;
 } Rsc;
 
 
