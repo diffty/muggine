@@ -1,2 +1,9 @@
 *.sdf
 .vs/
+include/
+lib/
+Build/
+Debug*/
+Release*/
+*.exe
+*.db
