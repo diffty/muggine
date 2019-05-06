@@ -1,7 +1,6 @@
 #include "text.hpp"
 
 
-
 Text::Text(const char* szText, IFont* pFont, vect2df_t vPos)
 	: IWidget(vPos.x, vPos.y, 1, 1) {
 
@@ -9,6 +8,18 @@ Text::Text(const char* szText, IFont* pFont, vect2df_t vPos)
 }
 
 Text::Text(const char* szText, IFont* pFont, float fXPos, float fYPos)
+	: IWidget(fXPos, fYPos, 1, 1) {
+
+	init(szText, pFont, fXPos, fYPos);
+}
+
+Text::Text(const wchar_t* szText, IFont* pFont, vect2df_t vPos)
+	: IWidget(vPos.x, vPos.y, 1, 1) {
+
+	init(szText, pFont, vPos.x, vPos.y);
+}
+
+Text::Text(const wchar_t* szText, IFont* pFont, float fXPos, float fYPos)
 	: IWidget(fXPos, fYPos, 1, 1) {
 
 	init(szText, pFont, fXPos, fYPos);
@@ -31,8 +42,15 @@ Text::~Text() {
 }
 
 void Text::init(const char* szText, IFont* pFont, float fXPos, float fYPos) {
+	int iTextSize = strlen(szText);
+	wchar_t* wideStr = new wchar_t[iTextSize+1];
+	mbsrtowcs(wideStr, &szText, iTextSize+1, NULL);
+	init(wideStr, pFont, fXPos, fYPos);
+}
+
+void Text::init(const wchar_t* szText, IFont* pFont, float fXPos, float fYPos) {
     m_pFont = pFont;
-    m_szText = new char[1];
+    m_szText = new wchar_t[1];
     m_szText[0] = '\0';
     
     setText(szText);
@@ -40,32 +58,39 @@ void Text::init(const char* szText, IFont* pFont, float fXPos, float fYPos) {
 
 void Text::init(int iNum, FontBitmap* pFont, float fXPos, float fYPos) {
     m_pFont = pFont;
-    m_szText = new char[1];
+    m_szText = new wchar_t[1];
     m_szText[0] = '\0';
     
-    char* newText = intToStr(iNum);
-    setText(newText);
+	wchar_t* newText = intToStr(iNum);
+    setText((wchar_t*) newText);
     delete newText;
 }
 
-char* Text::getText() {
+wchar_t* Text::getText() {
 	return m_szText;
 }
 
 void Text::setText(const char* szText) {
-	long lTextLen = strlen(szText);
+	int iTextSize = strlen(szText);
+	wchar_t* wideStr = new wchar_t[iTextSize + 1];
+	mbsrtowcs(wideStr, &szText, iTextSize + 1, NULL);
+	setText(wideStr);
+}
+
+void Text::setText(const wchar_t* szText) {
+	long lTextLen = wcslen(szText);
 
 	if (m_szText) delete m_szText;
 
-	m_szText = new char[lTextLen+1];
+	m_szText = new wchar_t[lTextLen + 1];
 
-	strcpy(m_szText, szText);
+	wcscpy(m_szText, szText);
 
 	updateSize();
 }
 
 void Text::setText(int iNum, int padding) {
-	char* newText = intToStr(iNum, padding);
+	wchar_t* newText = intToStr(iNum, padding);
 	setText(newText);
 	delete newText;
 }
@@ -110,20 +135,20 @@ void Text::draw(uint8* buffer) {
 		drawStr(buffer, m_rect.getPos().x, m_rect.getPos().y, m_szText);
 }
 
-void Text::drawChar(uint8* buffer, float x, float y, char c) {
+void Text::drawChar(uint8* buffer, float x, float y, wchar_t c) {
 	Color* testcolor = new Color(255, 255, 0);
 
-	m_pFont->draw(buffer, c, x, y, 16, testcolor);
+	m_pFont->draw(buffer, (wchar_t) c, x, y, 16, testcolor);
 
 	delete testcolor;
 }
 
-void Text::drawStr(uint8* buffer, float x, float y, char* text) {
+void Text::drawStr(uint8* buffer, float x, float y, wchar_t* text) {
 	int i = 0;
 	int iDrawCurW = 0;
 	int iDrawCurH = 0;
 
-	char c;
+	wchar_t c;
 
 	while ((c = m_szText[i]) != '\0') {
 		if (c == '\n') {
@@ -140,10 +165,10 @@ void Text::drawStr(uint8* buffer, float x, float y, char* text) {
 }
 
 // Grosse source de memory leaks AVEREE cette merde. Ne pas oublier de delete après usage
-char* Text::intToStr(int iNum, int padding) {
+wchar_t* Text::intToStr(int iNum, int padding) {
 	unsigned int i, j;
 	char tmp;
-	char* newStr = new char[16];
+	wchar_t* newStr = new wchar_t[16];
 
 	if (iNum == 0) {
         if (padding > 0) {

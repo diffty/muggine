@@ -20,7 +20,7 @@ public:
 	FontBitmap(char* szFileName, int iGridWidth, int iGridHeight, uint uLength, int iSizeOffset);
 	~FontBitmap();
 
-	void draw(uint8* pBuffer, char c, int x, int y, int size, Color* color);
+	void draw(uint8* pBuffer, wchar_t c, int x, int y, int size, Color* color);
 
 	int getWidthForChar(char c, int hSize = -1);
 	int getCharHeight();

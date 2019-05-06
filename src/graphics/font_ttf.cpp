@@ -1,5 +1,7 @@
 #include "font_ttf.hpp"
 
+#include <cwchar> 
+
 #include "../utils/math_tools.hpp"
 
 
@@ -29,9 +31,17 @@ FontTTF::~FontTTF() {
 	delete m_pFontFileBuffer;
 }
 
-void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color) {
+/*void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color) {
+	draw(pBuffer, (int)c, x, y, hSize, color);
+}*/
+
+void FontTTF::draw(uint8* pBuffer, wchar_t c, int x, int y, int hSize, Color* color) {
+	draw(pBuffer, (int) c, x, y, hSize, color);
+}
+
+void FontTTF::draw(uint8* pBuffer, int codepoint, int x, int y, int hSize, Color* color) {
 	int w, h, xoff, yoff;
-	uint8* pGlyphBitmap = stbtt_GetCodepointBitmap(&m_font, 0, stbtt_ScaleForPixelHeight(&m_font, hSize), c, &w, &h, &xoff, &yoff);
+	uint8* pGlyphBitmap = stbtt_GetCodepointBitmap(&m_font, 0, stbtt_ScaleForPixelHeight(&m_font, hSize), codepoint, &w, &h, &xoff, &yoff);
 	
 	/* uint8* screenBitmap = new uint8[w*h*SCREEN_BPP];
 	for (int i = 0; i < w*h; i++) {
@@ -54,6 +64,8 @@ void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color
 		*(pBuffer + screenIdx * SCREEN_BPP + 1) = int(lerpf(currG, colorStruct.g, glyphPixelValue));
 		*(pBuffer + screenIdx * SCREEN_BPP + 2) = int(lerpf(currB, colorStruct.r, glyphPixelValue));
 	}
+
+	delete pGlyphBitmap;
 }
 
 int FontTTF::getWidthForChar(char c, int hSize) {

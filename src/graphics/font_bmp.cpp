@@ -56,6 +56,6 @@ int FontBitmap::getCharHeight() {
 	return m_sprSht.getFrameSize().h;
 }
 
-void FontBitmap::draw(uint8* pBuffer, char c, int x, int y, int size, Color* color) {
+void FontBitmap::draw(uint8* pBuffer, wchar_t c, int x, int y, int size, Color* color) {
 	m_sprSht.draw(pBuffer, c - 32, x, y, false, true);
 }
