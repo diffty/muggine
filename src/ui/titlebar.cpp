@@ -46,7 +46,6 @@ void Titlebar::onRelease() {
 }
 
 bool Titlebar::receiveTouchInput(vect2d_t touchPt) {
-	printf("%i; %i\n", touchPt.x, touchPt.y);
 	bool touchTest = receiveTouchInputChildren(touchPt);
 
 	if (!touchTest) {
