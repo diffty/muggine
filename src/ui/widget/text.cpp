@@ -55,7 +55,7 @@ char* Text::getText() {
 void Text::setText(const char* szText) {
 	long lTextLen = strlen(szText);
 
-	if (m_szText) delete m_szText;
+	if (m_szText != NULL) delete m_szText;
 
 	m_szText = new char[lTextLen+1];
 
