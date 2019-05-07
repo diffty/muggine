@@ -9,9 +9,9 @@ public:
 	IFont() {};
 	virtual ~IFont() {};
 
-	virtual void draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color) = 0;
+	virtual void draw(uint8* pBuffer, int codepoint, int x, int y, int hSize, Color* color) = 0;
 
-	virtual int getWidthForChar(char c, int hSize = -1) = 0;
+	virtual int getWidthForChar(int codepoint, int hSize = -1) = 0;
 	virtual int getCharHeight() = 0;
 };
 

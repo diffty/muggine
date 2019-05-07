@@ -44,8 +44,8 @@ FontBitmap::~FontBitmap() {
 }
 
 
-int FontBitmap::getWidthForChar(char c, int hSize) {
-	return m_pCharSizesTable[c - 32];
+int FontBitmap::getWidthForChar(int codepoint, int hSize) {
+	return m_pCharSizesTable[codepoint - 32];
 }
 
 size2d_t FontBitmap::getCharSize() {
@@ -57,5 +57,9 @@ int FontBitmap::getCharHeight() {
 }
 
 void FontBitmap::draw(uint8* pBuffer, char c, int x, int y, int size, Color* color) {
-	m_sprSht.draw(pBuffer, c - 32, x, y, false, true);
+	draw(pBuffer, (int) (c - 32), x, y, size, color);
+}
+
+void FontBitmap::draw(uint8* pBuffer, int codepoint, int x, int y, int size, Color* color) {
+	m_sprSht.draw(pBuffer, codepoint - 32, x, y, false, true);
 }

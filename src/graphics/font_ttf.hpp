@@ -16,9 +16,10 @@ public:
 	FontTTF(char* szFileName);
 	~FontTTF();
 
-	void draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color);
+	void draw(uint8* pBuffer, char c, int x, int y, int size, Color* color);
+	void draw(uint8* pBuffer, int codepoint, int x, int y, int hSize, Color* color);
 
-	int getWidthForChar(char c, int hSize = -1);
+	int getWidthForChar(int codepoint, int hSize = -1);
 	int getCharHeight();
 
 private:

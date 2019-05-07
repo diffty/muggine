@@ -123,7 +123,10 @@ void Text::drawStr(uint8* buffer, float x, float y, char* text) {
 	int iDrawCurW = 0;
 	int iDrawCurH = 0;
 
-	char c;
+	unsigned char c;
+	int codepoint;
+
+	Color* testcolor = new Color(255, 255, 0);
 
 	while ((c = m_szText[i]) != '\0') {
 		if (c == '\n') {
@@ -131,12 +134,27 @@ void Text::drawStr(uint8* buffer, float x, float y, char* text) {
 			iDrawCurH += m_pFont->getCharHeight();
 		}
 		else {
-			drawChar(buffer, x + iDrawCurW, y + iDrawCurH, c);
-			iDrawCurW += m_pFont->getWidthForChar(c, 16);
+			// UTF-8 DECODING (for now, only U+0000 -> U+07FF is supported)
+			if (m_szText[i] & 0x80) {
+				if (m_szText[i] & 0x40) {
+					int part1 = m_szText[i] & 0x1F;
+					int part2 = m_szText[i+1] & 0x3F;
+					codepoint = (part1 << 6) | part2;
+					i++;
+				}
+			}
+			else {
+				codepoint = m_szText[i];
+			}
+
+			m_pFont->draw(buffer, codepoint, x + iDrawCurW, y + iDrawCurH, 16, testcolor);
+			iDrawCurW += m_pFont->getWidthForChar(codepoint, 16);
 		}
 
 		i++;
 	}
+
+	delete testcolor;
 }
 
 // Grosse source de memory leaks AVEREE cette merde. Ne pas oublier de delete après usage

@@ -128,7 +128,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 
 	FontTTF font("c:/windows/fonts/arialbd.ttf");
 
-	Text testText("Caca test", &font, 50, 50);
+	Text testText("Ce caca est testééé", &font, 50, 50);
 
 	testText.setParentWidget(pCurrScene);
 

@@ -21,8 +21,9 @@ public:
 	~FontBitmap();
 
 	void draw(uint8* pBuffer, char c, int x, int y, int size, Color* color);
+	void draw(uint8* pBuffer, int codepoint, int x, int y, int size, Color* color);
 
-	int getWidthForChar(char c, int hSize = -1);
+	int getWidthForChar(int codepoint, int hSize = -1);
 	int getCharHeight();
 
 	size2d_t getCharSize();

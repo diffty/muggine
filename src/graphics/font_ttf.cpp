@@ -29,9 +29,20 @@ FontTTF::~FontTTF() {
 	delete m_pFontFileBuffer;
 }
 
-void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color) {
+void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int size, Color* color) {
+	draw(pBuffer, c - 32, x, y, size, color);
+}
+
+void FontTTF::draw(uint8* pBuffer, int codepoint, int x, int y, int hSize, Color* color) {
 	int w, h, xoff, yoff;
-	uint8* pGlyphBitmap = stbtt_GetCodepointBitmap(&m_font, 0, stbtt_ScaleForPixelHeight(&m_font, hSize), c, &w, &h, &xoff, &yoff);
+	uint8* pGlyphBitmap = stbtt_GetCodepointBitmap(
+		&m_font,
+		0,
+		stbtt_ScaleForPixelHeight(&m_font, hSize),
+		codepoint,
+		&w, &h,
+		&xoff, &yoff
+	);
 	
 	/* uint8* screenBitmap = new uint8[w*h*SCREEN_BPP];
 	for (int i = 0; i < w*h; i++) {
@@ -54,14 +65,16 @@ void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int hSize, Color* color
 		*(pBuffer + screenIdx * SCREEN_BPP + 1) = int(lerpf(currG, colorStruct.g, glyphPixelValue));
 		*(pBuffer + screenIdx * SCREEN_BPP + 2) = int(lerpf(currB, colorStruct.r, glyphPixelValue));
 	}
+
+	delete pGlyphBitmap;
 }
 
-int FontTTF::getWidthForChar(char c, int hSize) {
+int FontTTF::getWidthForChar(int codepoint, int hSize) {
 	//stbtt_GetCodepointHMetrics(&m_font, c, &advance, &iLeftBearing);
 	int iGlyphWidth, iLeftBearing, ascent, advance, lsb;
 	float scale = stbtt_ScaleForPixelHeight(&m_font, hSize);
 	stbtt_GetFontVMetrics(&m_font, &ascent, 0, 0);
-	stbtt_GetCodepointHMetrics(&m_font, c, &advance, &lsb);
+	stbtt_GetCodepointHMetrics(&m_font, codepoint, &advance, &lsb);
 	//int baseline = (int)(ascent*scale);
 
 	return scale * advance;
