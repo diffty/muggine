@@ -12,7 +12,7 @@ class Text :
 {
 private:
 	IFont* m_pFont;
-	char* m_szText;
+	char* m_szText = NULL;
 
 public:
 	Text(const char* szText, IFont* pFont, vect2df_t vPos);
