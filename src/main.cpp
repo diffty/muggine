@@ -126,8 +126,12 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	FloatingWindow timelineWindow(20, 200, 290, 20, animTimelineWidget);
 	timelineWindow.setParentWidget(&uiScene);
 
-	FontTTF font("c:/windows/fonts/arialbd.ttf");
-
+    #ifdef __APPLE__
+        FontTTF font("/System/Library/Fonts/SFCompactDisplay-Regular.otf");
+    #else
+        FontTTF font("c:/windows/fonts/arialbd.ttf");
+    #endif
+    
 	Text testText("Ce caca est testééé", &font, 50, 50);
 
 	testText.setParentWidget(pCurrScene);
