@@ -3,9 +3,9 @@
 
 
 #include <stdio.h>
-#include "../core/common_types.hpp"
-#include "../core/iwidget.hpp"
-#include "../graphics/drawing.hpp"
+#include "../../core/common_types.hpp"
+#include "../../core/iwidget.hpp"
+#include "../../graphics/drawing.hpp"
 
 
 class SamplerGridWidget : public IWidget {
