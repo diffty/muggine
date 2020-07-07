@@ -127,7 +127,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	timelineWindow.setParentWidget(&uiScene);
 
     #ifdef __APPLE__
-        FontTTF font("/System/Library/Fonts/SFCompactDisplay-Regular.otf");
+        FontTTF font("/System/Library/Fonts/SFCompactDisplay.ttf");
     #else
         FontTTF font("c:/windows/fonts/arialbd.ttf");
     #endif
