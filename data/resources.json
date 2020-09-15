@@ -1,36 +1,65 @@
 {
 	"static_sprites": [
 		{
-			"name": "simon",
-			"path": "data/simon.bmp",
+			"name": "wagon",
+			"path": "data/wagon.bmp",
 		},
 		{
-			"name": "win",
-			"path": "data/win.bmp",
+			"name": "transition-wagon",
+			"path": "data/transition-wagon.bmp",
 		}
 	],
-  "animated_sprites": [
+"animated_sprites": [
     {
-      "name": "animtest3",
-      "path": "data/animtest3.bmp",
-      "gridWidth": 2,
-      "gridHeight": 2,
-      "nbItems": 4
-    },
-    {
-      "name": "objects",
-      "path": "data/objects.bmp",
-      "gridWidth": 6,
-      "gridHeight": 2,
-      "nbItems": 9
-    },
-    {
-      "name": "ui",
-      "path": "data/ui.bmp",
-      "gridWidth": 2,
+      "name": "cha",
+      "path": "data/cha.bmp",
+      "gridWidth": 5,
       "gridHeight": 1,
-      "nbItems": 2
+      "nbItems": 5
+    },
+    {
+      "name": "clothes",
+      "path": "data/clothes.bmp",
+      "gridWidth": 3,
+      "gridHeight": 2,
+      "nbItems": 5
+    },
+    {
+      "name": "door",
+      "path": "data/door.bmp",
+      "gridWidth": 7,
+      "gridHeight": 1,
+      "nbItems": 7
+    },
+    {
+      "name": "faces",
+      "path": "data/faces.bmp",
+      "gridWidth": 5,
+      "gridHeight": 1,
+      "nbItems": 5
+    },
+    {
+      "name": "fred",
+      "path": "data/fred.bmp",
+      "gridWidth": 5,
+      "gridHeight": 1,
+      "nbItems": 5
+    },
+    {
+      "name": "man-haircuts",
+      "path": "data/man-haircuts.bmp",
+      "gridWidth": 6,
+      "gridHeight": 1,
+      "nbItems": 6
+    },
+    {
+      "name": "woman-haircuts",
+      "path": "data/woman-haircuts.bmp",
+      "gridWidth": 5,
+      "gridHeight": 2,
+      "nbItems": 10
     }
+
   ],
 	"fonts": [
 		{
