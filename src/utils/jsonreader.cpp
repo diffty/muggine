@@ -167,7 +167,7 @@ bool JSONReader::parseNode(JSONItemKeyValue* pJsonNode) {
 
 			if (resultKey[0] == '"' && resultKey[iKeySize - 1] == '"') {
 				delete pJsonNode->szKey;
-				pJsonNode->szKey = new char[iKeySize - 2];
+				pJsonNode->szKey = new char[iKeySize - 2 + 1];
 				spliceString(resultKey, 1, iKeySize - 2, pJsonNode->szKey);
 				delete resultKey;
 			}
@@ -186,7 +186,7 @@ bool JSONReader::parseNode(JSONItemKeyValue* pJsonNode) {
 	int iValueSize = strlen(resultValue);
 	
 	if (resultValue[0] == '"' && resultValue[iValueSize - 1] == '"') {
-		char* strValueContent = new char[iValueSize - 2];
+		char* strValueContent = new char[iValueSize - 2 + 1];
 		spliceString(resultValue, 1, iValueSize - 2, strValueContent);
 		pJsonNode->pValue = (void*) strValueContent;
 		pJsonNode->eType = EContentType_STR;
