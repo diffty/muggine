@@ -284,7 +284,7 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
 	overflowTop = maxInt(0, -dstY);
 	overflowBottom = maxInt(0, (dstY + srcH) - SCREEN_HEIGHT);
     
-	printf("%d, %d, %d, %d, %d, %d, %d, %d\n", overflowLeft, overflowRight, overflowBottom, overflowTop, dstY, srcH, dstX, srcW);
+	//printf("%d, %d, %d, %d, %d, %d, %d, %d\n", overflowLeft, overflowRight, overflowBottom, overflowTop, dstY, srcH, dstX, srcW);
 
 	if (overflowLeft > srcW || overflowRight > srcW || overflowTop > srcH || overflowBottom > srcH) {
 		return;
