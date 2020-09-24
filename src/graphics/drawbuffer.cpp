@@ -1,15 +1,29 @@
 #include "drawbuffer.hpp"
 
+#include "drawing.hpp"
+
  
 DrawBuffer::DrawBuffer() {
     m_nbZoneByLine = new long[0];
     m_bIsMasked = false;
+    m_mask = NULL;
 }
 
 DrawBuffer::~DrawBuffer() {
     free(m_pImgData);
     //free(m_aPalette);
-    delete m_nbZoneByLine;
+    if (m_bIsMasked) {
+        if (m_mask != NULL) {
+            delete m_mask;
+        }
+        
+        for (int i = 0; i < m_size.h; i++) {
+            delete m_maskIdByLine[i];
+        }
+        
+        delete m_maskIdByLine;
+        delete m_nbZoneByLine;
+    }
 }
 
 void DrawBuffer::createBuffer(int width, int height /*, byte* paletteData*/) {
@@ -35,6 +49,10 @@ void DrawBuffer::createBuffer(int width, int height /*, byte* paletteData*/) {
 
     // Allocating pixel buffer
     m_pImgData = (uint8 *) malloc(nbPixels * SCREEN_BPP * sizeof(uint8));
+    
+    m_drawBuffer.buffer = m_pImgData;
+    m_drawBuffer.width = m_size.w;
+    m_drawBuffer.height = m_size.h;
 }
 
 void DrawBuffer::wipeBuffer() {
@@ -250,9 +268,16 @@ void DrawBuffer::detectTransparency(color_t transpClr) {
     m_bIsMasked = true;
 }
 
-void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked) {
+
+void DrawBuffer::draw(drawbuffer* pBuffer, int dstX, int dstY, bool reversed, bool masked) {
+    draw(pBuffer, dstX, dstY, 0, 0, (int) m_size.w, (int) m_size.h, reversed, masked);
+}
+ 
+void DrawBuffer::draw(drawbuffer* pBuffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked) {
     if (masked && !m_bIsMasked)
         masked = false;
+    
+    reversed = pBuffer->reverse;
     
     unsigned int imgBufIdx;
 	unsigned int overflowLeft = 0, overflowRight = 0, overflowTop = 0, overflowBottom = 0;
@@ -280,9 +305,9 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
     }
     
 	overflowLeft = maxInt(0, -dstX);
-	overflowRight = maxInt(0, (dstX + srcW) - SCREEN_WIDTH);
+	overflowRight = maxInt(0, (dstX + srcW) - pBuffer->width);
 	overflowTop = maxInt(0, -dstY);
-	overflowBottom = maxInt(0, (dstY + srcH) - SCREEN_HEIGHT);
+	overflowBottom = maxInt(0, (dstY + srcH) - pBuffer->height);
     
 	//printf("%d, %d, %d, %d, %d, %d, %d, %d\n", overflowLeft, overflowRight, overflowBottom, overflowTop, dstY, srcH, dstX, srcW);
 
@@ -300,7 +325,7 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
     
   	if (masked) {
 #if TARGET_3DS
-        int dstYInv = (SCREEN_HEIGHT - 1 - dstY);
+        int dstYInv = (pBuffer->height - 1 - dstY);
         
 		for (int x = srcX; x < srcX + srcW; x++) {
             
@@ -329,7 +354,7 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
                 int posOnBufferY = dstYInv - srcH + initYTranspDelta;
                 
                 // Buffer edge clipping
-                int overflowZoneTop = maxInt((posOnBufferY + zoneSize) - (SCREEN_HEIGHT - 1), 0);
+                int overflowZoneTop = maxInt((posOnBufferY + zoneSize) - (pBuffer->height - 1), 0);
                 int overflowZoneBottom = -minInt(posOnBufferY, 0);
                 int newZoneSize = zoneSize - overflowZoneTop - overflowZoneBottom;
                 
@@ -338,7 +363,7 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
                     newImgBufIdx += overflowZoneBottom;
 
                     // Blittin'
-                    memcpy(buffer + (posOnBufferY * SCREEN_BPP) + (posOnBufferX * SCREEN_HEIGHT * SCREEN_BPP),
+                    memcpy(pBuffer->buffer + (posOnBufferY * SCREEN_BPP) + (posOnBufferX * pBuffer->height * SCREEN_BPP),
                         m_pImgData + newImgBufIdx * SCREEN_BPP,
                         newZoneSize * SCREEN_BPP);
                 }
@@ -348,7 +373,7 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
         for (int y = srcY; y < srcY + srcH; y++) {
             int reversedY = (m_size.h - 1) - (m_size.h - 1 - srcY) + (y % srcH);
             
-            if (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > SCREEN_HEIGHT-1) {
+            if (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > pBuffer->height-1) {
                 continue;
             }
             
@@ -362,7 +387,7 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
                 int posOnImgY = (srcH - 1) - (imgBufIdx / m_size.w);
                 
                 // Skipping out of bounds zones
-                if (posOnImgX + zoneSize < srcX || posOnImgX > srcX + srcW || (posOnImgX - srcX) + zoneSize + dstX < 0 || (posOnImgX - srcX) + dstX > SCREEN_WIDTH-1) {
+                if (posOnImgX + zoneSize < srcX || posOnImgX > srcX + srcW || (posOnImgX - srcX) + zoneSize + dstX < 0 || (posOnImgX - srcX) + dstX > pBuffer->width-1) {
                     continue;
                 }
                 
@@ -381,8 +406,8 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
                     newZoneSize = maxInt(0, newZoneSize - transpZoneX);
                     newImgBufIdx += transpZoneX;
                 }
-                else if (dstX + (newPosOnImgX - srcX) + newZoneSize > SCREEN_WIDTH-1) {
-                    newZoneSize = maxInt(0, newZoneSize - (dstX + (newPosOnImgX - srcX) + newZoneSize - SCREEN_WIDTH));
+                else if (dstX + (newPosOnImgX - srcX) + newZoneSize > pBuffer->width-1) {
+                    newZoneSize = maxInt(0, newZoneSize - (dstX + (newPosOnImgX - srcX) + newZoneSize - pBuffer->width));
                 }
                 
                 // Building final coordinates
@@ -391,15 +416,16 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
                 // TODO: OK FOR NOW THE FLAG REVERSED BLIT THE SPRITE FROM UP TO DOWN.
                 // TODO: Following a logic of blitting the image on a regular buffer and not a framebuffer which y is inverted.
                 // TODO: Gotta fix that later
-                if (reversed) {
-                    posOnBufferY = (dstY + y);
+                if (!reversed) {
+                    //posOnBufferY = (dstY + y);
+                    posOnBufferY = (pBuffer->height - srcH - dstY + y - srcY);
                 }
                 else {
                     posOnBufferY = (((srcH - 1 + srcY) - reversedY) + dstY);
                 }
                 
                 // Blittin'
-                memcpy(buffer + (posOnBufferX * SCREEN_BPP) + (posOnBufferY * SCREEN_WIDTH * SCREEN_BPP),
+                memcpy(pBuffer->buffer + (posOnBufferX * SCREEN_BPP) + (posOnBufferY * pBuffer->width * SCREEN_BPP),
                        m_pImgData + newImgBufIdx * SCREEN_BPP,
                        newZoneSize * SCREEN_BPP);
             }
@@ -409,24 +435,43 @@ void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int
 	else {
 #if TARGET_3DS
 		for (int i = overflowLeft; i < srcW - overflowRight; i++) {
-			memcpy(buffer + (int) (((SCREEN_HEIGHT - 1) - (srcH - 1) - dstY) * SCREEN_BPP) + ((dstX + i) * SCREEN_HEIGHT * SCREEN_BPP),
+			memcpy(pBuffer->buffer + (int) (((pBuffer->height - 1) - (srcH - 1) - dstY) * SCREEN_BPP) + ((dstX + i) * pBuffer->height * SCREEN_BPP),
                 m_pImgData + (int) (srcY * SCREEN_BPP + (i + srcX) * m_size.h * SCREEN_BPP),
 				(srcH - overflowTop - overflowBottom) * SCREEN_BPP);
 		}
 #else
-		for (int i = overflowTop; i < srcH - overflowBottom; i++) {
-            memcpy(buffer + (maxInt(0, dstX) * SCREEN_BPP) + ((maxInt(0, dstY) + i - overflowTop) * SCREEN_WIDTH * SCREEN_BPP),
-				m_pImgData + (int) ((m_size.h - (i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((srcX) * SCREEN_BPP),
-				(srcW - overflowRight) * SCREEN_BPP);
-		}
+        // TODO: ui c'est rough grosse répétition de code heh
+        if (!reversed) {
+            for (int i = overflowTop; i < srcH - overflowBottom; i++) {
+                memcpy(
+                       pBuffer->buffer + (maxInt(0, dstX) * SCREEN_BPP) + ((maxInt(0, dstY) + i - overflowTop) * pBuffer->width * SCREEN_BPP),
+                       m_pImgData + (int) (((i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((srcX) * SCREEN_BPP),
+                       (srcW - overflowRight) * SCREEN_BPP);
+            }
+        }
+        else {
+            for (int i = overflowTop; i < srcH - overflowBottom; i++) {
+                memcpy(
+                       pBuffer->buffer + (maxInt(0, dstX) * SCREEN_BPP) + ((maxInt(0, dstY) + i - overflowTop) * pBuffer->width * SCREEN_BPP),
+                       m_pImgData + (int) ((m_size.h - (i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((srcX) * SCREEN_BPP),
+                       (srcW - overflowRight) * SCREEN_BPP);
+            }
+        }
 #endif
 	}
 }
 
-void DrawBuffer::draw(uint8* buffer, int dstX, int dstY, bool reversed, bool masked) {
-    draw(buffer, dstX, dstY, 0, 0, (int) m_size.w, (int) m_size.h, reversed, masked);
+void DrawBuffer::clear() {
+    clear(Color(0, 255, 0));
 }
 
-uint8* DrawBuffer::getBuffer() {
-    return m_pImgData;
+void DrawBuffer::clear(Color color) {
+    size2d_t drawBufSize = getSizei();
+    
+    // Clearing chara's buffer background with transparent color
+    drawBox(&m_drawBuffer, 0, 0, drawBufSize.w-1, drawBufSize.h-1, &color);
+}
+
+drawbuffer* DrawBuffer::getBuffer() {
+    return &m_drawBuffer;
 }

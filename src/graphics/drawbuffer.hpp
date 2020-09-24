@@ -19,6 +19,7 @@
 class DrawBuffer {
 protected:
 	uint8* m_pImgData;
+    drawbuffer m_drawBuffer;
 	size2df_t m_size;
 	long* m_mask;
 	long* m_nbZoneByLine;
@@ -35,11 +36,13 @@ public:
     void createBuffer(int w, int h /*, byte* paletteData = NULL */);
     void wipeBuffer();
 
-    void draw(uint8* buffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked);
-    void draw(uint8* buffer, int dstX, int dstY, bool reversed, bool masked);
+    void draw(drawbuffer* pBuffer, int dstX, int dstY, bool reversed, bool masked);
+    void draw(drawbuffer* pBuffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked);
     
     void detectTransparency(color_t transpClr);
-    uint8* getBuffer();
+    void clear();
+    void clear(Color clr);
+    drawbuffer* getBuffer();
 
 	size2df_t getSize() { return m_size; }
 	size2d_t getSizei() {
