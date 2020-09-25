@@ -39,6 +39,10 @@
 #include "ui/floating_window.hpp"
 #include "graphics/font_bmp.hpp"
 #include "graphics/font_ttf.hpp"
+#include "graphics/drawbuffer.hpp"
+#include "graphics/drawing.hpp"
+#include "game/ct_character.hpp"
+#include "game/ct_wagon.hpp"
 
 
 #include <time.h>
@@ -101,30 +105,30 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Scene uiScene;
 
 	pGfx->SetDoubleBuffering(false);
-	uint8* fb = pGfx->GetFramebuffer();
+	drawbuffer fb = pGfx->GetFramebuffer();
 	pSys->initLoop();
     
     int frameId = 0;
     int x = 0, y = 0;
 
-	SceneManager sceneManager;
-	sceneManager.loadFromJSON("data/scene01.json");
+	//SceneManager sceneManager;
+	//sceneManager.loadFromJSON("data/scene01.json");
 
-	SceneDescription* pCurrSceneDesc = sceneManager.getScene("Scene01");
-	Scene* pCurrScene = pCurrSceneDesc->pScene;
-	AnimationTimeline* pCurrAnimTimeline = pCurrSceneDesc->pAnimTimeline;
+	//SceneDescription* pCurrSceneDesc = sceneManager.getScene("Scene01");
+	//Scene* pCurrScene = pCurrSceneDesc->pScene;
+	//AnimationTimeline* pCurrAnimTimeline = pCurrSceneDesc->pAnimTimeline;
 
-	AnimationTimelineWidget* animTimelineWidget = new AnimationTimelineWidget(0, 0, 300, 10, pCurrAnimTimeline, 0.0, 10.0);
+	//AnimationTimelineWidget* animTimelineWidget = new AnimationTimelineWidget(0, 0, 300, 10, pCurrAnimTimeline, 0.0, 10.0);
 
 	Input* pInputSys = pSys->getInputSys();
 
-	OutlinerWidget* outlinerWidget = new OutlinerWidget(0, 0, 70, 100, pCurrScene);
+	//OutlinerWidget* outlinerWidget = new OutlinerWidget(0, 0, 70, 100, pCurrScene);
 
-	FloatingWindow outlinerWindow(30, 100, 70, 100, outlinerWidget);
-	outlinerWindow.setParentWidget(&uiScene);
+	//FloatingWindow outlinerWindow(30, 100, 70, 100, outlinerWidget);
+	//outlinerWindow.setParentWidget(&uiScene);
 
-	FloatingWindow timelineWindow(20, 200, 290, 20, animTimelineWidget);
-	timelineWindow.setParentWidget(&uiScene);
+	//FloatingWindow timelineWindow(20, 200, 290, 20, animTimelineWidget);
+	//timelineWindow.setParentWidget(&uiScene);
 
     #ifdef __APPLE__
         FontTTF font("/System/Library/Fonts/SFCompactDisplay.ttf");
@@ -134,7 +138,38 @@ void MainApp(System* pSys, Graphics* pGfx) {
     
 	Text testText("Ce caca est testééé", &font, 50, 50);
 
-	testText.setParentWidget(pCurrScene);
+	//testText.setParentWidget(pGameScene);
+    
+    Color bgClr(200, 100, 0);
+
+    /*DrawBuffer drawBuf;
+    drawBuf.createBuffer(100, 100);
+    
+    size2d_t bufSize = drawBuf.getSizei();
+    
+    drawBox(drawBuf.getBuffer(), 0, 0, bufSize.w-1, bufSize.h-1, &bgClr);
+    SpriteSheet* chaImg = rscManager.getSprShtRsc("cha");
+    chaImg->draw(drawBuf.getBuffer(), 1, 10, 10, false, true);
+    
+    drawBuf.detectTransparency(bgClr.getColor());*/
+
+    /*Sprite drawSprite(&drawBuf, 10, 10);
+    drawSprite.setParentWidget(pGameScene);*/
+    
+    
+    /*for (int y = 0; y < 5; y++) {
+        for (int x = 0; x < 5; x++) {
+            CTCharacter* procChara = new CTCharacter();
+            procChara->translate(x * 35, y * 50);
+            pGameScene->addComponent(procChara);
+        }
+    }*/
+    
+    
+    SpriteSheet* testSprSht = rscManager.getSprShtRsc("clothes");
+    
+    CTWagon* wagon = new CTWagon();
+    pGameScene->addComponent(wagon);
 
     // Main loop
 	while (pSys->mainLoop())
@@ -143,12 +178,16 @@ void MainApp(System* pSys, Graphics* pGfx) {
         
         pGfx->FillWithColor(0x00);
 
-		// printf("FPS: %u\n", (uint) (1./deltaTime));
+        testSprSht->draw(&fb, 1, 0, 0, false, true);
+        
+
+        // printf("FPS: %u\n", (uint) (1./deltaTime));
         
 		//gameManager.update();
 		//gameManager.draw(fb);
 
-		if (pInputSys->IsKeyPressed(KEYB_Q)) {
+		/*
+        if (pInputSys->IsKeyPressed(KEYB_Q)) {
 			pCurrAnimTimeline->setTime(pCurrAnimTimeline->getTime() - deltaTime);
 		}
 
@@ -159,23 +198,49 @@ void MainApp(System* pSys, Graphics* pGfx) {
 		if (pInputSys->IsKeyPressed(KEYB_SPACE)) {
 			pCurrAnimTimeline->setIsPlaying(!pCurrAnimTimeline->isPlaying());
 		}
+        */
 
-		MouseEvent* mouseEvt = pInputSys->GetButtonPressEvent(MOUSE_BTN_LEFT);
+        /*if (pInputSys->IsKeyPressed(KEYB_Q)) {
+            drawSprite.translate(-1, 0);
+        }
+        else if (pInputSys->IsKeyPressed(KEYB_D)) {
+            drawSprite.translate(1, 0);
+        }
+
+        if (pInputSys->IsKeyPressed(KEYB_Z)) {
+            drawSprite.translate(0, -1);
+        }
+        else if (pInputSys->IsKeyPressed(KEYB_S)) {
+            drawSprite.translate(0, 1);
+        }*/
+
+        
+        if (pInputSys->IsKeyPressed(KEYB_SPACE)) {
+            pGameScene->removeComponent(wagon);
+            delete wagon;
+            wagon = new CTWagon();
+            pGameScene->addComponent(wagon);
+        }
+        
+        
+        MouseEvent* mouseEvt = pInputSys->GetButtonPressEvent(MOUSE_BTN_LEFT);
 		if (mouseEvt) {
 			vect2d_t vCurrMousePos = pInputSys->getCurrInputPos();
 			uiScene.receiveTouchInput(vCurrMousePos);
 		}
 
-		pCurrScene->update();
-		pCurrScene->draw(fb);
+		pGameScene->update();
+		pGameScene->draw(&fb);
 
 		uiScene.update();
-		uiScene.draw(fb);
+		uiScene.draw(&fb);
 
 		Color* c = new Color(75, 75, 255);
 		//font.draw(fb, 'a', 20, 20, 16, c);
 		delete c;
-
+        
+        //drawBuf.draw(fb, 10, 10, false, true);
+        
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
 		pGfx->SwapBuffer();
