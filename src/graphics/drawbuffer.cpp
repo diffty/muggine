@@ -4,7 +4,6 @@
 
  
 DrawBuffer::DrawBuffer() {
-    m_nbZoneByLine = new long[0];
     m_bIsMasked = false;
     m_mask = NULL;
 }
