@@ -60,12 +60,12 @@ void PaginatedWidgetLayout::update() {
 	}*/
 }
 
-void PaginatedWidgetLayout::draw(uint8* buffer) {
+void PaginatedWidgetLayout::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
-		drawChildren(buffer);
+		drawChildren(pBuffer);
 
 		/*if (m_pCurrWidget != NULL) {
-			m_pCurrWidget->draw(buffer);
+			m_pCurrWidget->draw(pBuffer);
 		}*/
 	}
 }

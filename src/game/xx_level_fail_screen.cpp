@@ -23,8 +23,8 @@ void XXLevelFailScreen::update() {
 	m_fTimeBeforeEnd -= System::get()->getDeltaTime();
 }
 
-void XXLevelFailScreen::draw(uint8* fb) {
-	m_pLevelTextLabel->draw(fb);
+void XXLevelFailScreen::draw(drawbuffer* pBuffer) {
+	m_pLevelTextLabel->draw(pBuffer);
 }
 
 bool XXLevelFailScreen::doMustDisappear() {

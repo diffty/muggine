@@ -55,15 +55,15 @@ bool AnimationTimelineWidget::receiveTouchInput(vect2d_t touchPt) {
 	}
 }
 
-void AnimationTimelineWidget::draw(uint8* buffer) {
+void AnimationTimelineWidget::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
-		drawChildren(buffer);
+		drawChildren(pBuffer);
 
 		vect2df_t vPos = m_rect.getPos();
 		size2df_t sSize = m_rect.getSize();
 
 		Color lineColor(255, 0, 0);
-		drawLine(buffer, vPos.x, vPos.y+2, vPos.x + sSize.w, vPos.y+2, &lineColor);
+		drawLine(pBuffer, vPos.x, vPos.y+2, vPos.x + sSize.w, vPos.y+2, &lineColor);
 		
 		float fXPos = (m_pDrivenTimeline->getTime() - m_fMinTime) / (m_fMaxTime - m_fMinTime);
 		if (fXPos < 0.) {
@@ -73,6 +73,6 @@ void AnimationTimelineWidget::draw(uint8* buffer) {
 			fXPos = 1.;
 		}
 
-		drawLine(buffer, vPos.x + fXPos * sSize.w, vPos.y - TIME_MARKER_HEIGHT + 4, vPos.x + fXPos * sSize.w, vPos.y + (TIME_MARKER_HEIGHT + 1) + 4, &lineColor);
+		drawLine(pBuffer, vPos.x + fXPos * sSize.w, vPos.y - TIME_MARKER_HEIGHT + 4, vPos.x + fXPos * sSize.w, vPos.y + (TIME_MARKER_HEIGHT + 1) + 4, &lineColor);
 	}
 }

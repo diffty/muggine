@@ -27,7 +27,7 @@ public:
 	bool isHovered();
 
 	void update();
-	void draw(uint8* pBuffer);
+	void draw(drawbuffer* pBuffer);
 
 private:
 	IWidget* m_pWidget = NULL;
@@ -56,7 +56,7 @@ public:
 	void onRelease();
 
 	void update();
-	void draw(uint8* buffer);
+	void draw(drawbuffer* buffer);
 
 	void addRow(IWidget* pWidget);
 

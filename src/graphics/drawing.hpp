@@ -10,8 +10,8 @@
 #include "../core/common_types.hpp"
 
 
-void drawLine(uint8* buffer, int fromX, int fromY, int toX, int toY, Color* color);
-void drawBox(uint8* fb, int fromX, int fromY, int toX, int toY, Color* color);
-void rescaleBuffer(uint8* srcBuf, int srcW, int srcH, int srcBpp, uint8* dstBuf, int dstW, int dstH, int dstBpp);
+void drawLine(drawbuffer* pBuffer, int fromX, int fromY, int toX, int toY, Color* color);
+void drawBox(drawbuffer* pBuffer, int fromX, int fromY, int toX, int toY, Color* color);
+void rescaleBuffer(drawbuffer* srcBuf, int srcW, int srcH, int srcBpp, uint8* dstBuf, int dstW, int dstH, int dstBpp);
 
 #endif

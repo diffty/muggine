@@ -19,7 +19,7 @@ public:
 	~XXLevelFailScreen();
 
 	void update();
-	void draw(uint8* fb);
+	void draw(drawbuffer* pBuffer);
 
 	bool doMustDisappear();
 };

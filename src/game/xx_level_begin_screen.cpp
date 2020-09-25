@@ -27,9 +27,9 @@ void XXLevelBeginScreen::update() {
 	m_fTimeBeforeEnd -= System::get()->getDeltaTime();
 }
 
-void XXLevelBeginScreen::draw(uint8* fb) {
-	m_pLevelTextLabel->draw(fb);
-	m_pLevelNumTextLabel->draw(fb);
+void XXLevelBeginScreen::draw(drawbuffer* pBuffer) {
+	m_pLevelTextLabel->draw(pBuffer);
+	m_pLevelNumTextLabel->draw(pBuffer);
 }
 
 bool XXLevelBeginScreen::doMustDisappear() {

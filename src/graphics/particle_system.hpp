@@ -20,7 +20,7 @@ public:
 	void emitParticle(SpriteSheet* pSprSht, float fStartVectX, float fStartVectY, float fStartVelX, float fStartVelY, int startFrame, int endFrame, uint uFPS);
 
 	void update();
-	void draw(uint8* pBuffer);
+	void draw(drawbuffer* pBuffer);
 	
 	void destroyParticle(Particle* pParticle);
 	void destroyAllParticles();

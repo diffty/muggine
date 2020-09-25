@@ -21,7 +21,7 @@ public:
 	void switchToNextWidget();
 
 	void update();
-	void draw(uint8* buffer);
+	void draw(drawbuffer* pBuffer);
 	bool receiveTouchInput(vect2d_t inputPos);
 
 	void updateChildren();

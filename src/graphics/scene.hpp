@@ -30,7 +30,7 @@ public:
 
 	//void receiveTouchInput(vect2d_t inputPos);
 	void update();
-	void draw(uint8* pBuffer);
+	void draw(drawbuffer* pBuffer);
     void clear();
 
 	void destroy();

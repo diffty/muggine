@@ -77,8 +77,8 @@ AnimationState* AnimatedSprite::getState() {
     return m_pCurrAnimState;
 }
 
-void AnimatedSprite::draw(uint8* buffer) {
-    Sprite::draw(buffer);
+void AnimatedSprite::draw(drawbuffer* pBuffer) {
+    Sprite::draw(pBuffer);
 }
 
 void AnimatedSprite::update() {

@@ -32,14 +32,14 @@ void XScrollingImg::update() {
     m_fXPos -= System::get()->getDeltaTime() * m_fScrollSpeed;
 }
 
-void XScrollingImg::draw(uint8* fb) {
+void XScrollingImg::draw(drawbuffer* pBuffer) {
     size2df_t imgSize = m_img->getSize();
     
     int fStartPosX = m_fXPos - imgSize.w;
     int fCurXPos = fStartPosX;
     
     while (fCurXPos < SCREEN_WIDTH) {
-        m_img->draw(fb, (int) fCurXPos, getRect()->getPos().y, false, true);
+        m_img->draw(pBuffer, (int) fCurXPos, getRect()->getPos().y, false, true);
         fCurXPos += imgSize.w;
     }
 }

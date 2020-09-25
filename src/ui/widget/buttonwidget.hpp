@@ -39,7 +39,7 @@ public:
 	void onRelease();
 
 	void update();
-	void draw(uint8* buffer);
+	void draw(drawbuffer* pBuffer);
 };
 
 

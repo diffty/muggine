@@ -27,7 +27,7 @@ public:
 	bool isActive();
 
 	void update();
-	void draw(uint8* pBuffer);
+	void draw(drawbuffer* pBuffer);
 };
 
 

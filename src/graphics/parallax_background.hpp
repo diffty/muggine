@@ -35,7 +35,7 @@ public:
     void addLayer(Image* layerImg, int distance, int offX = 0, int offY = 0);
     void deleteLayer(int layerNum);
     void update();
-    void draw(uint8* buffer);
+    void draw(drawbuffer* pBuffer);
     void setCamPos(int x, int y);
     vect2d_t getCamPos();
 	void setTransparencyDrawing(bool newTransparency);

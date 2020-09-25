@@ -49,7 +49,7 @@ public:
     AnimationState* getState();
     
     void update();
-    void draw(uint8* buffer);
+    void draw(drawbuffer* pBuffer);
 
 	void destroyAllStates();
 };

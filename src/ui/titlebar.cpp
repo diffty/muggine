@@ -74,7 +74,7 @@ void Titlebar::update() {
 	}
 }
 
-void Titlebar::draw(uint8* pBuffer) {
+void Titlebar::draw(drawbuffer* pBuffer) {
 	vect2df_t vPos = m_rect.getPos();
 	size2df_t sSize = m_rect.getSize();
 	drawBox(pBuffer, vPos.x, vPos.y, vPos.x + sSize.w, vPos.y + sSize.h, &m_color);

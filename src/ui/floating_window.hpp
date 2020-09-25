@@ -16,7 +16,7 @@ public:
 	void setContent(IWidget* pWidget);
 
 	void update();
-	void draw(uint8* pBuffer);
+	void draw(drawbuffer* pBuffer);
 
 	void close();
 	void onMove(vect2d_t vDeltaPos);

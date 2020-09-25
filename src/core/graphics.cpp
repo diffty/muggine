@@ -44,9 +44,9 @@ void Graphics::Init() {
 }
 
 void Graphics::FillWithColor(uint8 colorHex) {
-	uint8* fb = GetFramebuffer();
+	drawbuffer fb = GetFramebuffer();
 
-	memset(fb,
+    memset(fb.buffer,
 		colorHex,
 		SCREEN_BPP * SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint8)
 		);
@@ -59,14 +59,22 @@ void Graphics::SetDoubleBuffering(bool isActive) {
 #endif
 }
 
-uint8* Graphics::GetFramebuffer() {
+drawbuffer Graphics::GetFramebuffer() {
+    drawbuffer buf;
+    
 #ifdef TARGET_3DS
-	return gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL);
+	buf.buffer = gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL);
 
 #else
-	return (uint8*) m_pSDLDrawSurface->pixels;
+    buf.buffer = (uint8*) m_pSDLDrawSurface->pixels;
+    buf.reverse = true;
 
 #endif
+    
+    buf.width = SCREEN_WIDTH;
+    buf.height = SCREEN_HEIGHT;
+
+    return buf;
 }
 
 void Graphics::FlushBuffer() {

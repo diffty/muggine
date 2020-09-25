@@ -27,9 +27,9 @@ void TinyProgressBar::setMaxValue(float fMaxValue) {
 	m_fMaxValue = fMaxValue;
 }
 
-void TinyProgressBar::draw(uint8* fb) {
+void TinyProgressBar::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
-		drawChildren(fb);
+		drawChildren(pBuffer);
 
 		vect2df_t vCurPos = m_rect.getPos();
 		size2df_t sCurSize = m_rect.getSize();
@@ -39,14 +39,14 @@ void TinyProgressBar::draw(uint8* fb) {
 		Color completedColor(0, 255, 0);
 		Color remainingColor(255, 0, 0);
 
-		drawBox(fb,
+		drawBox(pBuffer,
 			vCurPos.x,
 			vCurPos.y,
 			vCurPos.x + completedBarSize,
 			vCurPos.y + sCurSize.h,
 			&completedColor);
 
-		drawBox(fb,
+		drawBox(pBuffer,
 			vCurPos.x + completedBarSize,
 			vCurPos.y,
 			vCurPos.x + sCurSize.w,

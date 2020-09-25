@@ -31,7 +31,7 @@ public:
 	void setGridOffsetX(int x);
 
 	void update();
-	void draw(uint8* buffer);
+	void draw(drawbuffer* pBuffer);
 	//void receiveTouchInput(vect2d_t inputPos);
 
 	void destroyAllWidgets();

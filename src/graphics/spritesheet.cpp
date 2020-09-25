@@ -23,13 +23,12 @@ SpriteSheet::SpriteSheet(char* fileName, int gridWidth, int gridHeight, uint len
 	m_currFrame = 0;
 }
 
-void SpriteSheet::draw(uint8* buffer, int dstX, int dstY, bool reversed, bool masked) {
-    draw(buffer, m_currFrame, dstX, dstY, reversed, masked);
+void SpriteSheet::draw(drawbuffer* pBuffer, uint frame, int dstX, int dstY, bool reversed, bool masked) {
+    Image::draw(pBuffer, dstX, dstY, (m_frameSize.w * (frame % m_gridSize.w)), (m_frameSize.h * ((frame / m_gridSize.w))), m_frameSize.w, m_frameSize.h, reversed, masked);
 }
 
-void SpriteSheet::draw(uint8* buffer, uint frame, int dstX, int dstY, bool reversed, bool masked) {
-    //printf("%i: %i\n", frame, (m_frameSize.w * (frame % m_gridSize.w)));
-    Image::draw(buffer, dstX, dstY, (m_frameSize.w * (frame % m_gridSize.w)), (m_frameSize.h * (m_gridSize.h - 1 - (frame / m_gridSize.w))), m_frameSize.w, m_frameSize.h, reversed, masked);
+void SpriteSheet::draw(drawbuffer* pBuffer, int dstX, int dstY, bool reversed, bool masked) {
+    draw(pBuffer, m_currFrame, dstX, dstY, reversed, masked);
 }
 
 size2d_t SpriteSheet::getFrameSize() {
@@ -42,6 +41,10 @@ uint SpriteSheet::getFrame() {
 
 void SpriteSheet::setFrame(uint newFrame) {
 	m_currFrame = newFrame;
+}
+
+uint SpriteSheet::getLength() {
+    return m_length;
 }
 
 void SpriteSheet::nextFrame() {

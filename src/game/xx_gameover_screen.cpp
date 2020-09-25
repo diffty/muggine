@@ -14,6 +14,6 @@ void XXGameOverScreen::update() {
 }
 
 
-void XXGameOverScreen::draw(uint8* buffer) {
-    drawChildren(buffer);
+void XXGameOverScreen::draw(drawbuffer* pBuffer) {
+    drawChildren(pBuffer);
 }

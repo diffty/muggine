@@ -28,7 +28,7 @@ public:
     
     float getScrollSpeed();
     
-    void draw(uint8*);
+    void draw(drawbuffer*);
     void update();
    
 };

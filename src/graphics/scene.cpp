@@ -47,7 +47,7 @@ void Scene::update() {
 	updateChildren();
 }
 
-void Scene::draw(uint8* pBuffer) {
+void Scene::draw(drawbuffer* pBuffer) {
 	drawChildren(pBuffer);
 }
 

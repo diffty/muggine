@@ -52,12 +52,12 @@ bool ButtonWidget::receiveTouchInput(vect2d_t touchPt) {
 	}
 }
 
-void ButtonWidget::draw(uint8* buffer) {
+void ButtonWidget::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
-		drawChildren(buffer);
+		drawChildren(pBuffer);
 
 		if (m_state == 1) {
-			drawBox(buffer,
+			drawBox(pBuffer,
 				m_rect.getPos().x,
 				m_rect.getPos().y,
 				m_rect.getPos().x + m_rect.getSize().w,
@@ -66,7 +66,7 @@ void ButtonWidget::draw(uint8* buffer) {
 			);
 		}
 		else if (m_state == 2 || m_state == 4) {
-			drawBox(buffer,
+			drawBox(pBuffer,
 				m_rect.getPos().x,
 				m_rect.getPos().y,
 				m_rect.getPos().x + m_rect.getSize().w,
@@ -75,7 +75,7 @@ void ButtonWidget::draw(uint8* buffer) {
 			);
 		}
 		else {
-			drawBox(buffer,
+			drawBox(pBuffer,
 				m_rect.getPos().x,
 				m_rect.getPos().y,
 				m_rect.getPos().x + m_rect.getSize().w,

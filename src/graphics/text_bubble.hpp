@@ -26,7 +26,7 @@ public:
 
 	void updateSize();
 
-	void draw(uint8* buffer);
+	void draw(drawbuffer* pBuffer);
 };
 
 

@@ -28,7 +28,7 @@ void XXLevelSuccessScreen::update() {
 }
 
 
-void XXLevelSuccessScreen::draw(uint8* fb) {
+void XXLevelSuccessScreen::draw(drawbuffer* pBuffer) {
 	
 }
 

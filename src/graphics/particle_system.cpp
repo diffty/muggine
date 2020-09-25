@@ -35,7 +35,7 @@ void ParticleSystem::update() {
 	IWidget::update();
 }
 
-void ParticleSystem::draw(uint8* pBuffer) {
+void ParticleSystem::draw(drawbuffer* pBuffer) {
 	LLNode* pCurrNode = m_llParticles.pHead;
 
 	while (pCurrNode != NULL) {

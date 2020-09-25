@@ -37,12 +37,12 @@ void IWidget::init(char* szName) {
     initList(&m_llWidgetNodesToDelete);
 }
 
-void IWidget::drawChildren(uint8* buffer) {
+void IWidget::drawChildren(drawbuffer* pBuffer) {
 	LLNode* pCurrNode = m_llChildrenWidgets.pHead;
 
 	while (pCurrNode != NULL) {
 		IWidget* pCurrWidget = (IWidget*)pCurrNode->pData;
-		if (pCurrWidget->isActive()) pCurrWidget->draw(buffer);
+		if (pCurrWidget->isActive()) pCurrWidget->draw(pBuffer);
 		pCurrNode = pCurrNode->pNext;
 	}
 }

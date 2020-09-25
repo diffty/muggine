@@ -61,7 +61,7 @@ void TransitionScreen::update() {
 	}
 }
 
-void TransitionScreen::draw(uint8* pBuffer) {
+void TransitionScreen::draw(drawbuffer* pBuffer) {
 	if (m_fAnimActive) {
         // Use m_fAnimCoef to know where we are in the animation
 	}

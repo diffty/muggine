@@ -93,14 +93,14 @@ void GridWidgetLayout::update() {
 	updateChildren();
 }
 
-void GridWidgetLayout::draw(uint8* buffer) {
+void GridWidgetLayout::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
-		drawChildren(buffer);
+		drawChildren(pBuffer);
 
 		LLNode* currNode = m_llChildrenWidgets.pHead;
 	
 		while (currNode != NULL) {
-			((IWidget*)currNode->pData)->draw(buffer);
+			((IWidget*)currNode->pData)->draw(pBuffer);
 		
 			currNode = currNode->pNext;
 		}

@@ -237,42 +237,42 @@ void GameManager::update() {
 	}
 }
 
-void GameManager::draw(uint8* fb) {
+void GameManager::draw(drawbuffer* pBuffer) {
 	switch (m_eCurrState) {
 	case E_APP_STATE_LOGO:
 		break;
 
 	case E_APP_STATE_INGAME:
-		m_gameScene.draw(fb);
-        m_pGameMode->debugDraw(fb);
+		m_gameScene.draw(pBuffer);
+        m_pGameMode->debugDraw(pBuffer);
 		break;
 
 	case E_APP_STATE_INGAME_MENU:
-		m_gameScene.draw(fb);
-		m_menuScene.draw(fb);
+		m_gameScene.draw(pBuffer);
+		m_menuScene.draw(pBuffer);
 		break;
 
 	case E_APP_STATE_MENU:
-		m_menuScene.draw(fb);
+		m_menuScene.draw(pBuffer);
 		break;
 
 	case E_APP_STATE_LEVEL_BEGIN:
-		m_pLevelBeginScreen->draw(fb);
+		m_pLevelBeginScreen->draw(pBuffer);
 		break;
 
 	case E_APP_STATE_LEVEL_SUCCESS:
-		//m_gameScene.draw(fb);
-		m_pLevelSuccessScreen->draw(fb);
+		//m_gameScene.draw(pBuffer);
+		m_pLevelSuccessScreen->draw(pBuffer);
 		break;
 
 	case E_APP_STATE_LEVEL_FAIL:
-		//m_gameScene.draw(fb);
-		m_pLevelFailScreen->draw(fb);
+		//m_gameScene.draw(pBuffer);
+		m_pLevelFailScreen->draw(pBuffer);
 		break;
             
     case E_APP_STATE_LEVEL_END:
-        m_gameScene.draw(fb);
-        m_pGameOverScreen->draw(fb);
+        m_gameScene.draw(pBuffer);
+        m_pGameOverScreen->draw(pBuffer);
         break;
     
     case E_APP_STATE_NULL:
@@ -304,7 +304,7 @@ void GameManager::draw(uint8* fb) {
 		int iNbPixels = SCREEN_WIDTH * SCREEN_HEIGHT * SCREEN_BPP;
 
 		for (int i = 0; i < iNbPixels; i++) {
-			fb[i] *= m_fScreenAlpha;
+			pBuffer->buffer[i] *= m_fScreenAlpha;
 		}
 	}
 }

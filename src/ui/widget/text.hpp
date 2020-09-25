@@ -32,10 +32,10 @@ public:
 
 	int getCharHeight();
 
-	void draw(uint8* buffer);
+	void draw(drawbuffer* pBuffer);
 
-	void drawChar(uint8* buffer, float x, float y, char c);
-	void drawStr(uint8* buffer, float x, float y, char* szText);
+	void drawChar(drawbuffer* pBuffer, float x, float y, char c);
+	void drawStr(drawbuffer* pBuffer, float x, float y, char* szText);
 
 	static char* intToStr(int iNum, int padding = 0);
 };

@@ -21,7 +21,7 @@ public:
 
 	bool receiveTouchInput(vect2d_t touchPt);
 	void update();
-	void draw(uint8* pBuffer);
+	void draw(drawbuffer* pBuffer);
 
 	void onMove();
 

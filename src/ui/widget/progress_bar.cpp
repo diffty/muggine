@@ -48,51 +48,51 @@ void ProgressBar::setCompletedColor(unsigned int r, unsigned int g, unsigned int
     m_completedColor.setColor(r, g, b);
 }
 
-void ProgressBar::draw(uint8* fb) {
+void ProgressBar::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
-		drawChildren(fb);
+		drawChildren(pBuffer);
         
 		vect2df_t vCurPos = m_rect.getPos();
 		size2df_t sCurSize = m_rect.getSize();
 
 		float completedBarSize = (-m_fMinValue + m_fCurValue) / (m_fMaxValue - m_fMinValue) * (sCurSize.w-1);
 
-		drawBox(fb,
+		drawBox(pBuffer,
 			vCurPos.x + 1,
 			vCurPos.y + 1,
 			vCurPos.x + completedBarSize,
 			vCurPos.y + sCurSize.h - 1 - 1,
 			&m_completedColor);
 
-		drawBox(fb,
+		drawBox(pBuffer,
 			vCurPos.x + completedBarSize,
 			vCurPos.y + 1,
 			vCurPos.x + sCurSize.w - 1 - 1,
 			vCurPos.y + sCurSize.h - 1,
 			&m_remainingColor);
         
-        drawLine(fb,
+        drawLine(pBuffer,
                  vCurPos.x + 1,
                  vCurPos.y,
                  vCurPos.x + 1 + sCurSize.w - 1 - 2,
                  vCurPos.y,
                  &m_borderColor);
         
-        drawLine(fb,
+        drawLine(pBuffer,
                  vCurPos.x + 1,
                  vCurPos.y + sCurSize.h - 1,
                  vCurPos.x + 1 + sCurSize.w - 1 - 2,
                  vCurPos.y + sCurSize.h - 1,
                  &m_borderColor);
         
-        drawLine(fb,
+        drawLine(pBuffer,
                  vCurPos.x,
                  vCurPos.y + 1,
                  vCurPos.x,
                  vCurPos.y + 1 + sCurSize.h - 2,
                  &m_borderColor);
         
-        drawLine(fb,
+        drawLine(pBuffer,
                  vCurPos.x + sCurSize.w - 2,
                  vCurPos.y + 1,
                  vCurPos.x + sCurSize.w - 2,
@@ -101,7 +101,7 @@ void ProgressBar::draw(uint8* fb) {
         
         
         float fZeroBarPos = (-m_fMinValue + 0.) / (m_fMaxValue - m_fMinValue) * (sCurSize.w-1);
-        drawLine(fb,
+        drawLine(pBuffer,
                  vCurPos.x + fZeroBarPos,
                  vCurPos.y + 1,
                  vCurPos.x + fZeroBarPos,

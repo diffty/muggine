@@ -20,7 +20,7 @@ public:
 	void setMinValue(float fMinValue);
 	void setMaxValue(float fMaxValue);
 
-	void draw(uint8* fb);
+	void draw(drawbuffer* pBuffer);
 };
 
 

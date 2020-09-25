@@ -25,8 +25,6 @@ protected:
 	long* m_nbZoneByLine;
 	long** m_maskIdByLine;
 	uint m_maskNbZone;
-	int m_paletteSize;
-	color_t* m_aPalette;
     bool m_bIsMasked;
     
 public:

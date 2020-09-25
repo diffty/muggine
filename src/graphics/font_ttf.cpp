@@ -29,11 +29,11 @@ FontTTF::~FontTTF() {
 	delete m_pFontFileBuffer;
 }
 
-void FontTTF::draw(uint8* pBuffer, char c, int x, int y, int size, Color* color) {
+void FontTTF::draw(drawbuffer* pBuffer, char c, int x, int y, int size, Color* color) {
 	draw(pBuffer, c - 32, x, y, size, color);
 }
 
-void FontTTF::draw(uint8* pBuffer, int codepoint, int x, int y, int hSize, Color* color) {
+void FontTTF::draw(drawbuffer* pBuffer, int codepoint, int x, int y, int hSize, Color* color) {
 	int w, h, xoff, yoff;
 	uint8* pGlyphBitmap = stbtt_GetCodepointBitmap(
 		&m_font,
@@ -57,13 +57,13 @@ void FontTTF::draw(uint8* pBuffer, int codepoint, int x, int y, int hSize, Color
 	for (int i = 0; i < w*h; i++) {
 		float glyphPixelValue = float(*(pGlyphBitmap + i)) / 255.0;
 		unsigned int screenIdx = ((x + xoff + i % w) + ((y + yoff + i / w) * SCREEN_WIDTH));
-		uint8 currR = *(pBuffer + screenIdx * SCREEN_BPP);
-		uint8 currG = *(pBuffer + screenIdx * SCREEN_BPP + 1);
-		uint8 currB = *(pBuffer + screenIdx * SCREEN_BPP + 2);
+		uint8 currR = *(pBuffer->buffer + screenIdx * SCREEN_BPP);
+		uint8 currG = *(pBuffer->buffer + screenIdx * SCREEN_BPP + 1);
+		uint8 currB = *(pBuffer->buffer + screenIdx * SCREEN_BPP + 2);
 
-		*(pBuffer + screenIdx * SCREEN_BPP)     = int(lerpf(currR, colorStruct.b, glyphPixelValue));
-		*(pBuffer + screenIdx * SCREEN_BPP + 1) = int(lerpf(currG, colorStruct.g, glyphPixelValue));
-		*(pBuffer + screenIdx * SCREEN_BPP + 2) = int(lerpf(currB, colorStruct.r, glyphPixelValue));
+		*(pBuffer->buffer + screenIdx * SCREEN_BPP)     = int(lerpf(currR, colorStruct.b, glyphPixelValue));
+		*(pBuffer->buffer + screenIdx * SCREEN_BPP + 1) = int(lerpf(currG, colorStruct.g, glyphPixelValue));
+		*(pBuffer->buffer + screenIdx * SCREEN_BPP + 2) = int(lerpf(currB, colorStruct.r, glyphPixelValue));
 	}
 
 	delete pGlyphBitmap;

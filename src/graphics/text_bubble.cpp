@@ -55,14 +55,14 @@ void TextBubble::updateSize() {
 	getRect()->setSize(sTextWidgetSize.w + 5, sTextWidgetSize.h);
 }
 
-void TextBubble::draw(uint8* buffer) {
+void TextBubble::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
 		vect2df_t vPos = getRect()->getPos();
 		size2df_t sSize = getRect()->getSize();
 
-		drawBox(buffer, vPos.x, vPos.y, vPos.x + sSize.w, vPos.y + sSize.h, &m_cBorderColor);
-		drawBox(buffer, vPos.x+1, vPos.y+1, vPos.x + sSize.w - 1 , vPos.y + sSize.h - 1, &m_cFillColor);
+		drawBox(pBuffer, vPos.x, vPos.y, vPos.x + sSize.w, vPos.y + sSize.h, &m_cBorderColor);
+		drawBox(pBuffer, vPos.x+1, vPos.y+1, vPos.x + sSize.w - 1 , vPos.y + sSize.h - 1, &m_cFillColor);
 
-		drawChildren(buffer);
+		drawChildren(pBuffer);
 	}
 }

@@ -62,7 +62,7 @@ public:
 		return receiveTouchInputChildren(touchPt);
 	};
 
-	void drawChildren(uint8* buffer);
+	void drawChildren(drawbuffer* pBuffer);
 	void updateChildren();
 	bool receiveTouchInputChildren(vect2d_t touchPt);
     

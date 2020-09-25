@@ -19,22 +19,15 @@
 
 class Image : public DrawBuffer {
 protected:
-	//uint8* m_pImgData;
-	//size2df_t m_size;
-	//long* m_mask;
-	//long* m_nbZoneByLine;
-	//long** m_maskIdByLine;
-	//uint m_maskNbZone;
-	//int m_paletteSize;
-	//color_t* m_aPalette;
+	int m_paletteSize;
+	color_t* m_aPalette;
 
 public:
 	Image(char* fileName);
 	~Image();
 
 	void loadFromFile(char* fileName);
-    void draw(drawbuffer* pBuffer, int dstX, int dstY, int srcX, int srcY, int srcW, int srcH, bool reversed, bool masked);
-    void draw(drawbuffer* pBuffer, int dstX, int dstY, bool reversed, bool masked);
+    
 	size2df_t getSize() { return m_size; }
 	size2d_t getSizei() {
 		size2d_t newSize;

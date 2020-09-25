@@ -23,12 +23,13 @@ private:
     
 public:
     SpriteSheet(char* fileName, int gridWidth, int gridHeight, uint length);
-    void draw(uint8* buffer, uint frame, int dstX, int dstY, bool reversed, bool masked);
-    void draw(uint8* buffer, int dstX, int dstY, bool reversed, bool masked);
+    void draw(drawbuffer* pBuffer, uint frame, int dstX, int dstY, bool reversed, bool masked);
+    void draw(drawbuffer* pBuffer, int dstX, int dstY, bool reversed, bool masked);
 	
 	size2d_t getFrameSize();
 	uint getFrame();
 	void setFrame(uint newFrame);
+    uint getLength();
     
 	void nextFrame();
     void prevFrame();

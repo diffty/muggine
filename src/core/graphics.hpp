@@ -32,7 +32,7 @@ public:
 	void Init();
 	void FillWithColor(uint8 colorHex);
 	void SetDoubleBuffering(bool isActive);
-	uint8* GetFramebuffer();
+	drawbuffer GetFramebuffer();
 	void FlushBuffer();
 	void SwapBuffer();
 	void WaitForBlank();

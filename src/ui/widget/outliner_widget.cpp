@@ -56,7 +56,7 @@ bool RowWidget::receiveTouchInput(vect2d_t touchPt) {
 	}
 }
 
-void RowWidget::draw(uint8* pBuffer) {
+void RowWidget::draw(drawbuffer* pBuffer) {
 	if(m_bIsHovered) {
 		vect2df_t vPos = m_rect.getPos();
 		size2df_t sSize = m_rect.getSize();
@@ -169,9 +169,9 @@ bool OutlinerWidget::receiveTouchInput(vect2d_t touchPt) {
 	}
 }
 
-void OutlinerWidget::draw(uint8* buffer) {
+void OutlinerWidget::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
-		drawChildren(buffer);
+		drawChildren(pBuffer);
 	}
 }
 

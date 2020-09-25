@@ -121,7 +121,7 @@ void DrawBuffer::detectTransparency(color_t transpClr) {
         }
         else {
 #if TARGET_3DS
-            if ((inOpaque && (bIsTranspPx|| ((int) currPixNb + 1) % (int) m_size.h == 0)) || (!inOpaque && !bIsTranspPx)) {
+            if ((inOpaque && (bIsTranspPx || ((int) currPixNb + 1) % (int) m_size.h == 0)) || (!inOpaque && !bIsTranspPx)) {
 #else
             if ((inOpaque && (bIsTranspPx || ((int) currPixNb + 1) % (int) m_size.w == 0)) || (!inOpaque && !bIsTranspPx)) {
 #endif
@@ -371,7 +371,7 @@ void DrawBuffer::draw(drawbuffer* pBuffer, int dstX, int dstY, int srcX, int src
 		}
 #else
         for (int y = srcY; y < srcY + srcH; y++) {
-            int reversedY = (m_size.h - 1) - (m_size.h - 1 - srcY) + (y % srcH);
+            int reversedY = m_size.h - 1 - y;
             
             if (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > pBuffer->height-1) {
                 continue;
@@ -384,7 +384,6 @@ void DrawBuffer::draw(drawbuffer* pBuffer, int dstX, int dstY, int srcX, int src
                 zoneSize  = (int)          m_mask[maskIdx + 1];
                 
                 int posOnImgX = (int) imgBufIdx % (int) m_size.w;
-                int posOnImgY = (srcH - 1) - (imgBufIdx / m_size.w);
                 
                 // Skipping out of bounds zones
                 if (posOnImgX + zoneSize < srcX || posOnImgX > srcX + srcW || (posOnImgX - srcX) + zoneSize + dstX < 0 || (posOnImgX - srcX) + dstX > pBuffer->width-1) {
@@ -417,11 +416,10 @@ void DrawBuffer::draw(drawbuffer* pBuffer, int dstX, int dstY, int srcX, int src
                 // TODO: Following a logic of blitting the image on a regular buffer and not a framebuffer which y is inverted.
                 // TODO: Gotta fix that later
                 if (!reversed) {
-                    //posOnBufferY = (dstY + y);
-                    posOnBufferY = (pBuffer->height - srcH - dstY + y - srcY);
+                    posOnBufferY = (pBuffer->height - 1 - dstY - (y - srcY));
                 }
                 else {
-                    posOnBufferY = (((srcH - 1 + srcY) - reversedY) + dstY);
+                    posOnBufferY = dstY + (m_size.h - 1 - reversedY);
                 }
                 
                 // Blittin'
@@ -444,8 +442,8 @@ void DrawBuffer::draw(drawbuffer* pBuffer, int dstX, int dstY, int srcX, int src
         if (!reversed) {
             for (int i = overflowTop; i < srcH - overflowBottom; i++) {
                 memcpy(
-                       pBuffer->buffer + (maxInt(0, dstX) * SCREEN_BPP) + ((maxInt(0, dstY) + i - overflowTop) * pBuffer->width * SCREEN_BPP),
-                       m_pImgData + (int) (((i + srcY) - 1) * (m_size.w * SCREEN_BPP)) + ((srcX) * SCREEN_BPP),
+                       pBuffer->buffer + (maxInt(0, dstX) * SCREEN_BPP) + ((pBuffer->height - 1 - srcH - maxInt(0, dstY) + i - overflowTop) * pBuffer->width * SCREEN_BPP),
+                       m_pImgData + (int) ((m_size.h - 1 - srcY - (srcH - 1 - i)) * (m_size.w * SCREEN_BPP) + (srcX * SCREEN_BPP)),
                        (srcW - overflowRight) * SCREEN_BPP);
             }
         }

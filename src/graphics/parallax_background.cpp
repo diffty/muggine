@@ -72,9 +72,9 @@ void ParallaxBackground::update() {
     }
 }
 
-void ParallaxBackground::draw(uint8* buffer) {
+void ParallaxBackground::draw(drawbuffer* pBuffer) {
 	if (m_bIsActive) {
-		drawChildren(buffer);
+		drawChildren(pBuffer);
 
 		LLNode* currNode = m_lLayers.pHead;
 
@@ -90,7 +90,7 @@ void ParallaxBackground::draw(uint8* buffer) {
 			do {
 				currXPos += currLayer->img->getSize().w;
 
-				currLayer->img->draw(buffer, m_rect.getPos().x + currXPos, m_rect.getPos().y + currLayer->v2dPos.y, false, m_bDrawTransparency);
+				currLayer->img->draw(pBuffer, m_rect.getPos().x + currXPos, m_rect.getPos().y + currLayer->v2dPos.y, false, m_bDrawTransparency);
 
 			} while (m_rect.getPos().x + currXPos < SCREEN_WIDTH);
 

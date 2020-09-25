@@ -103,14 +103,14 @@ void Text::updateSize() {
 	getRect()->setSize(sizeW, sizeH);
 }
 
-void Text::draw(uint8* buffer) {
+void Text::draw(drawbuffer* buffer) {
 	if (m_bIsActive)
 		drawChildren(buffer);
 		
 		drawStr(buffer, m_rect.getPos().x, m_rect.getPos().y, m_szText);
 }
 
-void Text::drawChar(uint8* buffer, float x, float y, char c) {
+void Text::drawChar(drawbuffer* buffer, float x, float y, char c) {
 	Color* testcolor = new Color(255, 255, 0);
 
 	m_pFont->draw(buffer, c, x, y, 16, testcolor);
@@ -118,7 +118,7 @@ void Text::drawChar(uint8* buffer, float x, float y, char c) {
 	delete testcolor;
 }
 
-void Text::drawStr(uint8* buffer, float x, float y, char* text) {
+void Text::drawStr(drawbuffer* buffer, float x, float y, char* text) {
 	int i = 0;
 	int iDrawCurW = 0;
 	int iDrawCurH = 0;

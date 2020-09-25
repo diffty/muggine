@@ -31,7 +31,7 @@ public:
     void setRemainingColor(unsigned int r, unsigned int g, unsigned int b);
     void setCompletedColor(unsigned int r, unsigned int g, unsigned int b);
 
-	void draw(uint8* fb);
+	void draw(drawbuffer* pBuffer);
 };
 
 

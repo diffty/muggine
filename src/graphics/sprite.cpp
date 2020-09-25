@@ -1,31 +1,53 @@
 #include "sprite.hpp"
 
 
-Sprite::Sprite(Image* pImg, vect2df_t vPos, char* szName) :
-	IWidget(vPos.x, vPos.y, szName)
+Sprite::Sprite(DrawBuffer* pDrawBuff, vect2df_t vPos, char* szName) :
+    IWidget(vPos.x, vPos.y, szName)
 {
-	init(pImg, vPos.x, vPos.y);
+    init(pDrawBuff, vPos.x, vPos.y);
+}
+
+Sprite::Sprite(DrawBuffer* pDrawBuff, float fXPos, float fYPos, char* szName) :
+    IWidget(fXPos, fYPos, szName)
+{
+    init(pDrawBuff, fXPos, fYPos);
+}
+
+Sprite::Sprite(Image* pImg, vect2df_t vPos, char* szName) :
+    IWidget(vPos.x, vPos.y, szName)
+{
+    init(pImg, vPos.x, vPos.y);
 }
 
 Sprite::Sprite(Image* pImg, float fXPos, float fYPos, char* szName) :
-	IWidget(fXPos, fYPos, szName)
+    IWidget(fXPos, fYPos, szName)
 {
-	init(pImg, fXPos, fYPos);
+    init(pImg, fXPos, fYPos);
 }
 
 Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, vect2df_t vPos, char* szName) :
-	IWidget(vPos.x, vPos.y, szName)
+    IWidget(vPos.x, vPos.y, szName)
 {
-	init(pSprSht, uFrameNb, vPos.x, vPos.y);
+    init(pSprSht, uFrameNb, vPos.x, vPos.y);
 }
 
 Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos, char* szName) :
-	IWidget(fXPos, fYPos, szName)
+    IWidget(fXPos, fYPos, szName)
 {
-	init(pSprSht, uFrameNb, fXPos, fYPos);
+    init(pSprSht, uFrameNb, fXPos, fYPos);
+}
+
+void Sprite::init(DrawBuffer* pDrawBuf, float fXPos, float fYPos) {
+    m_pDrawBuf = pDrawBuf;
+    m_pImg = NULL;
+    m_pSprSht = NULL;
+    
+    size2df_t imgSize = m_pDrawBuf->getSize();
+    m_rect.setSize(imgSize.w, imgSize.h);
 }
 
 void Sprite::init(Image* pImg, float fXPos, float fYPos) {
+    m_pDrawBuf = NULL;
     m_pImg = pImg;
     m_pSprSht = NULL;
     
@@ -34,6 +56,7 @@ void Sprite::init(Image* pImg, float fXPos, float fYPos) {
 }
 
 void Sprite::init(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos) {
+    m_pDrawBuf = NULL;
     m_pImg = NULL;
     m_pSprSht = pSprSht;
     m_uFrameNb = uFrameNb;
@@ -43,23 +66,25 @@ void Sprite::init(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos)
 }
 
 uint Sprite::getFrame() {
-	return m_uFrameNb;
+    return m_uFrameNb;
 }
 
 void Sprite::setFrame(uint uNewFrame) {
-	m_uFrameNb = uNewFrame;
+    m_uFrameNb = uNewFrame;
 }
 
-void Sprite::draw(uint8* buffer) {
-	// TODO: faire ce test à l'échelle de l'objet Scene qui va appeler les draw et update
+void Sprite::draw(drawbuffer* pBuffer) {
+    // TODO: faire ce test a l'echelle de l'objet Scene qui va appeler les draw et update
     if (m_bIsActive) {
         vect2df_t pos = m_rect.getPos();
 
-		if (m_pSprSht)
-			m_pSprSht->draw(buffer, m_uFrameNb, pos.x, pos.y, false, true);
-		else
-			m_pImg->draw(buffer, pos.x, pos.y, false, true); 
-	
-		drawChildren(buffer);
-	}
+        if (m_pDrawBuf)
+            m_pDrawBuf->draw(pBuffer, pos.x, pos.y, false, true);
+        else if (m_pSprSht)
+            m_pSprSht->draw(pBuffer, m_uFrameNb, pos.x, pos.y, false, true);
+        else
+            m_pImg->draw(pBuffer, pos.x, pos.y, false, true);
+    
+        drawChildren(pBuffer);
+    }
 }

@@ -34,7 +34,7 @@ void GameMode::update() {
     destroyWidgetsInTrash();
 }
 
-void GameMode::debugDraw(uint8* buffer) {
+void GameMode::debugDraw(drawbuffer* pBuffer) {
     
 }
 

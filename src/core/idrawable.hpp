@@ -12,7 +12,7 @@ public:
 		IObject() {};
 	virtual ~IDrawable() {};
 
-	virtual void draw(uint8* buffer) = 0;
+	virtual void draw(drawbuffer* pBuffer) = 0;
 };
 
 
