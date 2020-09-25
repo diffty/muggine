@@ -1,74 +1,77 @@
 {
-	"static_sprites": [
-		{
-			"name": "wagon",
-			"path": "data/wagon.bmp",
-		},
-		{
-			"name": "transition-wagon",
-			"path": "data/transition-wagon.bmp",
-		}
-	],
-"animated_sprites": [
-    {
-      "name": "cha",
-      "path": "data/cha.bmp",
-      "gridWidth": 5,
-      "gridHeight": 1,
-      "nbItems": 5
-    },
-    {
-      "name": "clothes",
-      "path": "data/clothes.bmp",
-      "gridWidth": 3,
-      "gridHeight": 2,
-      "nbItems": 5
-    },
-    {
-      "name": "door",
-      "path": "data/door.bmp",
-      "gridWidth": 7,
-      "gridHeight": 1,
-      "nbItems": 7
-    },
-    {
-      "name": "faces",
-      "path": "data/faces.bmp",
-      "gridWidth": 5,
-      "gridHeight": 1,
-      "nbItems": 5
-    },
-    {
-      "name": "fred",
-      "path": "data/fred.bmp",
-      "gridWidth": 5,
-      "gridHeight": 1,
-      "nbItems": 5
-    },
-    {
-      "name": "man-haircuts",
-      "path": "data/man-haircuts.bmp",
-      "gridWidth": 6,
-      "gridHeight": 1,
-      "nbItems": 6
-    },
-    {
-      "name": "woman-haircuts",
-      "path": "data/woman-haircuts.bmp",
-      "gridWidth": 5,
-      "gridHeight": 2,
-      "nbItems": 10
-    }
-
-  ],
-	"fonts": [
-		{
-			"name": "font-small",
-			"path": "data/font-small.bmp",
-			"gridWidth": 16,
-			"gridHeight": 16,
-			"nbItems": 256,
-			"sizeOffset": -1,
-		},
-	]
+    "static_sprites": [
+        {
+            "name": "wagon",
+            "path": "data/wagon.bmp",
+        },
+        {
+            "name": "transition-wagon",
+            "path": "data/transition-wagon.bmp",
+        },
+        {
+            "name": "seats-wagon",
+            "path": "data/seats-wagon.bmp",
+        }
+    ],
+    "animated_sprites": [
+        {
+          "name": "cha",
+          "path": "data/cha.bmp",
+          "gridWidth": 5,
+          "gridHeight": 1,
+          "nbItems": 5
+        },
+        {
+          "name": "clothes",
+          "path": "data/clothes.bmp",
+          "gridWidth": 3,
+          "gridHeight": 2,
+          "nbItems": 5
+        },
+        {
+          "name": "door",
+          "path": "data/door.bmp",
+          "gridWidth": 7,
+          "gridHeight": 1,
+          "nbItems": 7
+        },
+        {
+          "name": "faces",
+          "path": "data/faces.bmp",
+          "gridWidth": 5,
+          "gridHeight": 1,
+          "nbItems": 5
+        },
+        {
+          "name": "fred",
+          "path": "data/fred.bmp",
+          "gridWidth": 5,
+          "gridHeight": 1,
+          "nbItems": 5
+        },
+        {
+          "name": "man-haircuts",
+          "path": "data/man-haircuts.bmp",
+          "gridWidth": 6,
+          "gridHeight": 1,
+          "nbItems": 6
+        },
+        {
+          "name": "woman-haircuts",
+          "path": "data/woman-haircuts.bmp",
+          "gridWidth": 5,
+          "gridHeight": 2,
+          "nbItems": 10
+        }
+    ],
+    "fonts": [
+        {
+            "name": "font-small",
+            "path": "data/font-small.bmp",
+            "gridWidth": 16,
+            "gridHeight": 16,
+            "nbItems": 256,
+            "sizeOffset": -1,
+        },
+    ]
 }
