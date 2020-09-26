@@ -372,7 +372,11 @@ void DrawBuffer::draw(drawbuffer* pBuffer, int dstX, int dstY, int srcX, int src
         for (int y = srcY; y < srcY + srcH; y++) {
             int reversedY = m_size.h - 1 - y;
             
-            if (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > pBuffer->height-1) {
+            if (!reversed && (dstY + ((srcH-1) - (y % srcH)) < 0 || dstY + ((srcH-1) - (y % srcH)) > pBuffer->height-1)) {
+                continue;
+            }
+            
+            if (reversed && (dstY + ((y % srcH)) < 0 || dstY + ((y % srcH)) > pBuffer->height-1)) {
                 continue;
             }
             
