@@ -12,8 +12,7 @@
 		954D9E36251CB82800E8EBCA /* ct_wagon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 954D9E34251CB82800E8EBCA /* ct_wagon.cpp */; };
 		954D9E3C251CCE4700E8EBCA /* seats-wagon.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 954D9E3B251CCE4700E8EBCA /* seats-wagon.bmp */; };
 		954D9E3D251CCE6000E8EBCA /* seats-wagon.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 954D9E3B251CCE4700E8EBCA /* seats-wagon.bmp */; };
-		954D9E3F251D6BD200E8EBCA /* clothes2.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 954D9E3E251D6BD200E8EBCA /* clothes2.bmp */; };
-		954D9E40251D6BDA00E8EBCA /* clothes2.bmp in CopyFiles */ = {isa = PBXBuildFile; fileRef = 954D9E3E251D6BD200E8EBCA /* clothes2.bmp */; };
+		954D9E43251E43E500E8EBCA /* ct_train.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 954D9E41251E43E500E8EBCA /* ct_train.cpp */; };
 		9562B1AF24B4EC7D0091D3B2 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9562B1AE24B4EC7D0091D3B2 /* SDL2.framework */; };
 		9562B1B024B4EC7D0091D3B2 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9562B1AE24B4EC7D0091D3B2 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		959EC946231C162A0046E8F3 /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 959EC8CC231C162A0046E8F3 /* text.cpp */; };
@@ -134,7 +133,6 @@
 			files = (
 				95AC32032511365C00CF10BD /* cha.bmp in CopyFiles */,
 				95AC320F25113D5000CF10BD /* clothes.bmp in CopyFiles */,
-				954D9E40251D6BDA00E8EBCA /* clothes2.bmp in CopyFiles */,
 				95AC32052511365C00CF10BD /* door.bmp in CopyFiles */,
 				95AC32062511365C00CF10BD /* faces.bmp in CopyFiles */,
 				95AC32072511365C00CF10BD /* fred.bmp in CopyFiles */,
@@ -185,7 +183,8 @@
 		954D9E34251CB82800E8EBCA /* ct_wagon.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ct_wagon.cpp; sourceTree = "<group>"; };
 		954D9E35251CB82800E8EBCA /* ct_wagon.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ct_wagon.hpp; sourceTree = "<group>"; };
 		954D9E3B251CCE4700E8EBCA /* seats-wagon.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = "seats-wagon.bmp"; sourceTree = "<group>"; };
-		954D9E3E251D6BD200E8EBCA /* clothes2.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = clothes2.bmp; sourceTree = "<group>"; };
+		954D9E41251E43E500E8EBCA /* ct_train.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ct_train.cpp; sourceTree = "<group>"; };
+		954D9E42251E43E500E8EBCA /* ct_train.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ct_train.hpp; sourceTree = "<group>"; };
 		9562B1AE24B4EC7D0091D3B2 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		95829A841FDB6F7D00D8D0A6 /* fmod_output.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fmod_output.h; sourceTree = "<group>"; };
 		95829A851FDB6F7D00D8D0A6 /* fmod_dsp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fmod_dsp.h; sourceTree = "<group>"; };
@@ -806,6 +805,8 @@
 				95AC32112512341200CF10BD /* ct_character.hpp */,
 				954D9E34251CB82800E8EBCA /* ct_wagon.cpp */,
 				954D9E35251CB82800E8EBCA /* ct_wagon.hpp */,
+				954D9E41251E43E500E8EBCA /* ct_train.cpp */,
+				954D9E42251E43E500E8EBCA /* ct_train.hpp */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -839,7 +840,6 @@
 		959EC990231C1C0F0046E8F3 /* data */ = {
 			isa = PBXGroup;
 			children = (
-				954D9E3E251D6BD200E8EBCA /* clothes2.bmp */,
 				95AC31F42511309300CF10BD /* cha.bmp */,
 				95AC320D25113D4700CF10BD /* clothes.bmp */,
 				95AC31F32511309300CF10BD /* door.bmp */,
@@ -952,7 +952,6 @@
 				959EC9EE231C1C0F0046E8F3 /* font-thin-number.bmp in Resources */,
 				95AC32022511309300CF10BD /* transition-wagon.bmp in Resources */,
 				959EC9FB231C1C0F0046E8F3 /* title.json in Resources */,
-				954D9E3F251D6BD200E8EBCA /* clothes2.bmp in Resources */,
 				959EC9D4231C1C0F0046E8F3 /* font-small.bmp in Resources */,
 				959EC9E5231C1C0F0046E8F3 /* font-small-black.csv in Resources */,
 				959EC9ED231C1C0F0046E8F3 /* test.json in Resources */,
@@ -1026,6 +1025,7 @@
 				959EC95B231C162A0046E8F3 /* text_bubble.cpp in Sources */,
 				959EC963231C162A0046E8F3 /* iwidget.cpp in Sources */,
 				959EC95F231C162A0046E8F3 /* drawing.cpp in Sources */,
+				954D9E43251E43E500E8EBCA /* ct_train.cpp in Sources */,
 				959EC952231C162A0046E8F3 /* animationevent.cpp in Sources */,
 				959EC982231C1B7B0046E8F3 /* AppDelegate.m in Sources */,
 				959EC94F231C162A0046E8F3 /* paginated_widget_layout.cpp in Sources */,
