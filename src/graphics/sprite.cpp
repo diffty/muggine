@@ -38,6 +38,8 @@ Sprite::Sprite(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos, ch
 }
 
 void Sprite::init(DrawBuffer* pDrawBuf, float fXPos, float fYPos) {
+    getClassType()->setClassTypeName("Sprite");
+    
     m_pDrawBuf = pDrawBuf;
     m_pImg = NULL;
     m_pSprSht = NULL;
@@ -47,6 +49,8 @@ void Sprite::init(DrawBuffer* pDrawBuf, float fXPos, float fYPos) {
 }
 
 void Sprite::init(Image* pImg, float fXPos, float fYPos) {
+    getClassType()->setClassTypeName("Sprite");
+
     m_pDrawBuf = NULL;
     m_pImg = pImg;
     m_pSprSht = NULL;
@@ -56,6 +60,8 @@ void Sprite::init(Image* pImg, float fXPos, float fYPos) {
 }
 
 void Sprite::init(SpriteSheet* pSprSht, uint uFrameNb, float fXPos, float fYPos) {
+    getClassType()->setClassTypeName("Sprite");
+
     m_pDrawBuf = NULL;
     m_pImg = NULL;
     m_pSprSht = pSprSht;
