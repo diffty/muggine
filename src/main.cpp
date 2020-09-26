@@ -43,7 +43,7 @@
 #include "graphics/drawing.hpp"
 #include "game/ct_character.hpp"
 #include "game/ct_wagon.hpp"
-
+#include "game/ct_train.hpp"
 
 #include <time.h>
 
@@ -92,7 +92,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	Result rc = romfsInit();
 #endif
 
-
 	RscManager rscManager;
 	rscManager.loadFromJSON("data/resources.json");
     
@@ -102,7 +101,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	// Building scene
 	Scene* pGameScene = gameManager.getGameScene();
 	Scene* pMenuScene = gameManager.getMenuScene();
-	Scene uiScene;
 
 	pGfx->SetDoubleBuffering(false);
 	drawbuffer fb = pGfx->GetFramebuffer();
@@ -114,21 +112,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
 	//SceneManager sceneManager;
 	//sceneManager.loadFromJSON("data/scene01.json");
 
-	//SceneDescription* pCurrSceneDesc = sceneManager.getScene("Scene01");
-	//Scene* pCurrScene = pCurrSceneDesc->pScene;
-	//AnimationTimeline* pCurrAnimTimeline = pCurrSceneDesc->pAnimTimeline;
-
-	//AnimationTimelineWidget* animTimelineWidget = new AnimationTimelineWidget(0, 0, 300, 10, pCurrAnimTimeline, 0.0, 10.0);
-
 	Input* pInputSys = pSys->getInputSys();
-
-	//OutlinerWidget* outlinerWidget = new OutlinerWidget(0, 0, 70, 100, pCurrScene);
-
-	//FloatingWindow outlinerWindow(30, 100, 70, 100, outlinerWidget);
-	//outlinerWindow.setParentWidget(&uiScene);
-
-	//FloatingWindow timelineWindow(20, 200, 290, 20, animTimelineWidget);
-	//timelineWindow.setParentWidget(&uiScene);
 
     #ifdef __APPLE__
         FontTTF font("/System/Library/Fonts/SFCompactDisplay.ttf");
@@ -136,41 +120,33 @@ void MainApp(System* pSys, Graphics* pGfx) {
         FontTTF font("c:/windows/fonts/arialbd.ttf");
     #endif
     
-	Text testText("Ce caca est testééé", &font, 50, 50);
-
-	//testText.setParentWidget(pGameScene);
-    
     Color bgClr(200, 100, 0);
 
-    /*DrawBuffer drawBuf;
-    drawBuf.createBuffer(100, 100);
+    SpriteSheet* chaSprSht = rscManager.getSprShtRsc("cha");
+    SpriteSheet* fredSprSht = rscManager.getSprShtRsc("fred");
     
-    size2d_t bufSize = drawBuf.getSizei();
+    AnimatedSprite cha(chaSprSht, 0, 0);
+    AnimatedSprite fred(fredSprSht, 0, 0);
     
-    drawBox(drawBuf.getBuffer(), 0, 0, bufSize.w-1, bufSize.h-1, &bgClr);
-    SpriteSheet* chaImg = rscManager.getSprShtRsc("cha");
-    chaImg->draw(drawBuf.getBuffer(), 1, 10, 10, false, true);
-    
-    drawBuf.detectTransparency(bgClr.getColor());*/
+    CTTrain train;
+    pGameScene->addComponent(&train);
+    //pGameScene->addComponent(&cha);
+    //pGameScene->addComponent(&fred);
 
-    /*Sprite drawSprite(&drawBuf, 10, 10);
-    drawSprite.setParentWidget(pGameScene);*/
-    
-    
-    /*for (int y = 0; y < 5; y++) {
-        for (int x = 0; x < 5; x++) {
-            CTCharacter* procChara = new CTCharacter();
-            procChara->translate(x * 35, y * 50);
-            pGameScene->addComponent(procChara);
-        }
-    }*/
-    
-    
-    SpriteSheet* testSprSht = rscManager.getSprShtRsc("clothes");
-    
-    CTWagon* wagon = new CTWagon();
-    pGameScene->addComponent(wagon);
+    train.addWagon();
+    train.addTransition();
+    train.addWagon();
+    train.addTransition();
+    train.addWagon();
+    train.addTransition();
 
+    train.translate(fb.width / 2 - train.getRect()->getSize().w / 2, 0, TRANSFORM_ABS);
+
+    //CTWagon* wagon = new CTWagon();
+    //pGameScene->addChildWidget(wagon);
+    
+    Image* m_pTransitionWagonImg = rscManager.getImgRsc("transition-wagon");
+    
     // Main loop
 	while (pSys->mainLoop())
 	{
@@ -178,69 +154,21 @@ void MainApp(System* pSys, Graphics* pGfx) {
         
         pGfx->FillWithColor(0x00);
 
-        testSprSht->draw(&fb, 1, 0, 0, false, true);
+        float speed = 200.;
         
-
+        train.translate(0, -speed * deltaTime, TRANSFORM_REL);
+        
         // printf("FPS: %u\n", (uint) (1./deltaTime));
-        
-		//gameManager.update();
-		//gameManager.draw(fb);
-
-		/*
-        if (pInputSys->IsKeyPressed(KEYB_Q)) {
-			pCurrAnimTimeline->setTime(pCurrAnimTimeline->getTime() - deltaTime);
-		}
-
-		if (pInputSys->IsKeyPressed(KEYB_D)) {
-			pCurrAnimTimeline->setTime(pCurrAnimTimeline->getTime() + deltaTime);
-		}
-
-		if (pInputSys->IsKeyPressed(KEYB_SPACE)) {
-			pCurrAnimTimeline->setIsPlaying(!pCurrAnimTimeline->isPlaying());
-		}
-        */
-
-        /*if (pInputSys->IsKeyPressed(KEYB_Q)) {
-            drawSprite.translate(-1, 0);
-        }
-        else if (pInputSys->IsKeyPressed(KEYB_D)) {
-            drawSprite.translate(1, 0);
-        }
-
         if (pInputSys->IsKeyPressed(KEYB_Z)) {
-            drawSprite.translate(0, -1);
+            train.translate(0, -speed * deltaTime, TRANSFORM_REL);
         }
         else if (pInputSys->IsKeyPressed(KEYB_S)) {
-            drawSprite.translate(0, 1);
-        }*/
-
-        
-        if (pInputSys->IsKeyPressed(KEYB_SPACE)) {
-            pGameScene->removeComponent(wagon);
-            delete wagon;
-            wagon = new CTWagon();
-            pGameScene->addComponent(wagon);
+            train.translate(0, speed * deltaTime, TRANSFORM_REL);
         }
-        
-        
-        MouseEvent* mouseEvt = pInputSys->GetButtonPressEvent(MOUSE_BTN_LEFT);
-		if (mouseEvt) {
-			vect2d_t vCurrMousePos = pInputSys->getCurrInputPos();
-			uiScene.receiveTouchInput(vCurrMousePos);
-		}
 
 		pGameScene->update();
 		pGameScene->draw(&fb);
 
-		uiScene.update();
-		uiScene.draw(&fb);
-
-		Color* c = new Color(75, 75, 255);
-		//font.draw(fb, 'a', 20, 20, 16, c);
-		delete c;
-        
-        //drawBuf.draw(fb, 10, 10, false, true);
-        
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
 		pGfx->SwapBuffer();
@@ -248,8 +176,8 @@ void MainApp(System* pSys, Graphics* pGfx) {
 		// Wait for VBlank
 		pGfx->WaitForBlank();
 	}
-	
-	rscManager.freeAllRsc();
+    
+    rscManager.freeAllRsc();
 }
 
 
