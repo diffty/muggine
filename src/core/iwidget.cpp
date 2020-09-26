@@ -186,6 +186,9 @@ void IWidget::removeChildWidget(IWidget* pWidget) {
 		removeNodeFromList(&m_llChildrenWidgets, pNode);
 		addDataToList(&m_llWidgetNodesToDelete, pNode);
 	}
+    else {
+        printf("<!> Widget to remove can't be found\n");
+    }
 }
 
 void IWidget::unlinkAllWidgets() {
