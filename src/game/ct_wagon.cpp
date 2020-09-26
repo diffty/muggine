@@ -11,9 +11,15 @@
 #include "../manager/rsc_manager.hpp"
 
 
-CTWagon::CTWagon() {
-    drawBuffer.createBuffer(200, 200);
+CTWagon::CTWagon()
+{
+    m_classInfo.setClassTypeName("CTWagon");
+    
+    drawBuffer.createBuffer(103, 168);
     drawBuffer.clear();
+    
+    size2df_t bufSize = drawBuffer.getSize();
+    m_rect = Rectf(0, 0, (int) bufSize.w, (int) bufSize.h);
     
     bufferSpr = new Sprite(&drawBuffer, 0, 0);
     addChildWidget(bufferSpr);
@@ -42,6 +48,8 @@ CTWagon::CTWagon() {
             addCharacter(x, y);
         }
     }
+    
+    drawBuffer.detectTransparency(Color(0, 255, 0).getColor());
 }
 
 CTWagon::~CTWagon() {
@@ -58,8 +66,6 @@ void CTWagon::addCharacter(int iSlotPosX, int iSlotPosY) {
     CTCharacter* pNewChar = new CTCharacter();
     int iSlotId = getSlotId(iSlotPosX, iSlotPosY);
     m_aSlots[iSlotId] = pNewChar;
-    
-    //addChildWidget(pNewChar);
     
     size2d_t bufferSize = drawBuffer.getSizei();
 

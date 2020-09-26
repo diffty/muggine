@@ -15,6 +15,8 @@
 
 
 CTCharacter::CTCharacter() {
+    m_classInfo.setClassTypeName("CTCharacter");
+    
     RscManager* rscManager = RscManager::get();
     
     SpriteSheet* facesImg = rscManager->getSprShtRsc("faces");
