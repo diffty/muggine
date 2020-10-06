@@ -53,8 +53,9 @@ public:
     void init(char* szName = NULL);
 
 	Rectf* getRect() { return &m_rect; };
-
-	virtual void update() {
+    void recomputeRect();
+	
+    virtual void update() {
 		updateChildren();
 	};
 
@@ -76,6 +77,11 @@ public:
 
 	void addChildWidget(IWidget* pWidget);
 	void removeChildWidget(IWidget* pWidget);
+    
+    IWidget* getChild(int iChildId);
+    IWidget* getLastChild();
+    int countChildren();
+    
 	void updateChildrenRootWidget();
 	void unlinkAllWidgets();
 

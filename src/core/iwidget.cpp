@@ -37,6 +37,39 @@ void IWidget::init(char* szName) {
     initList(&m_llWidgetNodesToDelete);
 }
 
+void IWidget::recomputeRect() {
+    LLNode* pCurrNode = m_llChildrenWidgets.pHead;
+    
+    IWidget* pCurrWidget = (IWidget*) pCurrNode->pData;
+    
+    vect2df_t newRectPos = pCurrWidget->getRect()->getPos();
+    size2df_t newRectSize = pCurrWidget->getRect()->getSize();
+
+    while (pCurrNode != NULL) {
+        pCurrWidget = (IWidget*) pCurrNode->pData;
+        
+        vect2df_t currWidgetRectPos = pCurrWidget->getRect()->getPos();
+        size2df_t currWidgetRectSize = pCurrWidget->getRect()->getSize();
+        
+        if (currWidgetRectPos.x < newRectPos.x)
+            newRectPos.x = currWidgetRectPos.x;
+
+        if (currWidgetRectPos.y < newRectPos.y)
+            newRectPos.y = currWidgetRectPos.y;
+
+        if (currWidgetRectSize.w > newRectSize.w)
+            newRectSize.w = currWidgetRectSize.w;
+
+        if (currWidgetRectSize.h > newRectSize.h)
+            newRectSize.h = currWidgetRectSize.h;
+        
+        m_rect.setPos(newRectPos.x, newRectPos.y);
+        m_rect.setSize(newRectSize.w, newRectSize.h);
+        
+        pCurrNode = pCurrNode->pNext;
+    }
+}
+
 void IWidget::drawChildren(drawbuffer* pBuffer) {
 	LLNode* pCurrNode = m_llChildrenWidgets.pHead;
 
@@ -185,11 +218,48 @@ void IWidget::removeChildWidget(IWidget* pWidget) {
 	if (pNode) {
 		removeNodeFromList(&m_llChildrenWidgets, pNode);
 		addDataToList(&m_llWidgetNodesToDelete, pNode);
+        recomputeRect();
 	}
     else {
         printf("<!> Widget to remove can't be found\n");
     }
 }
+
+IWidget* IWidget::getChild(int iChildId) {
+    if (iChildId >= m_llChildrenWidgets.size)
+        return NULL;
+    
+    LLNode* pCurrNode = m_llChildrenWidgets.pHead;
+    
+    int i = 0;
+    
+    while (pCurrNode != NULL) {
+        IWidget* pCurrWidget = (IWidget*)pCurrNode->pData;
+        
+        if (i == iChildId)
+            return pCurrWidget;
+        
+        pCurrNode = pCurrNode->pNext;
+        i++;
+    }
+    
+    return NULL;
+}
+
+IWidget* IWidget::getLastChild() {
+    LLNode* pTailNode = m_llChildrenWidgets.pTail;
+
+    if (pTailNode != NULL)
+        return (IWidget*) pTailNode->pData;
+
+    return NULL;
+}
+
+int IWidget::countChildren() {
+    return (int) m_llChildrenWidgets.size;
+}
+
+
 
 void IWidget::unlinkAllWidgets() {
 	LLNode* pCurrNode = m_llChildrenWidgets.pHead;
@@ -287,6 +357,7 @@ void IWidget::addWidgetToDrawOrder(IWidget* pWidgetToAdd) {
 	}
 
 	addDataToList(&m_llChildrenWidgets, pWidgetToAdd);
+    recomputeRect();
 }
 
 void IWidget::updateWidgetInParentDrawOrder() {
