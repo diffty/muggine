@@ -22,6 +22,7 @@ struct AnimationState {
     uint uFrameEnd;
     uint uFPS;
     bool bLooped;
+    int id;
 
     void (*pOnAnimEndCallback)(void*);
     void *pOnAnimEndCallbackArg;
@@ -32,7 +33,8 @@ class AnimatedSprite : public Sprite {
 private:
     LinkedList m_llAnimStates;
     AnimationState* m_pCurrAnimState;
-
+    
+    bool m_bIsPlaying = false;
     float m_fPlaySpeed;
     float m_fCurrFrameTime;
     
@@ -47,6 +49,10 @@ public:
     void addState(AnimationState animState);
     void changeState(uint uStateId);
     AnimationState* getState();
+    int getStateId();
+    
+    void play();
+    void pause();
     
     void update();
     void draw(drawbuffer* pBuffer);

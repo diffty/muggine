@@ -55,7 +55,10 @@ void AnimatedSprite::addState(const char* szName, uint uFrameStart, uint uFrameE
 }
 
 void AnimatedSprite::addState(AnimationState animState) {
-    addDataToList(&m_llAnimStates, new AnimationState(animState));
+    AnimationState* newAnimState = new AnimationState(animState);
+    newAnimState->id = m_llAnimStates.size;
+    
+    addDataToList(&m_llAnimStates, newAnimState);
     
     if (m_llAnimStates.size == 1) {
         m_pCurrAnimState = (AnimationState*) m_llAnimStates.pHead->pData;
@@ -73,8 +76,20 @@ void AnimatedSprite::changeState(uint uStateId) {
     }
 }
 
+void AnimatedSprite::play() {
+    m_bIsPlaying = true;
+}
+
+void AnimatedSprite::pause() {
+    m_bIsPlaying = false;
+}
+
 AnimationState* AnimatedSprite::getState() {
     return m_pCurrAnimState;
+}
+
+int AnimatedSprite::getStateId() {
+    return m_pCurrAnimState->id;
 }
 
 void AnimatedSprite::draw(drawbuffer* pBuffer) {
@@ -84,7 +99,7 @@ void AnimatedSprite::draw(drawbuffer* pBuffer) {
 void AnimatedSprite::update() {
 	updateChildren();
 
-    if (m_pCurrAnimState != NULL) {
+    if (m_bIsPlaying && m_pCurrAnimState != NULL) {
         m_fCurrFrameTime += System::get()->getDeltaTime();
         
 		int iCurrFrame = getFrame();
