@@ -18,6 +18,8 @@
 
 #include "../graphics/drawing.hpp"
 
+#include "../game/ct_train.hpp"
+
 
 class GameMode
 {
@@ -25,15 +27,19 @@ private:
 	static GameMode* s_pInstance;
 
 	Scene* m_pMainScene;
+    Scene* m_pWallScene;
 
 	float m_fTimer;
-
-
+    
+    CTTrain* m_pTrain;
+    
+    AnimatedSprite* m_pCha;
+    AnimatedSprite* m_pFred;
+    
 	LinkedList m_llWidgetTrash;
 
-
 public:
-	GameMode(Scene* pMainScene);
+    GameMode(Scene* pMainScene);
 	~GameMode();
 
 	void initScene();

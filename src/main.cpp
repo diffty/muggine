@@ -44,6 +44,7 @@
 #include "game/ct_character.hpp"
 #include "game/ct_wagon.hpp"
 #include "game/ct_train.hpp"
+#include "game/ct_door.hpp"
 
 #include <time.h>
 
@@ -122,59 +123,60 @@ void MainApp(System* pSys, Graphics* pGfx) {
     
     Color bgClr(200, 100, 0);
 
-    SpriteSheet* chaSprSht = rscManager.getSprShtRsc("cha");
-    SpriteSheet* fredSprSht = rscManager.getSprShtRsc("fred");
-    
-    AnimatedSprite cha(chaSprSht, 0, 0);
-    AnimatedSprite fred(fredSprSht, 0, 0);
-    
-    CTTrain train;
-    pGameScene->addComponent(&train);
-    //pGameScene->addComponent(&cha);
-    //pGameScene->addComponent(&fred);
+    int i = 0;
+    float elapsedTime = 0;
+    float fTimeByFrame = 1. / 50.;
 
-    train.addWagon();
-    train.addTransition();
-    train.addWagon();
-    train.addTransition();
-    train.addWagon();
-    train.addTransition();
+    GameMode* pGameMode = GameMode::get();
+    //Scene* pWallScene = pGameMode->getWallScene();
 
-    train.translate(fb.width / 2 - train.getRect()->getSize().w / 2, 0, TRANSFORM_ABS);
-
-    //CTWagon* wagon = new CTWagon();
-    //pGameScene->addChildWidget(wagon);
-    
-    Image* m_pTransitionWagonImg = rscManager.getImgRsc("transition-wagon");
-    
     // Main loop
 	while (pSys->mainLoop())
 	{
+        double startTime = pSys->getTime();
 		double deltaTime = pSys->getDeltaTime();
         
         pGfx->FillWithColor(0x00);
 
-        float speed = 200.;
-        
-        train.translate(0, -speed * deltaTime, TRANSFORM_REL);
-        
         // printf("FPS: %u\n", (uint) (1./deltaTime));
+        
+        /*
         if (pInputSys->IsKeyPressed(KEYB_Z)) {
             train.translate(0, -speed * deltaTime, TRANSFORM_REL);
         }
         else if (pInputSys->IsKeyPressed(KEYB_S)) {
             train.translate(0, speed * deltaTime, TRANSFORM_REL);
         }
-
+        */
+        
+        pGameMode->update();
+        
 		pGameScene->update();
 		pGameScene->draw(&fb);
-
+        
+        //pWallScene->draw(&fb);
+        
 		// Flush and swap framebuffers
 		pGfx->FlushBuffer();
 		pGfx->SwapBuffer();
 
 		// Wait for VBlank
 		pGfx->WaitForBlank();
+        
+        i++;
+        
+        unsigned int sleepTime = (unsigned int) (fTimeByFrame * 1000 - (pSys->getTime() - startTime)) * 1000;
+        usleep(sleepTime);
+
+        if (elapsedTime >= 1.0) {
+            printf("%d FPS\n", i);
+            i = 0;
+            elapsedTime = 0.0;
+        }
+        else {
+            elapsedTime += deltaTime;
+        }
+        
 	}
     
     rscManager.freeAllRsc();

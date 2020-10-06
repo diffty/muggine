@@ -32,6 +32,8 @@ private:
     Sprite* bufferSpr;
     CTCharacter** m_aSlots;
     
+    bool m_bIsDoorOpened = false;
+    
     int m_iNbSlotsX = 4;
     int m_iNbSlotsY = 8;
 };

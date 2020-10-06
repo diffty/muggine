@@ -2,16 +2,32 @@
 #include "../manager/game_manager.hpp"
 #include "../manager/rsc_manager.hpp"
 
-#include <cmath>
+#include "../graphics/spritesheet.hpp"
+#include "../graphics/animatedsprite.hpp"
+#include "../core/graphics.hpp"
 
+#include <cmath>
 
 GameMode* GameMode::s_pInstance = NULL;
 
 
 GameMode::GameMode(Scene* pMainScene) {
 	GameMode::s_pInstance = this;
-
+    
 	m_pMainScene = pMainScene;
+
+    m_pTrain = new CTTrain();
+    
+    m_pMainScene->addChildWidget(m_pTrain);
+
+    m_pTrain->addWagon();
+    m_pTrain->addTransition();
+    m_pTrain->addWagon();
+    m_pTrain->addTransition();
+    m_pTrain->addWagon();
+    m_pTrain->addTransition();
+    
+    //m_pTrain->translate(fb.width / 2 - train.getRect()->getSize().w / 2, 0, TRANSFORM_ABS);
 
     initList(&m_llWidgetTrash);
     initScene();
@@ -30,7 +46,6 @@ void GameMode::update() {
     double fDeltaTime = System::get()->getDeltaTime();
 
     // ** Game logic code here **
-    
     destroyWidgetsInTrash();
 }
 
