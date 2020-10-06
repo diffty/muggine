@@ -15,6 +15,7 @@
 		954D9E43251E43E500E8EBCA /* ct_train.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 954D9E41251E43E500E8EBCA /* ct_train.cpp */; };
 		9562B1AF24B4EC7D0091D3B2 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9562B1AE24B4EC7D0091D3B2 /* SDL2.framework */; };
 		9562B1B024B4EC7D0091D3B2 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9562B1AE24B4EC7D0091D3B2 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9586D3022520F53B0054F616 /* ct_door.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9586D3002520F53B0054F616 /* ct_door.cpp */; };
 		959EC946231C162A0046E8F3 /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 959EC8CC231C162A0046E8F3 /* text.cpp */; };
 		959EC947231C162A0046E8F3 /* animation_timeline_widget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 959EC8CF231C162A0046E8F3 /* animation_timeline_widget.cpp */; };
 		959EC948231C162A0046E8F3 /* tiny_progress_bar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 959EC8D0231C162A0046E8F3 /* tiny_progress_bar.cpp */; };
@@ -280,6 +281,8 @@
 		95829AE31FDB6F7D00D8D0A6 /* SDL2.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = SDL2.lib; sourceTree = "<group>"; };
 		95829AE41FDB6F7D00D8D0A6 /* SDL2.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = SDL2.dll; sourceTree = "<group>"; };
 		95829AE51FDB6F7D00D8D0A6 /* SDL2test.lib */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = SDL2test.lib; sourceTree = "<group>"; };
+		9586D3002520F53B0054F616 /* ct_door.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ct_door.cpp; sourceTree = "<group>"; };
+		9586D3012520F53B0054F616 /* ct_door.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ct_door.hpp; sourceTree = "<group>"; };
 		959EC8CB231C162A0046E8F3 /* outliner_widget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = outliner_widget.hpp; sourceTree = "<group>"; };
 		959EC8CC231C162A0046E8F3 /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
 		959EC8CD231C162A0046E8F3 /* buttonwidget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = buttonwidget.hpp; sourceTree = "<group>"; };
@@ -793,7 +796,6 @@
 				959EC936231C162A0046E8F3 /* game_mode.hpp */,
 				959EC931231C162A0046E8F3 /* xx_gameover_screen.cpp */,
 				959EC935231C162A0046E8F3 /* xx_gameover_screen.hpp */,
-				959EC92E231C162A0046E8F3 /* xx_level_begin_screen.cpp */,
 				959EC932231C162A0046E8F3 /* xx_level_begin_screen.hpp */,
 				959EC934231C162A0046E8F3 /* xx_level_fail_screen.cpp */,
 				959EC930231C162A0046E8F3 /* xx_level_fail_screen.hpp */,
@@ -801,12 +803,15 @@
 				959EC92F231C162A0046E8F3 /* xx_level_success_screen.hpp */,
 				959EC92D231C162A0046E8F3 /* xx_main_menu.cpp */,
 				959EC937231C162A0046E8F3 /* xx_main_menu.hpp */,
+				959EC92E231C162A0046E8F3 /* xx_level_begin_screen.cpp */,
 				95AC32102512341200CF10BD /* ct_character.cpp */,
 				95AC32112512341200CF10BD /* ct_character.hpp */,
 				954D9E34251CB82800E8EBCA /* ct_wagon.cpp */,
 				954D9E35251CB82800E8EBCA /* ct_wagon.hpp */,
 				954D9E41251E43E500E8EBCA /* ct_train.cpp */,
 				954D9E42251E43E500E8EBCA /* ct_train.hpp */,
+				9586D3002520F53B0054F616 /* ct_door.cpp */,
+				9586D3012520F53B0054F616 /* ct_door.hpp */,
 			);
 			path = game;
 			sourceTree = "<group>";
@@ -1024,6 +1029,7 @@
 				959EC951231C162A0046E8F3 /* titlebar.cpp in Sources */,
 				959EC95B231C162A0046E8F3 /* text_bubble.cpp in Sources */,
 				959EC963231C162A0046E8F3 /* iwidget.cpp in Sources */,
+				9586D3022520F53B0054F616 /* ct_door.cpp in Sources */,
 				959EC95F231C162A0046E8F3 /* drawing.cpp in Sources */,
 				954D9E43251E43E500E8EBCA /* ct_train.cpp in Sources */,
 				959EC952231C162A0046E8F3 /* animationevent.cpp in Sources */,
