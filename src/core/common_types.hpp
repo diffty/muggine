@@ -118,6 +118,11 @@ public:
 		setColor(r, g, b);
 	}
 
+	Color(const Color& colortoCopy) {
+		m_framebuffer3DSFmt = new uint8[3];
+		setColor(colortoCopy.m_color.r, colortoCopy.m_color.g, colortoCopy.m_color.b);
+	}
+
 	~Color() {
 		delete m_framebuffer3DSFmt;
 	}
