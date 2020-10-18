@@ -9,7 +9,7 @@
 #include "spritesheet.hpp"
 
 
-SpriteSheet::SpriteSheet(char* fileName, int gridWidth, int gridHeight, uint length)
+SpriteSheet::SpriteSheet(const char* fileName, int gridWidth, int gridHeight, uint length)
 	: Image(fileName) {
 
 	m_gridSize.w = gridWidth;

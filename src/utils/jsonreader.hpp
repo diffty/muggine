@@ -68,7 +68,7 @@ public:
 	json_list_t m_contentList;
 
 	template <typename T>
-	T get(char* szKeyName) {
+	T get(const char* szKeyName) {
 		if (m_contentDict.count(szKeyName) > 0 ) {
 			return (T) m_contentDict[szKeyName]->pValue;
 		}
@@ -175,7 +175,7 @@ public:
 	bool trunctStr(char* str, char** result);
 
 	template <typename T>
-	T get(char* szKeyName) {
+	T get(const char* szKeyName) {
 		return m_pRootDict->get<T>(szKeyName);
 	}
 

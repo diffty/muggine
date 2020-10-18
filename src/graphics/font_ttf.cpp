@@ -3,7 +3,7 @@
 #include "../utils/math_tools.hpp"
 
 
-FontTTF::FontTTF(char* szFileName)
+FontTTF::FontTTF(const char* szFileName)
 	: IFont() {
 
 	FILE* fp = fopen(szFileName, "rb");  // "c:/windows/fonts/arialbd.ttf"

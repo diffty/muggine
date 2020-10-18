@@ -23,10 +23,10 @@ protected:
 	color_t* m_aPalette;
 
 public:
-	Image(char* fileName);
+	Image(const char* fileName);
 	~Image();
 
-	void loadFromFile(char* fileName);
+	void loadFromFile(const char* fileName);
     
 	size2df_t getSize() { return m_size; }
 	size2d_t getSizei() {

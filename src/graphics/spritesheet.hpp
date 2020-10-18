@@ -22,7 +22,7 @@ private:
     uint m_length;
     
 public:
-    SpriteSheet(char* fileName, int gridWidth, int gridHeight, uint length);
+    SpriteSheet(const char* fileName, int gridWidth, int gridHeight, uint length);
     void draw(drawbuffer* pBuffer, uint frame, int dstX, int dstY, bool reversed, bool masked);
     void draw(drawbuffer* pBuffer, int dstX, int dstY, bool reversed, bool masked);
 	

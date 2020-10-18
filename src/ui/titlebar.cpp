@@ -5,7 +5,7 @@
 #include "../core/system.hpp"
 
 
-Titlebar::Titlebar(char* szTitle, IWidget* pParentObject)
+Titlebar::Titlebar(const char* szTitle, IWidget* pParentObject)
 	: IWidget(0, 0),
 	m_color(20, 20, 20) {
 

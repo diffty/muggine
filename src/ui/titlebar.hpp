@@ -11,7 +11,7 @@
 
 class Titlebar : public IWidget {
 public:
-	Titlebar(char* szTitle, IWidget* pParentObject);
+	Titlebar(const char* szTitle, IWidget* pParentObject);
 	~Titlebar();
 
 	void addButton(SpriteSheet *pSprSht, vect2df_t vPos, int iPressedFrameId, int iReleasedFrameId, void(*pCallback)(void*) = NULL, void* pCallbackArg = NULL);

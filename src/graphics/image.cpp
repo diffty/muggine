@@ -1,7 +1,7 @@
 #include "image.hpp"
 
  
-Image::Image(char* fileName) {
+Image::Image(const char* fileName) {
 	loadFromFile(fileName);
     Color bgClr(0, 255, 0);
     detectTransparency(bgClr.getColor());
@@ -11,7 +11,7 @@ Image::~Image() {
 	free(m_aPalette);
 }
 
-void Image::loadFromFile(char* fileName) {
+void Image::loadFromFile(const char* fileName) {
 	FILE* fp;
 	int nBytesToRead;
 	int i, j;

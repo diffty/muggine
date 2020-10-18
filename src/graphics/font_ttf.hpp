@@ -13,7 +13,7 @@
 class FontTTF : public IFont
 {
 public:
-	FontTTF(char* szFileName);
+	FontTTF(const char* szFileName);
 	~FontTTF();
 
 	void draw(drawbuffer* pBuffer, char c, int x, int y, int size, Color* color);
