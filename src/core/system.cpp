@@ -159,6 +159,24 @@ float System::getRandFloat(float fMin, float fMax) {
     return fMin + (((float) rand()) / RAND_MAX) * (fMax - fMin);
 }
 
+void System::usleep(unsigned int uSleepTime) {
+#if TARGET_WIN
+	HANDLE timer;
+	LARGE_INTEGER ft;
+
+	ft.QuadPart = -(10 * (__int64) uSleepTime);
+
+	timer = CreateWaitableTimer(NULL, TRUE, NULL);
+	SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
+	WaitForSingleObject(timer, INFINITE);
+	CloseHandle(timer);
+
+#elif TARGET_OSX
+	usleep(uSleepTime);
+
+#endif
+}
+
 void System::initLoop() {
 	m_startLoopTime = getTime();
 	m_prevLoopTime = m_startLoopTime;

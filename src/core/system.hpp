@@ -22,6 +22,7 @@
 #ifdef TARGET_OSX
 #include <mach/clock.h>
 #include <mach/mach.h>
+#include <time.h>
 #endif
 
 
@@ -64,6 +65,8 @@ public:
 	double getDeltaTime();
     int getRandInt(int iMin, int iMax);
     float getRandFloat(float fMin, float fMax);
+
+	void usleep(unsigned int uSleepTime);
 
 #if TARGET_SDL2
 	SDL_Window* getWindow();

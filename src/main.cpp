@@ -46,8 +46,6 @@
 #include "game/ct_train.hpp"
 #include "game/ct_door.hpp"
 
-#include <time.h>
-
 #if TARGET_WIN
 #include <windows.h>
 #endif
@@ -166,7 +164,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
         i++;
         
         unsigned int sleepTime = (unsigned int) (fTimeByFrame * 1000 - (pSys->getTime() - startTime)) * 1000;
-        usleep(sleepTime);
+        pSys->usleep(sleepTime);
 
         if (elapsedTime >= 1.0) {
             printf("%d FPS\n", i);
@@ -176,7 +174,6 @@ void MainApp(System* pSys, Graphics* pGfx) {
         else {
             elapsedTime += deltaTime;
         }
-        
 	}
     
     rscManager.freeAllRsc();
