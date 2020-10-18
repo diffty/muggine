@@ -27,6 +27,7 @@ public:
     void addWagon();
     void addPart(IWidget* pNewPart);
     CTDoor* addDoorForPart(IWidget* pTrainPart);
+    Sprite* addWallForPart(IWidget* pTrainPart);
         
     Scene* getWallScene();
     

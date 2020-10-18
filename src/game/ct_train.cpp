@@ -145,6 +145,7 @@ void CTTrain::addPart(IWidget* pNewPart) {
 
     m_pTrainScene->addChildWidget(pNewPart);
     addDoorForPart(pNewPart);
+    addWallForPart(pNewPart);
 }
 
 Scene* CTTrain::getWallScene() {
@@ -157,6 +158,14 @@ CTDoor* CTTrain::addDoorForPart(IWidget* pTrainPart) {
     CTDoor* door = new CTDoor(trainPartPos.x + trainPartSize.w / 2 - 10, trainPartPos.y + 5);
     m_pWallScene->addChildWidget(door);
     return door;
+}
+
+Sprite* CTTrain::addWallForPart(IWidget* pTrainPart) {
+    vect2df_t trainPartPos = pTrainPart->getRect()->getPos();
+    size2df_t trainPartSize = pTrainPart->getRect()->getSize();
+    Sprite* wall = new Sprite(RscManager::get()->getImgRsc("transition-wagon-wall"), trainPartPos.x + trainPartSize.w / 2 - 49, trainPartPos.y + 0);
+    m_pWallScene->addChildWidget(wall);
+    return wall;
 }
 
 CTDoor* CTTrain::isInFrontOfDoor() {
