@@ -159,7 +159,7 @@ float System::getRandFloat(float fMin, float fMax) {
     return fMin + (((float) rand()) / RAND_MAX) * (fMax - fMin);
 }
 
-void System::usleep(unsigned int uSleepTime) {
+void System::sleep(unsigned int uSleepTime) {
 #if TARGET_WIN
 	HANDLE timer;
 	LARGE_INTEGER ft;

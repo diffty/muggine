@@ -23,6 +23,7 @@
 #include <mach/clock.h>
 #include <mach/mach.h>
 #include <time.h>
+#include <unistd.h>
 #endif
 
 
@@ -66,7 +67,7 @@ public:
     int getRandInt(int iMin, int iMax);
     float getRandFloat(float fMin, float fMax);
 
-	void usleep(unsigned int uSleepTime);
+	void sleep(unsigned int uSleepTime);
 
 #if TARGET_SDL2
 	SDL_Window* getWindow();

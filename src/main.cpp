@@ -164,7 +164,7 @@ void MainApp(System* pSys, Graphics* pGfx) {
         i++;
         
         unsigned int sleepTime = (unsigned int) (fTimeByFrame * 1000 - (pSys->getTime() - startTime)) * 1000;
-        pSys->usleep(sleepTime);
+        pSys->sleep(sleepTime);
 
         if (elapsedTime >= 1.0) {
             printf("%d FPS\n", i);
