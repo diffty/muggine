@@ -255,9 +255,12 @@ void RscManager::freeAllRsc() {
         nextNode = currNode->pNext;
         Rsc* pRscNode = (Rsc*) currNode->pData;
         
+		printf("Freeing resource: %s\n", pRscNode->szName);
 		if (pRscNode->eRscType == ERscType_FONT)
 			delete ((IFont*) pRscNode->pData);
-		else 
+		else if (pRscNode->eRscType == ERscType_SPRITESHEET)
+			delete ((SpriteSheet *)pRscNode->pData);
+		else
 			delete ((Image *)pRscNode->pData);
 
         delete pRscNode;
